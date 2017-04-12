@@ -9,10 +9,7 @@
 // --------------------------------------------------
 
 @import "variables.less";
-@import "mixins.less";
-
-
-//
+@import "mixins.less";//
 // Buttons
 // --------------------------------------------------
 
@@ -93,20 +90,14 @@
 .btn-success { .btn-styles(@btn-success-bg); }
 .btn-info    { .btn-styles(@btn-info-bg); }
 .btn-warning { .btn-styles(@btn-warning-bg); }
-.btn-danger  { .btn-styles(@btn-danger-bg); }
-
-
-//
+.btn-danger  { .btn-styles(@btn-danger-bg); }//
 // Images
 // --------------------------------------------------
 
 .thumbnail,
 .img-thumbnail {
   .box-shadow(0 1px 2px rgba(0,0,0,.075));
-}
-
-
-//
+}//
 // Dropdowns
 // --------------------------------------------------
 
@@ -120,10 +111,7 @@
 .dropdown-menu > .active > a:focus {
   #gradient > .vertical(@start-color: @dropdown-link-active-bg; @end-color: darken(@dropdown-link-active-bg, 5%));
   background-color: darken(@dropdown-link-active-bg, 5%);
-}
-
-
-//
+}//
 // Navbar
 // --------------------------------------------------
 
@@ -180,10 +168,7 @@
       #gradient > .vertical(@start-color: @dropdown-link-active-bg; @end-color: darken(@dropdown-link-active-bg, 5%));
     }
   }
-}
-
-
-//
+}//
 // Alerts
 // --------------------------------------------------
 
@@ -204,10 +189,7 @@
 .alert-success    { .alert-styles(@alert-success-bg); }
 .alert-info       { .alert-styles(@alert-info-bg); }
 .alert-warning    { .alert-styles(@alert-warning-bg); }
-.alert-danger     { .alert-styles(@alert-danger-bg); }
-
-
-//
+.alert-danger     { .alert-styles(@alert-danger-bg); }//
 // Progress bars
 // --------------------------------------------------
 
@@ -232,10 +214,7 @@
 // the above custom styles override the new `.progress-bar-striped` in v3.2.0.
 .progress-bar-striped {
   #gradient > .striped();
-}
-
-
-//
+}//
 // List groups
 // --------------------------------------------------
 
@@ -253,10 +232,7 @@
   .badge {
     text-shadow: none;
   }
-}
-
-
-//
+}//
 // Panels
 // --------------------------------------------------
 
@@ -276,10 +252,7 @@
 .panel-success > .panel-heading   { .panel-heading-styles(@panel-success-heading-bg); }
 .panel-info > .panel-heading      { .panel-heading-styles(@panel-info-heading-bg); }
 .panel-warning > .panel-heading   { .panel-heading-styles(@panel-warning-heading-bg); }
-.panel-danger > .panel-heading    { .panel-heading-styles(@panel-danger-heading-bg); }
-
-
-//
+.panel-danger > .panel-heading    { .panel-heading-styles(@panel-danger-heading-bg); }//
 // Wells
 // --------------------------------------------------
 

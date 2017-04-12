@@ -1,0 +1,182 @@
+﻿@using BachMaiCR.DBMapping.Models
+@using Resources
+@{
+    ViewBag.Title = "_AddUserToRole";
+}
+@{
+  
+    var role = ViewBag.Role as WEBPAGES_ROLES;
+    var RootDepartment = ViewBag.RootDepartment as List<LM_DEPARTMENT>;
+    string DeptId = "", DeptName = "";
+    if (RootDepartment != null && RootDepartment.Count > 0)
+    {
+        DeptId = Convert.ToString(RootDepartment[0].LM_DEPARTMENT_ID);
+        DeptName = RootDepartment[0].DEPARTMENT_NAME;
+    }
+    RootDepartment = null;
+}
+<link href="~/Content/jquery.treeview.css" rel="stylesheet" />
+<link href="~/Content/gpcp-department.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.cookie.js"></script>
+<script src="~/Scripts/jquery.treeview.js"></script>
+<script src="~/Scripts/gpcp-department.js"></script>
+<style>
+    .model-hearder-table {
+        border: 1px solid #DDDDDD;
+        border-bottom: 1px solid #dbe8fe;
+        padding-bottom: 4px;
+        height: 30px;
+        background: none repeat scroll 0 0 #DBE8FE;
+        text-align: center;
+    }
+
+    .dv-table-header {
+        background-color: #dbe8fe;
+        border: 1px solid #CCCCCC;
+        border-image: none;
+        border-width: 1px;
+        color: #0b55c4;
+        font-size: 1.15em;
+        height: 30px;
+        line-height: 30px;  
+        font-weight:bold;
+        font-size:12px;    
+    }
+
+    #dv_table_add_user {
+        display: block;
+        max-height: 250px !important;
+        overflow-y:auto;
+        min-height: 25px;
+        position: relative;
+        width: 100% !important;
+        border: 1px solid #DDDDDD;
+    }
+
+</style>
+<div class="modal fade" id="AddUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Thêm người dùng vào nhóm : @role.ROLE_NAME</h4>
+            </div>
+
+            <div class="modal-body min-width">
+                <div class="row form-group">
+                    <div>
+                        <div class="col-sm-2" style="text-align:right;">Từ khóa :</div>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control input-sm" id="input-search-user" />
+                        </div>
+                        <div class="col-sm-2" style="text-align:right;">@Localization.LabelDepartment: </div>
+                        <div class="col-sm-4">
+                            @if (role == null)
+{
+
+    <input type="text" class="form-control input-sm" id="input-department-add-user" data-id="@DeptId" data-name="@DeptName" />
+}
+                            else
+                            {
+                                <input type="text" class="form-control input-sm" id="input-department-add-user" data-id="@DeptId" data-name="@DeptName" />
+
+                            }
+                        </div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div class="col-sm-12">
+                            <a class="btn btn-primary btn-sm" href="javascript:void(0)" id="searhbtn">
+                                <span class="glyphicon glyphicon-search"></span>Tìm kiếm
+                            </a>
+                        </div>
+                        <div class="col-sm-12" style=" height: 10px;"></div>
+
+                    </div>
+
+                    <div class="col-sm-12">
+                        <div style="" id="div-hearder">
+                            <input style="display: none;" value="@role.WEBPAGES_ROLE_ID" id="RoleId" />
+                            <table class="tbl">
+
+                                <tr>
+                                    <th class="col-sm-1">@Localization.ListItem</th>
+                                    <th class="col-sm-1"><input class='check-all-user' type='checkbox' /></th>
+                                    <th class="col-sm-3">@Localization.LoginModelDisplayUserName</th>
+                                    <th class="col-sm-7">@Localization.LabelDepartment</th>
+                                  </tr></table>
+                                    <div id="dv_table_add_user">
+                                                                     <div class="dv-table-content" id="SearchUserList">
+                                            @{
+                                                Html.RenderPartial("~/Views/admin/_SearchUserToRole.cshtml");
+                                            }
+                                        </div>
+                                    </div>
+                                                           </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div></div>
+<script type="text/javascript" src="~/Scripts/Utils/bmcrUtils.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {       
+        bmcr.checkboxUtils.checkAndUnCheckAll($('.check-all-user'), $("input.add-user-role"));
+        var $search = $('#searhbtn');
+        var $closeModel = $('.close');       
+        function SearchUser() {
+            var roleid = $('#RoleId').val();
+            var ctrdepartmentId = $('#input-department-add-user').val();
+            if (ctrdepartmentId == null || ctrdepartmentId == "") {
+                ctrdepartmentId = 0;
+            }
+            var keySearch = $('#input-search-user').val();
+            var $catlist = $('#SearchUserList');
+            $.ajax({
+                type: "GET",
+                url: '/WebpageRoles/SearchUser',
+                data: { id: roleid, key: keySearch, deparmentId: ctrdepartmentId },
+                success: function (response) {
+                    if ($catlist == null || $catlist.length == 0) {
+                    } else {
+                        $catlist.html(response);
+                    }
+                }
+            });
+        }
+
+        $search.bind('click', function (event) {
+            SearchUser();
+        });
+
+
+        $('#input-search-user').keyup(function (e) {
+            if (e.keyCode == 13)
+            { SearchUser(); }
+
+        });
+        $closeModel.bind('click', function (event) {
+
+            $('#role-model-container').html('');
+            $('body').attr('class', '');
+            $(".modal-backdrop").remove();
+            $('#AddUserModal').modal('hide');
+        });
+        $('#input-department-add-user').Department({
+        });
+        $('#input-department-add-user').change(function (e) {
+            SearchUser();
+        });
+       
+    });
+    function setWidthTd() {
+        var widthTable = $('#dv_table_add_user').innerHeight();
+        alert(widthTable);
+        if (parseFloat(widthTable) < 250) {
+            $('.checkboxId').removeClass("marginp");
+        }
+    }
+</script>

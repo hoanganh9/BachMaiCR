@@ -1,0 +1,372 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using Resources;
+@using BachMaiCR.Web.Common
+<link type="text/css" href="~/Content/fixheader/fixtable.css" rel="stylesheet" />
+<script type="text/javascript">
+
+
+
+    $(function () {
+        $('#selectable').selectable({
+            filter: 'td.item-schedule',
+            stop: function (event, ui) {
+                $('#popupStaff').fadeOut(50);
+                $('#box_staff').fadeOut(50);
+                $('#flag_accept').val(0);
+                $('.ui-icon-closethick').click();
+            }
+        })
+    });
+
+
+
+</script>
+<br />
+@{ 
+    var times = ViewBag.times as List<TimeCalendarDuty>;
+    string idTemplate = ViewBag.idTemplate;
+    int idTemplatex = 0;
+    int.TryParse(idTemplate.ToString(), out idTemplatex);
+    int idDepartment = ViewBag.idDepartment;
+    List<TEMPLATE_COLUM> templateColumnList = new UnitOfWork().TemplatesColumn.GetColumnByIDTemplate(idTemplatex, idDepartment).ToList();
+    var columnx = "";
+    string titlePopup = Localization.DoctorDetail;
+    var lstAction = ViewBag.ActionPermission as List<string>;
+    bool enableSave = lstAction.Contains(WebConst.ACTION_INSERT_CALENDAR_DUTY_CODE);
+    bool enableImport = lstAction.Contains(WebConst.ACTION_IMPORT_EXCEL_CALENDAR_DUTY_CODE);
+   
+}
+
+
+<div id="grid">
+    <div style="height:500px;overflow:auto" class="grid_4 height500">
+        <table class="fancyTable" id="selectable" cellpadding="0" cellspacing="0" style="width:@(templateColumnList.Count*180 + 200)px">
+            <thead>
+                <tr>
+                    <th style="width:100px">@Localization.DayText</th>
+                    <th style="width:100px">@Localization.DateText</th>
+                    @for (int i = 0; i < templateColumnList.Count; i++)
+                    {
+                        <th style="width:180px"> @templateColumnList[i].COLUM_NAME </th>
+                    }
+
+                </tr>
+            </thead>
+            <tbody>
+                @for (int j = 0; j < times.Count; j++)
+                {
+                    if (@times[j].DAYS.Equals("Chủ nhật") == false)
+                    {
+                    
+                    <tr>
+                        <td style="width:100px">
+                            @times[j].DAYS
+                        </td>
+                        <td style="width:100px">
+                            @String.Format("{0:d/M/yyyy}", @times[j].DATES)
+                        </td>
+                        @for (int k = 0; k < templateColumnList.Count; k++)
+                        {
+
+                            columnx = @templateColumnList[k].TEMPLATE_COLUM_ID + "," + @String.Format("{0:d/M/yyyy}", times[j].DATES);        
+                            <td class="item-schedule" style="width:180px" id="@columnx" ></td>
+                      
+                           
+                        }
+                    </tr>
+                    }
+                    else
+                    {
+                        // Chủ nhật
+                    <tr class="sundayCalendar" attr-class="sundayCalendar">
+                        <td style="width:100px" class="sundayCalendar">
+                            @times[j].DAYS
+                        </td>
+                        <td style="width:100px" class="sundayCalendar">
+                            @String.Format("{0:d/M/yyyy}", @times[j].DATES)
+                        </td>
+                        @for (int k = 0; k < templateColumnList.Count; k++)
+{
+
+    columnx = @templateColumnList[k].TEMPLATE_COLUM_ID + "," + @String.Format("{0:d/M/yyyy}", times[j].DATES);
+    <td class="item-schedule sundayCalendar" style="width:180px" id="@columnx"></td>
+
+
+}
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+<div id="popupStaff" style="border: 1px solid #D0DAFD; text-align: center; width: 326px; display: none; background-color: #dbe8fe;">
+</div>
+
+
+
+
+
+<div class="TextCenter">
+
+    <button class="btn btn-primary btn-sm" type="button"  onclick="location.href='@Url.Action("Index", "CalendarDuty")'">
+        <span class="glyphicon glyphicon-step-backward"></span>
+        @Localization.PageBack</button>
+    @if (enableSave)
+    {
+        <button class="btn btn-primary btn-sm" id="saveCalendar" type="button">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            @Localization.ButtonSaveDuty</button>
+    }
+    <button class="btn btn-primary btn-sm" id="bntAutoGenerate" type="button">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        @Localization.LableAutoGenerate
+    </button>
+    @if (enableImport)
+    {
+        <button class="btn btn-primary btn-sm" id="" type="button">
+            <span class="glyphicon glyphicon-folder-open"></span>&nbsp;
+        @Localization.ButtonInputExcel</button>
+    }
+</div>
+<div class="clear"></div>
+<div id="box_staff" class="box-staff" style="display: none; height: 75px;">
+</div>
+
+<script type="text/javascript" src="~/Scripts/Utils/jquery.fixedheadertable.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+
+        $('#selectable').fixedHeaderTable({
+            altClass: 'odd',
+            footer: false,
+            fixedColumns: 2,
+        });
+        $("#bntAutoGenerate").click(function () {
+            var contentDuty = $('#inforContent').val();
+            var monthx = $('#monthx').val();
+            var yearx = $('#yearx').val();
+            var templatex = $('#templatex').val();
+            $.ajax({
+                type: "POST",
+                url: "/CalendarDuty/AutoScheduling",
+                content: "application/json; charset=utf-8",
+                data: ({ iMonth: monthx, iYear: yearx, templateId: templatex, contentDuty: contentDuty }),
+                success: function (data) {
+                    window.notice('Lập lịch trực Khoa/Viện/Trung tâm tự động thành công', window.notice_success);
+                    window.location = "/CalendarDuty";
+                },
+                error: function () {
+
+                    window.notice('@Resources.Localization.DataIsNotValid', window.notice_warning);
+                }
+            });
+        });
+        $("#saveCalendar").click(function () {
+            var dates = "";
+            var strValues = "";
+            var i = 0;
+
+            var contentx = $('#inforContent').val();
+            var errcalendarContent = $('.field-validation-valid[data-valmsg-for="errinforContent"]');
+            errcalendarContent.css('color', 'red');
+            if (contentx == "" || contentx == null) {
+                $("#inforContent").focus();
+                errcalendarContent.text('(Nhập tên lịch đơn vị)');
+                return false;
+            }
+            errcalendarContent.text('');
+            var strInfor = $('#monthx').val() + "_" + $('#yearx').val() + "_" + $('#templatex').val();
+            $('#selectable').find('.item-schedule').each(function () {
+                dates = $(this).attr('id');
+                $(this).find('.schedule-element').each(function () {
+                    i++;
+                    if (i == 1) {
+                        strValues = dates + "_" + $(this).attr('id');
+                    } else {
+                        strValues = strValues + "-" + dates + "_" + $(this).attr('id');
+                    }
+                })
+            })
+
+            $.ajax({
+                type: "POST",
+                url: "/CalendarDuty/AddValuesCalendarDuty",
+                content: "application/json; charset=utf-8",
+                data: ({ contentDuty: contentx, strValues: strValues, strInfor: strInfor }),
+                success: function (data) {
+                    window.notice(data, window.notice_warning);
+                    window.location = "/CalendarDuty";
+                },
+                error: function () {
+
+                    window.notice('@Resources.Localization.DataIsNotValid', window.notice_warning);
+                }
+            });
+        });
+    });
+
+    $.curCSS = function (element, attrib, val) {
+        $(element).css(attrib, val);
+    };
+
+    $(document).delegate(".schedule-element", "hover", function (event) {
+        if (event.type == 'mouseenter') {
+            $(this).find(".element-close").fadeIn(50);
+
+        } else {
+            $(this).find(".element-close").fadeOut(50);
+        }
+    });
+
+    //Thực hiện mở cửa sổ thêm mới danh sách bác sĩ
+    //Danh sách mảng id bác sĩ sẽ được chuyền qua biến arrayid vào controller
+    $("#" + $('#selectable').attr('id')).delegate(" td.ui-selected", "dblclick", function (e) {
+        var x = e.clientX;
+        var y = e.clientY;
+        var optionTexts = "";
+        var ii = 0;
+        var idColumn = $(this).attr('id');
+        $('.ui-selected').find('div').each(function () {
+            ii++;
+            if (ii == 1) {
+                optionTexts = $(this).attr('id');
+            }
+            else {
+
+                optionTexts = optionTexts + "_" + $(this).attr('id');
+            }
+        })
+
+        document.getElementById("popupStaff").innerHTML = '';
+        $("#popupStaff").dialog({
+            title: 'Danh sách cán bộ',
+            modal: true,
+            position: [x, y],
+            width: 540,
+            height: 280,
+            resizable: false,
+            draggable: false,
+        }).load("/CalendarDuty/ListDoctors/?arrayid=" + optionTexts + "&arrayView=''&idColumn=" + idColumn + "&idTemplate=" + $('.templates').val());
+        $("#popupStaff").removeClass("ui-dialog-content ui-widget-content");
+        $("#btnSearch").remove();
+        $('#popupStaff').after('<input value="" id="btnSearch" style="height: 22px; width: 200px; font-size: 11px; color: black; font-weight: normal; top:4px; position: absolute; right: 35px;" placeholder="Tìm cán bộ"/>');
+        $('#btnSearch').val('');
+        $('#btnSearch').live('keyup', function () {
+            searchTable($(this).val());
+        });
+    });
+    //Hàm tìm kiếm trên table
+    function searchTable(inputVal) {
+        var count = 0;
+        var table = $('#table_list_staff');
+        table.find('tr').each(function (index, row) {
+            var allCells = $(row).find('td');
+            if (allCells.length > 0) {
+                var found = false;
+                allCells.each(function (index, td) {
+                    var regExp = new RegExp(inputVal.trim(), 'i');
+                    if (regExp.test($(td).text())) {
+                        found = true;
+                        count++;
+                        return false;
+                    }
+                });
+                if (found == true) $(row).show(); else $(row).hide();
+            }
+        });
+        if (parseFloat(count) > 7) {
+            $('.checkboxId').addClass("marginp");
+        }
+        else {
+            $('.checkboxId').removeClass("marginp");
+        }
+    }
+    // Hiển thị thông tin cá nhân của bác sĩ trực
+    $("#" + $('#selectable').attr('id')).delegate(" td.item-schedule .schedule-element", "click", function (e) {
+        //Cập nhật lại tên bác sĩ theo vị trí Click
+        $('#box_staff #staff_name').text($(e.currentTarget).text().trim());
+        var x = e.clientX;
+        var y = e.clientY;
+        var idparent = $(this).parent('div').attr('id');
+        $("#box_staff").dialog({
+            title: 'Chi tiết thông tin cán bộ',
+            modal: true,
+            height: 'auto',
+            width: 340,
+            resizable: false,
+            draggable: false,
+            position: [x, y]
+        }).load("/CalendarDuty/GetInforDoctor/?idDoctor=" + $(this).attr('id') + "");
+        $("#box_staff").removeClass("ui-dialog-content");
+        $("#box_staff").fadeIn(50);
+        $("#ui-dialog-title-box_staff").css("margin-top", "-5px");
+
+
+    });
+
+    //Gọi hàm thêm mới bác sĩ
+    $('#popupStaff').delegate(" #btnOk", "click", function (event) {
+        removeList();
+        $('#popupStaff').find('input:checked').each(function () {
+            var item = $(this).parent('td').next('td').find('div');
+            addItemToList(item);
+        })
+
+        //Tính lại độ cao cho các dòng dữ liệu
+        setHeightRow();
+
+    });
+
+    function setHeightRow() {
+        var tdSelected = $('.ui-selected');
+        if (tdSelected) {
+            var indexSelected = tdSelected.parent().index();
+            var rowFix = $('.fht-fixed-column .fht-tbody .fht-table tbody tr:eq(' + indexSelected + ')');
+            if (rowFix.height() != tdSelected.height()) {
+                rowFix.height(tdSelected.height());
+            }
+            //console.log(tdSelected.parent().index());
+        }
+    }
+
+    function removeList() {
+        $('.ui-selected').find('div').each(function () {
+            $(this).remove();
+        })
+    }
+    // Thêm mới danh sách bác sĩ ô lựa chọn
+    function addItemToList(item) {
+
+        $('.ui-selected').each(function () {
+            // Effect
+            $(this).append('<div style="background:#d5f76e; max-width:100px;padding-left:3px;" class="schedule-element" id="'
+                    + item.attr('id') + '">'
+                    + item.text().trim()
+                    + '<span class="element-close fa fa-times-circle" title="Xóa bỏ" onclick="scheduleCloseClick(this)"/>'
+                    + '</div>');
+        });
+
+    };
+
+    // Thực hiện xóa bác sĩ được chọn
+    function scheduleCloseClick(item) {
+        var itemX = $(item).parent('.schedule-element');
+        $(itemX).fadeOut(0, function () { $(this).remove(); });
+
+        setHeightRow();
+    }
+
+
+</script>
+
+
+
+<script type="text/javascript" src="~/Scripts/TableCalendar.js"></script>
+
+<link type="text/css" href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />

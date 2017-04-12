@@ -1,0 +1,137 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@model BachMaiCR.Web.Models.TemplateModel
+
+
+<!-- Modal -->
+<style>
+   #table_content {
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    table-layout: fixed;
+    /*position: absolute;*/
+}
+
+    #table_content td {        
+        text-align: center;       
+        border: 1px solid #ccc;
+    }
+    #table_content tr td
+{
+  height: 40px;
+  width: 40px;
+}
+    .holiday
+    {
+        background-color:#e5eecc;
+    }
+    .day
+    {
+        background-color: #dbe8fe
+    }
+       
+</style>
+
+
+<div class="modal fade" id="viewEntityModel" tabindex="-1000" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">@Localization.Template_Detail</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">  
+                    <div style="margin-bottom:10px; text-align:center; font-weight:bold;   color:#900000 ;font-size:14px;">
+                        @Localization.TemplateNameDisplay
+                      
+                    </div>
+                 <table id="table_content" class="ui-selectable" cellspacing="0" cellpadding="0" width="100%">
+<tbody>
+<tr>
+<td class="ui-selectee day" >Thứ 2</td>
+<td class="ui-selectee day">Thứ 3</td>
+<td class="ui-selectee day" >Thứ 4</td>
+<td class="ui-selectee day">Thứ 5</td>
+<td class="ui-selectee day" >Thứ 6</td>
+<td class="ui-selectee day" >Thứ 7</td>
+<td class="ui-selectee day">Chủ nhật</td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td class="ui-selectee"></td>
+<td class="ui-selectee">&nbsp;</td>
+<td class="ui-selectee">&nbsp;</td>
+<td class="ui-selectee">&nbsp;</td>
+<td class="ui-selectee holiday">01</td>
+<td class="ui-selectee holiday">02</td>
+</tr>
+<tr>
+<td class="ui-selectee">03</td>
+<td class="ui-selectee">04</td>
+<td class="ui-selectee">05</td>
+<td class="ui-selectee ui-selected">06</td>
+<td class="ui-selectee">07</td>
+<td class="ui-selectee holiday">08</td>
+<td class="ui-selectee holiday">09</td>
+</tr>
+<tr>
+<td class="ui-selectee">10</td>
+<td class="ui-selectee">11</td>
+<td class="ui-selectee">12</td>
+<td class="ui-selectee">13</td>
+<td class="ui-selectee">14</td>
+<td class="ui-selectee holiday">15</td>
+<td class="ui-selectee holiday">16</td>
+</tr>
+<tr>
+<td class="ui-selectee">17</td>
+<td class="ui-selectee">18</td>
+<td class="ui-selectee">19</td>
+<td class="ui-selectee">20</td>
+<td class="ui-selectee">21</td>
+<td class="ui-selectee holiday">22</td>
+<td class="ui-selectee holiday">23</td>
+</tr>
+<tr>
+<td class="ui-selectee">24</td>
+<td class="ui-selectee">25</td>
+<td class="ui-selectee">26</td>
+<td class="ui-selectee">27</td>
+<td class="ui-selectee">28</td>
+<td class="ui-selectee holiday">29</td>
+<td class="ui-selectee holiday">30</td>
+</tr>
+<tr>
+<td class="ui-selectee">31</td>
+<td class="ui-selectee">&nbsp;</td>
+<td class="ui-selectee">&nbsp;</td>
+<td class="ui-selectee">&nbsp;</td>
+<td class="ui-selectee">&nbsp;</td>
+<td class="ui-selectee holiday">&nbsp;</td>
+<td class="ui-selectee holiday">&nbsp;</td>
+</tr>
+</tbody>
+</table>
+                </div>
+            </div>
+
+           
+           
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">@Localization.ButtonCloseDisplay</button>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    $(document).ready(function () {
+    });
+</script>

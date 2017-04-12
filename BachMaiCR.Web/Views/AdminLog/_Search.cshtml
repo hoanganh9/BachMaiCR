@@ -1,0 +1,142 @@
+﻿@using Resources;
+@model BachMaiCR.DBMapping.ModelsExt.LogSearch
+@{
+    var lstLogType = ViewBag.ListLogType as List<SelectListItem>;
+    var lstLogAction = ViewBag.ListLogAction as List<SelectListItem>;
+    var lstStatus = ViewBag.ListStatus;
+    var lstMenu = ViewBag.ListMenuName as List<SelectListItem>;
+}
+@*<script src="~/Scripts/bootstrap.input-clear.js"></script>*@
+@*<script src="~/Scripts/jquery.input-clear.js"></script>*@
+<div class="content-wrapper">
+    <div class="row" style="width:75%; margin:0 auto">
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelSearchDateStart</label>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group input-group-sm ">
+                @Html.TextBoxFor(m => m.SearchDateStart, "{0:dd/MM/yyyy}", new { @class = "form-control input-sm", @id = "SearchDateStart", @placeholder = @Localization.LabelSearchDateStart })
+                <span id="btnSearchDateStartPicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelSearchDateEnd</label>
+        </div>
+        <div class="col-md-4" style="margin-bottom: 5px;">
+            <div class="input-group input-group-sm ">
+                @Html.TextBoxFor(m => m.SearchDateEnd, "{0:dd/MM/yyyy}", new {  @class = "form-control input-sm", @id = "SearchDateEnd", @placeholder = @Localization.LabelSearchDateEnd })
+                <span id="btnSearchDateEndPicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelUser</label>
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.SearchUserName, new { @class = "form-control input-sm", @placeholder = @Localization.LabelUser,@autocomplete="off" })
+        </div>
+
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.ListContent</label>
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.SearchName, new { @class = "form-control input-sm", @placeholder = @Localization.ListContent ,@autocomplete="off"})
+        </div>
+
+        <div class="col-md-12"></div>
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelIpAddress</label>
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.SearchIpAddress, new { @class = "form-control input-sm", @placeholder = @Localization.LabelIpAddress,@autocomplete="off" })
+        </div>
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelMenu</label>
+        </div>
+        <div class="col-md-4" style="margin-bottom: 5px;">
+            @Html.DropDownListFor(m => m.SearchMenuCode, lstMenu, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+        </div>
+        <div class="col-md-12"></div>
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelAdminLogType</label>
+        </div>
+        <div class="col-md-4" style="margin-bottom: 5px;">
+            @Html.DropDownListFor(m => m.SearchStatus, lstLogType, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+        </div>
+
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelAdminLogAction</label>
+        </div>
+        <div class="col-md-4">
+            @Html.DropDownListFor(m => m.SearchAction, lstLogAction, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+        </div>
+        <div class="col-md-12 align-center">
+            <button class="btn btn-primary" type="button" onclick="return btnSearchClick();">
+                <span class="glyphicon glyphicon-search"></span>Tìm kiếm
+            </button>
+            <button id="btnLogDelete" type="button" class="btn btn-primary" onclick="return OnDelete()">
+                <span class=" glyphicon glyphicon-trash"></span>
+                @Localization.LabelDel
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="~/Scripts/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.maskedinput-1.3.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#SearchDateStart, #SearchDateEnd').datepicker({
+            format: 'dd/mm/yyyy',
+            weekStart: 1
+        });
+
+        $.mask.definitions['y'] = '[12]';
+        $.mask.definitions['m'] = '[01]';
+        $.mask.definitions['d'] = '[0-3]';
+        $("#SearchDateStart, #SearchDateEnd").mask("d9/m9/y999", { placeholder: "_" });
+
+        $('#btnSearchDateStartPicker').delegate("", "click", function (evt) {
+            if (!$('.datepicker ').is(":visible"))
+                $('#SearchDateStart').datepicker('show')
+        });
+        $('#btnSearchDateEndPicker').delegate("", "click", function (evt) {
+            if (!$('.datepicker ').is(":visible"))
+                $('#SearchDateEnd').datepicker('show')
+        });
+        $('#btnSearchDateSentPicker').delegate("", "click", function (evt) {
+            if (!$('.datepicker ').is(":visible"))
+                $('#SearchDateSent').datepicker('show')
+        });
+
+        $('.selectpicker').selectpicker({
+            style: 'btn btn-default btn-sm',
+            size: 5,
+        });
+
+        // Button Clear text on the input datetimpiker
+        $("#SearchDateStart, #SearchDateEnd").inputClear();
+
+        $('#SearchUserName, #SearchIpAddress,#SearchName').keyup(function (e) {
+            //,.bootstrap-select [data-toggle=dropdown], .bootstrap-select [role=menu], .bootstrap-select-searchbox input
+            if (e.keyCode == 13)
+            { OnCriteria(0); }
+
+        });
+
+        $(document).on('focusin', '.bootstrap-select [data-toggle=dropdown], .bootstrap-select [role=menu], .bootstrap-select-searchbox input', function (e) {
+            //alert("Handler for .focus() called.");
+            e.stopPropagation();
+        });
+
+        //$("#SearchStatus").focus(function () {
+        //    alert("Handler for .focus() called.");
+        //});
+    });
+
+    function btnSearchClick() {
+        OnCriteria(0);
+    }
+</script>

@@ -1,0 +1,316 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.DBMapping.ModelsExt
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.Utilities.Entity
+@using BachMaiCR.Web.Common
+@{
+
+    var pagNar = ViewBag.Pagination as Pagination;
+    var searchDB = ViewBag.calendarSearch as SearchTemplate;
+    var lstItem = ViewBag.calendarDuty as List<TEMPLATE>;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+    var lstAction = ViewBag.Actions as List<string>;
+    bool enableEdit = lstAction.Contains(WebConst.ACTION_EDIT_TEMPLATE_CODE);
+    bool enableDetail = lstAction.Contains(WebConst.ACTION_VIEW_TEMPLATE_CODE);
+    bool enableDelete = lstAction.Contains(WebConst.ACTION_DELETE_TEMPLATE_CODE);
+    //lstAction = null;
+}
+<script type="text/javascript">
+    function EditTemplate(id) {
+        var url = "/Template/Edit";
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: { id: id },
+            success: function (response) {
+                $('#Contentx').html(response);
+            }
+
+        })
+
+    }
+
+</script>
+
+<div class="content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+        <script type="text/javascript">
+            function OnCriteria(pageIndex) {
+
+                var template_name = '@ViewBag.template_name';
+                var template_abb = '@ViewBag.template_abb';
+                var dateApproved = '@ViewBag.dateApproved';
+                var usernameCreate = '@ViewBag.usernameCreate';
+                var usernameAppoved = '@ViewBag.usernameAppoved';
+                var departmentName = '@ViewBag.departmentName';
+                var status = '@ViewBag.status';
+
+                $.ajax({
+                    type: "GET",
+                    url: '/@pagNar.ModelName/@pagNar.ActionName',
+                    data: { template_name: template_name, template_abb: template_abb, dateApproved: dateApproved, usernameCreate: usernameCreate, usernameAppoved: usernameAppoved, departmentName: departmentName, status: status, pageIndex: pageIndex },
+                    success: function (response) {
+                        var $catlist = $('@pagNar.TagetReLoadId');
+                        if ($catlist == null || $catlist.length == 0) {
+
+                        }
+                        else {
+                            $catlist.html(response);
+                        }
+                    }
+                });
+                setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+            }
+
+
+
+        </script>
+    }
+    else
+    {
+        <table class="tbl">
+
+            <tr>
+                <th style="width: 3%;">@Localization.ListItem</th>
+
+                <th style="width: 12%;">@Localization.Template_Department </th>
+                <th style="width: 14%;">@Localization.Template_Name</th>
+                <th style="width: 11%;">@Localization.Template_Abb</th>
+                <th style="width: 12%;">@Localization.ListUserCreate</th>
+                <th style="width: 6%;">@Localization.ListDateCreate</th>
+                <th style="width: 12%;">@Localization.ListUserApproved</th>
+                <th style="width: 9%;">@Localization.ListDateApproved</th>
+                <th style="width: 12%;">@Localization.ListStatus</th>
+                @if (enableEdit)
+                {
+                    <th style="width: 3%;">@Localization.ListView</th>
+                }
+                @if (enableDelete)
+                {
+                    <th style="width: 3%;">@Localization.ListDelete</th>
+                }
+                @if (enableEdit)
+                {
+                    <th style="width: 3%;">@Localization.ListEdit</th>
+                }
+
+            </tr>
+            <tbody id="ctg_content_body">
+                @for (int i = 0; i < lstItem.Count; i++)
+                {
+                    var status = lstItem[i].STATUS;
+                    string css = "";
+                    if (status == TemplateStatus.Aproved.GetHashCode())
+                    {
+                        TimeSpan day = lstItem[i].DATE_END.Value - DateTime.Now;
+                        if (day.Days < 0)
+                        {
+                            css = "bgList";
+                        }
+                    }
+                    <tr class="@css">
+
+                        <td>@(i + 1 + startIndex)</td>
+
+                        <td style="text-align: left">
+                            @if (@lstItem[i].LM_DEPARTMENT_ID != null)
+                            {
+                                @lstItem[i].LM_DEPARTMENT.DEPARTMENT_CODE
+                            }
+                        </td>
+                        <td style="text-align: left">@lstItem[i].TEMPLATE_NAME</td>
+                        <td style="text-align: left">@lstItem[i].ABBREVIATION</td>
+                        <td style="text-align: left">
+                            @if (@lstItem[i].USER_CREATE_ID != null)
+                            {
+                                @lstItem[i].ADMIN_USER.FULLNAME
+                            }
+                        </td>
+                        <td>@String.Format("{0:dd/MM/yyyy}", lstItem[i].DATE_CREATE) </td>
+                        <td style="text-align: left">
+                            @if (@lstItem[i].USER_APPROVED_ID != null)
+                            {
+                                @lstItem[i].ADMIN_USER1.FULLNAME
+                            }
+
+
+                        </td>
+                        <td>@String.Format("{0:dd/MM/yyyy}", lstItem[i].DATE_APPROVED)</td>
+                        <td style="text-align: left">
+                            @Html.Label(BachMaiCR.Web.Models.TemplateModel.GetStatus(lstItem[i].STATUS), new { @class = "labels" })
+
+                        </td>
+                        @if (enableEdit)
+                        {
+                            <td style="text-align: center"><a title='Xem chi tiết biểu mẫu' href='javascript:void(0)' class='cat-detail' data-id='@lstItem[i].TEMPLATES_ID'><span class='glyphicon glyphicon-calendar'></span></a></td>
+                        }
+                        @if (enableDelete)
+                        {
+                            if (status != TemplateStatus.Aproved.GetHashCode())
+                            {
+                                <td style="text-align: center"><a title='@Resources.Localization.TitleDisplayDel' data-toggle='confirmation' href='javascript:void(0)' class='cat-delete' data-id='@lstItem[i].TEMPLATES_ID'><span class='glyphicon glyphicon-trash'></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="text-align:center">
+                                    <a title='@Localization.TitleDisplayDel' class='disabled'>
+                                        <span class='glyphicon glyphicon-trash' title="Biểu mẫu đã được phê duyệt không cho phép xóa"></span>
+                                    </a>
+                                </td>
+                            }
+                        }
+                        @if (enableEdit)
+                        {
+                            if (status != TemplateStatus.Aproved.GetHashCode())
+                            {
+                                <td style="text-align: center">
+                                    <a title='@Resources.Localization.TitleDisplayEdit' href='javascript:void(0)' onclick="EditTemplate(@lstItem[i].TEMPLATES_ID)" class='cat-edit' data-id='@lstItem[i].TEMPLATES_ID'><span class='glyphicon glyphicon-edit'></span></a>
+
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td style="text-align:center">
+                                    <a title='@Localization.TitleDisplayEdit' class='disabled'>
+                                        <span class='glyphicon glyphicon-edit' title="Biểu mẫu đã được phê duyệt không cho phép sửa"></span>
+                                    </a>
+                                </td>
+
+                            }
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationView", pagNar);
+
+        <script type="text/javascript">
+
+            function OnCriteria(pageIndex) {
+
+                var template_name = '@ViewBag.template_name';
+                var template_abb = '@ViewBag.template_abb';
+                var dateApproved = '@ViewBag.dateApproved';
+                var usernameCreate = '@ViewBag.usernameCreate';
+                var usernameAppoved = '@ViewBag.usernameAppoved';
+                var departmentName = '@ViewBag.departmentName';
+                var status = '@ViewBag.status';
+
+                $.ajax({
+                    type: "GET",
+                    url: '/@pagNar.ModelName/@pagNar.ActionName',
+                    data: { template_name: template_name, template_abb: template_abb, dateApproved: dateApproved, usernameCreate: usernameCreate, usernameAppoved: usernameAppoved, departmentName: departmentName, status: status, pageIndex: pageIndex },
+                    success: function (response) {
+                        var $catlist = $('@pagNar.TagetReLoadId');
+                        if ($catlist == null || $catlist.length == 0) {
+
+                        }
+                        else {
+                            $catlist.html(response);
+                        }
+                    }
+                });
+                setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+            }
+
+
+        </script>
+
+    }
+</div>
+<div id="navigate_bottom_panel" class="nav-bottom">
+</div>
+
+<script type="text/javascript">
+    function bntAproved(type) {
+        var strConfirm = "";
+        var strAlert = "OK";
+        if (type == 1) {
+            strConfirm = '@Html.Raw(Localization.ConfirmApprovedTemplate)';
+            strAlert = '@Html.Raw(Localization.MsgstatusApproved)';
+        }
+        else if (type == 2) {
+            strConfirm = '@Html.Raw(Localization.ConfirmCancelTemplate)';
+            strAlert = '@Html.Raw(Localization.MsgstatusCancel)';
+        }
+        else if (type == 3) {
+            strConfirm = '@Html.Raw(Localization.ConfirmRestoreTemplate)';
+            strAlert = '@Html.Raw(Localization.MsgstatusResore)';
+        }
+        if (confirm(strConfirm)) {
+            var idValue = $("#template_Id").val();
+            var statusValueID = $("#statusID").val();
+            $.ajax(
+            {
+                type: "POST",
+                url: "/Template/CancelTemplate",
+                content: "application/json; charset=utf-8",
+                data: ({ idValue: idValue, statusValueID: statusValueID }),
+                success: function (data) {
+                    if (data.status == 200) {
+                        OnCriteria(0);
+                        $('#viewEntityModel').modal('hide');
+                        window.notice(strAlert, window.notice_success);
+                    }
+                },
+                error: function (result) {
+                    window.notice('@Resources.Localization.DataIsNotValid', window.notice_warning);
+                }
+
+            });
+        }
+
+    }
+
+    $(document).ready(function () {
+        $('.cat-delete').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'btnOkClass': 'btn-danger',
+                'title': 'Bạn có muốn xóa biểu mẫu này?',
+                'yesButtonTitle': '<span class="glyphicon glyphicon-trash"></span> Xóa',
+                'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+                onComplete: function (e) {
+                    $.post('/Template/Delete', { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            OnCriteria(0);
+                            window.notice(response.result, window.notice_success);
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                    //alert(0);
+                }
+            });
+        });
+
+        $(".cat-detail").bind('click', function (event) {
+            //  alert("edit");
+            var $self = $(this);
+            $.get('/Template/Detail', {
+                Id: $self.attr('data-id'),
+            },
+                function (data) {
+                    var $categoryModel = $('#view_model_container');
+                    $categoryModel.html(data);
+                    $('#viewEntityModel').modal({
+                        keyboard: true
+                    });
+                });
+
+        });
+
+    });
+</script>

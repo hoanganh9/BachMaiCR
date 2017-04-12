@@ -86,19 +86,13 @@
 .btn-group .dropdown-toggle:active,
 .btn-group.open .dropdown-toggle {
   outline: 0;
-}
-
-
-// Sizing
+}// Sizing
 //
 // Remix the default button sizing classes into new ones for easier manipulation.
 
 .btn-group-xs > .btn { &:extend(.btn-xs); }
 .btn-group-sm > .btn { &:extend(.btn-sm); }
-.btn-group-lg > .btn { &:extend(.btn-lg); }
-
-
-// Split button dropdowns
+.btn-group-lg > .btn { &:extend(.btn-lg); }// Split button dropdowns
 // ----------------------
 
 // Give the line between buttons some depth
@@ -120,10 +114,7 @@
   &.btn-link {
     .box-shadow(none);
   }
-}
-
-
-// Reposition the caret
+}// Reposition the caret
 .btn .caret {
   margin-left: 0;
 }
@@ -135,10 +126,7 @@
 // Upside down carets for .dropup
 .dropup .btn-lg .caret {
   border-width: 0 @caret-width-large @caret-width-large;
-}
-
-
-// Vertical button groups
+}// Vertical button groups
 // ----------------------
 
 .btn-group-vertical {
@@ -192,10 +180,7 @@
 }
 .btn-group-vertical > .btn-group:last-child:not(:first-child) > .btn:first-child {
   .border-top-radius(0);
-}
-
-
-// Justified button groups
+}// Justified button groups
 // ----------------------
 
 .btn-group-justified {
@@ -216,10 +201,7 @@
   > .btn-group .dropdown-menu {
     left: auto;
   }
-}
-
-
-// Checkbox and radio options
+}// Checkbox and radio options
 //
 // In order to support the browser's form validation feedback, powered by the
 // `required` attribute, we have to "hide" the inputs via `clip`. We cannot use

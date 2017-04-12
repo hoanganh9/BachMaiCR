@@ -1,9 +1,6 @@
 //
 // Tables
-// --------------------------------------------------
-
-
-table {
+// --------------------------------------------------table {
   background-color: @table-bg;
 }
 caption {
@@ -14,10 +11,7 @@ caption {
 }
 th {
   text-align: left;
-}
-
-
-// Baseline styles
+}// Baseline styles
 
 .table {
   width: 100%;
@@ -62,10 +56,7 @@ th {
   .table {
     background-color: @body-bg;
   }
-}
-
-
-// Condensed table w/ half padding
+}// Condensed table w/ half padding
 
 .table-condensed {
   > thead,
@@ -78,10 +69,7 @@ th {
       }
     }
   }
-}
-
-
-// Bordered version
+}// Bordered version
 //
 // Add borders all around the table and between all the columns.
 
@@ -103,10 +91,7 @@ th {
       border-bottom-width: 2px;
     }
   }
-}
-
-
-// Zebra-striping
+}// Zebra-striping
 //
 // Default zebra-stripe styles (alternating gray and transparent backgrounds)
 
@@ -114,10 +99,7 @@ th {
   > tbody > tr:nth-of-type(odd) {
     background-color: @table-bg-accent;
   }
-}
-
-
-// Hover effect
+}// Hover effect
 //
 // Placed here since it has to come after the potential zebra striping
 
@@ -125,10 +107,7 @@ th {
   > tbody > tr:hover {
     background-color: @table-bg-hover;
   }
-}
-
-
-// Table cell sizing
+}// Table cell sizing
 //
 // Reset default table behavior
 
@@ -146,10 +125,7 @@ table {
       display: table-cell;
     }
   }
-}
-
-
-// Table backgrounds
+}// Table backgrounds
 //
 // Exact selectors below required to override `.table-striped` and prevent
 // inheritance to nested tables.
@@ -159,10 +135,7 @@ table {
 .table-row-variant(success; @state-success-bg);
 .table-row-variant(info; @state-info-bg);
 .table-row-variant(warning; @state-warning-bg);
-.table-row-variant(danger; @state-danger-bg);
-
-
-// Responsive tables
+.table-row-variant(danger; @state-danger-bg);// Responsive tables
 //
 // Wrap your tables in `.table-responsive` and we'll make them mobile friendly
 // by enabling horizontal scrolling. Only applies <768px. Everything above that

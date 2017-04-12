@@ -1,0 +1,111 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using Resources;
+@using System.Data;
+@using BachMaiCR.Web.Utils;
+@{ 
+    var lstDepartment = ViewBag.ListDepartment as List<SelectListItem>;
+    var pagNar = ViewBag.Pagination as BachMaiCR.Utilities.Entity.Pagination;
+    var lstDoctorCalendarHoliday = ViewBag.DoctorCalendarHoliday as List<DoctorCalendarLeader>;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+}
+
+<script type="text/javascript">
+    $(function () {
+
+    });
+
+    function btnExportExcel() {
+        var url = '@Url.Action("ExportReportOfHoliday", "ReportOfHoliday")' + '?SearchName=' + $('#SearchName').val().trim();
+        url += '&SearchFeastId=' + $('#SearchFeastId').val().trim() + '&SearchDeprtId=' + $('#SearchDeprtId').val().trim();
+        url += '&SearchPositionId=' + $('#SearchPositionId').val().trim();
+        location.href = url;
+    }
+
+</script>
+
+
+<style>
+    #selectable th
+    {
+        word-wrap: break-word;
+    }
+
+    #selectable tr:last-child, #selectable tbody tr td:last-child
+    {
+        color: maroon;
+        font-weight: bold;
+        text-align: center;
+    }
+</style>
+<div class="content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+    }
+    else
+    {
+        <table class="tbl">
+            <tr>
+                <th class="index width36">@Resources.Localization.LabelIndex</th>
+                <th>@Resources.Localization.LabelDoctorName</th>
+                <th style="width: 150px;">@Resources.Localization.LabelPosition</th>
+                <th>@Resources.Localization.LabelHolidayContent</th>
+                <th>@Resources.Localization.LabelHolidayPlace</th>
+                <th style="width: 200px;">@Resources.Localization.LabelHolidayTime</th>
+             
+            </tr>
+            <tbody id="ctg_content_body">
+                @if (lstDoctorCalendarHoliday != null && lstDoctorCalendarHoliday.Any())
+                {
+                    var count = 0;
+                    foreach (var ldc in lstDoctorCalendarHoliday)
+                    {
+                        count++;
+                        var deptName = "";
+                    <tr>
+                        <td class="align-center">@(count + startIndex)</td>
+                        <td>@ldc.DOCTOR_NAME</td>
+                        <td>
+                            @ldc.POSITION_NAMEs
+                        </td>
+                        <td>@ldc.CALENDAR_DUTY_NAME</td>
+                        <td>
+                            @{
+                        if (lstDepartment.Any())
+                        {
+                            var deptItem = lstDepartment.FirstOrDefault(t => t.Value.Equals(ldc.LM_DEPARTMENT_ID.ToString()));
+                            if (deptItem != null)
+                            {
+                                deptName = deptItem.Text;
+                            }
+                        }
+                            }
+                            @deptName
+                        </td>
+                        <td class="align-center" style="color: maroon">
+                            @(ldc.DATE_START.HasValue ? ldc.DATE_START.Value.ToString("dd/MM/yyyy") : "")
+                        </td>
+                        @*<td></td>*@
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationView", pagNar);
+    }
+</div>
+<div id="navigate_bottom_panel" class="nav-bottom ">
+</div>
+
+<div class="clear"></div>
+<div id="box_staff" class="box-staff " style="display: none">
+</div>
+<link type="text/css" href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+

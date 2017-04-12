@@ -1,0 +1,225 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.Web.Common
+@{
+    var pagNar = ViewBag.Pagination as BachMaiCR.Utilities.Entity.Pagination;
+    var lstItem = ViewBag.Category as List<CONFIG_SMS>;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+
+
+    var lstAction = ViewBag.Actions as List<string>;
+    var actDel = lstAction.Contains(WebConst.ACTION_CONFIG_SMS_DELETE_CODE);
+    var actUpdate = lstAction.Contains(WebConst.ACTION_CONFIG_SMS_SAVE_CODE);
+    var actView = lstAction.Contains(WebConst.ACTION_CONFIG_SMS_VIEW_CODE);
+    bool enableActive = lstAction.Contains(WebConst.ACTION_DOCTOR_ACTIVE_CODE);
+    string defaulValue = "N/A";
+}
+<div class="content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+    }
+    else
+    {
+        <table class="tbl">
+            <tr>
+                <th class="index width36">@Resources.Localization.LabelIndex</th>
+                <th>@Resources.Localization.LabelSMSName</th>
+                <th>@Resources.Localization.LabelDepartment</th>
+                <th>@Resources.Localization.LabelTemplate</th>
+
+                @if (enableActive)
+                {
+                    <th class="width84">@Resources.Localization.LabelActived</th>
+                }
+                <th class="width200">@Resources.Localization.LabelTime</th>
+                @if (actDel)
+                {
+                    <th class="width36">@Resources.Localization.LabelDel</th>
+                }
+                @if (actUpdate)
+                {
+                    <th class="width36">@Resources.Localization.LabelEdit</th>
+                }
+            </tr>
+            <tbody id="ctg_content_body">
+                @for (int i = 0; i < lstItem.Count; i++)
+                {
+                    string dateBegin = "";
+                    string dateEnd = "";
+                    if (lstItem[i].DATE_START.HasValue)
+                    {
+                        dateBegin = String.Format("{0:dd/MM/yyyy}", lstItem[i].DATE_START.Value);
+                    }
+                    if (lstItem[i].DATE_END.HasValue)
+                    {
+                        dateEnd = String.Format("{0:dd/MM/yyyy}", lstItem[i].DATE_END.Value);
+                    }
+                    string dateValue = "";
+                    if (dateBegin == dateEnd || string.IsNullOrEmpty(dateEnd))
+                    {
+                        dateValue = dateBegin;
+                    }
+                    else
+                    {
+                        dateValue = dateBegin + " đến " + dateEnd;
+                    }
+                    string css = "";
+                    if (!string.IsNullOrEmpty(dateEnd))
+                    {
+                        TimeSpan day = lstItem[i].DATE_END.Value - DateTime.Now;
+                        if (day.Days < 0 && lstItem[i].ISACTIVED.Equalstrue)
+                        {
+                            css = "bgList";
+                        }
+                    }
+                    <tr class="@css">
+                        <td class="align-center">@(i + 1 + startIndex)</td>
+                        <td>@lstItem[i].CONFIG_SMS_NAME</td>
+                        <td>
+                            @if (lstItem[i].LM_DEPARTMENT_ID != null)
+                            {
+                                @lstItem[i].LM_DEPARTMENT.DEPARTMENT_CODE
+                            }
+                            else
+                            {
+                                @defaulValue
+                            }
+                        </td>
+                        <td>
+                            @if (lstItem[i].TEMPLATES_ID != null && lstItem[i].TEMPLATES_ID != 0)
+                            {
+                                @lstItem[i].TEMPLATE.ABBREVIATION
+                            }
+                            else if (lstItem[i].TEMPLATES_ID == 0)
+                            {
+                                @Resources.Localization.CalendarDefault
+                            }
+                            else
+                            {
+                                @defaulValue
+                            }
+                        </td>
+                        @if (enableActive)
+                        {
+                            <td style="text-align: center;">
+                                @if (lstItem[i].ISACTIVED.Equalstrue)
+                                {
+                                    <input class='change-active' type='checkbox' checked value='@lstItem[i].CONFIG_SMS_ID' />
+                                }
+                                else
+                                {
+                                    <input class='change-active' type='checkbox' value='@lstItem[i].CONFIG_SMS_ID' />
+                                }
+                            </td>
+                        }
+                        <td>@dateValue</td>
+
+
+                        @if (actDel)
+                        {
+                            <td class="align-center"><a title='@Resources.Localization.TitleDisplayDel' data-bb="dialog" data-toggle='confirmation' href='javascript:void(0)' class='cat-delete' data-id='@lstItem[i].CONFIG_SMS_ID'><span class='glyphicon glyphicon-trash'></span></a></td>
+                        }
+                        @if (actUpdate)
+                        {
+                            <td class="align-center"><a title='@Resources.Localization.TitleDisplayEdit' href='javascript:void(0)' class='cat-edit' data-id='@lstItem[i].CONFIG_SMS_ID'><span class='glyphicon glyphicon-edit'></span></a></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationView", pagNar);
+    }
+</div>
+<div id="navigate_bottom_panel" class="nav-bottom ">
+</div>
+
+
+<script type="text/javascript">
+
+    function OnCriteria(pageIndex) {
+        $.ajax({
+            type: "GET",
+            url: '/@pagNar.ModelName/@pagNar.ActionName',
+            data: {
+                SearchDeprtId: $('#SearchDeprtId').val().trim()
+                , SearchName: $('#SearchName').val().trim()
+                , pageIndex: pageIndex
+            },
+            success: function (response) {
+                var $catlist = $('@pagNar.TagetReLoadId');
+                if ($catlist == null || $catlist.length == 0) {
+                    window.notice('@Resources.Localization.MsgItemNotFound', window.notice_error);
+                }
+                else {
+                    $catlist.html(response);
+                }
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        $(".modal").on('shown', function () {
+            // $(this).find("[autofocus]:first").focus();
+        });
+
+
+        $(".cat-edit").bind('click', function (event) {
+            var $self = $(this);
+            $.get('/ConfigSMS/OnUpdate', {
+                id: $self.attr('data-id')
+
+            },
+                function (data) {
+                    var $categoryModel = $('#add_category_model_container');
+                    $categoryModel.html(data);
+                    $('#addCategoryModel').modal({
+                        keyboard: true
+                    });
+                });
+        });
+
+        $('.change-active').bind('change', function (event) {
+            var $self = $(this);
+            $.post('/ConfigSMS/ActiveChage', { configSMSId: $self.val(), active: $self.is(":checked") == true }, function (response) {
+                if (response.status == 200) {
+                    window.notice(response.result, window.notice_success);
+                }
+                else {
+                    window.notice(response.result, window.notice_error);
+                }
+            });
+        });
+        $('.cat-delete').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'popout': true,
+                'btnOkClass': 'btn-danger',
+                'title': '@Resources.Localization.MsgConfirmDisplayDel',
+                'yesButtonTitle': '<span class="glyphicon glyphicon-trash"></span> @Localization.LabelDel',
+                'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+                'placement': 'left',
+                onComplete: function (e) {
+                    $.post('/ConfigSMS/OnDelete', { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            OnCriteria(0);
+                            window.notice(response.result, window.notice_success);
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+
+                }
+            });
+        });
+    });
+</script>

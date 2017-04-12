@@ -1,0 +1,317 @@
+﻿@model BachMaiCR.Web.Models.CalendarDutyModel
+@using Resources
+@using BachMaiCR.Utilities.Enums
+@{
+    int idCalendarDuty = Model.CALENDAR_DUTY_ID;
+    int? dutyType = Model.DUTY_TYPE;
+
+    string actionName = "";
+    if (dutyType == 2 || dutyType == 5)
+    {
+        actionName = "CancelApprovedDirectors";
+    }
+    else if (dutyType == 1 || dutyType == 6)
+    {
+        actionName = "CancelApprovedLeader";
+    }
+    else
+    {
+        actionName = "CancelApproved";
+    }
+
+}
+<style>
+    .Validation_Error {
+        margin-left: 0px;
+    }
+
+    .TopDivs {
+        clear: both;
+        vertical-align: top;
+        text-align: left;
+        margin-bottom: 5px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight: 100;
+    }
+
+    .modal-title {
+        margin: 0;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .modal-header {
+        padding: 5px 10px 10px;
+    }
+
+    .modal-footer {
+        padding: 5px 10px 10px;
+        margin-top: 5px;
+        text-align: center;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .modal-body {
+        position: relative;
+        padding: 5px 10px 0px 10px;
+    }
+
+    .form-group {
+        margin-bottom: 5px;
+    }
+
+    .modal-dialog {
+        width: 450px;
+    }
+</style>
+<!-- Modal -->
+
+<div class="modal fade" id="CalendarDutyRequest" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+
+        @Html.ValidationSummary(false)
+
+        @using (Html.BeginForm(
+              actionName: @actionName, controllerName: "CalendarDuty", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmCalendarDuty", @class = "", @role = "form" }))
+        {
+            @Html.HiddenFor(model => model.CALENDAR_DUTY_ID)
+            @Html.HiddenFor(model => model.DUTY_TYPE)
+            @Html.HiddenFor(model => model.USER_CREATE_ID)
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Thông tin hủy duyệt</h4>
+                </div>
+                <div class="modal-body min-width">
+                    <div class="form-group">
+
+                        <table border="0" style="width:100%">
+                            <tr>
+                                <td style="height:35px;" colspan="2">
+                                    <strong>Lịch trực : </strong>  @Html.DisplayFor(model => model.CALENDAR_NAME)
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="vertical-align:top;width:15%">
+
+                                    Nội dung <span class="field-validation-error"> * </span>
+                                </td>
+                                <td style="text-align:left">
+
+                                    @Html.TextAreaFor(model => model.COMMENTS, new { @class = "TextBoxContent _first", style = "width:360px;height:100px;resize: none" })
+                                    @Html.ValidationMessageFor(model => model.COMMENTS, null, new { @class = "Validation_Error" })
+
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+
+
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><span class="glyphicon glyphicon-off"></span> @Localization.ButtonCloseDisplay</button>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        setTimeout(function () { $('._first').focus(); }, 500);
+        $("#frmCalendarDuty").submit(function (event) {
+            event.preventDefault();
+            if ($("#frmCalendarDuty").valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: $("#frmCalendarDuty").attr('action'),
+                    data: $("#frmCalendarDuty").serialize(),
+                    dataType: '',
+                    success: function (response) {
+                        $('#CalendarDutyRequest').modal('hide');
+                        $('.modal-backdrop').remove();
+                        var dutyType = '@dutyType';
+                        if (dutyType != null) {
+                            var idCalendarDuty = '@idCalendarDuty';
+                            if (dutyType == 2) {//Trường hợp sửa lịch ban giám đốc
+                                window.notice('Hủy duyệt lịch trực thường trú Ban giám đốc thành công', window.notice_success);
+                                RefreshCalendar(idCalendarDuty);
+
+                            }
+                            else if (dutyType == 5) {//Trường hợp tạo mới lịch ban giám đốc
+                                window.notice('Hủy duyệt lịch trực thường trú Ban giám đốc thành công', window.notice_success);
+                                $.get('@Url.Action("LoadCalendarDirectors", "CalendarDuty")', function (data) {
+                                    $('#loadTemplate').html(data);
+                                });
+
+                            }
+                            else if (dutyType == 3) {
+
+                                $('#buttonList').html(response);
+                                $(document).ready(function (e) {
+                                    $(document).delegate(".schedule-element", "hover", function (event) {
+                                        if (event.type == 'mouseenter') {
+                                            $(this).find(".element-close").fadeIn(0);
+                                            $(this).find(".element-change").fadeIn(0);
+                                        } else {
+                                            $(this).find(".element-close").fadeOut(0);
+                                            $(this).find(".element-change").fadeOut(0);
+                                        }
+                                    });
+
+                                    $(document).delegate(".schedule-elementDelete", "hover", function (event) {
+                                        if (event.type == 'mouseenter') {
+                                            $(this).find(".element-close").fadeIn(0);
+                                            $(this).find(".element-change").fadeIn(0);
+                                        } else {
+                                            $(this).find(".element-close").fadeOut(0);
+                                            $(this).find(".element-change").fadeOut(0);
+                                        }
+                                    });
+                                    $(document).delegate(".schedule-elementView", "hover", function (event) {
+                                        if (event.type == 'mouseenter') {
+                                            $(this).find(".element-close").fadeIn(0);
+                                            $(this).find(".element-change").fadeIn(0);
+                                        } else {
+                                            $(this).find(".element-close").fadeOut(0);
+                                            $(this).find(".element-change").fadeOut(0);
+                                        }
+                                    });
+                                });
+
+
+
+                                //Thực hiện mở cửa sổ thêm mới danh sách bác sĩ
+                                //Danh sách mảng id bác sĩ sẽ được chuyền qua biến arrayid vào controller
+                                $("#" + $('#selectable').attr('id')).delegate(" td.ui-selected", "dblclick", function (e) {
+
+
+                                    var x = e.clientX;
+                                    var y = e.clientY;
+                                    var optionTexts = "";
+                                    var ii = 0;
+                                    var idColumn = $(this).attr('id');
+                                    $('.ui-selected').find('.schedule-element .viewInfor').each(function () {
+                                        ii++;
+                                        if (ii == 1) {
+                                            optionTexts = $(this).attr('id');
+                                        }
+                                        else {
+
+                                            optionTexts = optionTexts + "_" + $(this).attr('id');
+                                        }
+
+                                    })
+
+
+                                    $("#popupStaff").dialog({
+                                        title: 'Danh sách cán bộ',
+                                        modal: true,
+                                        position: [x, y],
+                                        width: 440,
+                                        height: 280,
+                                        resizable: false,
+                                        draggable: false,
+                                    }).load("/CalendarDuty/ListDoctors/?arrayid=" + optionTexts + "&idColumn=" + idColumn);
+                                    $("#popupStaff").removeClass("ui-dialog-content ui-widget-content");
+                                });
+
+                                window.notice('Hủy duyệt lịch trực đơn vị thành công', window.notice_success);
+                            }
+                            else if (dutyType == 1) {
+                                window.notice('Hủy duyệt lịch trực lãnh đạo thành công', window.notice_success);
+                                RefreshCalendarLeader(idCalendarDuty);
+                            }
+                            else if (dutyType == 6) {//Trường hợp tạo mới lịch lãnh đạo
+                                window.notice('Hủy duyệt lịch trực lãnh đạo thành công', window.notice_success);
+                                $.get('@Url.Action("LoadCalendarLeader", "CalendarDuty")', function (data) {
+                                    $('#loadTemplate').html(data);
+                                });
+
+                            }
+                            else if (dutyType == 7) {//Hủy duyệt lịch trực đơn vị - Lịch mặc định
+
+                                window.notice('Hủy duyệt lịch trực đơn vị thành công', window.notice_success);
+                                var typeEdit = 0;
+                                if ($('#Contentx').length)
+                                {
+                                    typeEdit = 1;
+                                }
+                                $.ajax({
+                                    type: "GET",
+                                    url: '/CalendarDuty/ViewCalendarDefault',
+                                    data: { idCalendarDuty: idCalendarDuty, types: 1, typeEdit: typeEdit },
+                                    success: function (response) {
+                                        if ($('#Contentx').length)         // Kiểm tra id chọn có tồn tại hay không
+                                        {
+                                            $('#Contentx').html(response);
+                                        }
+                                        else {
+                                            $('#loadTemplate').html(response);
+                                        }
+                                    }
+
+                                });
+
+                            }
+                        }
+                        else {
+
+                            $('#buttonList').html(response);
+                            window.notice('Hủy duyệt lịch trực đơn vị thành công', window.notice_success);
+
+                        }
+
+                    }
+                });
+            }
+            else {
+                window.notice("Điền đầy đủ thông tin trên form", window.notice_warning);
+            }
+        });
+
+    });
+    function RefreshCalendar(idCalendarDuty) {
+        var url = "/CalendarDuty/PartialViewListCalendarDirectors";
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: { idCalendarDuty: idCalendarDuty },
+            success: function (response) {
+                $('#ContentCalendar').html(response);
+                $('#ContentCalendar').find(".modal-backdrop").removeClass("modal-backdrop");
+            }
+
+        })
+    }
+    function RefreshCalendarLeader(idCalendarDuty) {
+        var url = "/CalendarDuty/PartialViewListCalendarLeader";
+        // var url = "/CalendarDuty/EditCalendarLeader";
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: { idCalendarDuty: idCalendarDuty },
+            success: function (response) {
+                $('#ContentCalendar').remove();
+                $('#Contentx').append(response);
+                $('#ContentCalendar').find(".modal-backdrop").removeClass("modal-backdrop");
+            }
+        })
+    }
+
+</script>

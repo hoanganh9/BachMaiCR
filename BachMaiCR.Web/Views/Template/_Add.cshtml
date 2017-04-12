@@ -1,0 +1,645 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.Web.Controllers
+@using BachMaiCR.Web.Models
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@model BachMaiCR.Web.Models.TEMPLATES
+
+@{
+    
+  
+    var strName = Localization.LableNameDisplay;
+    string DuLieuMoi = Convert.ToString(ViewData["DuLieuMoi"]);
+    string templateId = Convert.ToString(ViewData["TEMPLATES_ID"]);
+    int? RootDepartment = ViewBag.RootDepartment;
+    if (DuLieuMoi == "0")
+    {
+        ViewBag.Title = Localization.LableEditTemplateTitle;
+    }
+    else
+    {
+        ViewBag.Title = Localization.LableAddTemplateTitle; 
+    }
+    // danh sach don vi
+    string strDepartment = "";   
+    List<SelectListItem> tmpTemplates = new List<SelectListItem>();
+    List<SelectListItem> doctorLevel = new List<SelectListItem>();
+    UnitOfWork unit = new UnitOfWork();
+    List<DEPARTMENTLIST> templateList = null;
+    bool exitsCheck = false;
+    if (RootDepartment!=null)
+    {
+        exitsCheck = unit.Departments.ExistDeparmentLevel0(RootDepartment);        
+    }
+    if (exitsCheck)
+    {
+        templateList = unit.Departments.GetAllDepartmentByLevel(LevelDeparment.Level1.GetHashCode());        
+    }
+    else
+    {
+        templateList = unit.Departments.GetAllDepartmentById(RootDepartment);    
+    }
+    if (templateList != null && templateList.Count > 0)
+    {
+        for (int i = 0; i < templateList.Count; i++)
+        {
+            tmpTemplates.Add(new SelectListItem() { Text = templateList[i].DEPARTMENT_NAME.ToString(), Value = templateList[i].LM_DEPARTMENT_ID.ToString(), Selected = false });         
+        }
+    }
+    //lấy danh sách cọc
+    string strColum = "";
+    List<DOCTOR_LEVEL> doctorLevelList = unit.DoctorLevels.GetAll_List();
+    if (doctorLevelList != null && doctorLevelList.Count>0)
+    {
+        for (int i = 0; i < doctorLevelList.Count; i++)
+        {
+            doctorLevel.Add(new SelectListItem() { Text = doctorLevelList[i].LEVEL_NAME, Value = doctorLevelList[i].DOCTOR_LEVEL_ID.ToString(), Selected = false });
+            strColum += "<option value=" + doctorLevelList[i].DOCTOR_LEVEL_ID + ">" + HttpUtility.HtmlEncode(doctorLevelList[i].LEVEL_NAME) + "</option>";
+        } 
+    }
+   
+    ///Trường hợp sửa dữ liệu
+    int countColumn = 0, countColumnheck = 1;
+    String template_name = ViewBag.templateNameValue, abb = ViewBag.templateAbbValue, deparmentID = ViewBag.templatentDeparmentValue, description = ViewBag.templatentDesValue;
+    string toMonth = ViewBag.toMonth, toYear = ViewBag.toYear, fromMonth = ViewBag.fromMonth, fromYear = ViewBag.fromYear;
+
+    DateTime date = BachMaiCR.Web.Utils.Utils.GetDateTime();
+    if (String.IsNullOrEmpty(toMonth))
+    {
+        toMonth = date.Month.ToString();
+    }
+    if (String.IsNullOrEmpty(toYear))
+    {
+        toYear = date.Year.ToString();
+    }
+    if (String.IsNullOrEmpty(fromMonth))
+    {
+        fromMonth = date.Month.ToString();
+    }
+    if (String.IsNullOrEmpty(fromYear))
+    {
+        fromYear = date.Year.ToString();
+    }
+    List<TEMPLATE_COLUM> templateColumnList = null;
+    List<COLUM_LEVEL> templateDoctorLevel = null;
+    if (!String.IsNullOrEmpty(templateId) && templateId != "0")
+    {
+        abb = ((TEMPLATE)(ViewBag.templateItem)).ABBREVIATION;
+        template_name = ((TEMPLATE)(ViewBag.templateItem)).TEMPLATE_NAME;
+        deparmentID = Convert.ToString(((TEMPLATE)(ViewBag.templateItem)).LM_DEPARTMENT_ID);
+        description = ((TEMPLATE)(ViewBag.templateItem)).DESCRIPTION;
+        DateTime? startDate = ((TEMPLATE)(ViewBag.templateItem)).DATE_START;
+        if (startDate.HasValue)
+        {
+            toMonth = startDate.Value.Month.ToString();
+            toYear = startDate.Value.Year.ToString();
+        }
+        DateTime? endDate = ((TEMPLATE)(ViewBag.templateItem)).DATE_END;
+        if (endDate.HasValue)
+        {
+            fromMonth = endDate.Value.Month.ToString();
+            fromYear = endDate.Value.Year.ToString();
+        }
+        templateColumnList = ((TEMPLATE)(ViewBag.templateItem)).TEMPLATE_COLUM as List<TEMPLATE_COLUM>;
+        countColumn = templateColumnList.Count;
+        countColumnheck = countColumn;
+    }
+    else
+    {        
+        if (RootDepartment!=null)
+        {
+            deparmentID = Convert.ToString(RootDepartment);
+        }        
+    }
+    ///
+    int yearCurrent = date.Year + 10;
+    int yearStart = date.Year - 10;
+    List<SelectListItem> tmpYear = new List<SelectListItem>();
+    for (int i = yearStart; i < yearCurrent; i++)
+    {
+        tmpYear.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+
+    List<SelectListItem> tmpMonths = new List<SelectListItem>();
+    for (int i = 1; i <= 12; i++)
+    {
+        tmpMonths.Add(new SelectListItem() { Text = "Tháng " + i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    //Phòng ban con
+    List<SelectListItem> tmpDeparment = new List<SelectListItem>();
+    List<DEPARTMENTLIST> deparmentList = BachMaiCR.Web.Common.Helpers.GenerateDepartmentTreeHelper.GenerateDepartmentAll(Convert.ToInt32(deparmentID));
+    if (deparmentList != null && deparmentList.Count > 0)
+    {
+        for (int i = 0; i < deparmentList.Count; i++)
+        {
+            tmpDeparment.Add(new SelectListItem() { Text = deparmentList[i].DEPARTMENT_NAME.ToString(), Value = deparmentList[i].LM_DEPARTMENT_ID.ToString(), Selected = false });
+            strDepartment += "<option value=" + deparmentList[i].LM_DEPARTMENT_ID + ">" + HttpUtility.HtmlEncode(deparmentList[i].DEPARTMENT_NAME) + "</option>";
+        }
+    }
+    var DATE_TO_MONTH = new SelectList(tmpMonths, "Value", "Text", toMonth);
+    var DATE_TO_YEAR = new SelectList(tmpYear, "Value", "Text", toYear);
+    var DATE_FROM_MONTH = new SelectList(tmpMonths, "Value", "Text", fromMonth);
+    var DATE_FROM_YEAR = new SelectList(tmpYear, "Value", "Text", fromYear);
+    var TEMPLATESLIST = new SelectList(tmpTemplates, "Value", "Text", 0);
+    var DEPARMENT_LIST = new SelectList(tmpDeparment, "Value", "Text", 0);
+    tmpMonths = null;
+    tmpYear = null;
+    tmpTemplates = null;
+    tmpDeparment = null;
+    unit.Dispose();
+   
+}
+@Styles.Render("~/Content/basic_data")
+@Scripts.Render("~/Scripts/basic_data")
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $('.ToMonth').selectpicker();
+        $('.ToYear').selectpicker();
+        $('.FromMonth').selectpicker();
+        $('.FromYear').selectpicker();
+        $("#cboDeparment").attr("data-live-search", "true");
+        $('#cboDeparment').selectpicker({
+            size: 10
+        });
+        $('select[name=cboDeparment]').selectpicker('val', '@deparmentID');
+
+    });
+  
+</script>
+    <div class="content-wrapper">
+        <div id="nav"><a href="/Template" title="">@Localization.TemplateConfig.ToUpper()</a> » @ViewBag.Title.ToUpper()</div>
+
+
+        <div style="width: 100%;">
+            <div style="padding: 10px;">
+                @using (Html.BeginForm(
+        actionName: "UpdateSubmit", controllerName: "Template", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmModifyCategory", @class = "", @role = "form" }))
+            {
+
+                @Html.Hidden("DuLieuMoi", DuLieuMoi);
+                @Html.Hidden("TEMPLATES_ID", templateId);
+                                                        @Html.Hidden("DepartmentParent", strDepartment);
+                <table style="width: 100%;" border="0">
+
+                        <tr>
+
+                            <td class="td_1" style="text-align: right;">
+                                @Localization.Template_Department    <span style="color: red;">*</span>&nbsp;
+                            </td>
+                            <td>
+                                <div style="height: 30px;">
+                                    <input type="hidden" id="txtNumber" name="txtNumber" value=@countColumnheck /> 
+                                    <input type="hidden" id="txtMaxNumber" name="txtMaxNumber" value=@countColumnheck /> 
+                                     @Html.DropDownList("cboDeparment", TEMPLATESLIST, new { data_width = "98%", @selected = @deparmentID })
+
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td class="td_1" style="text-align: right; vertical-align:top;">
+                                @Localization.Template_Name <span style="color: red;">*</span>&nbsp;
+                            </td>
+                            <td style="vertical-align: top;">
+                                <div style="height: 30px;">
+                                    <input id="txtName" maxlength="250" name="txtName" class="span2 _first" style="width: 98%"  value='@template_name'/>
+
+
+                                </div>
+                                <div>@Html.ValidationMessage("err_Name")</div>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td class="td_1" style="text-align: right; vertical-align: top;">
+                                @Localization.Template_Abb  <span style="color: red;">*</span>&nbsp;
+                            </td>
+                            <td style="vertical-align: top;">
+                                <div style="height: 30px;">
+                                    <input id="txtAbb" name="txtAbb" maxlength="50" style="width: 98%;" class="span2" value='@abb' />
+
+
+                                </div>
+                                <div>@Html.ValidationMessage("err_Abb")</div>
+                            </td>
+                        </tr>
+
+                        <tr>
+
+                            <td class="td_1" style="text-align: right; vertical-align: top;">
+                                @Localization.Template_startDate     <span style="color: red;">*</span>&nbsp;
+                            </td>
+                            <td style="vertical-align: top;">
+                                <div style="width: 98%;height: 30px;">
+                                    @Html.DropDownList("cboToMonth", DATE_TO_MONTH, new { @class = "ToMonth", data_width = "90px" })
+
+                                    &nbsp;@Html.DropDownList("cboToYear", DATE_TO_YEAR, new { data_width = "90px", @class = "ToYear" })
+
+                                    &nbsp;@Localization.Template_endDate      <span style="color: red;">*</span>&nbsp;&nbsp;&nbsp;
+                                    @Html.DropDownList("cboFromMonth", DATE_FROM_MONTH, new { data_width = "100px", @class = "FromMonth" })
+                                    &nbsp;@Html.DropDownList("cboFromYear", DATE_FROM_YEAR, new { data_width = "100px", @class = "FromYear" })
+
+
+                                </div>
+                                <div>
+                                    @Html.ValidationMessage("err_fromDate")
+                                </div>
+                            </td>
+
+</tr>
+
+<tr>
+<td class="td_1" style="text-align: right; vertical-align: top;">
+    @Localization.Template_columName &nbsp;
+</td>
+<td>
+    <div id="InputsWrapper" style="width: 98%">
+        @if (!String.IsNullOrEmpty(templateId) && templateId != "0" && countColumn > 0)
+                                {
+                                    for (int i = 0; i < countColumn; i++)
+                                    {
+                                        var countNumber = i + 1;
+                                        var inputID = "field_" + countNumber;
+                                        var dropdownlistId = "cboDeparment_" + countNumber;
+                                        var fieldselectId = "fieldselect_" + countNumber;
+                                        var columnName = templateColumnList[i].COLUM_NAME;
+                                        var deparmentlevelId = templateColumnList[i].LM_DEPARTMENT_ID;
+                                        templateDoctorLevel = templateColumnList[i].COLUM_LEVEL as List<COLUM_LEVEL>;
+                                        var columnlevelId = "";
+                                        for (int j = 0; j < templateDoctorLevel.Count; j++)
+                                        {
+                                            columnlevelId += "," + templateDoctorLevel[j].DOCTOR_LEVEL.DOCTOR_LEVEL_ID;
+                                        }
+                                        columnlevelId += ",";
+                                        templateDoctorLevel = null;
+                                             <div style="min-height: 30px; width: 100%;" id='@countNumber'>
+        <table style="width:100%" border="0">
+            <tr>
+                <td style="width:195px;"><input type="text" name='@inputID' id='@inputID' maxlength="50" value='@columnName' style="width: 190px; " class="span2" /><span style="color: red;">*</span>
+                    <div>@Html.ValidationMessage("err_field_" + countNumber)</div>
+                </td>
+                <td style="width:50px;">&nbsp;Đơn vị<span style="color: red;">*</span>&nbsp;</td>
+                <td style="width:250px;">
+                    @Html.DropDownList(dropdownlistId, DEPARMENT_LIST, new { data_width = "98%" })&nbsp;
+                </td>
+                <td style="width:40px;">
+                    Vị trí<span style="color: red;">*</span>&nbsp;
+                </td>
+                <td>
+                  @Html.DropDownList(fieldselectId, doctorLevel, new { @style = "display: none;", @multiple = "multiple", @size = "5" })
+                    <div>@Html.ValidationMessage("err_fieldselect_" + countNumber)</div>
+                </td>
+                <td style="width:10px;"><a href="#" class="removeclass" id='@countNumber' title="Xóa cột hiển thị">&times;</a></td>
+            </tr>
+        </table>
+    </div>
+      
+                                    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#cboDeparment_' + '@countNumber').find('option').each(function (i, e) {
+            if ($(e).val() == '@deparmentlevelId') {
+                $('#cboDeparment_' + '@countNumber').prop('selectedIndex', i);
+            }
+        });       
+        $('#cboDeparment_' + '@countNumber').attr("data-live-search", "true");
+        $('#cboDeparment_' + '@countNumber').selectpicker({
+            size: 10
+        });
+        $('#fieldselect_' + '@countNumber').find('option').each(function (i, e) {
+            var iValue = $(e).val();           
+            var sSeach = '@columnlevelId'                    
+            if (sSeach.indexOf(',' + iValue + ',') >= 0) {
+                $('#fieldselect_' + '@countNumber' + ' option[value=' + (iValue) + ']').attr("selected", "selected");
+            }
+        });
+    });
+
+</script>
+                                    }
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            var count = '@countColumn';
+                                            var FieldCount = 0;
+                                            for (var i = 0; i < count; i++) {
+                                                FieldCount++;
+                                                $("#fieldselect_" + FieldCount).multiselect(
+                                                    {
+                                                        selectedList: 10
+                                                    });
+                                            }                                           
+                                        });
+
+                                    </script>    
+                                                             
+                                }
+                                else
+                                { 
+            <div style="min-height: 30px; width: 100%;" id="1">
+        <table style="width:100%" border="0">
+            <tr>
+                <td style="width:195px; vertical-align:top;"> <input type="text" name="field_1" id="field_1" maxlength="50" value="" style="width: 190px;" class="span2" /><span style="color: red;">*</span>
+                    <div>@Html.ValidationMessage("err_field_1")</div>
+                </td>
+                <td style="width: 50px; vertical-align: top;">&nbsp;Đơn vị<span style="color: red;">*</span>&nbsp;</td>
+                <td style="width: 250px; vertical-align: top;">
+                    @Html.DropDownList("cboDeparment_1", DEPARMENT_LIST, new { data_width = "98%" })&nbsp;
+                </td>
+                <td style="width: 40px; vertical-align: top;">
+                    Vị trí<span style="color: red;">*</span>&nbsp;
+                </td>
+                <td style="vertical-align: top;">
+                    @Html.DropDownList("fieldselect_1", doctorLevel, new { @style = "display: none; ", @multiple = "multiple", @size = "5" })
+                    <div>@Html.ValidationMessage("err_fieldselect_1")</div>
+                                   </td>
+                <td style="width: 10px; vertical-align: top;"><a href="#" class="removeclass" id="1" title="Xóa cột hiển thị">&times;</a></td>
+            </tr>
+           
+        </table>
+    </div>
+                                              
+                                    <script type="text/javascript">
+                                        $(function () {
+                                            $("#fieldselect_1").multiselect({
+                                                selectedList: 10 // 0-based index
+                                            });
+                                            $('#cboDeparment_1').attr("data-live-search", "true");
+                                            $('#cboDeparment_1').selectpicker({
+                                                size: 10
+                                            });                                          
+                                        });
+                                    </script>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="float: left;">
+
+                            <div style="height: 40px; margin-top: 5px;">
+                                <a href="#" id="AddMoreFileBox" class="btn btn-primary min-width" style="width: 150px;">
+                                     <span class="glyphicon glyphicon-plus"></span>
+                                    @Localization.Template_add_columName
+
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td class="td_1" style="text-align: right; vertical-align: top;">
+                            @Localization.Template_note
+                            &nbsp;
+                        </td>
+                        <td>      
+                          @Html.TextArea("txtNote", description, new { @class = "form-control", @style = "width: 98%; resize: none; font-size:12px;", @cols = "20", @rows = "2", @onkeyup = "return checkMaxLen(this,500)" })
+                              <div>@Html.ValidationMessage("err_Note")</div>
+
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td colspan="2">
+                            <br />
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div style="float: left;">
+
+                                <button type="submit" class="btn btn-primary min-width" style="width: 110px;" onclick="return validateForm();">   <span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+                                <button type="button" class="btn btn-primary min-width" onclick="Huy()" style="width: 110px;"> <span class="glyphicon glyphicon-step-backward"></span>@Localization.Template_list</button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+        }
+        </div>
+        <div style="margin: 10px; text-align:center;">
+                        @Html.Raw(Localization.Template_Notes)
+                        <a class='cat-template' style="color: red; font-weight: bold; cursor: pointer;">@Localization.Template_ViewTemp</a>
+         </div>
+    </div>
+</div>
+<div id="viewEntityModelContent">
+    @{
+        Html.RenderPartial("_Template");
+    }
+</div>
+<script type="text/javascript">
+    function Huy() {
+        window.location.href = "/Template";
+    }
+    $(document).ready(function () {      
+        setTimeout(function () { $('._first').focus(); }, 500);
+        $('.ui-multiselect').css('width', '98%');
+        var MaxInputs = 20; //maximum input boxes allowed
+        var InputsWrapper = $("#InputsWrapper"); //Input boxes wrapper ID
+        var AddButton = $("#AddMoreFileBox"); //Add button ID
+        $(AddButton).click(function (e)  //on add input button click
+        {
+            var x = InputsWrapper.length; //initlal text box count
+            var FieldCount = $("#txtNumber").val();
+            var FieldMaxCount = $("#txtMaxNumber").val();
+            var DepartmentParent = $("#DepartmentParent").val();
+            if (x <= MaxInputs) //max input box allowed
+            {
+                FieldCount++; //text box added increment    
+                FieldMaxCount++;
+                //add input box
+                var strselect = "";
+                strselect += '<div style="min-height: 30px; width: 100%;" id="' + FieldCount + '">'
+                strselect += '<table style="width:100%" border="0"> <tr> <td style="width:195px;vertical-align: top;"> <input type="text" name="field_' + FieldCount + '" id="field_' + FieldCount + '" value="" maxlength="50" style=\"width:190px;\" class="span2"/><span style="color: red;">*</span>'
+                strselect += '<div><span class="field-validation-valid" data-valmsg-replace="true" data-valmsg-for="err_field_' + FieldCount + '" style="color: rgb(255, 0, 0);"></span></div>';
+                strselect += '</td>';
+                strselect += '<td style="width:50px;vertical-align: top;">&nbsp;Đơn vị<span style="color: red;">*</span>&nbsp;</td>'
+                strselect += '<td style="width:250px;vertical-align: top;">'
+                strselect += '<select id="cboDeparment_' + FieldCount + '" name="cboDeparment_' + FieldCount + '" title="Chọn phòng ban"  style="width:98%;" data-width="98%">';
+                 strselect += DepartmentParent
+                strselect += ' </select>'
+                strselect += '</td>'
+                strselect += '<td style="width:40px;vertical-align: top;">'
+                strselect += 'Vị trí<span style="color: red;">*</span>&nbsp;'
+                strselect += '</td>'
+                strselect += '<td style="vertical-align: top;">'
+                strselect += '<select style="display: none;" id="fieldselect_' + FieldCount + '" title="Chọn cọc" multiple="multiple" name="fieldselect_' + FieldCount + '" size="5">'
+                strselect += '@Html.Raw(@strColum)'
+                strselect += ' </select>';
+                strselect += '<div><span class="field-validation-valid" data-valmsg-replace="true" data-valmsg-for="err_fieldselect_' + FieldCount + '" style="color: rgb(255, 0, 0);"></span></div>';
+                strselect += '</td>'
+                strselect += '<td style="width:10px; vertical-align: top;"><a href="#" class="removeclass" id="' + FieldCount + '" title="Xóa cột hiển thị">&times;</a></td>'
+                strselect += '</tr> </table> </div>'
+                $(InputsWrapper).append(strselect);
+                x++; //text box increment
+                $("#fieldselect_" + FieldCount).multiselect(
+                    {
+                        selectedList: 10
+                    });
+                $('#cboDeparment_' + FieldCount).attr("data-live-search", "true");
+                $('#cboDeparment_' + FieldCount).selectpicker({
+                    size: 10
+                });
+                document.getElementById('txtNumber').value = FieldCount;
+                document.getElementById('txtMaxNumber').value = FieldMaxCount;
+                setTimeout(function () { $("#field_" + FieldCount).focus(); }, 500);
+                $('.ui-multiselect').css('width', '98%');
+            }
+            return false;
+        });
+
+        $("body").on("click", ".removeclass", function (e) { //user click on remove text
+            var s = $("#txtMaxNumber").val()
+            if (s > 1) {
+                var id = $(this).attr('id');
+                $('#InputsWrapper').find('div[id="' + id + '"]').remove();
+                s--; //decrement textbox
+                document.getElementById('txtMaxNumber').value = s;
+            }
+            else {
+                alert("Phải có ít nhất 1 cột thông tin không cho phép xóa");
+            }
+            //checkForm = true;
+            return false;
+        })
+
+    });
+
+    
+    $(".cat-template").bind('click', function (event) {
+        $('#viewEntityModel').modal({
+            keyboard: true
+        });
+
+
+    });
+
+    $('#cboDeparment').change(function () {
+        var id = $('#cboDeparment').val();
+        jQuery.ajaxSetup({ cache: false });
+        var url = unescape('@Url.Action("GetBranchesByCustomer?parrentId=#0", "Template")');
+        url = unescape(url.replace("#0", id));
+        $.getJSON(url, function (data) {
+            var FieldCount = $("#txtNumber").val();
+            for (var i = 0; i < FieldCount; i++) {
+                var key = i + 1;
+                $('#cboDeparment_' + key).find("option").remove();
+                $('#cboDeparment_' + key).append(data);
+                $('#cboDeparment_' + key).selectpicker('refresh');
+            }
+            document.getElementById('DepartmentParent').value = data;
+        });
+    });
+ 
+    function validateForm() {
+        var checkForm = true;
+        var Name = $("#txtName").val();
+        var err_Name = $('.field-validation-valid[data-valmsg-for="err_Name"]');
+        err_Name.css('color', 'red');
+        if (Name == "" || Name == null) {
+            err_Name.text('@Html.Raw(Localization.Template_err_Name)');
+            $("#txtName").focus();
+            checkForm= false;
+        }
+        else {
+            if (Name.length > 250) {
+                err_Name.text('@Html.Raw(Localization.Template_err_Name_maxLengh)');
+                $("#txtName").focus();
+                checkForm = false;
+            }
+            else {
+                err_Name.text("");
+               // checkForm = true;
+            }
+                          
+
+        }
+        var txtAbb = $("#txtAbb").val();
+        var err_Abb = $('.field-validation-valid[data-valmsg-for="err_Abb"]');
+        err_Abb.css('color', 'red');
+        if (txtAbb == "" || txtAbb== null) {
+            err_Abb.text('@Html.Raw(Localization.Template_err_Abb)');
+            $("#txtAbb").focus();
+            checkForm = false;
+        }
+        else {
+            if (txtAbb.length > 50) {
+                err_Abb.text('@Html.Raw(Localization.Template_err_Abb_maxLengh)');
+                $("#txtAbb").focus();
+                checkForm = false;
+            }
+            else {
+                err_Abb.text("");
+               // checkForm = true;
+            }
+          
+        }
+
+        var cboToMonth = $("#cboToMonth").val();
+        var cboFromMonth = $("#cboFromMonth").val();
+        var cboToYear = $("#cboToYear").val();
+        var cboFromYear = $("#cboFromYear").val();
+        var err_fromDate = $('.field-validation-valid[data-valmsg-for="err_fromDate"]');
+        err_fromDate.css('color', 'red');
+        if ((parseFloat(cboFromYear) < parseFloat(cboToYear)) ||
+            (parseFloat(cboFromYear) >= parseFloat(cboToYear) && (parseFloat(cboToMonth) > parseFloat(cboFromMonth)))) {
+            err_fromDate.text('@Html.Raw(Localization.Template_err_fromDate2)');
+            checkForm = false;
+        }
+        else {
+            err_fromDate.text("");          
+        }       
+
+        var FieldCount = $("#txtNumber").val();       
+        for (var i = 0; i < FieldCount; i++) {          
+            var divId = $('#InputsWrapper').find('div[id="' + (i + 1) + '"]').attr('id');
+            if (divId != "" && divId != null) {
+                var field = $("#field_" + (i + 1)).val();
+                var err_field = $('.field-validation-valid[data-valmsg-for="err_field_' + (i + 1) + '"]');
+                if (field == "") {
+                    err_field.css('color', 'red');
+                    err_field.text("Nhập tên cột hiển thị");
+                    $("#field_" + (i + 1)).focus();
+                    checkForm = false;
+                }
+                else {
+                    err_field.text("");                   
+                }
+
+                var fieldselect = $("#fieldselect_" + (i + 1)).val();
+                var err_fieldselect = $('.field-validation-valid[data-valmsg-for="err_fieldselect_' + (i + 1) + '"]');
+                if (fieldselect == null || fieldselect == "") {
+                    err_fieldselect.css('color', 'red');
+                    err_fieldselect.text("Nhập vị trí cán bộ");
+                    $("#fieldselect_" + (i + 1)).focus();
+                    checkForm = false;
+                }
+                else {
+                    err_fieldselect.text("");                 
+                }
+            }
+        }
+        var txtNote = $("#txtNote").val();
+        var err_Note = $('.field-validation-valid[data-valmsg-for="err_Note"]');
+        err_Note.css('color', 'red');
+        if (txtNote != "" && txtNote.length > 500) {
+            err_Note.text('@Html.Raw(Localization.Template_err_Contents_maxLengh)');
+            $("#txtNote").focus();
+            checkForm = false;
+        }
+        else {
+            err_Note.text("");          
+        }
+        if (Name != "" && txtAbb != "") {
+
+        }      
+        return checkForm;      
+    }
+</script>
+<script type="text/javascript" src="~/Scripts/Utils/dateUtils.js"></script>

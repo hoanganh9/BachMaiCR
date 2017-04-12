@@ -1,0 +1,259 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.Web.Controllers
+@using BachMaiCR.Web.Models
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.Web.Utils;
+@model BachMaiCR.Web.Models.ConfigParametter
+
+@{
+    int? RootDepartment = ViewBag.RootDepartment;
+    ViewBag.Title = Localization.LabelConfigParameter;
+    // danh sach don vi
+    List<SelectListItem> tmpTemplates = new List<SelectListItem>();
+    UnitOfWork unit = new UnitOfWork();
+    List<DEPARTMENTLIST> templateList = null;
+    bool exitsCheck = false;
+    if (RootDepartment != null)
+    {
+        exitsCheck = unit.Departments.ExistDeparmentLevel0(RootDepartment);
+    }
+    if (exitsCheck)
+    {
+        templateList = unit.Departments.GetAllDepartmentByLevel(LevelDeparment.Level1.GetHashCode());
+    }
+    else
+    {
+        templateList = unit.Departments.GetAllDepartmentById(RootDepartment);
+    }
+    if (templateList != null && templateList.Count > 0)
+    {
+        for (int i = 0; i < templateList.Count; i++)
+        {
+            tmpTemplates.Add(new SelectListItem() { Text = templateList[i].DEPARTMENT_NAME.ToString(), Value = templateList[i].LM_DEPARTMENT_ID.ToString(), Selected = false });
+        }
+        int? deparmentId = templateList[0].LM_DEPARTMENT_ID;
+        DateTime date = Utils.GetDateTime();
+        List<CONFIG_PARAMETES> lstParameter = unit.ConfigParameter.GetAll(deparmentId, date.Year, 2);
+        if (lstParameter != null && lstParameter.Count > 0)
+        {
+            var configId = lstParameter[0].CONFIG_PARAMETES_ID;
+            var entity = unit.ConfigParameter.GetById(configId);
+            Model.TIME_DISTANCE = entity.TIME_DISTANCE;
+            Model.CONFIG_PARAMETES_ID = entity.CONFIG_PARAMETES_ID;
+            Model.LM_DEPARTMENT_ID = entity.LM_DEPARTMENT_ID;
+            Model.IS_FIX_WEEKEND = entity.IS_FIX_WEEKEND;
+            Model.TIME_DISTANCE_OF_HOLIDAY = entity.TIME_DISTANCE_OF_HOLIDAY;
+            Model.NUMBER_DOCTOR_IN_DAY = entity.NUMBER_DOCTOR_IN_DAY;
+            Model.NORMS_DIRECT = entity.NORMS_DIRECT;
+            Model.IS_FEMALE_DIRECT_AM = entity.IS_FEMALE_DIRECT_AM;
+            Model.DESCRIPTION = entity.DESCRIPTION;
+        }
+    }
+
+    var TEMPLATESLIST = new SelectList(tmpTemplates, "Value", "Text", 0);
+    tmpTemplates = null;
+
+    unit.Dispose();
+
+}
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        $("#LM_DEPARTMENT_ID").attr("data-live-search", "true");
+        $('#LM_DEPARTMENT_ID').selectpicker({
+            size: 10
+        });
+
+
+    });
+
+</script>
+<div class="content-wrapper">
+    <div id="nav"><a href="#" title="">@Localization.ManageAutoCalendarTitle.ToUpper()</a> » @ViewBag.Title.ToUpper()</div>
+    <div style="width: 100%;">
+        <div style="padding: 10px;">
+            @using (Html.BeginForm(
+        actionName: "SubmitChange", controllerName: "ConfigParameter", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmModifyCategory", @class = "", @role = "form" }))
+            {
+                <div class="modal-body min-width">
+                    <div class="row form-group">
+                        <!-- Hide value -->
+                        @Html.HiddenFor(m => m.CONFIG_PARAMETES_ID)
+                        <div class="col-md-12"></div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            @Html.ValidationMessageFor(m => m.LM_DEPARTMENT_ID)
+                        </div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.LM_DEPARTMENT_ID, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-9">
+                            @Html.DropDownListFor(m => m.LM_DEPARTMENT_ID, TEMPLATESLIST, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            @Html.ValidationMessageFor(m => m.TIME_DISTANCE)
+                        </div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.TIME_DISTANCE, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.TIME_DISTANCE, new { @class = "form-control index_first input-sm", @placeholder = Localization.LabelTimeDistance, @maxlength = 2 })
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.IS_FIX_WEEKEND, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.CheckBoxFor(m => m.IS_FIX_WEEKEND)
+
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            @Html.ValidationMessageFor(m => m.TIME_DISTANCE_OF_HOLIDAY)
+                        </div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.TIME_DISTANCE_OF_HOLIDAY, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.TIME_DISTANCE_OF_HOLIDAY, new { @class = "form-control index_first input-sm", @placeholder = Localization.LabelTimeDistanceOfHoliday, @maxlength = 2 })
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            @Html.ValidationMessageFor(m => m.NUMBER_DOCTOR_IN_DAY)
+                        </div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.NUMBER_DOCTOR_IN_DAY, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.NUMBER_DOCTOR_IN_DAY, new { @class = "form-control index_first input-sm", @placeholder = Localization.LabelNumberDoctorInDay, @maxlength = 2 })
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            @Html.ValidationMessageFor(m => m.NORMS_DIRECT)
+                        </div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.NORMS_DIRECT, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextBoxFor(m => m.NORMS_DIRECT, new { @class = "form-control index_first input-sm", @placeholder = Localization.LabelNormsDirect, @maxlength = 2 })
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.IS_FEMALE_DIRECT_AM, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-9">
+                            @Html.CheckBoxFor(m => m.IS_FEMALE_DIRECT_AM)
+
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-3"></div>
+                        <div class="col-md-9">
+                            @Html.ValidationMessageFor(m => m.DESCRIPTION)
+                        </div>
+                        <div class="col-md-3">
+                            @Html.LabelFor(m => m.DESCRIPTION, new { @class = "input-lable-control nowrap" })
+
+                        </div>
+                        <div class="col-md-9">
+                            @Html.TextAreaFor(m => m.DESCRIPTION, new { @class = "form-control index _first input-sm", @placeholder = Localization.LableDesriptionDisplay, @style = "resize: none;" })
+                        </div>
+                    </div>
+                    <div class="modal-footer padding-all">
+                        <button type="submit" class="btn btn-primary min-width"><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+
+                    </div>
+                </div>
+
+            }
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    // Chỉ cho phép nhập số
+    $(".index_first").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+            // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+            // let it happen, don't do anything
+            return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+
+
+    $('.index_first').focus(function () {
+        $(this).select();
+    });
+    var $catForm = $("#frmModifyCategory");
+    // Focus vào trường input đầu tiên
+    setTimeout(function () { $catForm.find('input:text:visible:first').focus(); }, 500);
+
+    $catForm.submit(function (event) {
+        event.preventDefault();
+        if ($catForm.valid()) {
+            $.ajax({
+                type: "POST",
+                url: $catForm.attr('action'),
+                data: $catForm.serialize(),
+                dataType: '',//chú ý là form đặc biệt thì phải điền trường này
+                success: function (response) {
+                    if (response != null && response.status == 200) {
+                        $('#addCategoryModel').modal('hide');
+                        var $catlist = $('#cat_list_render');
+                        if ($catlist == null || $catlist.length == 0) {
+                            window.notice('@Resources.Localization.MsgItemNotFound', window.notice_warning);
+                        }
+                        else {
+                            $catlist.html('');
+                        }
+                        window.notice(response.result, window.notice_success);
+                    } else {
+                        window.notice(response.result, window.notice_error);
+                    }
+                }
+            });
+        }
+        else {
+            window.notice($catForm.validate().errorList[0].message, window.notice_error);
+        }
+    });
+    $("#LM_DEPARTMENT_ID").change(function () {
+        var deparmentId = this.value;
+        $.getJSON('/ConfigParameter/GetDetail', { deparmentId: deparmentId }, function (data) {
+            for (code in data) {
+                $('#CONFIG_PARAMETES_ID').val(data["CONFIG_PARAMETES_ID"]);
+                $('#TIME_DISTANCE').val(data["TIME_DISTANCE"]);
+                $('#TIME_DISTANCE_OF_HOLIDAY').val(data["TIME_DISTANCE_OF_HOLIDAY"]);
+                $('#NUMBER_DOCTOR_IN_DAY').val(data["NUMBER_DOCTOR_IN_DAY"]);
+                $('#NORMS_DIRECT').val(data["NORMS_DIRECT"]);
+                $('#DESCRIPTION').val(data["DESCRIPTION"]);
+                $('#IS_FEMALE_DIRECT_AM').prop("checked", data["IS_FEMALE_DIRECT_AM"]);
+                $('#IS_FIX_WEEKEND').prop("checked", data["IS_FIX_WEEKEND"]);
+            }
+            var $catForm = $("#frmModifyCategory");
+            // Focus vào trường input đầu tiên
+            setTimeout(function () { $catForm.find('input:text:visible:first').focus(); }, 500);
+        });
+    });
+</script>

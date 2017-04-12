@@ -1,0 +1,165 @@
+﻿@*@inherits System.Web.Mvc.WebViewPage
+Luon phai bat dau bang inherits nay*@
+@using Resources
+
+@model BachMaiCR.Web.Models.WebPageActionEditModel
+@{
+    var strTitleForm = Model.WEBPAGES_ACTION_ID.Equals(0) ? Localization.FormAddTitle : Localization.FormEditTitle;
+
+}
+<!-- Modal -->
+<div class="modal fade" id="ActionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">@strTitleForm</h4>
+            </div>
+            @Html.ValidationSummary(false)
+            @using (
+            Html.BeginForm(
+                actionName: "AddAction", controllerName: "WebpageActions", routeValues: new { }, method: FormMethod.Post, htmlAttributes: new { @id = "action-form", @class = "", @role = "form", @style = "width: 100%;" }
+            )
+        )
+            {
+                @Html.HiddenFor(m => m.WEBPAGES_ACTION_ID)
+                <div class="modal-body min-width">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.DESCRIPTION, labelText: Localization.CategoryDisplayDescription, htmlAttributes: new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-10">@Html.TextBoxFor(m => m.DESCRIPTION, new { @class = "form-control _first" })</div>
+
+                        <div>
+                            @Html.ValidationMessageFor(m => m.DESCRIPTION)
+                        </div>
+                        <div class="col-md-2">@Html.LabelFor(m => m.IS_ACTIVE, labelText: Localization.RoleModelDisplayIsActive, htmlAttributes: new { @class = "input-lable-control nowrap" })</div>
+                        <div class="col-md-10">
+                            <label>
+                                @Html.CheckBoxFor(m => m.IS_ACTIVE, new { @checked = "checked" })
+
+                            </label>
+                        </div>
+
+
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="modal-footer padding-all">
+
+                    <button type="submit" class="btn btn-primary min-width">@Localization.ButtonSaveDisplay</button>
+                    <button type="button" class="btn btn-primary min-width" data-dismiss="modal">@Localization.ButtonCloseDisplay</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<style>
+    .Validation_Error
+    {
+       margin-left:80px;
+    }
+    .TopDivs
+    {
+        clear:both;
+        vertical-align:top;
+        text-align:left;
+        margin-bottom: 5px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight:100;
+    }
+    .modal-title {
+        margin: 0;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight:bold;
+    }
+    .modal-header {
+     
+     padding: 5px 10px 10px;
+     
+    }
+    .modal-footer {
+      padding: 5px 10px 10px;
+      margin-top: 5px;
+      text-align: center;
+      border-top: 1px solid #e5e5e5;
+    }
+    .modal-body {
+      position: relative;
+      padding:5px 10px 0px 10px;
+     
+    }
+    .form-group {
+      margin-bottom: 5px;
+    }
+    .modal-dialog
+    {
+        width:550px;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        setTimeout(function () { $('._first').focus(); }, 500);
+        function checkint(value, control) {
+            var lableError = $(control);
+            var patt = /^\d+$/;
+            if (value == null || value == "" || patt.test(value)) {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text("phải nhập kiểu số");
+                return false;
+            }
+        }
+
+        $("#GROUP_ORDER").on('change', function (e) {
+            checkint($("#GROUP_ORDER").val(), '.field-validation-valid[data-valmsg-for="GROUP_ORDER"]');
+        });
+
+        $("#MENU_ORDER").on('change', function (e) {
+            checkint($("#MENU_ORDER").val(), '.field-validation-valid[data-valmsg-for="MENU_ORDER"]');
+        });
+
+        var $actionForm = $("#action-form");
+        $actionForm.submit(function (event) {
+            event.preventDefault();
+            var validform = true;
+            if (!checkint($("#GROUP_ORDER").val(), '.field-validation-valid[data-valmsg-for="GROUP_ORDER"]')) {
+                validform = false;
+            }
+            if (!checkint($("#MENU_ORDER").val(), '.field-validation-valid[data-valmsg-for="MENU_ORDER"]')) {
+                validform = false;
+            }
+            if (validform && $actionForm.valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: $actionForm.attr('action'),
+                    data: $actionForm.serialize(),
+                    dataType: '',//chú ý là form đặc biệt thì phải điền trường này
+                    success: function (response) {
+                        if (response != null && response.status == 200) {
+                            $('#ActionModal').modal('hide');
+                            //location.reload();
+                            var $actionList = $('#action-list');
+                            if ($actionList == null || $actionList.length == 0) {
+                                alert('@@LTV: để tải lại được danh sách action, div chứa cần có id là "action-list"');
+                            }
+                            else {
+                                $actionList.html('');
+                                $actionList.load('/Admin/ManageActions' + jQuery.browser.msie ? '?nocache=' + Math.random() : '');
+                            }
+                            window.notice(response.result, window.notice_success);
+                        } else {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    }
+                });
+            }
+            else {
+                window.notice("Phải nhập thông tin trên form", window.notice_warning);
+            }
+        });
+    });
+</script>

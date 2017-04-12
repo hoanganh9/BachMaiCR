@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inf.wssms.com/" name="InsertMTInf" targetNamespace="http://inf.wssms.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:tns="http://inf.wssms.com/" elementFormDefault="unqualified" targetNamespace="http://inf.wssms.com/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="http://www.w3.org/2005/05/xmlmime" />
+      <xs:element name="insertMT" type="tns:insertMT" />
+      <xs:element name="insertMTResponse" type="tns:insertMTResponse" />
+      <xs:element name="insertMtAll" type="tns:insertMtAll" />
+      <xs:element name="insertMtAllResponse" type="tns:insertMtAllResponse" />
+      <xs:element name="insertMtExcel" type="tns:insertMtExcel" />
+      <xs:element name="insertMtExcelResponse" type="tns:insertMtExcelResponse" />
+      <xs:element name="insertMtExcelResult" type="tns:insertMtExcelResult" />
+      <xs:element name="insertMtExcelResultResponse" type="tns:insertMtExcelResultResponse" />
+      <xs:complexType name="insertMtAll">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element minOccurs="0" name="cpCode" type="xs:string" />
+          <xs:element minOccurs="0" name="requestID" type="xs:string" />
+          <xs:element minOccurs="0" name="receiveID" type="xs:string" />
+          <xs:element minOccurs="0" name="serviceID" type="xs:string" />
+          <xs:element minOccurs="0" name="commandCode" type="xs:string" />
+          <xs:element minOccurs="0" name="contentType" type="xs:string" />
+          <xs:element minOccurs="0" name="info" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="insertMtAllResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:deliverObject" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="deliverObject">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="lstObjectProgTctResult" nillable="true" type="tns:deliverObjectResult" />
+          <xs:element name="requestId" type="xs:int" />
+          <xs:element name="statusOfrequestId" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="deliverObjectResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="receiver" type="xs:string" />
+          <xs:element name="status" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="insertMtExcel">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="userName" type="xs:string" />
+          <xs:element minOccurs="0" name="passWord" type="xs:string" />
+          <xs:element minOccurs="0" name="cpCode" type="xs:string" />
+          <xs:element minOccurs="0" name="alias" type="xs:string" />
+          <xs:element minOccurs="0" name="resquestId" type="xs:string" />
+          <xs:element xmime:expectedContentTypes="application/octet-stream" minOccurs="0" name="data" type="xs:base64Binary" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="insertMtExcelResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="insertMtExcelResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="userName" type="xs:string" />
+          <xs:element minOccurs="0" name="passWord" type="xs:string" />
+          <xs:element minOccurs="0" name="cpCode" type="xs:string" />
+          <xs:element minOccurs="0" name="resquestId" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="insertMtExcelResultResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:objectProgTctResultBean" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="objectProgTctResultBean">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="lstObjectProgTctResult" nillable="true" type="tns:objectProgTctResult" />
+          <xs:element minOccurs="0" name="requestid" type="xs:string" />
+          <xs:element name="status" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="objectProgTctResult">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="receiver" type="xs:string" />
+          <xs:element name="status" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="insertMT">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="password" type="xs:string" />
+          <xs:element minOccurs="0" name="cpCode" type="xs:string" />
+          <xs:element minOccurs="0" name="requestID" type="xs:string" />
+          <xs:element minOccurs="0" name="userID" type="xs:string" />
+          <xs:element minOccurs="0" name="receiveID" type="xs:string" />
+          <xs:element minOccurs="0" name="serviceID" type="xs:string" />
+          <xs:element minOccurs="0" name="commandCode" type="xs:string" />
+          <xs:element minOccurs="0" name="contentType" type="xs:string" />
+          <xs:element minOccurs="0" name="info" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="insertMTResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="insertMtAll">
+    <wsdl:part name="parameters" element="ns1:insertMtAll" />
+  </wsdl:message>
+  <wsdl:message name="insertMtExcelResultResponse">
+    <wsdl:part name="parameters" element="ns1:insertMtExcelResultResponse" />
+  </wsdl:message>
+  <wsdl:message name="insertMTResponse">
+    <wsdl:part name="parameters" element="ns1:insertMTResponse" />
+  </wsdl:message>
+  <wsdl:message name="insertMtExcelResponse">
+    <wsdl:part name="parameters" element="ns1:insertMtExcelResponse" />
+  </wsdl:message>
+  <wsdl:message name="insertMtExcel">
+    <wsdl:part name="parameters" element="ns1:insertMtExcel" />
+  </wsdl:message>
+  <wsdl:message name="insertMT">
+    <wsdl:part name="parameters" element="ns1:insertMT" />
+  </wsdl:message>
+  <wsdl:message name="insertMtExcelResult">
+    <wsdl:part name="parameters" element="ns1:insertMtExcelResult" />
+  </wsdl:message>
+  <wsdl:message name="insertMtAllResponse">
+    <wsdl:part name="parameters" element="ns1:insertMtAllResponse" />
+  </wsdl:message>
+  <wsdl:portType name="InsertMTInf">
+    <wsdl:operation name="insertMtAll">
+      <wsdl:input name="insertMtAll" message="ns1:insertMtAll" />
+      <wsdl:output name="insertMtAllResponse" message="ns1:insertMtAllResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="insertMtExcel">
+      <wsdl:input name="insertMtExcel" message="ns1:insertMtExcel" />
+      <wsdl:output name="insertMtExcelResponse" message="ns1:insertMtExcelResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="insertMtExcelResult">
+      <wsdl:input name="insertMtExcelResult" message="ns1:insertMtExcelResult" />
+      <wsdl:output name="insertMtExcelResultResponse" message="ns1:insertMtExcelResultResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="insertMT">
+      <wsdl:input name="insertMT" message="ns1:insertMT" />
+      <wsdl:output name="insertMTResponse" message="ns1:insertMTResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

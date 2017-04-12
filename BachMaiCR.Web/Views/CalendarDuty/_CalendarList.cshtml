@@ -1,0 +1,465 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.DBMapping.ModelsExt
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.Utilities.Entity
+@using BachMaiCR.Web.Common
+@{
+    var pagNar = ViewBag.Pagination as Pagination;
+    var searchDB = ViewBag.calendarSearch as SearchCalendarDuty;
+    var lstItem = ViewBag.calendarDuty as List<CALENDAR_DUTY>;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+    int types = ViewBag.types; //phuonglt15> Thêm 28/04/2014
+
+    var classTr = "";
+    var classTrTD = "";
+    var lstAction = ViewBag.ActionPermission as List<string>;
+
+    bool enableDelete = false;
+    bool enableEdit = false;
+    if (types == 3)
+    {
+        ViewBag.Title = @Resources.Localization.ListCalendarDuty;
+
+        enableDelete = lstAction.Contains(WebConst.ACTION_DELETE_CALENDAR_DUTY_CODE);
+        enableEdit = lstAction.Contains(WebConst.ACTION_EDIT_CALENDAR_DUTY_CODE);
+
+    }
+    else if (types == 1)//Lịch lãnh đạo
+    {
+        ViewBag.Title = @Resources.Localization.ListCalendarLeader;
+
+        enableDelete = lstAction.Contains(WebConst.ACTION_DELETE_CALENDAR_LEADER_CODE);
+        enableEdit = lstAction.Contains(WebConst.ACTION_EDIT_CALENDAR_LEADER_CODE);
+    }
+    else if (types == 2)//phuonglt15: 30/04/2014 => lịch thường trú BGĐ:
+    {
+        ViewBag.Title = @Resources.Localization.CalendarDirectorsTittle;
+
+        enableDelete = lstAction.Contains(WebConst.ACTION_DELETE_CALENDAR_DIRECTORS_CODE);
+        enableEdit = lstAction.Contains(WebConst.ACTION_EDIT_CALENDAR_DIRECTORS_CODE);
+
+    }
+    else if (types == 4)//phuonglt15: 30/04/2014 => Lịch trực toàn viện
+    {
+        ViewBag.Title = @Resources.Localization.CalendarHospitalTittle;
+    }
+
+
+}
+
+<script type="text/javascript">
+    function ViewCalendar(idCalendarDuty, type, idTemplate) {
+        var url = "";
+        if (type == 3) {
+            if (idTemplate == 1) {
+                url = "/CalendarDuty/ViewCalendarDuty";
+            }
+            else {
+                url = "/CalendarDuty/ViewCalendarDefault";
+            }
+
+        }
+        else if (type == 1) {
+            url = "/CalendarDuty/PartialViewListCalendarLeader";
+        }
+        else if (type == 2) {
+            url = "/CalendarDuty/PartialViewListCalendarDirectors";
+        }
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: { idCalendarDuty: idCalendarDuty },
+            success: function (response) {
+                $('#Contentx').html(response);
+            }
+
+        })
+
+    }
+    function EditCalendar(idCalendarDuty, type, idTemplate) {
+        var url = "";
+        if (type == 3) {
+            if (idTemplate == 1) {
+                url = "/CalendarDuty/ViewCalendarDuty";
+            }
+            else {
+                url = "/CalendarDuty/ViewCalendarDefault";
+
+            }
+        }
+        else if (type == 1) {
+            url = "/CalendarDuty/EditCalendarLeader";
+        }
+        else if (type == 2) {
+            url = "/CalendarDuty/EditCalendarDirectors";
+        }
+        else if (type == 4) {
+            url = "/CalendarDuty/ViewCalendarHospital";
+
+        }
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: { idCalendarDuty: idCalendarDuty, types: type },
+            success: function (response) {
+                $('#Contentx').html(response);
+            }
+
+        })
+
+    }
+
+</script>
+<div class="content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+
+    }
+    else
+    {
+
+        <div style="margin-right: 5px">
+            <table class="tbl">
+
+                <tr>
+                    <th>@Localization.ListItem</th>
+                    <th>@Localization.ListContent</th>
+                    <th>@Localization.MonthYear</th>
+                    @if (types == 3)
+                    {
+                        <th>@Localization.LabelDepartment</th>
+                    }
+                    <th>@Localization.ListUserCreate</th>
+                    <th>@Localization.ListDateCreate</th>
+                    <th>@Localization.ListUserApproved</th>
+                    <th>@Localization.ListDateApproved</th>
+                    <th>@Localization.ListStatus</th>
+
+                    @if (types != 4)
+                    {
+                        if (enableEdit)
+                        {
+
+                        }
+                        if (enableDelete)
+                        {
+
+                        }
+                        <th>@Localization.ListView</th>
+                        <th>@Localization.ListDelete</th>
+                    }
+                    <th>@Localization.ListEdit</th>
+                </tr>
+
+                @for (int i = 0; i < lstItem.Count; i++)
+                {
+
+                    //Kiểm tra trường hợp hủy duyệt
+                    if (lstItem[i].CALENDAR_STATUS == 4)
+                    {
+                        classTr = " class=BgYear";
+                        classTrTD = "BgYearTD";
+                    }
+                    else
+                    {
+                        classTr = "";
+                        classTrTD = "BgYearTDNone";
+
+                    }
+                    var status = lstItem[i].CALENDAR_STATUS;
+                    <tr @classTr>
+
+                        <td>@(i + 1 + startIndex)</td>
+
+                        <td style="width: 30%; text-align: left">@lstItem[i].CALENDAR_NAME</td>
+                        <td>
+                            @(lstItem[i].CALENDAR_MONTH.ToString() + "/" + lstItem[i].CALENDAR_YEAR)
+                        </td>
+                        @if (types == 3)
+                        {
+                            <td>
+                                @if (lstItem[i].LM_DEPARTMENT_ID != null)
+                                {
+                                    @lstItem[i].LM_DEPARTMENT.DEPARTMENT_CODE
+                                }
+                            </td>
+                        }
+                        <td style="text-align: left">
+                            @if (lstItem[i].USER_CREATE_ID != null)
+                            { @lstItem[i].ADMIN_USER.FULLNAME}
+                    </td>
+                    <td>@String.Format("{0:dd/MM/yyyy}", lstItem[i].DATE_CREATE) </td>
+                    <td style="text-align: left">
+                        @if (@lstItem[i].USER_APPROVED_ID != null)
+                        { @lstItem[i].ADMIN_USER1.FULLNAME}
+                </td>
+                <td>@String.Format("{0:dd/MM/yyyy}", lstItem[i].DATE_APPROVED)</td>
+                <td class="@classTrTD" data-h="@lstItem[i].COMMENTS" style="text-align:center">
+                    @if (status == 1)
+                    {
+                        @Html.Label(Resources.Localization.StatusCreateNew, new { @class = classTrTD })
+                    }
+                    @if (status == 2)
+                    {
+                        @Html.Label(Resources.Localization.StatusPendingApproval, new { @class = classTrTD })
+                    }
+                    @if (status == 3)
+                    {
+                        @Html.Label(Resources.Localization.StatusIsApproval, new { @class = classTrTD })
+                    }
+                    @if (status == 4)
+                    {
+                        @Html.Label(Resources.Localization.StatusCancelApproval, new { @class = classTrTD, id = "Click_ViewApproved" })
+                    }
+                </td>
+                @if (lstItem[i].TEMPLATES_ID != null)
+                {
+
+                    <td style="text-align: center"><a title='Xem lịch trực' href="#" onclick="ViewCalendar(@lstItem[i].CALENDAR_DUTY_ID, @types,1)"><span class='glyphicon glyphicon-calendar'></span></a></td>
+
+                    if (((lstItem[i].CALENDAR_STATUS < 2) || (lstItem[i].CALENDAR_STATUS > 3)) && enableDelete)
+                    {
+                        if (status < 3)
+                        {
+                            <td style="text-align: center"><a title='@Resources.Localization.TitleDisplayDel' data-toggle='confirmation' href='javascript:void(0)' class='cat-delete' data-id='@lstItem[i].CALENDAR_DUTY_ID'><span class='glyphicon glyphicon-trash'></span></a></td>
+                        }
+                        else
+                        {
+                            <td style="text-align: center">
+                                <a title='@Localization.TitleDisplayDel' class='disabled'>
+                                    <span class='glyphicon glyphicon-trash'></span>
+                                </a>
+                            </td>
+
+                        }
+                    }
+                    else
+                    {
+
+                        <td style="text-align: center">
+                            <a title='@Localization.TitleDisplayDel' class='disabled'>
+                                <span class='glyphicon glyphicon-trash'></span>
+                            </a>
+                        </td>
+
+                    }
+                    if (((lstItem[i].CALENDAR_STATUS < 2) || (lstItem[i].CALENDAR_STATUS > 3)) && enableEdit)
+                    {
+                        <td style="text-align: center"><a title='@Resources.Localization.TitleDisplayEdit' href='javascript:void(0)' onclick="EditCalendar(@lstItem[i].CALENDAR_DUTY_ID, @types,1)"><span class='glyphicon glyphicon-edit'></span></a></td>
+                    }
+                    else
+                    {
+                        <td style="text-align: center">
+                            <a title='@Localization.TitleDisplayEdit' class='disabled'>
+                                <span class='glyphicon glyphicon-edit'></span>
+                            </a>
+                        </td>
+                    }
+
+                }
+                else
+                {
+                    if (types != 4)
+                    {
+
+                        <td style="text-align: center"><a title='Xem lịch trực' href="#" onclick="ViewCalendar(@lstItem[i].CALENDAR_DUTY_ID, @types,2)"><span class='glyphicon glyphicon-calendar'></span></a></td>
+
+                        if (((lstItem[i].CALENDAR_STATUS < 2) || (lstItem[i].CALENDAR_STATUS > 3)) && (enableDelete))
+                        {
+                            if (status < CalendarDutyStatus.Approved.GetHashCode())
+                            {
+                                <td style="text-align: center"><a title='@Resources.Localization.TitleDisplayDel' data-toggle='confirmation' href='javascript:void(0)' class='cat-delete' data-id='@lstItem[i].CALENDAR_DUTY_ID'><span class='glyphicon glyphicon-trash'></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="text-align: center">
+                                    <a title='@Localization.TitleDisplayDel' class='disabled'>
+                                        <span class='glyphicon glyphicon-trash'></span>
+                                    </a>
+                                </td>
+
+                            }
+                        }
+                        else
+                        {
+
+                            <td style="text-align: center">
+                                <a title='@Localization.TitleDisplayDel' class='disabled'>
+                                    <span class='glyphicon glyphicon-trash'></span>
+                                </a>
+                            </td>
+                        }
+                        if (((lstItem[i].CALENDAR_STATUS < 2) || (lstItem[i].CALENDAR_STATUS > 3)) && (enableEdit))
+                        {
+                            if (status != CalendarDutyStatus.Approved.GetHashCode())
+                            {
+                                <td style="text-align: center"><a title='@Resources.Localization.TitleDisplayEdit' href='javascript:void(0)' onclick="EditCalendar(@lstItem[i].CALENDAR_DUTY_ID, @types,2)"><span class='glyphicon glyphicon-edit'></span></a></td>
+                            }
+                            else
+                            {
+                                <td style="text-align: center">
+                                    <a title='@Localization.TitleDisplayEdit' class='disabled'>
+                                        <span class='glyphicon glyphicon-edit'></span>
+                                    </a>
+                                </td>
+
+                            }
+                        }
+                        else
+                        {
+
+                            <td style="text-align: center">
+                                <a title='@Localization.TitleDisplayEdit' class='disabled'>
+                                    <span class='glyphicon glyphicon-edit'></span>
+                                </a>
+                            </td>
+
+
+                        }
+                    }
+                    else
+                    { // sửa lịch toàn bệnh viện
+                        <td style="text-align: center"><a title='@Resources.Localization.TitleDisplayEdit' href='javascript:void(0)' onclick="EditCalendar(@lstItem[i].CALENDAR_DUTY_ID, @types,1)"><span class='glyphicon glyphicon-edit'></span></a></td>
+
+
+                    }
+
+
+
+                }
+
+            </tr>
+
+                }
+
+            </table>
+            @Html.Partial("_PaginationView", pagNar)
+        </div>
+        <script type="text/javascript">
+
+            function OnCriteria(pageIndex) {
+
+                var dateCreate = '@ViewBag.dateCreate';
+                var dateApproved = '@ViewBag.dateApproved';
+                var usernameCreate = '@ViewBag.usernameCreate';
+                var usernameAppoved = '@ViewBag.usernameAppoved';
+                var calendarStatus = '@ViewBag.calendarStatus';
+                var dateMonth = '@ViewBag.dateMonth';
+                var dateYear = '@ViewBag.dateYear';
+                var feast = '@ViewBag.feast';
+                var departmentName = '@ViewBag.departmentName';
+                var types = '@ViewBag.types';
+                $.ajax({
+                    type: "GET",
+                    url: '/@pagNar.ModelName/@pagNar.ActionName',
+                    data: { dateCreate: dateCreate, dateApproved: dateApproved, usernameCreate: usernameCreate, usernameAppoved: usernameAppoved, calendarStatus: calendarStatus, dateMonth: dateMonth, dateYear: dateYear, feast: feast, departmentName: departmentName, pageIndex: pageIndex, types: types },
+                    success: function (response) {
+                        var $catlist = $('@pagNar.TagetReLoadId');
+                        if ($catlist == null || $catlist.length == 0) {
+
+                        }
+                        else {
+                            $catlist.html(response);
+                        }
+                    }
+                });
+                setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+            }
+
+
+        </script>
+
+    }
+</div>
+
+<div id="navigate_bottom_panel" class="nav-bottom">
+</div>
+<div id="popupApproved" class="box-staff " style="display: none; font-size:11px;">
+</div>
+@Styles.Render("~/Content/themes/base/jquery-ui")
+<script type="text/javascript">
+
+    $.curCSS = function (element, attrib, val) {
+        $(element).css(attrib, val);
+    };
+
+
+    $(document).ready(function () {
+
+
+
+        $('.BgYearTD').bind('click', function (event) {
+            var x = event.clientX;
+            var y = event.clientY;
+            $("#popupApproved").text($(this).attr('data-h'));
+            $("#popupApproved").dialog({
+                title: 'Nội dung hủy lịch trực',
+                modal: true,
+                position: [x - 100, y],
+                width: 250,
+                height: 'auto',
+                resizable: false,
+                draggable: true,
+
+            }).dialog("open");
+
+        });
+        $("#popupApproved").bind('click', function (event) {
+            $('.ui-icon-closethick').click();
+        });
+
+        $('.cat-delete').bind('click', function (event) {
+            $("#popupApproved").dialog('close');
+            var url = "";
+            var types = '@types';
+            if (types == '2') {
+                url = '/CalendarDuty/DeleteDirectors';
+            }
+            else if (types == '1') {
+                url = '/CalendarDuty/DeleteCalendarLeader';
+            }
+            else if (types == '3') {
+                url = '/CalendarDuty/Delete';
+            }
+            else if (types == '4') {
+                url = '/CalendarDuty/DeleteHospital';
+            }
+            var $self = $(this);
+            $self.confirmation({
+                'popout': true,
+                'btnOkClass': 'btn-danger',
+                'title': '@Resources.Localization.MsgConfirmDisplayDel',
+                'yesButtonTitle': '<span class="glyphicon glyphicon-trash"></span> @Localization.LabelDel',
+                'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+                'placement': 'left',
+                onComplete: function (e) {
+                    $.post(url, { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            window.notice(response.result, window.notice_success);
+                            OnCriteria(0);
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                }
+            });
+        });
+
+
+
+
+    });
+
+
+</script>

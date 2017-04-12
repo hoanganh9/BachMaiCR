@@ -1,0 +1,272 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.Web.Utils;
+@using BachMaiCR.Utilities.Enums;
+@using BachMaiCR.Utilities.Entity
+@{
+    var pagNar = ViewBag.Pagination as Pagination;
+    ViewBag.Title = Localization.MenuCategoryDoctor;
+    var lstItem = ViewBag.Category as List<REPORT>;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+    int monthCurrent = Utils.GetDateTime().Hour;
+    int minTime = ReportOfDayTime.MinHour.GetHashCode();
+    int maxTime = ReportOfDayTime.MaxHour.GetHashCode();
+}
+
+<script src="~/Scripts/bootbox.min.js"></script>
+<div class="content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+    }
+    else
+    {
+        <table class="tbl">
+            <tr>
+                <th class="index width36">@Localization.LabelIndex</th>
+                <th class="width84">@Localization.LabelDateCreate</th>
+                <th>@Localization.LabelReportName</th>
+                <th>@Localization.LabelUserCreate</th>
+                <th>@Localization.LabelDepartment</th>
+                <th>@Localization.LabelRecipient</th>
+                <th class="width84">@Localization.LabelDateSend</th>
+                <th class="width84">@Localization.LabelStatus</th>
+                <th class="width36">@Localization.LabelSent</th>
+                <th class="width36">@Localization.LabelView</th>
+                <th class="width36">@Localization.LabelDel</th>
+                <th class="width36">@Localization.LabelEdit</th>
+            </tr>
+            <tbody id="ctg_content_body">
+                @for (int i = 0; i < lstItem.Count; i++)
+                {
+                    <tr>
+                        <td class="align-center">@(i + 1 + startIndex)</td>
+                        <td>@lstItem[i].DATE_CREATE.ToString("dd/MM/yyyy")</td>
+                        <td>@lstItem[i].REPORT_NAME</td>
+                        <td>@lstItem[i].USER_CREATE_NAME</td>
+                        <td>@lstItem[i].LM_DEPARTMENT_NAME</td>
+                        <td>@lstItem[i].USER_RECIPIENTS_NAMEs</td>
+                        @if (lstItem[i].DATE_SENDED.HasValue)
+                        {
+                            <td>@lstItem[i].DATE_SENDED.Value.ToString("dd/MM/yyyy")</td>
+                        }
+                        else
+                        {
+                            <td>N/A</td>
+                        }
+                        @if (lstItem[i].STATUS.Equals(1))
+                        {
+                            <td>@Resources.Localization.ReportOfDayStatusSend</td>
+                            <td class="align-center">
+                                <a title='@Localization.TitleDisplaySentReport' class='disabled'>
+                                    <span class='glyphicon glyphicon-envelope' title="Báo cáo đã gửi hoặc"></span>
+                                </a>
+                            </td>
+                        }
+                        else if (monthCurrent < minTime || monthCurrent > maxTime)
+                        {
+                          <td>@BachMaiCR.Web.Models.ReportOfDay.GetStatus(lstItem[i].STATUS)</td>
+                            <td class="align-center">
+                                <a title='@Localization.TitleDisplaySentReport' class='disabled'>
+                                    <span class='glyphicon glyphicon-envelope' title="Báo cáo đã quá thời gian gửi báo cáo ngày"></span>
+                                </a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@Resources.Localization.ReportOfDayStatusCreate</td>
+                            <td class="align-center">
+                                <a title='@Localization.TitleDisplaySentReport' href='javascript:void(0)' class='cat-sent' data-id='@lstItem[i].REPORT_ID'><span class='glyphicon glyphicon-envelope'></span></a>
+                            </td>
+
+                        }
+
+
+                        <td class="align-center">
+                            <a title='@Localization.TitleDisplayView' href='javascript:void(0)' class='cat-view' data-id='@lstItem[i].REPORT_ID'><span class='glyphicon glyphicon-list-alt'></span></a>
+                        </td>
+
+                        <td class="align-center">
+                            @if (lstItem[i].STATUS.Equals(0) && lstItem[i].USER_CREATE_ID.Equals((int)ViewBag.UserId) && monthCurrent >= minTime && monthCurrent<=maxTime)
+                            {
+                                <a title='@Localization.TitleDisplayDel' data-bb="dialog" data-toggle='confirmation' href='javascript:void(0)' class='cat-delete' data-id='@lstItem[i].REPORT_ID'><span class='glyphicon glyphicon-trash'></span></a>
+                            }
+                            else
+                            {
+                                <a title='@Localization.TitleDisplayDel' class='disabled'>
+                                    <span class='glyphicon glyphicon-trash' title="Báo cáo không cho phép xóa"></span>
+                                </a>
+                            }
+                        </td>
+                        <td class="align-center">
+                            @if (lstItem[i].STATUS.Equals(0) && lstItem[i].USER_CREATE_ID.Equals((int)ViewBag.UserId) && monthCurrent >= minTime && monthCurrent <= maxTime)
+                            {
+                                <a title='@Localization.TitleDisplayEdit' href='javascript:void(0)' class='cat-edit' data-id='@lstItem[i].REPORT_ID'><span class='glyphicon glyphicon-edit'></span></a>
+                            }
+                            else
+                            {
+                                <a title='@Localization.TitleDisplayEdit' class='disabled'>
+                                    <span class='glyphicon glyphicon-edit' title="Báo cáo không cho phép sửa"></span>
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationView", pagNar);
+    }
+</div>
+<div id="navigate_bottom_panel" class="nav-bottom ">
+</div>
+
+
+<script type="text/javascript">
+    function btnResetClick() {
+        $("#SearchCode").val("");
+        $("#SearchName").val("");
+        $("#SearchUserCreate").val("");
+        $("#SearchUserReceive").val("");     
+        $("#SearchDateStart").val("");
+        $("#SearchDateEnd").val("");
+        $("#SearchDateCreate").val("");
+        $("#SearchDateSent").val("");
+        OnCriteria(0);
+    }
+
+    function OnCriteria(pageIndex) {
+        $.ajax({
+            type: "GET",
+            url: '/@pagNar.ModelName/@pagNar.ActionName',
+            data: {
+                SearchCode: $("#SearchCode").val()
+                , SearchName: $("#SearchName").val()
+                , SearchUserCreate: $("#SearchUserCreate").val()
+                , SearchUserReceive: $("#SearchUserReceive").val()
+                , SearchStatus: $("#SearchStatus").val()
+                , SearchDateStart: getDateFromFormat($("#SearchDateStart").val())
+                , SearchDateEnd: getDateFromFormat($("#SearchDateEnd").val())
+                , SearchDateCreate: getDateFromFormat($("#SearchDateCreate").val())
+                , SearchDateSent: getDateFromFormat($("#SearchDateSent").val())
+                , pageIndex: pageIndex
+            },
+            success: function (response) {
+                var $catlist = $('@pagNar.TagetReLoadId');
+                if ($catlist == null || $catlist.length == 0) {
+                    window.notice('@Resources.Localization.MsgItemNotFound', window.notice_error);
+                }
+                else {
+                    $catlist.html(response);
+                }
+            }
+        });       
+    }
+
+    $(document).ready(function () {
+        $(".modal").on('shown', function () {
+            $(this).find("[autofocus]:first").focus();
+        });
+
+        $(".cat-edit").bind('click', function (event) {
+            var $self = $(this);
+            $.get('/@pagNar.ModelName/OnUpdate', {
+                id: $self.attr('data-id')
+
+            },
+                function (data) {
+                    var $categoryModel = $('#add_category_model_container');
+                    $categoryModel.html(data);
+                    $('#addCategoryModel').modal({
+                        keyboard: true
+                    });
+                });
+        });
+
+        $(".cat-view").bind('click', function (event) {
+            var $self = $(this);
+            $.get('/@pagNar.ModelName/OnDetail', {
+                id: $self.attr('data-id')
+            },
+                function (data) {
+                    var $categoryModel = $('#view_model_container');
+                    $categoryModel.html(data);
+                    $('#viewModelContainer').modal({
+                        keyboard: true
+                    });
+                });
+        });
+
+
+        // Xóa thông tin
+        $('.cat-delete').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'popout': true,
+                'btnOkClass': 'btn-danger',
+                'title': '@Resources.Localization.MsgConfirmDisplayDel',
+                'yesButtonTitle': '<span class="glyphicon glyphicon-trash"></span> @Localization.LabelDel',
+                'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+                'placement': 'left',
+                onComplete: function (e) {
+                    $.post('/@pagNar.ModelName/OnDelete', { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            window.notice(response.result, window.notice_success);
+                            OnCriteria(0);
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                }
+            });
+        });
+
+
+        //Gửi báo cáo
+        $('.cat-sent').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'popout': true,
+                'btnOkClass': 'btn-danger',
+                'title': 'Bạn có chắc chắn muốn gửi báo cáo hàng ngày không?',
+                'yesButtonTitle': '<span class="glyphicon glyphicon-envelope"></span> @Localization.LabelSent',
+                'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+                'placement': 'left',
+                onComplete: function (e) {
+                    $.post('/@pagNar.ModelName/OnSent', { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            window.notice(response.result, window.notice_success);
+                            $.ajax({
+                                type: "GET",
+                                url: '/@pagNar.ModelName/@pagNar.ActionName',
+                                data: { pageIndex: 0 },
+                                success: function (response) {
+                                    var $catlist = $('@pagNar.TagetReLoadId');
+                                    if ($catlist == null || $catlist.length == 0) {
+                                        window.notice('@Resources.Localization.MsgItemNotFound', window.notice_error);
+                                    }
+                                    else {
+                                        $catlist.html(response);
+                                    }
+                                }
+                            });
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                }
+            });
+        });
+
+    });
+</script>

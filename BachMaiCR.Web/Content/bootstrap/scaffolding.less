@@ -1,9 +1,6 @@
 //
 // Scaffolding
-// --------------------------------------------------
-
-
-// Reset the box-sizing
+// --------------------------------------------------// Reset the box-sizing
 //
 // Heads up! This reset may cause conflicts with some third-party widgets.
 // For recommendations on resolving such conflicts, see
@@ -14,10 +11,7 @@
 *:before,
 *:after {
   .box-sizing(border-box);
-}
-
-
-// Body reset
+}// Body reset
 
 html {
   font-size: 10px;
@@ -40,10 +34,7 @@ textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-}
-
-
-// Links
+}// Links
 
 a {
   color: @link-color;
@@ -58,20 +49,14 @@ a {
   &:focus {
     .tab-focus();
   }
-}
-
-
-// Figures
+}// Figures
 //
 // We reset this here because previously Normalize had no `figure` margins. This
 // ensures we don't break anyone's use of the element.
 
 figure {
   margin: 0;
-}
-
-
-// Images
+}// Images
 
 img {
   vertical-align: middle;
@@ -105,20 +90,14 @@ img {
 // Perfect circle
 .img-circle {
   border-radius: 50%; // set radius in percents
-}
-
-
-// Horizontal rules
+}// Horizontal rules
 
 hr {
   margin-top:    @line-height-computed;
   margin-bottom: @line-height-computed;
   border: 0;
   border-top: 1px solid @hr-border;
-}
-
-
-// Only display content to screen readers
+}// Only display content to screen readers
 //
 // See: http://a11yproject.com/posts/how-to-hide-content/
 
@@ -147,10 +126,7 @@ hr {
     overflow: visible;
     clip: auto;
   }
-}
-
-
-// iOS "clickable elements" fix for role="button"
+}// iOS "clickable elements" fix for role="button"
 //
 // Fixes "clickability" issue (and more generally, the firing of events such as focus as well)
 // for traditionally non-focusable elements with role="button"

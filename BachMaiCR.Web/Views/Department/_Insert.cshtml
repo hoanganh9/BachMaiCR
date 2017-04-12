@@ -1,0 +1,146 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@model BachMaiCR.Web.Models.Department
+
+@{
+    var strTitleForm = Model.Id.Equals(0) ? Localization.FormAddTitle : Localization.FormEditTitle;
+
+}
+<div class="modal fade" id="addCategoryModel" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        @Html.ValidationSummary(false)
+        @using (Html.BeginForm(
+        actionName: "SubmitChange", controllerName: "Department", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmModifyCategory", @class = "", @role = "form" }))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">@strTitleForm</h4>
+                </div>
+
+                <div class="modal-body min-width">
+                    <div class="form-group">
+                        <!-- Hide value -->
+                        @Html.HiddenFor(m => m.Id)
+                        @Html.HiddenFor(m => m.Parent)
+                        @Html.HiddenFor(m => m.Level)
+                        <div class="col-md-12">
+                            @Html.ValidationMessageFor(m => m.Name)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.Name, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-sm", @placeholder = @Localization.LabelDepartmentName })
+                        </div>
+
+
+                        <div class="col-md-12">
+                            @Html.ValidationMessageFor(m => m.Code)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.Code, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Code, new { @class = "form-control input-sm", @placeholder = @Localization.LabelDepartmentCode })
+                        </div>
+
+
+                        <div class="col-md-12">
+                            @Html.ValidationMessageFor(m => m.Phone)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.Phone, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Phone, new { @class = "form-control input-sm", @placeholder = @Localization.LabelPhone })
+                        </div>
+
+
+                        <div class="col-md-12">
+                            @Html.ValidationMessageFor(m => m.Address)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.Address, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Address, new { @class = "form-control input-sm", @placeholder = @Localization.LabelAddress })
+                        </div>
+
+                        <div class="col-md-12">
+                            @Html.ValidationMessageFor(m => m.Description)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.Description, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control input-sm", @placeholder = @Localization.LabelDescription, @style = "height:60px;resize: none;" })
+                        </div>                      
+                        <div class=" col-md-12">
+                            <span style="color:red;">
+                               Lưu ý: Các trường dấu * buộc phải nhập, để gửi SMS nhắc lịch tới đơn vị cần nhập chính xác số điện thoại theo đúng định dạng (ví dụ: 84973xxxxxx)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clear"></div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><span class="glyphicon glyphicon-off"></span>@Localization.ButtonCloseDisplay</button>
+
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $catForm = $("#frmModifyCategory");
+
+        // Focus vào trường input đầu tiên
+        setTimeout(function () { $catForm.find('input:text:visible:first').focus(); }, 500);
+
+        // Xử lý lưu thông tin
+        $catForm.submit(function (event) {
+            event.preventDefault();
+            if ($catForm.valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: $catForm.attr('action'),
+                    data: $catForm.serialize(),
+                    dataType: '',//chú ý là form đặc biệt thì phải điền trường này
+                    success: function (response) {
+                        if (response != null && response.status == 200) {
+                            $('#addCategoryModel').modal('hide');
+                            var $catlist = $('#cat_list_render');
+                            if ($catlist == null || $catlist.length == 0) {
+                                window.notice('@Resources.Localization.MsgItemNotFound', window.notice_warning);
+
+                            }
+                            else {
+                                $catlist.html('');
+                                $catlist.load('/Department/getList?type=0');
+                            }
+                            window.notice(response.result, window.notice_success);
+                        } else {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    }
+                });
+            }
+            else {
+                window.notice("Điền đầy đủ thông tin trên form", window.notice_warning);
+            }
+        });
+    });
+</script>

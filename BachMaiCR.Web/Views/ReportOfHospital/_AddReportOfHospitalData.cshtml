@@ -1,0 +1,86 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using Resources;
+@using System.Data;
+@using BachMaiCR.Web.Utils;
+@{ 
+    var lstPositions = ViewBag.lstPositions as List<SelectListItem>;
+}
+<script type="text/javascript">
+
+    function loadTable() {
+        $('#selectable').append("@(Html.Raw(ViewBag.tbodyStr))");
+
+        $('#selectable tr td').each(function () {
+            var htmlTd = $(this).html().trim();
+            //if (htmlTd.indexOf('script_remove_start') > -1) {       
+            //    htmlTd = htmlTd.replace('script_remove_start', '&lt;script&gt;');
+            //}
+            //if (htmlTd.indexOf('script_remove_end') > -1) {
+            //    htmlTd = htmlTd.replace('script_remove_end', '&lt;&#47;script&gt;');
+            //}
+            //$(this).html(htmlTd);
+        });
+    }
+
+    $(function () {
+        /*
+        $('#selectable').selectable({
+            filter: 'td.item-schedule',
+            stop: function (event, ui) {
+                $('#popupStaff').fadeOut(50);
+                $('#box_staff').fadeOut(50);
+                $('#flag_accept').val(0);
+                $('.ui-icon-closethick').click();
+            }
+        }) */
+        loadTable();
+
+        var widthTable = $('#selectable').width();
+        var colWidth = parseFloat(widthTable - 320) / (@lstPositions.Count +1);
+        $('.col').width(parseFloat(colWidth).toFixed());
+
+        $("#exportExcel").click(function () {
+
+            var strDate = $('.selectWeek').val() + "_" + $('.selectMonths').val() + "_" + $('.selectYears').val();
+            var url = '@Url.Action("ExportReportOfHospital", "ReportOfHospital")' + '?strData=' + strDate;
+            location.href = url;
+        });
+    });
+</script>
+
+
+<style>
+    #selectable th
+    {
+        word-wrap:break-word;
+    }
+    #selectable tr:last-child, #selectable tbody tr td:last-child
+    {
+       color:maroon;
+       font-weight:bold;
+       text-align:center;
+    }
+
+</style>
+<div id="grid">
+     <table class="tbl" id="selectable">
+         </table>
+</div>
+<div id="popupStaff" style="border: 1px solid #D0DAFD; text-align: center; width: 100%; display: none; background-color: #D0DAFD;">
+</div>
+<div class="TextCenter">
+    <button class="btn btn-primary btn-sm" id="exportExcel" type="button" @*onclick="location.href='@Url.Action("ExportReportOfHospital", "ReportOfHospital")'"*@>
+        <span class="glyphicon glyphicon-folder-open" ></span>&nbsp;
+        @Localization.ButtonExportExcel</button>
+
+</div>
+<div class="clear"></div>
+<div id="box_staff" class="box-staff " style="display: none">
+</div>
+<script type="text/javascript" src="~/Scripts/TableCalendar.js"></script>
+<link type="text/css" href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script type="text/ecmascript" src="~/Scripts/Calendar/calendarDirectors.js">
+
+</script>

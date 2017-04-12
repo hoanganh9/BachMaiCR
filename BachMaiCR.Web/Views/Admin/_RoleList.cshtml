@@ -1,0 +1,303 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.DBMapping.ModelsExt
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.Utilities.Entity
+@using BachMaiCR.Web.Common
+@{
+
+    var pagNar = ViewBag.Pagination as Pagination;
+    var lstItem = ViewBag.Roles as List<WEBPAGES_ROLES>;
+    var lstAction = ViewBag.Actions as List<string>;
+    if (lstAction == null)
+    {
+        lstAction = new List<string>();
+    }
+    var user = ViewBag.User as ADMIN_USER;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+    bool enableEditPermission = lstAction.Contains(WebConst.ACTION_ROLE_UPDATEPER_CODE);
+    bool enableActive = lstAction.Contains(WebConst.ACTION_ROLE_ACTIVE_CODE);
+    bool enableAddUser = lstAction.Contains(WebConst.ACTION_ROLE_ADDUSER_CODE);
+    bool enableDelete = lstAction.Contains(WebConst.ACTION_ROLE_DELETE_CODE);
+    bool enableAddRole = lstAction.Contains(WebConst.ACTION_ROLE_ADD_CODE);
+    bool isAdmin = false;
+    List<int> listRoleId = new List<int>();
+
+    if (user != null)
+    {
+        isAdmin = user.USERNAME.ToLower() == WebConst.DefaultAdminAccount.ToLower() ;
+        if (user.WEBPAGES_ROLES.Any())
+        {
+            listRoleId = user.WEBPAGES_ROLES.Select(o => o.WEBPAGES_ROLE_ID).ToList();
+        }
+    }
+}
+
+
+
+<div class="page-content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+    }
+    else
+    {
+        <table>
+            <tr>
+                <th class="Table-title">Danh sách nhóm quyền</th>
+
+            </tr>
+        </table>
+        if (user != null)
+        {
+        <table class="tbl">
+            <tr>
+                <th style="width: 5%">@Localization.ListItem</th>
+                <th style="width: 20%">@Localization.RoleModelDisplayNameRoleName</th>
+                <th style="width: 10%">@Localization.RoleAbb</th>
+                <th style="width: 11%">@Localization.CategoryDisplayDescription</th>
+                <th style="width: 11%">@Localization.LabelDepartment</th>
+                @if (isAdmin || enableActive)
+                {
+                    <th style="width: 7%">@Localization.RoleModelDisplayIsActive</th>
+                }
+                @if (isAdmin || enableEditPermission)
+                {
+                    <th style="width: 12%">@Localization.RoleConfig</th>
+                }
+                @if (isAdmin || enableAddUser)
+                {
+                    <th style="width: 10%">@Localization.RoleUser</th>
+                }
+                @if (isAdmin || enableDelete)
+                {
+                    <th style="width: 7%">@Localization.ListDelete</th>
+                }
+                @if (isAdmin || enableAddRole)
+                {
+                    <th style="width: 7%">@Localization.ListEdit</th>
+                }
+            </tr>
+            <tbody id="ctg_content_body">
+
+                @for (int i = 0; i < lstItem.Count; i++)
+                {
+                    <tr>
+                        <td style="text-align: center; width: 40px">@(i + 1 + startIndex)</td>
+                        <td style="text-align: left">@lstItem[i].ROLE_NAME</td>
+                        <td style="text-align: left">@lstItem[i].ABBREVIATION</td>
+                        <td style="text-align: left">@lstItem[i].DESCRIPTION</td>
+                        <td style="text-align: left">
+@if (lstItem[i].LM_DEPARTMENT_ID != null)
+                            {
+                        @lstItem[i].LM_DEPARTMENT.DEPARTMENT_CODE
+}                    
+    </td>
+
+                        @if (isAdmin || (!listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableActive))
+                        {
+                            <td style="text-align: center; width: 120px">
+                                @if (lstItem[i].ISACTIVE.Equalstrue)
+                                {
+                                    <input class = 'change-active' type='checkbox'  checked value= '@lstItem[i].WEBPAGES_ROLE_ID'/>
+                                }
+                                else
+                                {
+                                    <input class = 'change-active' type='checkbox'   value= '@lstItem[i].WEBPAGES_ROLE_ID'/>
+                                }
+                            </td>
+                        }
+                        else if ((listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableActive))
+                        {
+                             <td style="text-align: center; width: 120px"></td>
+                        }
+
+                        @if (isAdmin || (!listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableEditPermission))
+                        {
+                            <td style="text-align: center;">
+                                <a title='Phân quyền' href='javascript:void(0)' class='role-permission' data-text='" + item.ROLE_NAME + "' data-id='@lstItem[i].WEBPAGES_ROLE_ID'>
+                                    <div class='glyphicon glyphicon-wrench'></div>
+                                </a>
+                            </td>
+                        }
+                        else if ((listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableEditPermission))
+                        {
+                            <td style="text-align: center;"></td>
+                        }
+
+                        @if (isAdmin || (!listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableAddUser))
+                        {
+                            <td style="text-align: center">
+                                <a title='Phân người dùng vào nhóm quyền' href='javascript:void(0)' class='role-adduser' data-text='" + item.ROLE_NAME + "' data-id='@lstItem[i].WEBPAGES_ROLE_ID'>
+                                    <div class='glyphicon glyphicon-user'></div>
+                                </a>
+                            </td>
+                        }
+                        else if ((listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableAddUser))
+                        {
+                            <td style="text-align: center;"></td>
+                        }
+                        @if (isAdmin || (!listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableDelete))
+                        {
+                            <td style="text-align: center">
+                                <a title='Xóa quyền' data-toggle='confirmation' href='#' class='role-delete' data-id='@lstItem[i].WEBPAGES_ROLE_ID'>
+                                    <div class='glyphicon glyphicon-trash'></div>
+                                </a>
+                            </td>
+                        }
+                        else if ((listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableDelete))
+                        {
+                            <td style="text-align: center;"></td>
+                        }
+                        @if (isAdmin || (!listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableAddRole))
+                        {
+                            <td style="text-align: center">
+                                <a title='Sửa tên quyền' href='javascript:void(0)' class='role-edit' data-id='@lstItem[i].WEBPAGES_ROLE_ID'>
+                                    <div class='glyphicon glyphicon-edit'></div>
+                                </a>
+                            </td>
+                        }
+                        else if ((listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableAddRole))
+                        {
+                            <td style="text-align: center;"></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationView", pagNar)
+        }
+    }
+    <script type="text/javascript">
+
+        function OnCriteria(pageIndex) {
+            var ctrSearch = $('#input-search');
+            var ctrdepartmentId = $('#input-deparment').val();
+           // alert(ctrdepartmentId);
+            if (ctrdepartmentId == null || ctrdepartmentId == "") {
+                ctrdepartmentId = 0;
+            }
+            ctrSearch = ctrSearch != null ? ctrSearch.val().trim() : "";
+            $.ajax({
+                type: "GET",
+                url: '/@pagNar.ModelName/@pagNar.ActionName',
+                data: { key: ctrSearch, departmentId: ctrdepartmentId, pageIndex: pageIndex },
+                success: function (response) {
+                    var $catlist = $('#role-list');
+                    if ($catlist == null || $catlist.length == 0) {
+                        window.notice('@Resources.Localization.MsgItemNotFound', window.notice_error);
+                    }
+                    else {
+                        $catlist.html(response);
+                    }
+                }
+            });
+            setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+        }
+    </script>
+
+
+</div>
+<div id="navigate_bottom_panel" class="nav-bottom ">
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('a').tipsy();
+        var $role_action_list = $('#role-list');
+        var $role_action_list_title = $('#role-list-title');
+        if ($role_action_list == null || $role_action_list.length == 0) {
+            alert('Không tìm thấy role-list');
+        }
+
+        $("table.tbl-role-list").colResizable({
+            headerOnly: true,
+            defaultWith: ["auto", "96px", '36px', '36px', '36px']
+        });
+
+        $('.change-active').bind('change', function (event) {
+            var $self = $(this);
+            $.post('/WebpageRoles/UpdateActive', { roleId: $self.val(), active: $self.is(":checked") == true }, function (response) {
+                if (response.status == 200) {
+                    window.notice(response.result, window.notice_success);
+                }
+                else {
+                    window.notice(response.result, window.notice_error);
+                }
+            });
+        });
+
+        $('.role-permission').bind('click', function (event) {
+            var $self = $(this);
+            //thay doi giao dien
+            var $table = $self.parents('table');
+            var $all_tr = $table.find('tr');
+            $all_tr.css(
+                {
+                    'background-color': 'transparent'
+                });
+            var $tr = $self.parents('tr');
+
+            $.get('/Partial/WebpageActionTreeViewWithRole', { roleId: $self.attr('data-id') }, function (response) {
+                $('.tipsy-n').css('display', 'none');
+
+                $(".content").html(response);
+                //$role_action_list_title.html($tr.find('td').first().html());//.css('background-color', '#FAC58F');
+
+            });
+            $('#div-hearder-role').css('display', 'none');
+            $('#div-hearder-role').css('height', '1px');
+            $('#div-hearder-role').css('max-height', '1px');
+        });
+
+        $('.role-delete').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'btnOkClass': 'btn-danger',
+                'title': '@Resources.Localization.MsgConfirmDisplayDel',
+                'yesButtonTitle': 'Xóa',
+                'cancelButtonTitle': 'Không xóa',
+                onComplete: function (e) {
+                    $.post('/WebpageRoles/delete', { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            OnCriteria(0);
+                            window.notice(response.result, window.notice_success);
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                    //alert(0);
+                }
+            });
+        });
+        $('.role-edit').bind('click', function (event) {
+            var $self = $(this);
+            $.get('/WebpageRoles/AddRole', { id: $self.attr('data-id') }, function (data) {
+                var $roleModel = $('#role-model-container');
+                $roleModel.html(data);
+                $('#RoleModal').modal({
+                    keyboard: true
+                });
+            });
+        });
+
+        $('.role-adduser').bind('click', function (event) {
+            var $self = $(this);
+            $.get('/WebpageRoles/AddUser', { id: $self.attr('data-id'), key: '' }, function (data) {
+                var $roleModel = $('#role-model-container');
+                $roleModel.html(data);
+                $('#AddUserModal').modal({
+                    keyboard: true
+                });
+            });
+                       
+        });
+    });
+</script>

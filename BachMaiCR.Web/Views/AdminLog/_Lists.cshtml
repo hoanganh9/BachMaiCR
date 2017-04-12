@@ -1,0 +1,287 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.Utilities.Entity
+@using BachMaiCR.Utilities.Enums
+@{
+    var pagNar = ViewBag.Pagination as Pagination;
+    var lstItem = ViewBag.Category as List<ADMIN_LOG>;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+}
+
+<script src="~/Scripts/bootbox.min.js"></script>
+<div class="content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+    }
+    else
+    {
+        <table class="tbl" style="font-size:0.85em">
+            <tr>
+                <th class="index width36">@Localization.LabelIndex</th>
+                <th class=""><input type="checkbox" class="select-checkbox-all" /></th>
+                <th class="">@Localization.LabelView</th>
+                <th class="width104">@Localization.LabelDateCreate</th>
+                <th class="width104">@Localization.LabelUser</th>
+                <th>@Localization.LabelIpAddress</th>
+                <th class="">@Localization.LabelMenu</th>
+                <th class="">@Localization.LabelAdminLogAction</th>
+                <th class="">@Localization.LabelContent</th>
+                <th class="">@Localization.LabelDescription</th>
+                <th class="">@Localization.LabelError</th>
+            </tr>
+            <tbody id="ctg_content_body">
+                @for (int i = 0; i < lstItem.Count; i++)
+                {
+                    <tr>
+                        <td class="align-center">@(i + 1 + startIndex)</td>
+                        <td class="align-center"><input type="checkbox" data-id='@lstItem[i].LOG_ID' class="select-checkbox" /></td>
+                        <td class="align-center">
+                            <a title='@Localization.TitleDisplayEdit' href='javascript:void(0)' class='cat-view' data-id='@lstItem[i].LOG_ID'><span class='glyphicon glyphicon-list-alt'></span></a>
+                        </td>
+                        <td>@lstItem[i].START_TIME.ToString("dd/MM/yyyy HH:mm")</td>
+                        @*<td>@lstItem[i].STATUS</td>*@
+                        <td>@lstItem[i].USER_NAME</td>
+                        <td>@lstItem[i].IP_ADDRESS</td>
+                        <td>@lstItem[i].MENU_NAME</td>
+                        @{
+                    var action = EnumHelper<enActionType>.GetStringName(lstItem[i].ACTION_TYPE);
+                    <td>@action</td>
+                        }
+                        <td>@lstItem[i].CONTENT</td>
+                        <td>@lstItem[i].DESCRIPTION</td>
+                        <td>@lstItem[i].ERROR_CODE</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationView", pagNar);
+    }
+</div>
+<div id="navigate_bottom_panel" class="nav-bottom ">
+</div>
+
+
+<script type="text/javascript">
+    function OnCriteria(pageIndex) {
+
+        $.ajax({
+            type: "GET",
+            url: '/@pagNar.ModelName/@pagNar.ActionName',
+            data: {
+                SearchName: $("#SearchName").val()
+                , SearchUserName: $("#SearchUserName").val()
+                , SearchStatus: $("#SearchStatus").val()
+                , SearchAction: $("#SearchAction").val()
+                , SearchMenuCode: $("#SearchMenuCode").val()
+                , SearchIpAddress: $("#SearchIpAddress").val()
+                , SearchDateStart: getDateFromFormat($("#SearchDateStart").val())
+                , SearchDateEnd: getDateFromFormat($("#SearchDateEnd").val())
+                , pageIndex: pageIndex
+            },
+            success: function (response) {
+                var $catlist = $('@pagNar.TagetReLoadId');
+                if ($catlist == null || $catlist.length == 0) {
+                    window.notice('@Resources.Localization.MsgItemNotFound', window.notice_error);
+                }
+                else {
+                    $catlist.html(response);
+                }
+            }
+        });
+
+        setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+    }
+
+
+    // Delete log checked
+    function OnDelete() {
+        var lstItem = $('.select-checkbox:checked');
+        if (lstItem.size() <= 0) {
+            window.notice("Chưa có bản ghi được chọn!", window.notice_error);
+            return;
+        }
+        else {
+            var strId = ",";
+            $(lstItem).each(function () {
+                strId += $(this).attr('data-id').trim() + ",";
+            });
+
+            bootbox.dialog({
+                message: 'Bạn có chắc chắn muốn xóa các thông tin này?',
+                title: "<div class='color-error'>Cảnh báo!</div>",
+                buttons: {
+                    success: {
+                        label: "@Localization.LabelDel",
+                        className: "btn-primary",
+                        callback: function () {
+                            $.post('/AdminLog/OnDelete', { id: strId }, function (response) {
+                                if (response.status == 200) {
+                                    OnCriteria(0);
+                                    window.notice(response.result, window.notice_success);
+                                }
+                                else if (response.status == 500) {
+                                    window.notice(response.result, window.notice_error);
+                                }
+                            });
+                        }
+                    },
+                    danger: {
+                        label: '@Localization.ButtonCancelDisplay',
+                        className: "btn-primary",
+                        callback: function () {
+                            //Example.show("uh oh, look out!");
+                        }
+                    }
+                }
+            });
+
+        }
+    }
+
+    $(document).ready(function () {
+        $(".modal").on('shown', function () {
+            $(this).find("[autofocus]:first").focus();
+        });
+
+        $(".cat-edit").bind('click', function (event) {
+            var $self = $(this);
+            $.get('/@pagNar.ModelName/OnUpdate', {
+                id: $self.attr('data-id')
+
+            },
+                function (data) {
+                    var $categoryModel = $('#add_category_model_container');
+                    $categoryModel.html(data);
+                    $('#addCategoryModel').modal({
+                        keyboard: true
+                    });
+                });
+        });
+
+        $(".cat-view").bind('click', function (event) {
+            var $self = $(this);
+            $.get('/@pagNar.ModelName/OnDetail', {
+                id: $self.attr('data-id')
+            },
+                function (data) {
+                    var $categoryModel = $('#view_model_container');
+                    $categoryModel.html(data);
+                    $('#viewModelContainer').modal({
+                        keyboard: true
+                    });
+                });
+        });
+
+
+        // Xóa thông tin
+        $('.cat-delete').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'popout': true,
+                'btnOkClass': 'btn-danger',
+                'title': '@Resources.Localization.MsgConfirmDisplayDel',
+                'yesButtonTitle': '<span class="glyphicon glyphicon-trash"></span> @Localization.LabelDel',
+                'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+                'placement': 'left',
+                onComplete: function (e) {
+                    $.post('/@pagNar.ModelName/OnDelete', { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            window.notice(response.result, window.notice_success);
+                            OnCriteria(0);
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                }
+            });
+        });
+
+
+        //Gửi báo cáo
+        $('.cat-sent').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'popout': true,
+                'btnOkClass': 'btn-danger',
+                'title': 'Bạn có chắc chắn muốn gửi báo cáo hàng ngày không?',
+                'yesButtonTitle': '<span class="glyphicon glyphicon-envelope"></span> @Localization.LabelSent',
+                'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+                'placement': 'left',
+                onComplete: function (e) {
+                    $.post('/@pagNar.ModelName/OnSent', { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            window.notice(response.result, window.notice_success);
+                            $.ajax({
+                                type: "GET",
+                                url: '/@pagNar.ModelName/@pagNar.ActionName',
+                                data: { pageIndex: 0 },
+                                success: function (response) {
+                                    var $catlist = $('@pagNar.TagetReLoadId');
+                                    if ($catlist == null || $catlist.length == 0) {
+                                        window.notice('@Resources.Localization.MsgItemNotFound', window.notice_error);
+                                    }
+                                    else {
+                                        $catlist.html(response);
+                                    }
+                                }
+                            });
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                }
+            });
+        });
+
+        //Xử lý CheckBox
+        // Check/Uncheck all Checkbox
+        $('.select-checkbox-all').click(function () {
+            if ($(this).is(':checked')) {
+                $('.select-checkbox').attr('checked', 'checked')
+            }
+            else {
+                $('.select-checkbox').removeAttr('checked')
+            }
+        });
+
+
+        // Checkbox click element
+        $('.select-checkbox').click(function () {
+            var isCheke = $(this).is(':checked');
+            var flagAll = true;
+            //$('.select-checkbox').each(function () {
+            //    if ($(this).is(':checked') != isCheke)
+            //    { flagAll = false; return; }
+            //});
+            if (ChekeBoxChecked() && isCheke)
+                $('.select-checkbox-all').attr('checked', 'checked')
+            else
+                $('.select-checkbox-all').removeAttr('checked')
+        });
+        // Return true if all checked/unchecked
+        function ChekeBoxChecked() {
+
+            isCheke = $('.select-checkbox').first().is(':checked');
+            var flagAll = true;
+            $('.select-checkbox').each(function () {
+                if ($(this).is(':checked') != isCheke)
+                { flagAll = false; return; }
+            });
+
+            return flagAll;
+        }
+    });
+</script>

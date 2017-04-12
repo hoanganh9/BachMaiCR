@@ -1,0 +1,397 @@
+﻿@model BachMaiCR.DBMapping.ModelsExt.SearchCalendarDuty
+@using Resources;
+@using BachMaiCR.Utilities.Enums;
+@using BachMaiCR.Web.Common
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@Scripts.Render("~/bundles/jqueryui")
+
+<script src="~/Scripts/bootstrap-select.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="~/Content/bootstrap-select.css">
+<script type="text/javascript" src="~/Scripts/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="~/Scripts/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="~/Scripts/Utils/dateUtils.js"></script>
+
+<link rel="Stylesheet" type="text/css" href="~/Content/datepicker.css">
+<style>
+    .span2 {
+        width: 280px;
+    }
+</style>
+
+
+<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+
+@{
+    var iMonthNow = System.DateTime.Now.Month;
+    var iYearNow = System.DateTime.Now.Year;
+    int types = ViewBag.types;
+    List<SelectListItem> tmpYear = new List<SelectListItem>();
+    for (int i = iYearNow - 5; i < iYearNow + 2; i++)
+    {
+        tmpYear.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+
+    var CALENDAR_STATUS = new List<SelectListItem>
+                {
+                     new SelectListItem { Value = "0", Text = Resources.Localization.StatusALL },
+                     new SelectListItem { Value = "1", Text = Resources.Localization.StatusCreateNew},
+                     new SelectListItem { Value = "2", Text = Resources.Localization.StatusPendingApproval},
+                     new SelectListItem { Value = "3", Text = Resources.Localization.StatusIsApproval},
+                     new SelectListItem { Value = "4", Text = Resources.Localization.StatusCancelApproval},
+                 };
+    List<SelectListItem> tmpMonths = new List<SelectListItem>();
+    tmpMonths.Add(new SelectListItem() { Text = Resources.Localization.StatusALL, Value = "0", Selected = false });
+    for (int i = 1; i <= 12; i++)
+    {
+        tmpMonths.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+
+
+    var DATE_MONTH = new SelectList(tmpMonths, "Value", "Text", iMonthNow);
+
+
+
+    var DATE_YEAR = new SelectList(tmpYear, "Value", "Text", iYearNow);
+    var lstAction = ViewBag.ActionPermission as List<string>;
+    bool enableInsert = false;
+    if (types == 3)//Lịch trực khoa viện trung tâm
+    {
+        ViewBag.Title = @Resources.Localization.ListCalendarDuty;
+        enableInsert = lstAction.Contains(WebConst.ACTION_INSERT_CALENDAR_DUTY_CODE);
+
+    }
+    else if (types == 1)//Lịch lãnh đạo
+    {
+        ViewBag.Title = @Resources.Localization.ListCalendarLeader;
+        enableInsert = lstAction.Contains(WebConst.ACTION_INSERT_CALENDAR_LEADER_CODE);
+
+    }
+    else if (types == 2)//phuonglt15: 30/04/2014 => lịch thường trú BGĐ:
+    {
+        ViewBag.Title = @Resources.Localization.CalendarDirectorsTittle;
+        enableInsert = lstAction.Contains(WebConst.ACTION_INSERT_CALENDAR_DIRECTORS_CODE);
+
+    }
+    else if (types == 4)//phuonglt15: 30/04/2014 => lịch thường trú BGĐ:
+    {
+        ViewBag.Title = @Resources.Localization.CalendarHospitalTittle;
+
+    }
+    lstAction = null;
+    int? RootDepartment = ViewBag.RootDepartment;
+    bool exitsCheck = false;
+    UnitOfWork unit = new UnitOfWork();
+    List<DEPARTMENTLIST> templateList = null;
+    List<SelectListItem> tmpTemplates = new List<SelectListItem>();
+    if (RootDepartment != null)
+    {
+        exitsCheck = unit.Departments.ExistDeparmentLevel0(RootDepartment);
+    }
+    if (exitsCheck)
+    {
+        templateList = unit.Departments.GetAllDepartmentByLevel(LevelDeparment.Level1.GetHashCode());
+    }
+    else
+    {
+        templateList = unit.Departments.GetAllDepartmentById(RootDepartment);
+    }
+    tmpTemplates.Add(new SelectListItem() { Text = Resources.Localization.StatusALL, Value = "", Selected = false });
+    if (templateList != null && templateList.Count > 0)
+    {
+        for (int i = 0; i < templateList.Count; i++)
+        {
+            tmpTemplates.Add(new SelectListItem() { Text = templateList[i].DEPARTMENT_NAME.ToString(), Value = templateList[i].DEPARTMENT_NAME.ToString(), Selected = false });
+        }
+    }
+    var TEMPLATESLIST = new SelectList(tmpTemplates, "Value", "Text", 0);
+    
+}
+<script>
+    $(function () {
+      
+        var dateMonth = '@System.DateTime.Now.Month';
+        var dateYear = '@System.DateTime.Now.Year';
+        var types = '@types';
+          $.ajax({
+                type: "GET",
+                url: '/CalendarDuty/List',
+                data: { dateMonth: dateMonth, dateYear: dateYear, types: types },
+                success: function (response) {
+                    $('#cat_list_render1').html(response);
+                }
+            });
+        
+    });
+
+</script>
+<script type="text/javascript">    
+    $(document).ready(function (e) {
+        $('.selectStatus').val(0);
+        $('.selectStatus').selectpicker();
+    });
+    $(document).ready(function (e) {
+        $('.selectMonths').val(@iMonthNow);
+        $('.selectMonths').selectpicker();
+    });
+    $(document).ready(function (e) {
+        $('.selectYears').val(@iYearNow);
+        $('.selectYears').selectpicker();
+    });
+
+    $(document).ready(function (e) {
+        $('#selectcboDeparment').val('');
+        $("#selectcboDeparment").attr("data-live-search", "true");
+        $('#selectcboDeparment').selectpicker({
+            size: 10
+        });
+    });
+</script>
+
+<div class="content-wrapper" id="Contentx">
+
+    <div class="page-nav-search-box">
+        @using (Ajax.BeginForm("CalendarLists", "CalendarDuty", new { types = types }, new AjaxOptions
+         {
+         
+             HttpMethod = "POST",
+             InsertionMode = InsertionMode.Replace,
+             UpdateTargetId = "cat_list_render1",
+            
+             
+         })) 
+        {
+         
+            <table border="0px" width="100%" class="tbl_Search">
+                <tr>
+                    <td colspan="4" style="height: 40px;">
+                        @if (types == 3)
+                        {
+                            <div id="nav"><a href="/CalendarDuty" title="">@Localization.ManageCalendarDutyTitle.ToUpper()</a> » @Localization.ListCalendarDuty.ToUpper()</div>
+                        }
+                        else if (types == 1)
+                        {
+                            <div id="nav">@Localization.ManageCalendarDutyTitle.ToUpper() » @Localization.ListCalendarLeader.ToUpper()</div> 
+                        }
+                        else if (types == 2)
+                        {
+                            <div id="nav">@Localization.ManageCalendarDutyTitle.ToUpper() » @Localization.CalendarDirectorsTittle.ToUpper()</div>
+                        }
+                        else if (types == 4)
+                        {
+                            <div id="nav">@Localization.ManageCalendarDutyTitle.ToUpper() » @Localization.CalendarHospitalTittle.ToUpper()</div>
+                        }
+                    </td>
+                </tr>
+                <tr>
+                <tr>
+                    <td style="width: 15%" class="Align_right">
+
+                        @Resources.Localization.DateCreateCalendar
+                        &nbsp;
+                    </td>
+                    <td style="width: 35%;" class="Align_Left">&nbsp;
+                         @Html.TextBoxFor(m => m.DATE_CREATES, new { Value = "", @class = "span2", id = "dpd1", @autocomplete = "off" })
+
+                    </td>
+                    <td style="width: 10%;" class="Align_right">
+                        @Resources.Localization.DateApprovalCalendar
+                        &nbsp;
+                    </td>
+                    <td style="width: 40%" class="Align_Left">&nbsp;
+                              @Html.TextBoxFor(m => m.DATE_APPROVEDS, new { Value = "", @class = "span2", id = "dpd2", @autocomplete = "off" })
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="Align_right">
+                        @Resources.Localization.UserCreateCalendar
+                        &nbsp;
+                    </td>
+                    <td class="Align_Left">&nbsp;  
+                          @Html.TextBoxFor(m => m.ADMIN_USER_CREATE, new { Value = "", @class = "span2", id = "userCreate", @data_provide = "typeahead", autocomplete = "off" })
+
+
+
+                    </td>
+                    <td class="Align_right">
+                        @Resources.Localization.UserApprovalCalendar
+                        &nbsp;
+                    </td>
+                    <td class="Align_Left">&nbsp;
+                               @Html.TextBoxFor(m => m.ADMIN_USER_APPROVED, new { Value = "", @class = "span2", id = "userApproved", @data_provide = "typeahead", autocomplete = "off" })
+
+                    </td>
+
+                </tr>
+                <tr>
+                    <td class="Align_right">
+
+                        @Resources.Localization.StatusCalendar  &nbsp;
+                    </td>
+                    <td class="Align_Left">&nbsp;
+                               @Html.DropDownListFor(m => m.CALENDAR_STATUS, CALENDAR_STATUS, new { @class = "selectStatus", data_size = "10", data_width = "280px" })
+
+
+                    </td>
+                    <td class="Align_right">
+                        @Resources.Localization.CalendarMonth
+
+                    </td>
+                    <td class="Align_Left">&nbsp;                           @Html.DropDownListFor(m => m.DATE_MONTH, DATE_MONTH, new { @class = "selectMonths", data_width = "80px" })
+                        &nbsp;
+                              @Resources.Localization.LabelYear&nbsp;
+                                  @Html.DropDownListFor(m => m.DATE_YEAR, DATE_YEAR, new { @class = "selectYears", data_width = "160px" })
+
+                    </td>
+
+                </tr>
+
+                @if (types == 3)
+                {
+                    <tr>
+                        <td class="Align_right">
+                            @Resources.Localization.LabelDepartment  &nbsp;
+                        </td>
+                        <td class="Align_Left">&nbsp; 
+                                  @Html.DropDownListFor(m => m.DEPARTMENTS, TEMPLATESLIST, new { @class = "selectcboDeparment", id = "selectcboDeparment", data_width = "280px" })
+                                               
+
+                        </td>
+                        <td class="Align_right"></td>
+                        <td class="Align_Left">&nbsp;  
+                            
+                        </td>
+
+                    </tr>
+                }
+
+                <tr>
+                    <td colspan="4" style="height: 35px; text-align: center; vertical-align: bottom">
+
+                        <span class="input-group-btn">
+
+                            <button class="btn btn-primary btn-sm" type="submit">
+                                <span class="glyphicon glyphicon-search"></span>
+                                @Localization.ButtonSearch</button>
+
+                            @if ((types == 3) && (enableInsert))
+                            {
+                                                              
+                                <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonAddDisplay"  onclick="location.href='@Url.Action("AddCalendarDuty", "CalendarDuty")'" ><span class="glyphicon glyphicon-plus"></span>@Localization.ButtonAddDisplay</button>
+                                                     
+                            }
+                            else if ((types == 1) && (enableInsert))
+                            {
+                                <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonAddDisplay"  onclick="location.href='@Url.Action("AddCalendarLeader", "CalendarDuty")'" ><span class="glyphicon glyphicon-plus"></span>@Localization.ButtonAddDisplay</button>
+                      
+                            }
+                            else if ((types == 2) && (enableInsert))
+                            {
+                                <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonAddDisplay"  onclick="location.href='@Url.Action("AddCalendarDirectors", "CalendarDuty")'" ><span class="glyphicon glyphicon-plus"></span>@Localization.ButtonAddDisplay</button>
+
+                            }
+
+                        </span>
+                    </td>
+
+                </tr>
+            </table>
+               
+       
+        }
+    </div>
+
+    <div class="page-content">
+        <div id="cat_list_render1">
+           
+        </div>
+    </div>
+
+    <div id="add_CalendarDuty_Container"></div>
+</div>
+<div id="view_model_container">
+</div>
+<div id="AddCalendarHospital"></div>
+
+<script type="text/javascript">
+   
+
+    function btnSearchClick() {
+        OnCriteria(0);
+    }
+    $('#txt_search_form').keyup(function (e) {
+        if (e.keyCode == 13)
+        { OnCriteria(0); }
+
+    });
+    function AddCalendarHospital() {
+        $.get('/CalendarDuty/AddCalendarHospital', {}, function (data) {
+
+            $('#AddCalendarHospital').html(data);
+            $('#CalendarHospitalForm').modal({
+                keyboard: true
+            });
+        });
+    }
+
+</script>
+
+<script type="text/javascript" src="~/Scripts/bootstrap.typeahead.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function (e) {
+        $('#userCreate').typeahead({
+            source: function (term, process) {
+                var url = '@Url.Content("/CalendarDuty/GetNamesCreate")';
+
+                return $.getJSON(url, { term: term }, function (data) {
+                    return process(data);
+                });
+            }
+        });
+        $('#department').typeahead({
+            source: function (termDepartment, process) {
+                var url = '@Url.Content("/CalendarDuty/GetDepartment")';
+
+                    return $.getJSON(url, { termDepartment: termDepartment }, function (data) {
+                        return process(data);
+                    });
+                }
+            });
+
+        $('#userApproved').typeahead({
+            source: function (termApproved, process) {
+                var url = '@Url.Content("/CalendarDuty/GetNamesApproved")';
+
+                    return $.getJSON(url, { termApproved: termApproved }, function (data) {
+                        return process(data);
+                    });
+                }
+            });
+    })
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        window.prettyPrint && prettyPrint();
+        $('#dpd1,#dpd2').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+        });
+
+        $.mask.definitions['y'] = '[12]';
+        $.mask.definitions['m'] = '[01]';
+        $.mask.definitions['d'] = '[0-3]';
+        $("#dpd1,#dpd2").mask("d9/m9/y999", { placeholder: "_" });
+        // disabling dates
+        var nowTemp = new Date();
+        var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0);
+
+    });
+
+</script>
+

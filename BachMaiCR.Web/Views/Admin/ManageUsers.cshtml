@@ -1,0 +1,134 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.Web.Common
+@{
+    ViewBag.Title = Localization.ManageUsersTitle;
+    var lstAction = ViewBag.Actions as List<string>;
+    var user = User.Identity.Name;
+    if (user == null)
+    {
+        user = "";
+    }
+    else
+    {
+        user = user.ToLower();
+    }
+    if (lstAction == null)
+    {
+        lstAction = new List<string>();
+    }
+    bool enableAddUser = lstAction.Contains(WebConst.ACTION_USER_ADD_CODE);
+    var RootDepartment = ViewBag.RootDepartment as List<LM_DEPARTMENT>;
+    string DeptId = "", DeptName = "";
+    if (RootDepartment != null && RootDepartment.Count > 0)
+    {
+        DeptId = Convert.ToString(RootDepartment[0].LM_DEPARTMENT_ID);
+        DeptName = RootDepartment[0].DEPARTMENT_NAME;
+    }
+    RootDepartment = null;
+    
+}
+
+<link href="~/Content/jquery.treeview.css" rel="stylesheet" />
+<link href="~/Content/gpcp-department.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.cookie.js"></script>
+<script src="~/Scripts/jquery.treeview.js"></script>
+<script src="~/Scripts/gpcp-department.js"></script>
+<div class="content">
+    <div class="clear"></div>
+    <table style="width: 100%">
+        <tr>
+            <td style="height: 40px;">
+                <div id="nav"><a href="/admin/ManageUsers" title="">@Resources.Localization.ManagerAdminTitle.ToUpper()</a> »  @ViewBag.Title.ToUpper() </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="">
+                <div style="width: 100%;">
+                    <div>
+                        <div class="col-md-2" style="text-align:right;">
+                            @Localization.LoginModelDisplayUserName
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="TextBoxContent" style="width: 100% !important" id="input-search">
+                        </div>
+
+                        <div class="col-md-2" style="text-align:right;">
+                            @Localization.LabelDepartment
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="TextBoxContent" style="width: 100% !important" id="input-deparment" data-id="@DeptId" data-name="@DeptName">
+                        </div>
+                    </div>
+                    <div>
+                        <div style="height: 10px;"></div>
+                        <div class="col-md-12">
+                           
+                            <div style="padding-top: 10px; text-align: center">
+                                <div class="col-md-12">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary btn-sm" type="button" id="button-search"><span class="glyphicon glyphicon-search"></span>@Localization.Search</button>
+                                        @if (enableAddUser || user == WebConst.DefaultAdminAccount.ToLower())
+                                        {
+                                            <button type="button" id="user_add" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonAddDisplay"  ><span class="glyphicon glyphicon-plus"></span>@Localization.ButtonAddDisplay</button>
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="user-list">
+                    @{
+                        Html.RenderPartial("_UserList");
+                    }
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="user-model-container"></div>
+<div id="resetpass-model-container"></div>
+@Scripts.Render("~/bundles/bootstrapjs")
+@Scripts.Render("~/bundles/underscore")
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#user_add').bind('click', function (event) {
+                $.get('/Users/AddUser', {}, function (data) {
+                    var $userModel = $('#user-model-container');
+                    $userModel.html(data);
+                    $('#UserModal').modal({
+                        keyboard: true
+                    });
+                });
+            });
+
+            $('#input-search').keyup(function (e) {
+                if (e.keyCode == 13)
+                { OnCriteria(0); }
+
+            });
+            $('#button-search').bind('click', function () {
+                OnCriteria(0);
+            });
+
+            $('#input-deparment').Department({
+            });
+            $('#input-deparment').change(function (e) {
+                OnCriteria(0);
+
+            });
+        });
+
+
+
+    </script>
+}

@@ -1,0 +1,328 @@
+﻿@model IEnumerable<BachMaiCR.DBMapping.Models.DOCTOR>
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using Resources;
+@{
+    var idCalendarDuty = ViewBag.idCalendarDuty;
+    var allDoctor = ViewBag.allDoctor as List<DoctorColumn>;
+    var idDoctorChange = ViewBag.idDoctorChange;
+    var dateDoctorChange = ViewBag.dateDoctorChange;
+    var idColumn = ViewBag.idColumn;
+    var idWeek = ViewBag.idWeek;
+    var isExist = ViewBag.isExist;
+    var arrayDoctorIsExit = ViewBag.arrayid as string;
+    var DoctorName = ViewBag.DoctorName as string;
+
+    DateTime date = Convert.ToDateTime(dateDoctorChange);
+    int monthX = date.Month;
+    int yearX = date.Year;
+}
+<style>
+    th{
+        font-size:12px;
+    }
+   
+
+</style>
+<table id="table_list_staff1" class="tbl" style="height:20px;border:0;width:100%">
+       <tr>
+           <th style="vertical-align:top;" class="col-sm-1 viewdoctors">
+               @Localization.ListItem
+           </th>
+           <th style="vertical-align:top;" class="col-sm-1 viewdoctors"></th>
+           <th style="text-align: center; vertical-align: top;" class="col-sm-3 viewdoctors">
+               @Localization.LabelShortName
+           </th>
+           <th style="text-align: left;vertical-align:top;" class="col-sm-4 viewdoctors">
+               @Localization.ListDoctorDefault
+           </th>
+
+           <th style="text-align: left; vertical-align: top;" class="col-sm-3 viewdoctors">
+               @Localization.LableDoctorLevel
+           </th>
+       
+    </tr>
+      </table>
+<div style="height: 180px; width:100%; overflow-y: auto;">
+    <table id="table_list_staff" class="table-view">
+        @{
+            int i = 1;
+        }
+@foreach (var item in Model)
+{
+
+    List<DoctorColumn> listDoctor = allDoctor.Where(o => o.DOCTORS_ID == item.DOCTORS_ID).ToList();
+    if (listDoctor.Count != 0)
+    {
+        if (arrayDoctorIsExit.Contains("'" + item.DOCTORS_ID.ToString() + "'")==false)
+        {
+           <tr>
+               <td class="col-sm-1 viewdoctors">
+                   @(i++)
+               </td>
+               <td class="col-sm-1 viewdoctors">
+                   <input type="radio" id="@item.DOCTORS_ID" name="doctors" value="@item.DOCTORS_ID" data-name="@item.ABBREVIATION">
+
+               </td>
+               <td class="col-sm-3 viewdoctors">
+                   <div id="@Html.DisplayFor(modelItem => item.DOCTORS_ID)" title="@Html.DisplayFor(modelItem => item.ABBREVIATION)">
+                       @Html.DisplayFor(modelItem => item.ABBREVIATION)
+                   </div>
+               </td>
+               <td style="text-align:left" class="col-sm-4 viewdoctors">
+                   <a title='Xem lịch cá nhân' href='javascript:void(0)' class='detailDoctor' data-id='@item.DOCTORS_ID'>
+                       <span style=" color: #0B55C4; ">@Html.DisplayFor(modelItem => item.DOCTOR_NAME)</span>
+                   </a>   
+                 
+               </td>
+                <td class="col-sm-3">@Html.DisplayFor(modelItem => item.DOCTOR_LEVEL.LEVEL_NAME)
+                    </td>
+            </tr>
+        }
+        else
+        {
+            <tr style="background-color:#b6ff00">
+                <td class="col-sm-1 viewdoctors">
+                    @(i++)
+                </td>
+                <td  >
+                   
+                </td>
+                <td class="col-sm-3 viewdoctors">
+                    <div id="@Html.DisplayFor(modelItem => item.DOCTORS_ID)" title="@Html.DisplayFor(modelItem => item.ABBREVIATION)">
+                        @Html.DisplayFor(modelItem => item.ABBREVIATION)
+                    </div>
+                </td>
+                <td style="text-align:left" class="col-sm-4 viewdoctors">
+                    <a title='Xem lịch cá nhân' href='javascript:void(0)' class='detailDoctor' data-id='@item.DOCTORS_ID'>
+                        <span style=" color: #0B55C4; ">@Html.DisplayFor(modelItem => item.DOCTOR_NAME)</span>
+                    </a>   
+                </td>
+                <td class="col-sm-3 viewdoctors">
+                    @Html.DisplayFor(modelItem => item.DOCTOR_LEVEL.LEVEL_NAME)
+            </td>
+            </tr>
+        
+        }
+    }
+}
+            
+       
+   
+ </table>
+    </div>
+    <div class="DatesChange" id="DatesChange"  style="height:30px;"> </div>
+    <div class="panel-search-button">
+        <input type="hidden" value="0" id="flag_accept" />
+        <input type="button" id="btnOkDuty" value="Đổi lịch" onclick="return onChangeDuty();" class="btn btn-primary min-width" />
+        <input type="button" id="btnCancelDuty" value="Đóng" onclick="return onClose();" class="btn btn-primary min-width" />
+    </div>
+
+<script type="text/javascript">
+    $(".detailDoctor").bind('click', function (event) {
+        var $self = $(this);
+        $.get('/CalendarDuty/DetailCalendarPersonal', {
+            doctorId: $self.attr('data-id'), monthx: '@monthX', yearx: '@yearX',
+        },
+            function (data) {
+                var $categoryModel = $('#view_model_container');
+                $categoryModel.html(data);
+                $('#viewEntityModel').modal({
+                    keyboard: false
+                });
+
+            });
+
+    });
+    $("input[type=radio]").click(function (event) {
+        var idDoctor = this.id;
+        var doctorName = $(this).attr('data-name');
+        var idDoctorChange = '@idDoctorChange';
+        var idCalendarDuty = '@idCalendarDuty';
+        $.ajax(
+                 {
+                     type: "GET",
+                     contentType: "application/json; charset=utf-8",
+                     url: "/CalendarDuty/ListDateChange?idDoctorChange=" + idDoctorChange + "&idDoctorIsChange=" + idDoctor + "&idCalendarDuty=" + idCalendarDuty,
+                     success: function (data) {
+                         $('#DatesChange').html(data);
+                         $('#spDoctorChange').html(doctorName);
+                     },
+                });
+
+    })
+
+
+    function onChangeDuty() {
+        
+     
+        var idCalendarDuty = '@idCalendarDuty'.toString();
+        var idDoctorChange = '@idDoctorChange'.toString();
+        //Ngày đổi lịch khi bật popup
+        var dateDoctorChange = '@dateDoctorChange'.toString();
+        var idColumn = '@idColumn'.toString();
+        var idDoctorIsChange = $("input[name='doctors']:checked").val().toString();
+        var strDate = $('#DatesChange').find($('.selectDateX')).val().toString();
+        var isExist = '@isExist';
+        var idWeek = '@idWeek';
+        var arrDatesIsChange = strDate.split('_');
+        //Ngày được chọn để đổi
+        var DatesIsChange;
+        var DoctorName = '@DoctorName';
+        var idColumeIsChange;
+       
+        var dayS = [];
+        //Ngày chọn để đổi không được chọn thì bổ sung     
+        if (strDate == -1) {
+            dayS = dateDoctorChange.split('/');
+            var date = new Date(dayS[2], dayS[1]-1, dayS[0]);
+                        var datex = $.datepicker.formatDate('dd/mm/yy', date);
+                        var tzOffset = new Date(datex);
+                        var data_idstart = ((tzOffset.getTime() * 10000) + 621355968000000000).toString() + idDoctorChange + idColumn;
+                        var idStart = idDoctorChange;
+                        var doctorName = DoctorName;
+                        var doctorNameChange = $("input[name='doctors']:checked").attr("data-name");
+                        var idChangeDoctor = idDoctorIsChange;
+                        var data_vt = datex.toString() + idDoctorChange + idColumn;
+                        $('#selectable').find('.item-schedule .schedule-elementView').each(function () {
+                            var idItem = $(this).attr("data-vt");
+                            if (idItem == data_vt) {
+                                $(this).empty();
+                                $(this).attr('data-idstart', data_idstart);
+                                $(this).attr('data-idchange', data_idchange);
+                                $(this).attr('data-idchangedoctor', idChangeDoctor);
+                                $(this).attr('data-changename', doctorNameChange);
+
+                                $(this).append('<span class="viewInfor" data-ChangeText="' + doctorName + '"   id="' + idStart + '">' + doctorName + '</span>');
+                                $(this).append('<img src="/Images/Forward_Arrow.png" width="12px" height="12px" /> <span class="viewInfor" data-viewX=1 id="' + idChangeDoctor + '">  ' + doctorNameChange + '</span> <span class="element-close fa fa-rotate-left" title="Hủy đổi lịch trực" id="' + data_idstart + '" onclick="scheduleCancelClick(this,0)"/></div>');
+                                $(this).removeClass('schedule-elementView');
+                                $(this).addClass('schedule-elementChangeOne');
+                                $(this).removeAttr("style");
+                                $(this).css({ 'background': '#b6ff00', 'padding-left': '3px', 'max-width': '100px' });
+
+                            }
+                        });
+
+                    
+        }
+        else {
+            // Ngày chọn để đổi được chọn thì hoán đổi
+             DatesIsChange = arrDatesIsChange[0].toString();
+             idColumeIsChange = arrDatesIsChange[1].toString();
+            dayS = dateDoctorChange.split('/');
+            var date = new Date(dayS[2], dayS[1]-1, dayS[0]);
+            var datex = $.datepicker.formatDate('dd/mm/yy', date);
+            var tzOffset = new Date(datex);
+            var data_idstart = ((tzOffset.getTime() * 10000) + 621355968000000000).toString() + idDoctorChange + idColumn;
+            dayS = DatesIsChange.split('/');
+            var dateChange = new Date(dayS[2], dayS[1]-1, dayS[0]);
+            var dateChangex = $.datepicker.formatDate('dd/mm/yy', dateChange);
+            var tzOffsetx = new Date(dateChangex);
+            var data_idchange = ((tzOffsetx.getTime() * 10000) + 621355968000000000).toString() + idDoctorIsChange + idColumeIsChange;
+
+
+
+            var idStart = idDoctorChange;
+            var doctorName = DoctorName;
+            var doctorNameChange = $("input[name='doctors']:checked").attr("data-name");
+            var idChangeDoctor = idDoctorIsChange;
+
+            var data_vt = datex.toString() + idDoctorChange + idColumn;
+            var data_vt_Send =   datex.toString() + "_" + idDoctorChange + "_" + idColumn;
+            var data_vt_Change = dateChangex.toString() + idDoctorIsChange + idColumeIsChange;
+            var data_vt_Change_Send =  dateChangex.toString() + "_" + idDoctorIsChange +"_"+ idColumeIsChange;
+            var checkNot = 0; // Kiểm tra xem người đổi lịch có được phép hay không?
+            $('#selectable').find('.item-schedule .schedule-elementView').each(function () {
+                var idItem = $(this).attr("data-vt");
+                if (idItem == data_vt_Change) {
+                    checkNot = 1;
+                }
+            });
+            $('#selectable').find('.item-schedule .schedule-elementDelete').each(function () {
+                var idItem = $(this).attr("data-vt");
+                if (idItem == data_vt_Change) {
+                    checkNot = 2; // Truong hop xoa van cho doi
+                }
+            })
+            $('#selectable').find('.item-schedule .schedule-elementView').each(function () {
+                var idItem = $(this).attr("data-vt");
+                if (idItem == data_vt) {
+                    $(this).empty();
+                    $(this).attr('data-idstart', data_idstart);
+                    $(this).attr('data-idchange', data_idchange);
+                    $(this).attr('data-idchangedoctor', idChangeDoctor);
+                    $(this).attr('data-changename', doctorNameChange);
+                    $(this).attr('data-changeSend', data_vt_Change_Send);
+                    $(this).append('<span class="viewInfor" data-ChangeText="' + doctorName + '"   id="' + idStart + '">' + doctorName + '</span>');
+                    $(this).append('<img src="/Images/Forward_Arrow.png" width="12px" height="12px" /> <span class="viewInfor" data-viewX=1 id="' + idChangeDoctor + '">  ' + doctorNameChange + '</span> <span class="element-close fa fa-rotate-left" title="Hủy đổi lịch trực" id="' + data_idstart + '" onclick="scheduleCancelClick(this,1)"/></div>');
+                    $(this).removeAttr("style");
+                    $(this).css({ 'background': '#b6ff00', 'padding-left': '3px', 'max-width': '100px' });
+                    $(this).removeClass('schedule-elementView');
+                    if ((checkNot == 1)||(checkNot == 2)) {
+                        $(this).addClass('schedule-elementChangeTwo');
+                    }
+                    else
+                    {
+                   
+                        $(this).addClass('schedule-elementChangeOne');
+                        $(this).find('.element-close').attr("onclick", "scheduleCancelClick(this, 0)");
+                    }
+                   
+           
+                }
+            });
+
+
+            $('#selectable').find('.item-schedule .schedule-elementView').each(function () {
+                var idItem = $(this).attr("data-vt");
+                 if (idItem == data_vt_Change) {
+                    $(this).empty();
+                    $(this).attr('data-idstart', data_idchange );
+                    $(this).attr('data-idchange', data_idstart);
+                    $(this).attr('data-idchangedoctor', idStart);
+                    $(this).attr('data-changename', doctorName);
+                    $(this).attr('data-changeSend', data_vt_Send);
+                    $(this).append('<span class="viewInfor" data-ChangeText="' + doctorNameChange + '"   id="' + idChangeDoctor + '">' + doctorNameChange + '</span>');
+                    $(this).append('<img src="/Images/Forward_Arrow.png" width="12px" height="12px" /> <span class="viewInfor" data-viewX=1 id="' + idStart + '">  ' + doctorName + '</span> <span class="element-close fa fa-rotate-left" title="Hủy đổi lịch trực" id="' + data_idchange + '" onclick="scheduleCancelClick(this,1)"/></div>');
+                    $(this).removeAttr("style");
+                    $(this).css({ 'background': '#b6ff00', 'padding-left': '3px', 'max-width': '100px' });
+                    $(this).removeClass('schedule-elementView');
+                    $(this).addClass('schedule-elementChangeTwo');
+                  
+                }
+            });
+            if (checkNot == 2)
+            {
+                $('#selectable').find('.item-schedule .schedule-elementDelete').each(function () {
+                    var idItem = $(this).attr("data-vt");
+                    if (idItem == data_vt_Change) {
+                        $(this).empty();
+                        $(this).attr('data-idstart', data_idchange);
+                        $(this).attr('data-idchange', data_idstart);
+                        $(this).attr('data-idchangedoctor', idStart);
+                        $(this).attr('data-changename', doctorName);
+                        $(this).attr('data-changeSend', data_vt_Send);
+                        $(this).append('<span class="viewInfor" data-ChangeText="' + doctorNameChange + '"   id="' + idChangeDoctor + '">' + doctorNameChange + '</span>');
+                        $(this).append('<img src="/Images/Forward_Arrow.png" width="16px" height="16px" /> <span class="viewInfor" data-viewX=1 id="' + idStart + '">  ' + doctorName + '</span> <span class="element-close fa fa-rotate-left" title="Hủy đổi lịch trực" id="' + data_idchange + '" onclick="scheduleCancelClick(this,1)"/></div>');
+                        $(this).removeAttr("style");
+                        $(this).css({ 'background': '#b6ff00', 'padding-left': '3px', 'max-width': '100px' });
+                        $(this).removeClass('schedule-elementDelete');
+                        $(this).addClass('schedule-elementChangeTwo');
+
+                    }
+                });
+
+            }
+        }
+     
+        $('.ui-icon-closethick').click();
+    }
+    function onClose() {
+        $('#flag_accept').val(0);
+        $('.ui-icon-closethick').click();
+        return false;
+    }
+</script>
+
+

@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "_TreeDepartment";
+}
+
+
+@helper GenerateTreeDepartment()
+{
+    var rootDepartment = ViewBag.RootDepartment as List<BachMaiCR.DBMapping.Models.LM_DEPARTMENT>;
+    <ul id="treedepartment">
+        @foreach (var parrentDepartment in rootDepartment)
+        {
+            var listDepartment = BachMaiCR.Web.Common.Helpers.GenerateDepartmentTreeHelper.GetRootDepartment(parrentDepartment.LM_DEPARTMENT_ID);            
+            <li><a class="" href="javascript:SelectDepartment('@parrentDepartment.DEPARTMENT_NAME', @parrentDepartment.LM_DEPARTMENT_ID);" data-in ="@parrentDepartment.LM_DEPARTMENT_ID">@parrentDepartment.DEPARTMENT_NAME</a>
+               
+               @GenerateNote(parrentDepartment.LM_DEPARTMENT_ID, parrentDepartment.DEPARTMENT_NAME)
+            </li>
+        }
+    </ul>
+}
+
+@helper GenerateNote(int parrentId, string departmentName)
+{
+    var listDepartment = BachMaiCR.Web.Common.Helpers.GenerateDepartmentTreeHelper.GetRootDepartment(parrentId);
+    if (listDepartment.Count > 0)
+    {
+        <ul>
+            @foreach (var department in listDepartment)
+            {
+                <li><a class="" href="javascript:SelectDepartment('@department.DEPARTMENT_NAME', @department.LM_DEPARTMENT_ID);" data-in ="@department.LM_DEPARTMENT_ID">@department.DEPARTMENT_NAME</a>
+                    @GenerateNote(department.LM_DEPARTMENT_ID, department.DEPARTMENT_NAME)
+                </li>
+            }
+        </ul>
+    }
+}
+<link href="~/Content/jquery.treeview.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.cookie.js"></script>
+<script src="~/Scripts/jquery.treeview.js"></script>
+<div class="modal fade" id="BrowseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Chọn phòng ban</h4>
+            </div>
+            <div class="modal-body min-width">
+                <div class="form-group">
+                   <text> @if (ViewBag.RootDepartment != null)
+                    {
+                        @GenerateTreeDepartment()
+                    }</text>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#treedepartment").treeview({
+            persist: "location",
+            collapsed: true,
+            unique: true
+        });
+    });
+    function SelectDepartment(name, id) {
+        $("#departmentname").val(name);
+        $("#LM_DEPARTMENT_ID").val(id);
+        $('#BrowseModal').modal('hide');
+    }
+</script>

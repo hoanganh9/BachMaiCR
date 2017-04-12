@@ -1,0 +1,699 @@
+﻿@using BachMaiCR.DBMapping.Models;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DataAccess;
+@using Resources;
+@using System.Data;
+@using BachMaiCR.Web.Utils;
+@using BachMaiCR.Utilities.Enums;
+@{
+
+
+    string titlePopup = Localization.DoctorDetail;
+    ViewBag.Title = Resources.Localization.TitleEditCalendar;
+    var objCalendarDuty = ViewBag.objCalendarDuty as CALENDAR_DUTY;
+    var listDoctor = ViewBag.doctors as List<DoctorCalendarLeader>;
+    int idCalendarDuty = 0;
+    int? calendarStatus = 0;
+    int? calendarMonth = 0;
+    int? calendarYear = 0;
+    if (objCalendarDuty != null)
+    {
+        idCalendarDuty = objCalendarDuty.CALENDAR_DUTY_ID;
+        calendarStatus = objCalendarDuty.CALENDAR_STATUS;
+        calendarMonth = objCalendarDuty.CALENDAR_MONTH;
+        calendarYear = objCalendarDuty.CALENDAR_YEAR;
+    }
+    var times = ViewBag.times;
+    DateTime date = Utils.GetDateTime();
+    int dayCurrent = date.Day;
+    //Giá trị xác định xem có cho phép sửa lịch hay không
+    int isEnableEdit = 0;
+    if (date.Hour > Convert.ToInt32(DayShifts.EndHour) || (date.Hour == Convert.ToInt32(DayShifts.EndHour) && date.Minute > Convert.ToInt32(DayShifts.EndMinute)))
+    {
+        isEnableEdit = 1;
+    }
+    int checkCurrentTime = 0;
+    if (date.Month == calendarMonth && date.Year == calendarYear)
+    {
+        checkCurrentTime = 1;
+    }
+    //End
+    date = Convert.ToDateTime(times);
+    DataTable tbl = Utils.Fill(date);
+    string[] thu = { "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật" };
+    var columnx = "";
+    string lengh = "";
+    string doctorName = "";
+    string doctorId = "", calendarDoctorId = "";
+    //Check xem dữ liệu xóa hay đổi lịch
+    UnitOfWork unit = new UnitOfWork();
+    CALENDAR_CHANGE objChangcheck = new CALENDAR_CHANGE();
+    List<CALENDAR_CHANGE> objChangDelete = new List<CALENDAR_CHANGE>();
+    List<CALENDAR_CHANGE> objChangeChange = new List<CALENDAR_CHANGE>();
+    List<CALENDAR_CHANGE> objChangeChange_Old = new List<CALENDAR_CHANGE>();
+    List<CALENDAR_CHANGE> listCalendarChangeChild = new List<CALENDAR_CHANGE>();
+    List<CALENDAR_CHANGE> listCalendarChange = unit.CalendarChanges.GetListChangeCalendar(Convert.ToInt32(idCalendarDuty));
+    var nodeOld = "";
+    int addType = CalendarChangeType.Add.GetHashCode();
+    int changeType = CalendarChangeType.Change.GetHashCode();
+    int deletedType = CalendarChangeType.Deleted.GetHashCode();
+    var typeEdit = ViewBag.typeEdit;
+    int valueChange = 1;
+    if (calendarStatus > 1)
+    { 
+        valueChange = 1;
+    }
+    else
+       { 
+        valueChange = 0;
+    }
+}
+<style>
+    .tbl td:first-child {
+        text-align: left;
+    }
+
+    .tbl {
+        table-layout: fixed;
+    }
+
+        .tbl td, .tbl td div {
+            text-overflow: ellipsis;
+            overflow: hidden;
+          
+        }
+    .schedule-element {
+        min-width: 100%;
+        max-width: 100%;
+    }
+        
+</style>
+
+<script type="text/javascript">
+    $(function () {
+        $('#selectable').selectable({
+            filter: 'td.item-schedule',
+            stop: function (event, ui) {
+                $('#popupStaff').fadeOut(50);
+                $('#box_staff').fadeOut(50);
+                $('#flag_accept').val(0);
+                $('.ui-icon-closethick').click();
+            }
+        })
+
+        setWidthTd();
+        var $page_nav_content = $('#page-nav-content');
+        $page_nav_content.css('overflow-x', "scroll");
+    });
+    function setWidthTd() {
+        var widthTable = $('#selectable').width();
+        var colWidth = parseFloat(widthTable) / 7;
+        $('#selectable tr td').each(function () {
+            $(this).width(parseFloat(colWidth).toFixed());
+        });
+    }
+
+</script>
+@Html.Hidden("isChange", valueChange)
+@Html.Hidden("calendarStatus", calendarStatus)
+@Html.Hidden("dayCurrent", dayCurrent)
+@Html.Hidden("isEnableEdit", isEnableEdit)
+@Html.Hidden("checkCurrentTime", checkCurrentTime)
+<div class="content page-content" style="width:98%;">
+    @if (typeEdit == 1)
+{<div id="nav">
+        <table style="width:100%;border:0px">
+            <tr>
+                <td style=" width: 65%">
+                    <div style="margin-top:-3px;">    <a href="/CalendarDuty" title=""> @Resources.Localization.ManageCalendarDutyTitle.ToUpper()</a> »  @ViewBag.Title.ToUpper()</div> 
+                </td>
+                <td>
+                    <table border="0" style="width:100%;margin-top:10px; border-spacing:0px 0px;border-collapse: separate;">
+                        <tr>
+                            <td style="width:100px;background:#b6ff00"></td>
+                            <td style="text-align:left;width:100px; color:#302f2f"> <strong> Đổi lịch trực</strong></td>
+                            <td style="width:100px;background:#d5f76e;"></td>
+                            <td style="text-align:left;width:155px;color:#302f2f"> <strong> Bổ sung lịch trực</strong></td>
+                            <td style="text-align:left"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+          <table border="0">
+        <tr>
+
+            <td style="width: 100%; text-align: left;vertical-align:top">
+                <strong>  @Resources.Localization.LabelContent : 	</strong> &nbsp;
+                @HttpUtility.HtmlDecode(objCalendarDuty.CALENDAR_NAME)&nbsp;
+                &nbsp; <strong>
+                    @Resources.Localization.LabelMonthSearch
+                </strong> &nbsp;  @Html.Raw(HttpUtility.HtmlDecode(objCalendarDuty.CALENDAR_MONTH.ToString()))
+                <strong>    @Resources.Localization.LabelYear</strong>   &nbsp;  @Html.Raw(HttpUtility.HtmlDecode(objCalendarDuty.CALENDAR_YEAR.ToString()))
+            </td>
+
+        </tr>
+        <tr>
+
+            <td style="vertical-align:bottom">
+                @if (objCalendarDuty.USER_CREATE_ID != null)
+                {
+                  <b>@Localization.ListUserCreate:&nbsp;</b>  @objCalendarDuty.ADMIN_USER.FULLNAME
+                }
+
+                @if (objCalendarDuty.DATE_CREATE != null)
+                {
+                   <b style="margin-left: 20px;">@Localization.ListDateCreate:&nbsp;</b>   @String.Format("{0:d/M/yyyy HH:mm:ss}", @objCalendarDuty.DATE_CREATE)
+                }
+            
+                @if (objCalendarDuty.USER_APPROVED_ID != null)
+                {
+                     <b style="margin-left: 20px;">@Localization.ListUserApproved:</b> @objCalendarDuty.ADMIN_USER1.FULLNAME
+                }
+                @if (objCalendarDuty.DATE_APPROVED != null)
+                {
+                    <b style="margin-left: 20px;">@Localization.ListDateApproved:&nbsp;</b>  @String.Format("{0:d/M/yyyy HH:mm:ss}", objCalendarDuty.DATE_APPROVED)
+                }
+                @if (objCalendarDuty.CALENDAR_STATUS != null)
+                {
+                    <b style="margin-left: 20px;">@Localization.ListStatus: &nbsp; </b>
+                    if (calendarStatus == 1)
+                    {
+                        @Html.Label(Resources.Localization.StatusCreateNew, new { @class = "labels" })
+                    }
+                    if (calendarStatus == 2)
+                    {
+                        @Html.Label(Resources.Localization.StatusPendingApproval, new { @class = "labels" })
+                    }
+                    if (calendarStatus == 3)
+                    {
+                        @Html.Label(Resources.Localization.StatusIsApproval, new { @class = "labels" })
+                    }
+                    if (calendarStatus == 4)
+                    {
+                        @Html.Label(Resources.Localization.StatusCancelApproval, new { @class = "labels" })
+                        <span><strong style="margin-left: 20px;">Nội dung hủy duyệt </strong> :&nbsp;  @objCalendarDuty.COMMENTS</span>
+                    }
+                }
+            </td>
+        </tr>
+    </table>
+    }
+    <div id="grid">
+        <table class="tbl" id="selectable" border="1">
+            <tr>
+
+
+                @for (int i = 0; i < 7; i++)
+                {
+                    <th>@thu[i] </th>
+                }
+
+            </tr>
+            @for (int j = 0; j < tbl.Rows.Count; j++)
+            {
+                DataRow dr = tbl.Rows[j];
+                <tr>
+
+                    @for (int k = 0; k < 7; k++)
+                    {
+                        columnx = dr[k].ToString();
+                        var id = columnx;
+                        var countRow = 0;
+                        var columnId ="";
+                        if (k == 5 || k == 6)
+                        {
+                            if (String.IsNullOrEmpty(columnx))
+                            {
+                                <td class="item-scheduleOld" id="@id">
+                                    <div style="vertical-align: top; float: right;">@columnx</div>
+                                </td>
+                            }
+                            else
+                            {
+                                var css = "item-schedule";
+                                if (Convert.ToInt32(columnx) == DateTime.Now.Day && DateTime.Now.Month == date.Month && DateTime.Now.Year == date.Year)
+                                {
+                                    css += " item-current";
+                                }
+                                DateTime dateX = Utils.ToDateTime(columnx + "/" + date.Month + "/" + date.Year, "dd/MM/yyyy");
+                                columnId = String.Format("{0:dd/MM/yyyy}", dateX);
+                                <td class="@css sundayCalendar " id="@id" style="vertical-align:top;">
+                                    <span class="itemspan_@columnx" id="@columnId" style="float:right; font-weight:bold;">  @columnx</span>
+                                    <br />
+                                    @for (int tt = 0; tt < listDoctor.Count; tt++)
+{
+    var divId = String.Format("{0:dd/MM/yyyy}", dateX) + "," + listDoctor[tt].DOCTORS_ID.ToString();
+    var divClass = "css" + id + "" + listDoctor[tt].DOCTORS_ID.ToString();
+    var rowid = "row" + listDoctor[tt].DOCTORS_ID;
+    if (Convert.ToInt32(columnx) == Convert.ToDateTime(listDoctor[tt].DATE_START).Day)
+    {
+        countRow++;
+        nodeOld = String.Format("{0:dd/MM/yyyy}", dateX) + "," + listDoctor[tt].DOCTORS_ID;
+        objChangcheck = new CALENDAR_CHANGE();
+        objChangcheck.CALENDAR_DUTY_ID = Convert.ToInt32(idCalendarDuty);
+        objChangcheck.DATE_START = dateX;
+        objChangcheck.DOCTORS_ID = listDoctor[tt].DOCTORS_ID;
+        objChangDelete = unit.CalendarChanges.ListNewChange(objChangcheck, deletedType, 1);
+        objChangeChange = unit.CalendarChanges.ListNewChange(objChangcheck, changeType, 1);
+        doctorName = listDoctor[tt].ABBREVIATION;
+        doctorId = Convert.ToString(listDoctor[tt].DOCTORS_ID);
+        if (!string.IsNullOrEmpty(doctorName))
+        {
+            lengh = Convert.ToString(doctorName.Length + 10) + "px";
+        }
+        else
+        {
+            lengh = "100%";
+        }
+        objChangeChange_Old = unit.CalendarChanges.ListNewChange(objChangcheck, changeType, 2);
+
+        calendarDoctorId = id + "_" + doctorId;
+        if ((objChangDelete.Count > 0) || (objChangeChange.Count > 0))
+        {
+            if (objChangDelete.Count > 0)
+            {
+                <div class="schedule-element del-calendar" data-row="@countRow.ToString()" title="Hủy trực"  id="@divId">
+                    <a href="#" id="@listDoctor[tt].DOCTORS_ID" style="color:red;" class="listdoctor">@listDoctor[tt].ABBREVIATION.ToString()</a>
+                    <span class="element-close fa fa-rotate-left" title="Khôi phục lịch trực" onclick="scheduleCancelDelClick(this,0)" data-date="@String.Format("{0:d/M/yyyy}", dateX)" data-duty="@idCalendarDuty" data-id="@divId"></span>
+                </div>
+                                                    <div class="schedule-DB" data-oldx="@nodeOld"></div>
+            }
+            if (objChangeChange.Count > 0)
+            {
+                string dateData = "";
+                if (objChangeChange[0].DATE_CHANGE_START.HasValue)
+                {
+                    dateData = Convert.ToString(objChangeChange[0].DATE_CHANGE_START.Value.Day);
+                }              
+                <div class="schedule-element change-calendar @divClass @rowid" data-row="@countRow.ToString()" title="Đổi lịch trực" id="@divId">
+                    <a href="#" id="@listDoctor[tt].DOCTORS_ID.ToString()" class="choseId listdoctor">@listDoctor[tt].ABBREVIATION.ToString()</a>
+                    <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" />
+                    <a href="#" id="@objChangeChange[0].DOCTORS_CHANGE_ID" class="changeId">@objChangeChange[0].DOCTORS_CHANGE_NAME</a>
+                    <span class="element-close fa fa-rotate-left" title="Hủy đổi lịch trực" onclick="scheduleRemoveCalendarChange(this)" data-date="@String.Format("{0:d/M/yyyy}", objChangeChange[0].DATE_START)" data-doctorchange="@objChangeChange[0].DOCTORS_CHANGE_ID" data-doctor="@listDoctor[tt].DOCTORS_ID" data-doctorname="@listDoctor[tt].ABBREVIATION" data-doctorname-change="@objChangeChange[0].DOCTORS_CHANGE_NAME" data-duty="@idCalendarDuty" data-data="@dateData" />
+                </div>
+                                                    <div class="schedule-DB" data-oldx="@nodeOld"></div>
+
+            }
+
+        }
+        else if (objChangeChange_Old.Count > 0)
+        {
+            string dateData = "";
+            if (objChangeChange_Old[0].DATE_START.HasValue)
+            {
+                dateData = Convert.ToString(objChangeChange_Old[0].DATE_START.Value.Day);
+            }            
+            <div class="schedule-element change-calendar @divClass @rowid" data-row="@countRow.ToString()" title="Đổi lịch trực" id="@divId">
+                <a href="#" id="@listDoctor[tt].DOCTORS_ID.ToString()" class="choseId listdoctor">@listDoctor[tt].ABBREVIATION.ToString()</a>
+                <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" />
+                <a href="#" id="@objChangeChange_Old[0].DOCTORS_ID" class="changeId">@objChangeChange_Old[0].DOCTORS_NAME</a>
+
+                <span class="element-close fa fa-rotate-left" title="Hủy đổi lịch trực" onclick="scheduleRemoveCalendarChange(this)" data-date="@String.Format("{0:d/M/yyyy}", objChangeChange_Old[0].DATE_CHANGE_START)" data-doctorchange="@objChangeChange_Old[0].DOCTORS_ID" data-doctor="@listDoctor[tt].DOCTORS_ID" data-doctorname="@listDoctor[tt].ABBREVIATION" data-doctorname-change="@objChangeChange_Old[0].DOCTORS_NAME" data-duty="@idCalendarDuty" data-data="@dateData" />
+            </div>
+                                            <div class="schedule-DB" data-oldx="@nodeOld"></div>
+
+                                            }
+                                            else
+                                            {                                               
+                                                if (objCalendarDuty.ISAPPROVED == 1)
+                                                {
+                                                    <div class="schedule-element current-calendar @rowid" data-row="@countRow.ToString()" id="@divId">
+
+                                                        <a href="#" id="@listDoctor[tt].DOCTORS_ID" class="choseId listdoctor">@listDoctor[tt].ABBREVIATION</a>
+                                                        <span class="element-close fa fa-times-circle" title="Hủy trực" onclick="scheduleCloseClick(this)"></span>
+                                                        <span id="@listDoctor[tt].DOCTORS_ID.ToString()" data-date="@String.Format("{0:d/M/yyyy}", dateX)" data-column="@idCalendarDuty" data-duty="@idCalendarDuty" class="element-change fa fa-pencil-square fa-lg" title="Đổi lịch trực"></span>
+                                                    </div>
+                                                    <div class="schedule-DB" data-oldx="@nodeOld"></div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="schedule-element current-calendar @rowid" data-row="@countRow.ToString()" id="@divId">
+                                                        <span class="viewInfor" data-row="@countRow.ToString()" id="@listDoctor[tt].DOCTORS_ID.ToString()"> <a href="#" id="@listDoctor[tt].DOCTORS_ID" class="choseId">@listDoctor[tt].ABBREVIATION</a>   </span>
+                                                        @if (calendarStatus > 2)
+                                                        {
+                                                            <span class="element-close fa fa-times-circle" title="Hủy trực" onclick="scheduleCloseClick(this)"></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="element-close fa fa-times-circle" title="Hủy trực" onclick="scheduleRemoveClick(this)"></span>
+                                                        }
+
+                                                    </div>
+                                                    <div class="schedule-DB" data-oldx="@nodeOld"></div>
+                                                }
+                                            }
+                                            objChangcheck = null;
+                                            objChangDelete = null;
+                                            objChangeChange = null;
+                                        }
+                                    }
+                                    @{ listCalendarChangeChild = listCalendarChange.Where(o => o.DATE_START != null && o.DATE_START.Value.Day == Convert.ToInt32(columnx) && o.STATUS == 3).ToList();
+                                    }
+
+                                    @for (int x = 0; x < listCalendarChangeChild.Count; x++)
+{
+    countRow++;
+    nodeOld = String.Format("{0:dd/MM/yyyy}", dateX) + "," + listCalendarChangeChild[x].DOCTORS_ID;
+    var divId = String.Format("{0:dd/MM/yyyy}", dateX) + "," + listCalendarChangeChild[x].DOCTORS_ID;
+    <div class="schedule-element add-calendar addnew" title="Bổ sung lịch trực" data-row="@countRow.ToString()" id="@divId">
+        <a href="#" id="@listCalendarChangeChild[x].DOCTORS_ID" class="choseId listdoctor">@listCalendarChangeChild[x].DOCTORS_NAME </a>
+        <span class="element-close fa fa-times-circle" title="Hủy trực" onclick="scheduleRemoveClick(this)"></span>
+    </div>
+                                        <div class="schedule-DB" data-oldx="@nodeOld"></div>
+                                    }
+
+
+                                </td>
+                            }
+                        }
+                        else
+                        {
+                            if (String.IsNullOrEmpty(columnx))
+                            {
+                                <td class="item-scheduleOld" id="@id" style="vertical-align:top;">
+                                    <div style="vertical-align: top; float: right;">@columnx</div>
+                                </td>
+                            }
+                            else
+                            {
+                                var css = "item-schedule";
+                                if (Convert.ToInt32(columnx) == DateTime.Now.Day && DateTime.Now.Month == date.Month && DateTime.Now.Year == date.Year)
+                                {
+                                    css += " item-current";
+                                }
+                                DateTime dateX = Utils.ToDateTime(columnx + "/" + date.Month + "/" + date.Year, "dd/MM/yyyy");
+                                columnId = String.Format("{0:dd/MM/yyyy}", dateX);
+                                <td class="@css" id="@id" style="vertical-align:top;">
+                                    <span class="itemspan_@columnx" id="@columnId" style="float:right; font-weight:bold;">  @columnx</span>
+                                    <br />
+                                    @for (int tt = 0; tt < listDoctor.Count; tt++)
+{
+    var divId = String.Format("{0:dd/MM/yyyy}", dateX) + "," + listDoctor[tt].DOCTORS_ID.ToString();
+    var divClass = "css" + id + "" + listDoctor[tt].DOCTORS_ID.ToString();
+    var rowid = "row" + listDoctor[tt].DOCTORS_ID;
+    if (Convert.ToInt32(columnx) == Convert.ToDateTime(listDoctor[tt].DATE_START).Day)
+    {
+        countRow++;
+        nodeOld = String.Format("{0:dd/MM/yyyy}", dateX) + "," + listDoctor[tt].DOCTORS_ID;
+        objChangcheck = new CALENDAR_CHANGE();
+        objChangcheck.CALENDAR_DUTY_ID = Convert.ToInt32(idCalendarDuty);
+        objChangcheck.DATE_START = dateX;
+        objChangcheck.DOCTORS_ID = listDoctor[tt].DOCTORS_ID;
+        objChangDelete = unit.CalendarChanges.ListNewChange(objChangcheck, deletedType, 1);
+        objChangeChange = unit.CalendarChanges.ListNewChange(objChangcheck, changeType, 1);
+        doctorName = listDoctor[tt].ABBREVIATION;
+        doctorId = Convert.ToString(listDoctor[tt].DOCTORS_ID);
+        if (!string.IsNullOrEmpty(doctorName))
+        {
+            lengh = Convert.ToString(doctorName.Length + 10) + "px";
+        }
+        else
+        {
+            lengh = "100%";
+        }
+        objChangeChange_Old = unit.CalendarChanges.ListNewChange(objChangcheck, changeType, 2);
+
+        calendarDoctorId = id + "_" + doctorId;
+        if ((objChangDelete.Count > 0) || (objChangeChange.Count > 0))
+        {
+            if (objChangDelete.Count > 0)
+            {
+                <div class="schedule-element del-calendar" data-row="@countRow.ToString()" title="Hủy trực" id="@divId">
+                    <a href="#" id="@listDoctor[tt].DOCTORS_ID" style="color:red;" class="listdoctor">@listDoctor[tt].ABBREVIATION.ToString()</a>
+                    <span class="element-close fa fa-rotate-left" title="Khôi phục lịch trực" onclick="scheduleCancelDelClick(this,0)" data-date="@String.Format("{0:d/M/yyyy}", dateX)" data-duty="@idCalendarDuty" data-id="@divId"></span>
+                </div>
+                                                    <div class="schedule-DB" data-oldx="@nodeOld"></div>
+                                                }
+                                                if (objChangeChange.Count > 0)
+                                                {
+                                                    string dateData = "";
+                                                    if (objChangeChange[0].DATE_CHANGE_START.HasValue)
+                                                    {
+                                                        dateData = Convert.ToString(objChangeChange[0].DATE_CHANGE_START.Value.Day);
+                                                    }
+                                                   // var rowid = "row" + listDoctor[tt].DOCTORS_ID;
+                                                    <div class="schedule-element change-calendar @divClass @rowid" data-row="@countRow.ToString()" title="Đổi lịch trực"  id="@divId">
+                                                        <a href="#" id="@listDoctor[tt].DOCTORS_ID.ToString()" class="choseId listdoctor">@listDoctor[tt].ABBREVIATION.ToString()</a>
+                                                        <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" />
+                                                        <a href="#" id="@objChangeChange[0].DOCTORS_CHANGE_ID" class="changeId">@objChangeChange[0].DOCTORS_CHANGE_NAME</a>
+                                                        <span class="element-close fa fa-rotate-left" title="Hủy đổi lịch trực" onclick="scheduleRemoveCalendarChange(this)" data-date="@String.Format("{0:d/M/yyyy}", objChangeChange[0].DATE_START)" data-doctorchange="@objChangeChange[0].DOCTORS_CHANGE_ID" data-doctor="@listDoctor[tt].DOCTORS_ID" data-doctorname="@listDoctor[tt].ABBREVIATION" data-doctorname-change="@objChangeChange[0].DOCTORS_CHANGE_NAME" data-duty="@idCalendarDuty" data-data="@dateData" />
+                                                    </div>
+                                                    <div class="schedule-DB" data-oldx="@nodeOld"></div>
+
+                                                }
+
+                                            }
+                                            else if (objChangeChange_Old.Count > 0)
+                                            {
+                                                string dateData = "";
+                                                if (objChangeChange_Old[0].DATE_START.HasValue)
+                                                {
+                                                    dateData = Convert.ToString(objChangeChange_Old[0].DATE_START.Value.Day);
+                                                }
+                                               // var rowid = "row" + listDoctor[tt].DOCTORS_ID;
+                                                <div class="schedule-element change-calendar @divClass @rowid" data-row="@countRow.ToString()" title="Đổi lịch trực" id="@divId">
+                                                    <a href="#" id="@listDoctor[tt].DOCTORS_ID.ToString()" class="choseId listdoctor">@listDoctor[tt].ABBREVIATION.ToString()</a>
+                                                    <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" />
+                                                    <a href="#" id="@objChangeChange_Old[0].DOCTORS_ID" class="changeId">@objChangeChange_Old[0].DOCTORS_NAME</a>
+
+                                                    <span class="element-close fa fa-rotate-left" title="Hủy đổi lịch trực" onclick="scheduleRemoveCalendarChange(this)" data-date="@String.Format("{0:d/M/yyyy}", objChangeChange_Old[0].DATE_CHANGE_START)" data-doctorchange="@objChangeChange_Old[0].DOCTORS_ID" data-doctor="@listDoctor[tt].DOCTORS_ID" data-doctorname="@listDoctor[tt].ABBREVIATION" data-doctorname-change="@objChangeChange_Old[0].DOCTORS_NAME" data-duty="@idCalendarDuty" data-data="@dateData" />
+                                                </div>
+                                                    <div class="schedule-DB" data-oldx="@nodeOld"></div>
+
+                                            }
+                                            else
+                                            { 
+                                                //var rowid="row" + listDoctor[tt].DOCTORS_ID;
+                                                if (objCalendarDuty.ISAPPROVED == 1)
+                                                {
+                                                    <div class="schedule-element current-calendar @rowid" data-row="@countRow.ToString()"  id="@divId">
+
+                                                        <a href="#" id="@listDoctor[tt].DOCTORS_ID" class="choseId listdoctor">@listDoctor[tt].ABBREVIATION</a>
+                                                        <span class="element-close fa fa-times-circle" title="Hủy trực" onclick="scheduleCloseClick(this)"></span>
+                                                        <span id="@listDoctor[tt].DOCTORS_ID.ToString()" data-date="@String.Format("{0:d/M/yyyy}", dateX)" data-column="@idCalendarDuty" data-duty="@idCalendarDuty" class="element-change fa fa-pencil-square fa-lg" title="Đổi lịch trực"></span>
+                                                    </div>
+                                                    <div class="schedule-DB" data-oldx="@nodeOld"></div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="schedule-element current-calendar @rowid" data-row="@countRow.ToString()" id="@divId">
+                                                        <span class="viewInfor" data-row="@countRow.ToString()" id="@listDoctor[tt].DOCTORS_ID.ToString()"> <a href="#" id="@listDoctor[tt].DOCTORS_ID" class="choseId">@listDoctor[tt].ABBREVIATION</a>   </span>
+                                                        @if (calendarStatus > 2)
+                                                        {
+                                                            <span class="element-close fa fa-times-circle" title="Hủy trực" onclick="scheduleCloseClick(this)"></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="element-close fa fa-times-circle" title="Hủy trực" onclick="scheduleRemoveClick(this)"></span>
+                                                        }
+                                                    </div>
+                                                    <div class="schedule-DB" data-oldx="@nodeOld"></div>
+                                                }
+                                            }
+                                            objChangcheck = null;
+                                            objChangDelete = null;
+                                            objChangeChange = null;
+                                        }
+                                    }
+                                   @{ listCalendarChangeChild = listCalendarChange.Where(o => o.DATE_START != null && o.DATE_START.Value.Day == Convert.ToInt32(columnx) && o.STATUS == 3).ToList();
+                                    }
+
+                                    @for (int x = 0; x < listCalendarChangeChild.Count; x++)
+{
+    countRow++;
+    nodeOld = String.Format("{0:dd/MM/yyyy}", dateX) + "," + listCalendarChangeChild[x].DOCTORS_ID;
+    var divId = String.Format("{0:dd/MM/yyyy}", dateX) + "," + listCalendarChangeChild[x].DOCTORS_ID;
+    <div class="schedule-element add-calendar addnew" title="Bổ sung lịch trực" data-row="@countRow.ToString()" id="@divId">
+        <a href="#" id="@listCalendarChangeChild[x].DOCTORS_ID" class="choseId listdoctor">@listCalendarChangeChild[x].DOCTORS_NAME </a>
+        <span class="element-close fa fa-times-circle" title="Hủy trực" onclick="scheduleRemoveClick(this)"></span>
+    </div>
+                                        <div class="schedule-DB" data-oldx="@nodeOld"></div>
+                                    }
+
+
+                                </td>
+                            }
+                        }
+
+                    }
+                </tr>
+            }
+
+        </table>       
+
+    </div>
+
+
+
+</div>
+<div class="TextCenter" id="buttonList">
+
+    @Html.Partial("_ListButtons")
+</div>
+
+<div id="box_staff" class="box-staff " style="display: none">
+</div>
+<div id="popupAnser"></div>
+<div id="popupStaff" style="border: 1px solid #D0DAFD; text-align: center; width: 100%; display: none; background-color: #dbe8fe;">
+</div>
+@if (tbl != null)
+{
+    tbl.Dispose();
+
+}
+@{
+    unit.Dispose();
+    listDoctor = null;
+    objChangcheck = null;
+    objChangDelete = null;
+    objChangeChange = null;
+    listCalendarChange = null;
+    listCalendarChangeChild = null;
+}
+
+
+<link type="text/css" href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.24.js"></script>
+<script type="text/ecmascript" src="~/Scripts/Calendar/calendarDefault.js"></script>
+<script type="text/javascript">
+    function SendCalendar() {
+
+        var idCalendarDuty = '@idCalendarDuty';
+        $.ajax({
+            type: "GET",
+            url: '/CalendarDuty/SendApproved',
+            data: { idCalendarDuty: idCalendarDuty, types: '1' },
+            success: function (response) {
+                $('#buttonList').html(response);
+                window.notice('Gửi duyệt lịch trực thành công', window.notice_success);
+
+            }
+
+        })
+
+    }
+    function saveCalendar() {
+        var dates = "";
+        var idRow = "";
+        var strValues = "";
+        var i = 0;
+        var j = 0;
+        var dataOldx = "";
+        var idCalendarDuty = '@idCalendarDuty';
+        var isChange = $('#isChange').val();
+
+        var strAdd = "";
+        var strDeleted = "";
+        var strChanged = "";
+        var strValues = "";
+        if (isChange == 1) {
+            $('#selectable').find('.item-schedule').each(function () {
+                $(this).find('.addnew').each(function () {
+                    var id = $(this).attr('id');
+                    if (id != "") {
+                        i++;
+                        if (i == 1) {
+                            strAdd = id;
+                        } else {
+                            strAdd = strAdd + "-" + id;
+                        }
+                    }
+                })
+                $(this).find('.deleted').each(function () {
+                    var id = $(this).attr('id');
+                    if (id != "") {
+                        i++;
+                        if (i == 1) {
+                            strDeleted = id;
+                        } else {
+                            strDeleted = strDeleted + "-" + id;
+                        }
+                    }
+                })
+                $(this).find('.changed').each(function () {
+                    var id = $(this).attr('id');
+                    var idChange = $(this).find(".changeId").attr('id');
+                    var dateChange = $(this).find(".element-close").attr('data-data');
+                    if (id != "") {
+                        i++;
+                        if (i == 1) {
+                            strChanged = id + "," + idChange + "," + dateChange;
+                        } else {
+                            strChanged = strChanged + "-" + id + "," + idChange + "," + dateChange;
+                        }
+                    }
+                })
+            })
+        }
+        else {
+            $('#selectable').find('.item-schedule').each(function () {
+                $(this).find('.schedule-element').each(function () {
+                    var id = $(this).attr('id');
+                    if (id != "") {
+                        i++;
+                        if (i == 1) {
+                            strValues = id;
+                        } else {
+                            strValues = strValues + "-" + id;
+                        }
+                    }
+                })              
+            })
+        }
+        $.ajax(
+        {
+            type: "POST",
+            url: "/CalendarDuty/EditValuesCalendarDefault",
+            content: "application/json; charset=utf-8",
+            data: ({ strAdd: strAdd, strDeleted: strDeleted, strChanged: strChanged, strValues: strValues, idCalendarDuty: idCalendarDuty }),
+            success: function (data) {
+                $('#Contentx').html(data);
+                $('#selectable').find('.item-schedule').find("div").each(function () {
+                    $(this).removeClass("deleted").removeClass("addnew").removeClass("changed");
+                });
+                if (isChange == 1) {
+                    window.notice('@Resources.Localization.ChangeCalendarSuccess', window.notice_warning);
+                }
+                else {
+                    window.notice('@Resources.Localization.UpdateCalendarSuccess', window.notice_warning);
+                }
+            },
+            error: function (result) {
+                window.notice('@Resources.Localization.DataIsNotValid', window.notice_warning);
+            }
+
+        });
+
+    }
+    function CancelCalendar() {
+        var idCalendarDuty = '@idCalendarDuty';
+        $.get('/CalendarDuty/ApprovedRequest', { idCalendarDuty: idCalendarDuty, types: '7',userCreate: '1' }, function (data) {
+
+            $('#popupAnser').html(data);
+            $('#CalendarDutyRequest').modal({
+                keyboard: true
+            });
+        });
+    }
+    function ApprovedCalendar() {
+        var idCalendarDuty = '@idCalendarDuty';
+        $.ajax({
+            type: "GET",
+            url: '/CalendarDuty/ApprovedCalendarDuty',
+            data: { idCalendarDuty: idCalendarDuty, types: '2' },
+            success: function (response) {
+               // $('#buttonList').html(response);
+                window.notice('Duyệt lịch trực đơn vị thành công', window.notice_success);
+                window.location = "/CalendarDuty";
+            }
+
+        })
+
+    }
+    function ExportExcel() {
+        var url = '@Url.Action("ExportCalendarDefault", "CalendarDuty")' + '?idCalendarDuty=@idCalendarDuty';
+        location.href = url;
+    }
+</script>

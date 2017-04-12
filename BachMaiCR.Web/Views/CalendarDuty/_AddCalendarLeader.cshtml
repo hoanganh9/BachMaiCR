@@ -1,0 +1,60 @@
+﻿@Scripts.Render("~/bundles/jqueryui")
+@{
+    ViewBag.Title = @Resources.Localization.TitleCalendarCreateLeader;
+}
+<div class="content">
+    <div class="clear"></div>
+    <div id="nav">
+        <table border="0" style="width:100%">
+            <tr>
+                <td style="width:65%">
+                    <a href="/CalendarDuty/CalendarLeader" title="">@Resources.Localization.ManageCalendarDutyTitle.ToUpper()</a> »  @ViewBag.Title.ToUpper()
+
+                </td>
+                <td>
+                    <table border="0" style="width:100%;margin-top:10px; border-spacing:0px 0px;border-collapse: separate;">
+                        <tr>
+                            <td style="width:100px;background:#b6ff00"></td>
+                            <td style="text-align:left;width:100px; color:#302f2f"> <strong> Đổi lịch trực</strong></td>
+                            <td style="width:100px;background:#d5f76e;"></td>
+                            <td style="text-align:left;width:155px;color:#302f2f"> <strong> Bổ sung lịch trực</strong></td>
+                            <td style="text-align:left"></td>
+                        </tr>
+                    </table>
+                </td>
+
+
+            </tr>
+
+
+        </table>
+    </div>
+    <table style="width: 98%">
+      
+        <tr>
+            <td>
+                @Html.Partial("~/Views/CalendarDuty/_AddCalendarLeaderInfo.cshtml")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <script type="text/javascript">
+                    $.get('@Url.Action("LoadCalendarLeader", "CalendarDuty")', function (data) {
+                        $('#loadTemplate').html(data);
+                        var calendarName = $('.TextCenter #calendarName').val().trim();
+                        if (calendarName == '') {
+                            $('#inforContent').val($('.templates option:selected').text() + "Lịch trực lãnh đạo tháng " + $('.selectMonths').val() + "/" + $('.selectYears').val());
+                        }
+                        else {
+                            $('#inforContent').val(calendarName);
+                        }
+                    });
+                </script>
+                <div id="loadTemplate"></div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div id="view_model_container">
+</div>

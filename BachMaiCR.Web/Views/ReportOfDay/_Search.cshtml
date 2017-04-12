@@ -1,0 +1,138 @@
+﻿@using Resources;
+@using BachMaiCR.Web.Utils;
+@using BachMaiCR.Utilities.Enums;
+@model BachMaiCR.DBMapping.ModelsExt.ItemSearch
+@{
+
+    var lstStatus = BachMaiCR.Web.Utils.DataTemplate.ListStatusSent;
+    int monthCurrent = Utils.GetDateTime().Hour;
+    int minTime = ReportOfDayTime.MinHour.GetHashCode();
+    int maxTime = ReportOfDayTime.MaxHour.GetHashCode();
+}
+<div class="content-wrapper">
+    <div id="searchReportOfDay" class="row" style="width:75%; margin:0 auto">
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelSearchDateStart</label>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group input-group-sm ">
+                @Html.TextBoxFor(m => m.SearchDateStart, "{0:dd/MM/yyyy}", new { @readonly = "true", @class = "form-control input-sm", @id = "SearchDateStart", @placeholder = @Localization.LabelSearchDateStart })
+                <span id="btnSearchDateStartPicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelSearchDateEnd</label>
+        </div>
+        <div class="col-md-4" style="margin-bottom: 5px;">
+            <div class="input-group input-group-sm ">
+                @Html.TextBoxFor(m => m.SearchDateEnd, "{0:dd/MM/yyyy}", new { @readonly = "true", @class = "form-control input-sm", @id = "SearchDateEnd", @placeholder = @Localization.LabelSearchDateEnd })
+                <span id="btnSearchDateEndPicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+
+            </div>
+        </div>
+        <div class="col-md-6"></div>
+        <div class="col-md-6"><span data-valmsg-replace="true" data-valmsg-for="SearchDateEnd" class="Validation_Error field-validation-valid" style="color: red;"></span></div>
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelUserCreate</label>
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.SearchUserCreate, new { @class = "form-control input-sm", @placeholder = @Localization.LabelUserCreate })
+        </div>
+
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelRecipient</label>
+        </div>
+        <div class="col-md-4">
+            @Html.TextBoxFor(m => m.SearchUserReceive, new { @class = "form-control input-sm", @placeholder = @Localization.LabelRecipient })
+        </div>
+
+        <div class="col-md-2">
+            <label class="input-lable-control nowrap">@Localization.LabelDateSend</label>
+            </div>
+            <div class="col-md-4" style="margin-bottom: 5px;">
+                <div class="input-group input-group-sm ">
+                    @Html.TextBoxFor(m => m.SearchDateSent, "{0:dd/MM/yyyy}", new { @readonly = "true", @class = "form-control input-sm", @id = "SearchDateSent", @placeholder = @Localization.LabelDateSend })
+                    <span id="btnSearchDateSentPicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelStatus</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownListFor(m => m.SearchStatus, lstStatus, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+            </div>
+            <div class="col-md-12 align-center">
+                <button class="btn btn-primary" type="button" onclick="return btnSearchClick();">
+                    <span class="glyphicon glyphicon-search"></span>@Localization.ButtonSearch
+                </button>
+                <button class="btn btn-primary" type="button" onclick="return btnResetClick();">
+                    <span class="glyphicon glyphicon-refresh"></span>@Localization.ButtonRefresh
+                </button>
+               @if (monthCurrent >= minTime && monthCurrent<=maxTime)
+               {
+                    <button type="submit" class="btn-add btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    @Localization.ButtonAddDisplay
+                </button>
+               }
+               
+            </div>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#SearchDateStart, #SearchDateEnd').datepicker({
+                format: 'dd/mm/yyyy',
+                weekStart: 1
+            }).on('changeDate', function (ev) {
+                var dateStart = $("#SearchDateStart").val();
+                var dateEnd = $("#SearchDateEnd").val();              
+                var lableError = $('.field-validation-valid[data-valmsg-for="SearchDateEnd"]');
+                lableError.css('color', 'red');
+                if (dateStart != null && dateStart != "" && dateEnd != null && dateEnd != "" && Date.parse(dateStart) > Date.parse(dateEnd)) {
+                    lableError.text("Khoảng thời gian cần tìm kiếm không chính xác");
+
+                    return true;
+                } else {
+                    lableError.text("");
+                    return false;
+                }
+            });
+            $('#SearchDateSent').datepicker({
+                format: 'dd/mm/yyyy',
+                weekStart: 1
+            });
+            $('#btnSearchDateStartPicker').delegate("", "click", function (evt) {
+                if (!$('.datepicker ').is(":visible"))
+                    $('#SearchDateStart').datepicker('show')
+            });
+            $('#btnSearchDateEndPicker').delegate("", "click", function (evt) {
+                if (!$('.datepicker ').is(":visible"))
+                    $('#SearchDateEnd').datepicker('show')
+            });
+            $('#btnSearchDateSentPicker').delegate("", "click", function (evt) {
+                if (!$('.datepicker ').is(":visible"))
+                    $('#SearchDateSent').datepicker('show')
+            });
+
+            $('.selectpicker').selectpicker({
+                style: 'btn btn-default btn-sm',
+                size: 5,
+            });
+
+            $("#SearchDateStart, #SearchDateEnd,#SearchDateSent").inputClear();
+            $('#searchReportOfDay input[type=text]').keyup(function (e) {
+                if (e.keyCode == 13)
+                    btnSearchClick();
+            });
+
+
+        });       
+        function btnSearchClick() {
+            OnCriteria(0);
+        }
+    </script>

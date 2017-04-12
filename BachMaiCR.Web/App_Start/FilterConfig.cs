@@ -33,7 +33,7 @@
             // 301 Permanent redirect or a 302 temporary redirect. You should perform a 301 permanent redirect if the
             // page can only ever be accessed by HTTPS and a 302 temporary redirect if the page can be accessed over
             // HTTP or HTTPS.
-            // filters.Add(new RedirectToHttpsAttribute(true));
+            // filters.Add(new RedirectToHttpsAttributetrue);
 
             // Several NWebsec Security Filters are added here. See
             // http://rehansaeed.com/nwebsec-asp-net-mvc-security-through-http-headers/ and
@@ -100,15 +100,9 @@
             //      logging of violations without blocking them. This is good for testing CSP without enabling it. To
             //      make use of this attribute, rename all the attributes below to their ReportOnlyAttribute versions
             //      e.g. CspDefaultSrcAttribute becomes CspDefaultSrcReportOnlyAttribute.
-            // filters.Add(new CspReportOnlyAttribute());
-
-
-            // Enables logging of CSP violations. See the NWebsecHttpHeaderSecurityModule_CspViolationReported method
+            // filters.Add(new CspReportOnlyAttribute());            // Enables logging of CSP violations. See the NWebsecHttpHeaderSecurityModule_CspViolationReported method
             // in Global.asax.cs to see where they are logged.
-            filters.Add(new CspReportUriAttribute() { EnableBuiltinHandler = true });
-
-
-            // default-src - Sets a default source list for a number of directives. If the other directives below are
+            filters.Add(new CspReportUriAttribute() { EnableBuiltinHandler = true });            // default-src - Sets a default source list for a number of directives. If the other directives below are
             //               not used then this is the default setting.
             filters.Add(
                 new CspDefaultSrcAttribute()
@@ -117,10 +111,7 @@
                     None = true,
                     // Allow everything from the same domain by default.
                     // Self = true
-                });
-
-
-            // base-uri - This directive restricts the document base URL
+                });            // base-uri - This directive restricts the document base URL
             //            (See http://www.w3.org/TR/html5/infrastructure.html#document-base-url).
             filters.Add(
                 new CspBaseUriAttribute()

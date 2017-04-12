@@ -1,0 +1,541 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.DBMapping.ModelsExt
+@model BachMaiCR.Web.Models.Doctor
+
+@{
+    var strTitleForm = Model.Id.Equals(0) ? Localization.FormAddTitle : Localization.FormEditTitle;
+    var lstDoctorLevel = ViewBag.DoctorLevel as List<SelectListItem>;
+    var lstEducation = ViewBag.ListEducation as List<SelectListItem>;
+    var lstDepartment = ViewBag.ListDepartment as List<SelectListItem>;
+    var lstProvince = ViewBag.ListProvince as List<SelectListItem>;
+    var lstPosition = ViewBag.ListPosition as List<SelectListItem>;
+    var lstGender = BachMaiCR.Web.Utils.DataTemplate.ListGender;
+    var lstDoctorGroup = ViewBag.DoctorGroup as List<SelectListItem>;
+
+    //ListProvince
+}
+<!-- Valid data enable -->
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/jquery.form.js"></script>
+<link href="~/Content/gpcp-department.css" rel="stylesheet" />
+<script src="~/Scripts/gpcp-department.js"></script>
+<link href="~/Content/jquery.treeview.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.cookie.js"></script>
+<script src="~/Scripts/jquery.treeview.js"></script>
+<script src="~/Scripts/chosen.jquery.js"></script>
+<link href="~/Content/chosen.css" rel="stylesheet" />
+
+
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg" id="addCategoryModel" tabindex="-1000" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.ValidationSummary(false)
+        @using (Html.BeginForm(
+        actionName: "SubmitChange", controllerName: "Doctor", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmModifyCategory", @class = "", @role = "form", @enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">@strTitleForm</h4>
+                </div>
+
+                <div class="modal-body padding-all padding-bottom-0">
+                    <div class="form-group input-group-lg ">
+                        <!-- Hide value -->
+                        @*Render form*@
+
+                        @Html.HiddenFor(m => m.Id)
+                        <div>
+                            <div class="col-md-2">
+                                <a id="LinkAvatarLick" href="#" class="thumbnail" style="min-height: 96px; margin:0 auto">
+                                    <input id="AvatarUrl" title="Tải ảnh" name="file" type="file" accept="image/*" style="display:none" onchange="ShowImageClient(this)" />
+                                    <img id="avatarUser" onclick="BrowseAvatarLick()" src="@Model.AvatarUrl" alt="..." title="Chọn ảnh đại diện" style="min-height: 96px; margin:0 auto">
+                                </a>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="col-md-12">@Html.ValidationMessageFor(m => m.Name)</div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(m => m.Name, new { @class = "input-lable-control" })
+                                    <span class="color-error">&nbsp;*</span>
+                                </div>
+                                <div class="col-md-9 ">
+                                    @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-sm", @placeholder = @Localization.LabelDoctorName })
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="col-md-12">@Html.ValidationMessageFor(m => m.Code)</div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(m => m.Code, new { @class = "input-lable-control nowrap" })
+                                    <span class="color-error">&nbsp;*</span>
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(m => m.Code, new { @class = "form-control input-sm", @placeholder = @Localization.LabelShortName })
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-5">
+                               @* <div class="col-md-12">@Html.ValidationMessageFor(m => m.BirthDay)</div>*@
+                                <div class="col-md-3">@Html.LabelFor(m => m.BirthDay, new { @class = "input-lable-control nowrap" })</div>
+                                <div class="col-md-9">
+                                    <div class="input-group input-group-sm ">
+                                        @Html.TextBoxFor(m => m.BirthDay, "{0:dd/MM/yyyy}", new { @class = "form-control input-sm datePicker", @id = "BirthDay", @placeholder = @Localization.LabelBirthday })
+                                        <span id="btnBirhtdayPicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-5">
+                                <div class="col-md-12">@Html.ValidationMessageFor(m => m.Gender)</div>
+                                <div class="col-md-3">@Html.LabelFor(m => m.Gender, @Localization.LabelGender, new { @class = "input-lable-control nowrap" })</div>
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.Gender, lstGender, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="col-md-12">@Html.ValidationMessageFor(m => m.Phone)</div>
+                                <div class="col-md-3">
+                                    @Html.LabelFor(m => m.Phone, new { @class = "input-lable-control nowrap" })
+                                    <span class="color-error">&nbsp;*</span>
+                                </div>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(m => m.Phone, new { @class = "form-control input-sm", @placeholder = @Localization.LabelPhone })
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="col-md-12">@Html.ValidationMessageFor(m => m.Email)</div>
+                                <div class="col-md-3">@Html.LabelFor(m => m.Email, new { @class = "input-lable-control nowrap" })</div>
+                                <div class="col-md-9">
+                                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control input-sm", @placeholder = @Localization.LabelEmail })
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Begin Row BHXH -->
+                        <div class="col-md-12"></div>
+
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.CodeStaff)</div>
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.InsuranceNumber)</div>
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.InsuranceRegister)</div>
+                        <div class="col-md-12"></div>
+                        <div>
+                            <div class="col-md-1">
+                                @Html.LabelFor(m => m.CodeStaff, new { @class = "input-lable-control nowrap" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.CodeStaff, new { @class = "form-control input-sm", @placeholder = @Localization.LabelCodeStaff })
+                            </div>
+                            <div class="col-md-1">
+                                @Html.LabelFor(m => m.InsuranceNumber, new { @class = "input-lable-control nowrap" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.InsuranceNumber, new { @class = "form-control input-sm", @placeholder = @Localization.LabelInsuranceNumber })
+                            </div>
+                            <div class="col-md-1">
+                                @Html.LabelFor(m => m.InsuranceRegister, new { @class = "input-lable-control nowrap" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.TextBoxFor(m => m.InsuranceRegister, new { @class = "form-control input-sm", @placeholder = @Localization.LabelInsuranceRegister })
+                            </div>
+
+                        </div>
+
+
+                        <!-- Begin Row CMND -->
+                        <div class="col-md-12"></div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.IdentityCard, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(m => m.IdentityCard, new { @class = "form-control input-sm", @placeholder = @Localization.LabelIdentity })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.IdentityDate, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group input-group-sm ">
+                                @Html.TextBoxFor(m => m.IdentityDate, "{0:dd/MM/yyyy}", new { @class = "form-control input-sm datePicker", @id = "IdentityDate", @placeholder = @Localization.LabelIdentityDate })
+                                <span id="btnIdentityDatePicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.IdentityPlace, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(m => m.IdentityPlace, new { @class = "form-control input-sm", @placeholder = @Localization.LabelIdentityPlace })
+                        </div>
+                        <!-- End Row CMND -->
+                        <!-- Begin Row Nation Religion -->
+
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.Nation)</div>
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.Religion)</div>
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.PlaceBirth)</div>
+                        <div class="col-md-12"></div>
+
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.Nation, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(m => m.Nation, new { @class = "form-control input-sm", @placeholder = @Localization.LabelNation })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.Religion, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(m => m.Religion, new { @class = "form-control input-sm", @placeholder = @Localization.LabelReligion })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.PlaceBirth, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(m => m.PlaceBirth, new { @class = "form-control input-sm", @placeholder = @Localization.LabelPlaceBirth })
+                        </div>
+
+
+                        <!-- Begin Row Province -->
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.Province)</div>
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.District)</div>
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.Village)</div>
+                        <div class="col-md-12"></div>
+
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.Province, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(m => m.Province, new { @class = "form-control input-sm", @placeholder = @Localization.LabelProvince })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.District, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(m => m.District, new { @class = "form-control input-sm", @placeholder = @Localization.LabelDistricts })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.Village, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(m => m.Village, new { @class = "form-control input-sm", @placeholder = @Localization.LabelVillage })
+                        </div>
+
+                        <!-- Begin Row Address -->
+
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.Address)</div>
+                        @*<div class="col-md-4">@Html.ValidationMessageFor(m => m.DateStart)</div>*@
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.DoctorGroupId)</div>
+                        <div class="col-md-12"></div>
+
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.Address, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.TextBoxFor(m => m.Address, new { @class = "form-control input-sm", @placeholder = @Localization.LabelAddress })
+                        </div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.DateStart, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group input-group-sm ">
+                                @Html.TextBoxFor(m => m.DateStart, "{0:dd/MM/yyyy}", new {@autocomplete="off", @class = "form-control input-sm datePicker", @id = "DateStart", @placeholder = @Localization.LabelDateStart })
+                                <span id="btnDateStartPicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.DoctorGroupId, new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.DoctorGroupId, lstDoctorGroup, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-8">@Html.ValidationMessageFor(m => m.PostionIds)</div>
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.DepartmentIds)</div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.PostionIds, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.HiddenFor(m => m.PostionIds)
+                            @if (lstEducation.Any())
+                            {<select name="PostionNames" multiple id="PostionNames" class="chosen-select"
+                                     data-placeholder="@Localization.LabelPosition">
+                                @foreach (var item in lstPosition)
+                                {
+                                    if (!string.IsNullOrEmpty(Model.PostionIds) && Model.PostionIds.Contains("," + item.Value + ","))
+                                    {
+                                        <option value="@item.Value" selected>@item.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                }
+                            </select>
+                            }
+
+                        </div>
+
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.DepartmentIds, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-3">
+                             @Html.HiddenFor(m => m.DepartmentIds,new { @class = "form-control dropdown-toggle selectpicker btn-sm",@data_name=ViewBag.LM_DEPARTMENT_NAMEs })
+                            @*<input id="DepartmentIds" name="DepartmentIds" data-id="" value="@ViewBag.LM_DEPARTMENT_IDs"  data-name="@ViewBag.LM_DEPARTMENT_NAMEs" class="form-control dropdown-toggle selectpicker btn-sm" />*@
+                                                  </div>
+                        <div class=" col-md-12"></div>
+                        <div class="col-md-8">@Html.ValidationMessageFor(m => m.EducationIds)</div>
+                        <div class="col-md-4">@Html.ValidationMessageFor(m => m.LevelID)</div>
+                        <div class=" col-md-12"></div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.EducationIds, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.HiddenFor(m => m.EducationIds)
+                            @if (lstEducation.Any())
+                            {<select name="EducationNames" multiple id="EducationNames" class="chosen-select"
+                                     data-placeholder="@Localization.LabelEducation">
+                                @foreach (var item in lstEducation)
+                                {
+                                    if (!string.IsNullOrEmpty(Model.EducationIds) && Model.EducationIds.Contains("," + item.Value + ","))
+                                    {
+                                        <option value="@item.Value" selected>@item.Text</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                }
+                            </select>
+                            }
+
+                        </div>
+                        <div class="col-md-1">
+                            @Html.LabelFor(m => m.LevelID, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">&nbsp;*</span>
+                        </div>
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(m => m.LevelID, lstDoctorLevel, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+                        </div>
+                        <div class="col-md-1"><b> Lưu ý:</b></div>
+                        <div class=" col-md-11">
+                            <span class="color-error">
+                                Các trường dấu * buộc phải nhập, để gửi được SMS cần nhập chính xác số điện thoại theo đúng định dạng (ví dụ: 84973xxxxxx)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="modal-footer btn-group-sm padding-all margin-top-0">
+                    <button id="btnValid" type="button" class="btn btn-primary btn-group-sm min-width "><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+                    <button type="button" class="btn btn-primary btn-group-sm min-width " data-dismiss="modal"><span class="glyphicon glyphicon-off"></span>@Localization.ButtonCloseDisplay</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $('#DepartmentIds').Department(
+            {
+                defaultDisplay: '-- Chọn --',
+                multiselect: true,
+                selectedlist: "@Model.DepartmentIds"
+            });
+
+        // Add attribute
+        $('#DepartmentId').attr('data-live-search', 'true');
+        $('.selectpicker').selectpicker({
+            style: 'btn btn-default btn-sm',
+            size: 5,
+        });
+
+
+        $('.input-group .datePicker').datepicker({
+            format: 'dd/mm/yyyy',
+            weekStart: 1,
+            autoclose:true
+        });
+
+        $.mask.definitions['y'] = '[12]';
+        $.mask.definitions['m'] = '[01]';
+        $.mask.definitions['d'] = '[0-3]';
+        $(".input-group .datePicker").mask("d9/m9/y999", { placeholder: "_" });
+
+        // Sự kiện cho button birthdat click
+        $('#btnBirhtdayPicker').delegate("", "click", function (evt) {
+            if (!$('.datepicker ').is(":visible"))
+                $('#BirthDay').datepicker('show')
+        });
+        $('#btnIdentityDatePicker').delegate("", "click", function (evt) {
+            if (!$('.datepicker ').is(":visible"))
+                $('#IdentityDate').datepicker('show')
+        });
+        $('#btnDateStartPicker').delegate("", "click", function (evt) {
+            if (!$('.datepicker ').is(":visible"))
+                $('#DateStart').datepicker('show')
+        });
+
+        // Set index cho datepicker lên trên
+        $('.datepicker').css('z-index', 9999);
+
+        var $catForm = $("#frmModifyCategory");
+
+        $catForm.keyup(function (e) {
+            if (e.keyCode == 13)
+                $('#btnValid').click();
+        });
+
+
+        // Focus vào trường input đầu tiên
+        setTimeout(function () { $catForm.find('input:text:visible:first').focus(); }, 500);
+
+        $('#DepartmentIds').on('change', function () {
+            $('#DepartmentIds').valid();
+        });
+
+        //Submit form
+        $('#btnValid').click(function () {
+            $('#DepartmentIds').valid();
+            $('#EducationIds').valid();
+            $('#PostionIds').valid();
+
+            if ($('#DepartmentIds').valid() && $('#EducationIds').valid() && $('#PostionIds').valid()) {
+                $catForm.submit();
+            }
+            else {
+                $catForm.valid();
+                return;
+            }
+        });
+        //$catForm.be
+        $catForm.ajaxForm(function (response) {
+            if (response != null && response.status == 200) {
+                $('#addCategoryModel').modal('hide');
+                var $catlist = $('#cat_list_render');
+                if ($catlist == null || $catlist.length == 0) {
+                    window.notice('@Resources.Localization.MsgItemNotFound', window.notice_warning);
+                }
+                else {
+                    OnCriteria(0);
+                }
+                window.notice(response.result, window.notice_success);
+            } else {
+                window.notice(response.result, window.notice_error);
+            }
+        });
+
+
+
+        // chose mutil boxx
+        $(".chosen-select").chosen({
+            no_results_text: "@Localization.MsgItemNotFound",
+            width: "100%",
+            search_contains: true,
+        });
+
+
+
+        // Kiểm tra Valid ở Client.
+        $('.chosen-select').on('change', function (evt, params) {
+            setEducationIds();
+            $('#EducationIds').valid();
+
+            setPostionIds();
+            $('#PostionIds').valid();
+        });
+
+        function setPostionIds() {
+            var lstItem = $('#PostionNames').val();
+            if (lstItem != null && lstItem.length > 0) {
+                lstItem = "," + $('#PostionNames').val().join(',') + ",";
+                $('#PostionIds').val(lstItem);
+                return true;
+            }
+            else {
+                $('#PostionIds').val("");
+                return false;
+            }
+        }
+
+
+        function setEducationIds() {
+            var lstItem = $('#EducationNames').val();
+            if (lstItem != null && lstItem.length > 0) {
+                lstItem = "," + $('#EducationNames').val().join(',') + ",";
+                $('#EducationIds').val(lstItem);
+                return true;
+            }
+            else {
+                $('#EducationIds').val("");
+                return false;
+            }
+        }
+
+    });
+
+    function BrowseAvatarLick() {
+        $('#AvatarUrl').click();
+
+    }
+
+    // Đổi ảnh đại diện
+    // Hiện thị ảnh lên Img
+    function ShowImageClient(input) {
+        var imgAvatar = $('#avatarUser');
+        if (input.files && input.files[0]) {
+            var ext = $('#AvatarUrl').val().split('.').pop().toLowerCase();
+            //console.log(ext);
+            if ($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+                window.notice("Chỉ được chọn tệp tin ảnh", window.notice_error);
+                $(input).attr("value", "");
+                imgAvatar.attr('src', '/Images/doctor_avatar_default.png');
+                return;
+            }
+            else
+                if (input.files[0].size <= (2 * 1024 * 1024)) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        imgAvatar.attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+                else {
+                    window.notice("Dung lượng ảnh lớn hơn 2Mb", window.notice_error);
+                    $(input).attr("value", "");
+                    imgAvatar.attr('src', '/Images/doctor_avatar_default.png');
+                    return;
+                }
+
+        }
+    }
+
+    // Chỉ cho phép nhập số
+    $("#IdentityCard").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+            // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+            // let it happen, don't do anything
+            return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+</script>

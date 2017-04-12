@@ -1,0 +1,899 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using Resources;
+@using System.Data;
+@using BachMaiCR.Web.Utils;
+@using BachMaiCR.Web.Controllers;
+@using BachMaiCR.Web.Common
+<style>
+    .schedule-element {
+        min-height: 25px;
+        min-width: 100%;
+        margin-left: 0px;
+    }
+
+    .elementX {
+        padding-top: 0px;
+        margin-left: 0px;
+    }
+
+    .element-close {
+        margin-top: 5px;
+    }
+
+    td {
+        font-size: 12px;
+    }
+</style>
+@{
+    var times = ViewBag.times;
+    DateTime date = Utils.GetDateTime();
+    date = Convert.ToDateTime(times);
+    DataTable tbl = Utils.CalendarWeekly(date);
+    string titlePopup = Localization.DoctorDetail;
+    var listDoctor = ViewBag.doctors as List<DoctorHospital>;
+    var listDoctorS = new List<DoctorHospital>();
+    var timeCalendar = ViewBag.timeCalendar as List<TimeCalendarDuty>;
+    string days = "", dayName = "";
+    DateTime dates;
+    var idCalendarDutyALL = ViewBag.idCalendarDuty as CALENDAR_DUTY;
+    int? statusId = 0;
+    string idCalendarDuty = "";
+    if (idCalendarDutyALL != null)
+    {
+        statusId = idCalendarDutyALL.CALENDAR_STATUS;
+        idCalendarDuty = idCalendarDutyALL.CALENDAR_DUTY_ID.ToString();
+    }
+    var objDepartment = ViewBag.objDepartment as List<DEPARTMENTLIST>;
+    int monthx = date.Month;
+    int yearx = date.Year;
+    List<CALENDAR_GROUP> calendarDepartment = ViewBag.calendarDepartment;
+    var count = timeCalendar.Count;
+    CALENDAR_CHANGE objChangcheck = new CALENDAR_CHANGE();
+    //Lấy danh sách đổi lịch
+    List<CALENDAR_CHANGE> listCalendarChange = new UnitOfWork().CalendarChanges.GetListByDate(monthx, yearx);
+    List<CALENDAR_CHANGE> listCalendarChangeInsert;
+    CALENDAR_CHANGE objChangDelete;
+    CALENDAR_CHANGE objChangeChange = new CALENDAR_CHANGE();
+    CALENDAR_CHANGE objChangeChange2 = new CALENDAR_CHANGE();
+    CALENDAR_CHANGE objChangeChangeBack;
+    var lstAction = ViewBag.ActionPermission as List<string>;
+    bool enableView = lstAction.Contains(WebConst.ACTION_VIEW_CALENDAR_HOSPITAL_CODE);
+    bool enableApproved = lstAction.Contains(WebConst.ACTION_SYNTHESIS_CALENDAR_HOSPITAL_CODE);
+
+}
+<script type="text/javascript">
+    $(function () {
+        setWidthTd();
+    });
+
+    function setWidthTd() {
+        var widthTable = $('#selectable').width();
+        var countSize = '@count'
+        var colWidth = (parseFloat(widthTable) - 140) / parseFloat(countSize);
+        $('#selectable tr').find('.item-hospital').each(function () {
+            $(this).width(parseFloat(colWidth).toFixed());
+        });
+
+        $('#selectable tr').find('.item-hospital').each(function () {
+            $(this).width(parseFloat(colWidth).toFixed());
+        });
+    }
+
+</script>
+
+<div id="grid">
+    <table id="selectable" class="tbl" style="width:100%">
+        <thead>
+            <tr>
+                <th style="min-width:30px">@Resources.Localization.LabelIndex</th>
+                <th style="min-width:10px"><input type="checkbox" id="cbx-check-all" onclick="CheckAll(this.checked)" /></th>
+                <th style="min-width:100px">@Resources.Localization.LabelDepartment.ToUpper()</th>
+                @if (timeCalendar != null && timeCalendar.Count > 0)
+                {
+                    for (int i = 0; i < timeCalendar.Count; i++)
+                    {
+                        days = timeCalendar[i].DAYS;
+                        dates = timeCalendar[i].DATES;
+                        dayName = days + "-" + String.Format("{0:dd/MM}", dates);
+                        <th class="item-hospital">
+                            @dayName
+                        </th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @if (objDepartment.Count > 0)
+            {
+                string css = "";
+                string dateDay = "";
+                string idItemS = "";
+                string idItemChange = "";
+                if (idCalendarDutyALL != null)
+                {
+                    <tr>
+                        <td style="min-width:30px;text-align:center">1</td>
+                        <td style="min-width:10px;text-align:center">
+                            @if (calendarDepartment.Where(x => x.CALENDAR_TYPE == 2 && x.CALENDAR_STATUS == 0).FirstOrDefault() != null)
+                            {
+                                <input type="checkbox" id="0" data-month="@monthx" data-year="@yearx" data-type="2" name="groupDoctor" />
+
+                            }
+                        </td>
+                        <td style="min-width:100px">
+                            <strong>
+                                <a title='Xem lịch lãnh đạo' href='javascript:void(0)' class='cat-leader'>LÃNH ĐẠO</a>
+                            </strong>                       
+                        </td>
+
+                        @if (calendarDepartment.Where(x => x.CALENDAR_TYPE == 2).FirstOrDefault() != null)
+                        {
+                            for (int z = 0; z < count; z++)
+                            {
+                                DateTime datetime = timeCalendar[z].DATES;
+                                css = "";
+
+                                dateDay = timeCalendar[z].DAYS;
+                                if (dateDay.Equals("CN") == true || dateDay.Equals("T7") == true)
+                                {
+                                    css = "sundayCalendar";
+                                }
+                                <td class="item-hospital @css" style="vertical-align:top;">
+                                    @if (listDoctor.Count > 0)
+                                    {
+                                        listDoctorS = listDoctor.Where(o => o.DUTY_TYPE == 1 && o.DATE_START.Value.Day == datetime.Day && o.DATE_START.Value.Month == datetime.Month && o.DATE_START.Value.Year == datetime.Year).OrderBy(x => x.DOCTOR_NAME).ToList();
+                                        foreach (var objDoctor in listDoctorS)
+                                        {
+                                            idItemS = datetime.Ticks + objDoctor.DOCTORS_ID.ToString();
+                                            objChangDelete = listCalendarChange.Where(o => o.DATE_START.Value.Day == objDoctor.DATE_START.Value.Day && o.DATE_START.Value.Month == objDoctor.DATE_START.Value.Month && o.DATE_START.Value.Year == objDoctor.DATE_START.Value.Year && o.DOCTORS_ID == objDoctor.DOCTORS_ID && o.STATUS == 2).FirstOrDefault();
+                                            objChangeChange = listCalendarChange.Where(o => o.DATE_START.Value.Day == objDoctor.DATE_START.Value.Day && o.DATE_START.Value.Month == objDoctor.DATE_START.Value.Month && o.DATE_START.Value.Year == objDoctor.DATE_START.Value.Year && o.DOCTORS_ID == objDoctor.DOCTORS_ID && o.STATUS == 1).FirstOrDefault();
+                                            if (objChangDelete != null)
+                                            {
+                                                <div class="schedule-element del-calendarH elementX" title="Hủy trực" id="@idItemS">
+                                                    <input type="checkbox" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="1" data-iddoctorchange="0" name="groupItem" />
+                                                    <a href="javascript:void(0)" id="@objDoctor.DOCTORS_ID" data-id="@objDoctor.DOCTORS_ID" style="color:#ff0000" class="StyleDelete">@objDoctor.ABBREVIATION</a>
+                                                    <span class="element-close fa fa-check-square fa-lg" title="Xác nhận xóa lịch trực" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="2" data-iddoctorchange="0" />
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                if (objChangeChange != null)
+                                                {
+                                                    if (objChangeChange.DATE_CHANGE_START != null)
+                                                    {
+
+                                                        idItemChange = objChangeChange.DATE_CHANGE_START.Value.Ticks + objChangeChange.DOCTORS_CHANGE_ID.ToString();
+                                                        <div class="schedule-element elementX" title="Đổi lịch trực" data-idchange="@idItemChange" style="background:#b6ff00;margin-top:0px;" id="@idItemS">
+                                                            <input type="checkbox" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="22" data-iddoctorchange="@objChangeChange.DOCTORS_CHANGE_ID" name="groupItem" />
+                                                            <a href="javascript:void(0)" id="@objDoctor.DOCTORS_ID" class="textDoctor">@objDoctor.ABBREVIATION</a>
+                                                            <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" class="ImageZ" />     <a href="javascript:void(0)" class="textChange" id="@objChangeChange.DOCTORS_CHANGE_ID">@objChangeChange.DOCTORS_CHANGE_NAME</a>    <span class="element-close fa fa-check-square fa-lg" title="Xác nhận đổi lịch trực" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="1" data-iddoctorchange="@objChangeChange.DOCTORS_CHANGE_ID" />
+                                                        </div>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="schedule-element elementX" title="Đổi lịch trực" data-idchange="XYZ" style="background:#b6ff00; " id="@idItemS">
+                                                            <input type="checkbox" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="2" data-iddoctorchange="@objChangeChange.DOCTORS_CHANGE_ID" name="groupItem" />
+                                                            <a href="javascript:void(0)" id="@objDoctor.DOCTORS_ID" class="textDoctor">@objDoctor.ABBREVIATION</a>
+                                                            <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" class="ImageZ" />     <a href="javascript:void(0)" class="textChange" id="@objChangeChange.DOCTORS_CHANGE_ID">@objChangeChange.DOCTORS_CHANGE_NAME</a>    <span class="element-close fa fa-check-square fa-lg" title="Xác nhận đổi lịch trực" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="4" data-iddoctorchange="@objChangeChange.DOCTORS_CHANGE_ID" />
+                                                        </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    objChangeChangeBack = listCalendarChange.Where(o => (o.DATE_CHANGE_START != null) ? (o.DATE_CHANGE_START.Value.Day == objDoctor.DATE_START.Value.Day && o.DATE_CHANGE_START.Value.Month == objDoctor.DATE_START.Value.Month && o.DATE_CHANGE_START.Value.Year == objDoctor.DATE_START.Value.Year && o.DOCTORS_CHANGE_ID == objDoctor.DOCTORS_ID && o.STATUS == 1) : (1 != 1)).FirstOrDefault();
+                                                    if (objChangeChangeBack != null)
+                                                    {
+
+                                                        idItemChange = objChangeChangeBack.DATE_START.Value.Ticks + objChangeChangeBack.DOCTORS_ID.ToString();
+                                                        <div class="schedule-element elementX" title="Đổi lịch trực" data-idchange="@idItemChange" style="background:#b6ff00;" id="@idItemS">
+                                                            <input type="checkbox" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-date="@objDoctor.DATE_START" data-typeaction="22" data-iddoctorchange="@objChangeChange2.DOCTORS_ID" name="groupItem" />
+                                                            <a href="javascript:void(0)" id="@objDoctor.DOCTORS_ID" class="textDoctor">@objDoctor.ABBREVIATION</a>
+                                                            <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" class="ImageZ" />     <a href="javascript:void(0)" class="textChange" id="@objChangeChangeBack.DOCTORS_ID">@objChangeChangeBack.DOCTORS_NAME</a>    <span class="element-close fa fa-check-square fa-lg" title="Xác nhận đổi lịch trực" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-date="@objDoctor.DATE_START" data-typeaction="1" data-iddoctorchange="@objChangeChangeBack.DOCTORS_ID" />
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="schedule-element current-calendarH" id="@idItemS">
+                                                            <a href="javascript:void(0)" id="@objDoctor.DOCTORS_ID">@objDoctor.ABBREVIATION</a>
+                                                        </div>
+
+                                                    }
+                                                }
+
+                                            }
+
+                                        }
+                                        listCalendarChangeInsert = listCalendarChange.Where(o => o.CALENDAR_DUTY.DUTY_TYPE == 1 && o.DATE_START.Value.Day == datetime.Day && o.DATE_START.Value.Month == datetime.Month && o.DATE_START.Value.Year == datetime.Year && o.STATUS == 3).ToList();
+                                        for (int x = 0; x < listCalendarChangeInsert.Count; x++)
+                                        {
+                                            if (listCalendarChangeInsert[x].DOCTOR.DOCTOR_LEVEL.LEVEL_NUMBER < 3)
+                                            {
+                                                idItemS = datetime.Ticks + listCalendarChangeInsert[x].DOCTORS_ID.ToString();
+
+                                                <div class="schedule-element add-calendar elementX" style="height:30px;" title="Bổ sung lịch trực" id="@idItemS">
+                                                    <input type="checkbox" data-id="@listCalendarChangeInsert[x].DOCTORS_ID" data-calendarduty="@listCalendarChangeInsert[x].CALENDAR_DUTY_ID" data-column="@listCalendarChangeInsert[x].TEMPLATE_COLUMN_ID" data-date="@listCalendarChangeInsert[x].DATE_START" data-typeaction="3" data-iddoctorchange="0" name="groupItem" />
+                                                    <a href="javascript:void(0)" id="@listCalendarChangeInsert[x].DOCTORS_ID">@listCalendarChangeInsert[x].DOCTORS_NAME</a>
+                                                    <span class="element-close fa fa-check-square fa-lg" title="Xác nhận  bổ sung lịch trực" id="@idItemS" data-id="@listCalendarChangeInsert[x].DOCTORS_ID" data-calendarduty="@listCalendarChangeInsert[x].CALENDAR_DUTY_ID" data-column="@listCalendarChangeInsert[x].TEMPLATE_COLUMN_ID" data-date="@listCalendarChangeInsert[x].DATE_START" data-typeaction="3" data-iddoctorchange="0" />
+                                                </div>
+
+                                            }
+
+                                        }
+                                    }
+                                </td>
+
+                            }
+                        }
+                        else
+                        {
+
+                            <td colspan="@count" class="warningcalendar">
+                                <div style="text-align:center;">
+                                    <a href="javascript:void(0)" id="bntSendLeader" class="cat-sendLeader">
+                                        <img src="/Images/Forward_Arrow.png" style="height:16px; width:16px;" />
+                                        @Localization.LabelWarningSendCalendar
+                                    </a>
+                                </div>
+                            </td>
+                        }
+
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td style="min-width:30px;text-align:center">1</td>
+                        <td style="min-width:10px;text-align:center"></td>
+                        <td style="min-width:100px"><strong>LÃNH ĐẠO</strong></td>
+                        <td colspan="@count" class="warningcalendar">
+                            <div style="text-align:center;">
+                                <a href="javascript:void(0)" id="bntSendLeader" class="cat-sendLeader">
+                                    <img src="/Images/Forward_Arrow.png" style="height:16px; width:16px;" />
+                                    @Localization.LabelWarningSendCalendar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                //Lịch đơn vị
+                for (int i = 0; i < objDepartment.Count; i++)
+                {
+                    var deparmentId = objDepartment[i].LM_DEPARTMENT_ID;
+                    var deparmentName = objDepartment[i].DEPARTMENT_NAME;
+
+                    <tr>
+                        <td style="min-width:30px;text-align:center">@(i + 2)</td>
+                        <td style="min-width:10px;text-align:center">
+                            @if (calendarDepartment.Where(x => Convert.ToInt32(x.LM_DEPARTMENT_ID) == deparmentId && x.CALENDAR_STATUS == 0).FirstOrDefault() != null)
+                            {
+                                <input type="checkbox" id="@deparmentId" data-month="@monthx" data-year="@yearx" data-type="1" name="groupDoctor" />
+
+                            }
+                        </td>
+                        <td style="min-width:100px">
+                            <strong>
+                                <a title='Xem lịch đơn vị' href='javascript:void(0)' class='cat-detail' data-id='@deparmentId'>@HttpUtility.HtmlDecode(deparmentName.ToUpper())</a>
+                            </strong>
+                        </td>
+                        @if (calendarDepartment.Where(x => Convert.ToInt32(x.LM_DEPARTMENT_ID) == deparmentId).FirstOrDefault() != null)
+                        {
+                            for (int j = 0; j < count; j++)
+                            {
+                                DateTime datetime = timeCalendar[j].DATES;
+                                css = "";
+
+                                dateDay = timeCalendar[j].DAYS;
+                                if (dateDay.Equals("CN") == true || dateDay.Equals("T7") == true)
+                                {
+                                    css = "sundayCalendar";
+                                }
+                                <td class="item-hospital @css" style="vertical-align:top;">
+                                    @if (listDoctor.Count > 0)
+                                    {
+
+                                        listDoctorS = listDoctor.Where(o => o.LM_DEPARTMENT_ID == deparmentId && o.DUTY_TYPE == 3 && o.DATE_START.Value.Day == datetime.Day && o.DATE_START.Value.Month == datetime.Month && o.DATE_START.Value.Year == datetime.Year).OrderBy(x => x.DOCTOR_NAME).ToList();
+                                        foreach (var objDoctor in listDoctorS)
+                                        {
+
+                                            idItemS = datetime.Ticks + objDoctor.DOCTORS_ID.ToString() + deparmentId.ToString() + objDoctor.TEMPLATE_COLUM_ID.ToString();
+
+
+                                            if (objDoctor.TEMPLATE_COLUM_ID != null)
+                                            {
+                                                objChangDelete = listCalendarChange.Where(o => o.DATE_START.Value.Day == objDoctor.DATE_START.Value.Day && o.DATE_START.Value.Month == objDoctor.DATE_START.Value.Month && o.DATE_START.Value.Year == objDoctor.DATE_START.Value.Year && o.DOCTORS_ID == objDoctor.DOCTORS_ID && o.STATUS == 2 && o.TEMPLATE_COLUMN_ID == objDoctor.TEMPLATE_COLUM_ID).FirstOrDefault();
+                                                objChangeChange = listCalendarChange.Where(o => o.DATE_START.Value.Day == objDoctor.DATE_START.Value.Day && o.DATE_START.Value.Month == objDoctor.DATE_START.Value.Month && o.DATE_START.Value.Year == objDoctor.DATE_START.Value.Year && o.DOCTORS_ID == objDoctor.DOCTORS_ID && o.STATUS == 1 && o.TEMPLATE_COLUMN_ID == objDoctor.TEMPLATE_COLUM_ID).FirstOrDefault();
+                                                objChangeChange2 = null;
+                                            }
+                                            else
+                                            {
+
+                                                objChangDelete = listCalendarChange.Where(o => o.DATE_START.Value.Day == objDoctor.DATE_START.Value.Day && o.DATE_START.Value.Month == objDoctor.DATE_START.Value.Month && o.DATE_START.Value.Year == objDoctor.DATE_START.Value.Year && o.DOCTORS_ID == objDoctor.DOCTORS_ID && o.STATUS == 2).FirstOrDefault();
+                                                objChangeChange2 = listCalendarChange.Where(o => o.DATE_CHANGE_START == objDoctor.DATE_START && o.DOCTORS_CHANGE_ID == objDoctor.DOCTORS_ID && o.STATUS == 1).FirstOrDefault();
+                                                if (objChangeChange2 == null)
+                                                {
+
+                                                    objChangeChange = listCalendarChange.Where(o => o.DATE_START.Value.Day == objDoctor.DATE_START.Value.Day && o.DATE_START.Value.Month == objDoctor.DATE_START.Value.Month && o.DATE_START.Value.Year == objDoctor.DATE_START.Value.Year && o.DOCTORS_ID == objDoctor.DOCTORS_ID && o.STATUS == 1).FirstOrDefault();
+                                                }
+                                                else
+                                                {
+                                                    objChangeChange = null;
+                                                }
+
+                                            }
+
+                                            if (objChangDelete != null)
+                                            {
+                                                <div class="schedule-element del-calendarH elementX" title="Hủy trực" id="@idItemS">
+                                                    <input type="checkbox" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="1" data-iddoctorchange="0" name="groupItem" />
+                                                    <a href="javascript:void(0)" id="@objDoctor.DOCTORS_ID" style="color:#ff0000" class="StyleDelete">@objDoctor.ABBREVIATION</a>
+                                                    <span class="element-close fa fa-check-square fa-lg" title="Xác nhận xóa lịch trực" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="2" data-iddoctorchange="0" />
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                if (objChangeChange != null)
+                                                {
+                                                    if (objChangeChange.DATE_CHANGE_START != null)
+                                                    {
+                                                        idItemChange = objChangeChange.DATE_CHANGE_START.Value.Ticks + objChangeChange.DOCTORS_CHANGE_ID.ToString() + deparmentId.ToString() + objChangeChange.COLUMN_CHANGE_ID;
+                                                        <div class="schedule-element elementX" title="Đổi lịch trực" data-idchange="@idItemChange" style="background:#b6ff00; " id="@idItemS">
+                                                            <input type="checkbox" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="22" data-iddoctorchange="@objChangeChange.DOCTORS_CHANGE_ID" name="groupItem" />
+                                                            <a href="javascript:void(0)" id="@objDoctor.DOCTORS_ID" class="textDoctor">@objDoctor.ABBREVIATION</a>
+                                                            <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" class="ImageZ" />     <a href="javascript:void(0)" class="textChange" id="@objChangeChange.DOCTORS_CHANGE_ID">@objChangeChange.DOCTORS_CHANGE_NAME</a>
+                                                            <span class="element-close fa fa-check-square fa-lg" title="Xác nhận đổi lịch trực" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="1" data-iddoctorchange="@objChangeChange.DOCTORS_CHANGE_ID" />
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="schedule-element elementX" title="Đổi lịch trực" data-idchange="XYZ" style="background:#b6ff00; padding-left:3px;" id="@idItemS">
+                                                            <input type="checkbox" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="2" data-iddoctorchange="@objChangeChange.DOCTORS_CHANGE_ID" name="groupItem" />
+                                                            <a href="javascript:void(0)" id="@objDoctor.DOCTORS_ID" class="textDoctor">@objDoctor.ABBREVIATION</a>
+                                                            <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" class="ImageZ" />     <a href="javascript:void(0)" class="textChange" id="@objChangeChange.DOCTORS_CHANGE_ID">@objChangeChange.DOCTORS_CHANGE_NAME</a>    <span class="element-close fa fa-check-square fa-lg" title="Xác nhận đổi lịch trực" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-column="@objDoctor.TEMPLATE_COLUM_ID" data-date="@objDoctor.DATE_START" data-typeaction="4" data-iddoctorchange="@objChangeChange.DOCTORS_CHANGE_ID" />
+                                                        </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (objChangeChange2 != null)
+                                                    {
+                                                        idItemChange = objChangeChange2.DATE_START.Value.Ticks + objChangeChange2.DOCTORS_ID.ToString() + deparmentId.ToString() + objChangeChange2.COLUMN_CHANGE_ID;
+                                                        <div class="schedule-element elementX" title="Đổi lịch trực" data-idchange="@idItemChange" data-column="0" style="background:#b6ff00; padding-left:3px;" id="@idItemS">
+                                                            <input type="checkbox" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-date="@objDoctor.DATE_START" data-typeaction="22" data-iddoctorchange="@objChangeChange2.DOCTORS_ID" name="groupItem" />
+                                                            <a id="@objDoctor.DOCTORS_ID" href="javascript:void(0)" class="textDoctor">@objDoctor.ABBREVIATION</a>
+                                                            <img src="~/Images/Forward_Arrow.png" style="width:12px; height:12px;" class="ImageZ" />     <a class="textChange" href="javascript:void(0)" id="@objChangeChange2.DOCTORS_ID">@objChangeChange2.DOCTORS_NAME</a>
+                                                            <span class="element-close fa fa-check-square fa-lg" title="Xác nhận đổi lịch trực" id="@idItemS" data-id="@objDoctor.DOCTORS_ID" data-calendarduty="@objDoctor.CALENDAR_DUTY_ID" data-date="@objDoctor.DATE_START" data-typeaction="1" data-iddoctorchange="@objChangeChange2.DOCTORS_ID" />
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="schedule-element current-calendarH" id="@idItemS">
+                                                            <a href="javascript:void(0)" id="@objDoctor.DOCTORS_ID">@objDoctor.ABBREVIATION</a>
+                                                        </div>
+                                                    }
+                                                }
+
+                                            }
+
+
+                                        }
+
+
+                                        listCalendarChangeInsert = listCalendarChange.Where(o => o.DATE_START.Value.Day == datetime.Day && o.DATE_START.Value.Month == datetime.Month && o.DATE_START.Value.Year == datetime.Year && o.STATUS == 3 && o.CALENDAR_DUTY.LM_DEPARTMENT_ID == deparmentId).ToList();
+                                        for (int x = 0; x < listCalendarChangeInsert.Count; x++)
+                                        {
+                                            if (listCalendarChangeInsert[x].DOCTOR.DOCTOR_LEVEL.LEVEL_NUMBER < 3)
+                                            {
+                                                idItemS = datetime.Ticks + listCalendarChangeInsert[x].DOCTORS_ID.ToString();
+
+                                                <div class="schedule-element add-calendar elementX" style="height:30px;" title="Bổ sung lịch trực" id="@idItemS">
+                                                    <input type="checkbox" data-id="@listCalendarChangeInsert[x].DOCTORS_ID" data-calendarduty="@listCalendarChangeInsert[x].CALENDAR_DUTY_ID" data-column="@listCalendarChangeInsert[x].TEMPLATE_COLUMN_ID" data-date="@listCalendarChangeInsert[x].DATE_START" data-typeaction="3" data-iddoctorchange="0" name="groupItem" />
+                                                    <a href="javascript:void(0)" id="@listCalendarChangeInsert[x].DOCTORS_ID">@listCalendarChangeInsert[x].DOCTORS_NAME</a>
+                                                    <span class="element-close fa fa-check-square fa-lg" title="Xác nhận  bổ sung lịch trực" id="@idItemS" data-id="@listCalendarChangeInsert[x].DOCTORS_ID" data-calendarduty="@listCalendarChangeInsert[x].CALENDAR_DUTY_ID" data-column="@listCalendarChangeInsert[x].TEMPLATE_COLUMN_ID" data-date="@listCalendarChangeInsert[x].DATE_START" data-typeaction="3" data-iddoctorchange="0" />
+                                                </div>
+                                            }
+
+                                        }
+                                    }
+                                </td>
+
+
+                            }
+                        }
+                        else
+                        {
+                            <td colspan="@count" class="warningcalendar">
+                                <div style="text-align:center;">
+                                    <a href="javascript:void(0)" id="bntSend" data-id="@deparmentId" class="cat-send">
+                                        <img src="/Images/Forward_Arrow.png" style="height:16px; width:16px;" />
+                                        @Localization.LabelWarningSendCalendar
+                                    </a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<div id="popupStaff" style="border: 1px solid #D0DAFD; text-align: center; width: 100%; display: none; background-color: #D0DAFD;">
+</div>
+@if (tbl != null)
+{
+    tbl.Dispose();
+    listDoctor = null;
+    timeCalendar = null;
+}
+<div class="TextCenter">
+    @if (enableView)
+    {
+        <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("CalendarHospitalAll", "CalendarDuty")'">
+            <span class="glyphicon glyphicon-step-backward"></span>
+            @Resources.Localization.Template_list
+        </button>
+    }
+
+    <button class="btn btn-primary btn-sm" id="ApprovedCalendar" onclick="ApprovedCalendar()" type="button">
+        <span class="glyphicon glyphicon-check"></span>
+        @Localization.ButtonApprovedTemptDisplay
+
+    </button>
+
+    <button class="btn btn-primary btn-sm" id="ApprovedDoctor" onclick="ApprovedDoctor()" type="button">
+        <span class="glyphicon glyphicon-check"></span>
+        Xác nhận đổi lịch
+    </button>
+    <button class="btn btn-primary btn-sm" id="NoApprovedDoctor" onclick="NoApprovedDoctor()" type="button">
+        <span class="glyphicon glyphicon-check"></span>
+        Hủy đổi lịch
+    </button>
+    <button class="btn btn-primary btn-sm" id="exportExcel" type="button" onclick="return btnExportExcel();">
+        <span class="glyphicon glyphicon-folder-open"></span>
+        @Localization.ButtonExportExcel
+    </button>
+
+
+</div>
+<div class="clear"></div>
+<div id="box_staff" class="box-staff " style="display: none">
+</div>
+<div id="view_model_container">
+</div>
+<script type="text/javascript" src="~/Scripts/TableCalendar.js"></script>
+<link type="text/css" href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript">
+    $(".cat-detail").bind('click', function (event) {       
+        var $self = $(this);
+        $.get('/CalendarDuty/DetailCalendar', {
+            deparmentId: $self.attr('data-id'), monthx: $('.selectMonths').val(), yearx: $('.selectYears').val(),
+        },
+            function (data) {
+                var $categoryModel = $('#view_model_container');
+                $categoryModel.html(data);
+                $('#viewEntityModel').modal({
+                    keyboard: false
+                });
+               
+            });
+
+    });
+    $(".cat-leader").bind('click', function (event) {
+        var $self = $(this);
+        $.get('/CalendarDuty/DetailLeader', {
+             monthx: $('.selectMonths').val(), yearx: $('.selectYears').val(),
+        },
+            function (data) {
+                var $categoryModel = $('#view_model_container');
+                $categoryModel.html(data);
+                $('#viewEntityModel').modal({
+                    keyboard: false
+                });
+
+            });
+
+    });
+    function btnExportExcel() {
+
+        var strDate = $('.selectWeek').val() + "_" + $('.selectMonths').val() + "_" + $('.selectYears').val() + '@(string.IsNullOrEmpty(idCalendarDuty) ? "" : "_" + idCalendarDuty)';
+        var url = '@Url.Action("ExportCalendarHospital", "CalendarDuty")' + '?strDate=' + strDate;
+        location.href = url;
+    }
+
+    $(document).ready(function () {
+
+        var $page_nav_content = $('#page-nav-content');
+        var idCount = 0;
+        // $page_nav_content.css('overflow-x', "visible");
+        var heightX = ($(window).height() - 320).toString() + "px";
+        $('.scrollz').find('tbody').css({ "height": heightX });
+
+    });
+    $('.element-close').click(function (e) {
+        var x = e.clientX;
+        var y = e.clientY;
+        var idDoctor = $(this).attr('data-id');
+        var idItem = $(this).attr('id');
+        var idCalendarduty = $(this).attr('data-calendarduty');
+        var idColumn = $(this).attr('data-column');
+        var idDate = $(this).attr('data-date').toString();
+        var typeactionX = $(this).attr('data-typeaction');
+        var idDoctorChange = $(this).attr('data-iddoctorchange');
+        //Lịch đơn vị
+        if (idColumn != null) {
+            $("#popupStaff").dialog({
+                title: 'Xác nhận đổi lịch',
+                modal: true,
+                position: [x, y],
+                width: 300,
+                height: 130,
+                resizable: false,
+                draggable: false,
+            }).load("/CalendarDuty/ApprovedCalendarHospital/?idCalendardutyX=" + idCalendarduty + "&idDoctorX=" + idDoctor + "&idDoctorChangeX=" + idDoctorChange + "&idColumnX=" + idColumn + "&typeActionX=" + typeactionX + "&idDateX=" + encodeURI(idDate) + "&idItem=" + idItem);
+        }
+            //Lịch lãnh đạo
+        else {
+            $("#popupStaff").dialog({
+                title: 'Xác nhận đổi lịch',
+                modal: true,
+                position: [x, y],
+                width: 300,
+                height: 130,
+                resizable: false,
+                draggable: false,
+            }).load("/CalendarDuty/ApprovedCalendarHospital/?idCalendardutyX=" + idCalendarduty + "&idDoctorX=" + idDoctor + "&idDoctorChangeX=" + idDoctorChange + "&typeActionX=" + typeactionX + "&idDateX=" + encodeURI(idDate) + "&idItem=" + idItem);
+
+        }
+
+        $("#popupStaff").removeClass("ui-dialog-content ui-widget-content");
+    });
+
+
+    // Hiển thị thông tin cá nhân của bác sĩ trực
+    $("#" + $('#selectable').attr('id')).delegate(" td.item-hospital .schedule-element a", "click", function (e) {
+        //Cập nhật lại tên bác sĩ theo vị trí Click
+        $('#box_staff #staff_name').text($(e.currentTarget).text().trim());
+        var x = e.clientX;
+        var y = e.clientY;
+        $("#box_staff").dialog({
+            title: '@titlePopup',
+            modal: true,
+            height: 'auto',
+            width: 340,
+            resizable: false,
+            draggable: false,
+            position: [x, y]
+        }).load("/CalendarDuty/GetInforDoctor/?idDoctor=" + $(this).attr('id') + "");
+        $("#box_staff").removeClass("ui-dialog-content");
+        $("#box_staff").fadeIn(50);
+        $("#ui-dialog-title-box_staff").css("margin-top", "-5px");
+
+    });
+    // Gửi thông tin
+    $('.cat-send').bind('click', function (event) {
+        var $self = $(this);
+        var deparmentIdx = $(this).attr("data-id");
+        $self.confirmation({
+            'popout': true,
+            'btnOkClass': 'btn-danger',
+            'title': '@Resources.Localization.MsgConfirmDisplayCalendar',
+            'yesButtonTitle': '@Localization.LabelAccept',
+            'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+            'placement': 'left',
+            onComplete: function (e) {
+                $.ajax({
+                    type: "GET",
+                    url: '/CalendarDuty/SendSMSHospital',
+                    data: { deparmentIdx: deparmentIdx },
+                    success: function (response) {
+                        window.notice('Gửi nhắc lịch thành công!', window.notice_success);
+                    }
+
+                });
+
+            },
+            onCancel: function (e) {
+            }
+        });
+    });
+    // Gửi nhắc lịch lãnh đạo
+    $('.cat-sendLeader').bind('click', function (event) {
+        var $self = $(this);
+        $self.confirmation({
+            'popout': true,
+            'btnOkClass': 'btn-danger',
+            'title': '@Resources.Localization.MsgConfirmDisplayCalendarLeader',
+            'yesButtonTitle': '@Localization.LabelAccept',
+            'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+            'placement': 'left',
+            onComplete: function (e) {
+                $.ajax({
+                    type: "GET",
+                    url: '/CalendarDuty/SendSMSHospitalLeader',
+                    data: null,
+                    success: function (response) {
+                        window.notice('Gửi nhắc lịch thành công!', window.notice_success);
+                    }
+
+                });
+
+            },
+            onCancel: function (e) {
+            }
+        });
+    });
+    $(document).delegate(".schedule-element", "hover", function (event) {
+        if (event.type == 'mouseenter') {
+            $(this).find(".element-close").fadeIn(0);
+            $(this).find(".element-change").fadeIn(0);
+        } else {
+            $(this).find(".element-close").fadeOut(0);
+            $(this).find(".element-change").fadeOut(0);
+        }
+    });
+    var lstApproved = [];
+    function ApprovedCalendar() {
+        var idCalendarDuty = '@idCalendarDuty';
+        var counx = 0;
+        $('#selectable').find('input:checked').each(function () {
+            if ($(this).attr("id") != "cbx-check-all") {
+                if ($(this).attr("name") == 'groupDoctor') {
+                    var GroupApproved = new Object();
+                    GroupApproved.CALENDAR_GROUP_ID = 0;
+                    GroupApproved.CALENDAR_ID = 0;
+                    GroupApproved.CALENDAR_PARENT_ID = 0;
+                    GroupApproved.CALENDAR_STATUS = 0;
+                    GroupApproved.LM_DEPARTMENT_ID = $(this).attr('id');
+                    GroupApproved.CALENDAR_MONTH = $(this).attr('data-month');
+                    GroupApproved.CALENDAR_YEAR = $(this).attr('data-year');
+                    GroupApproved.CALENDAR_TYPE = $(this).attr('data-type');
+                    lstApproved[counx] = GroupApproved;
+                    counx++;
+                }
+            }
+
+        });
+        if (lstApproved.length > 0) {
+            $.ajax({
+
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "/CalendarDuty/ApprovedCalendarDutyHospital",
+                data: JSON.stringify({ idCalendarDuty: idCalendarDuty, types: '4', lstApproved: lstApproved }),
+                success: function (data) {
+                    window.notice('Duyệt lịch trực toàn Bệnh viện thành công!', window.notice_success);
+                    $('#selectable').find('input:checked').each(function () {
+                        if ($(this).attr("id") != "cbx-check-all") {
+                            if ($(this).attr("name") == 'groupDoctor') {
+                                for (var i = 0; i < lstApproved.length; i++) {
+                                    if (lstApproved[i].LM_DEPARTMENT_ID == $(this).attr("id")) {
+                                        $(this).remove();
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    lstApproved = [];
+                },
+                error: function (result) {
+                    window.notice('Xin lỗi duyệt lịch trực không thành công!', window.notice_warning);
+
+                }
+            });
+
+        }
+        else {
+            alert("Xin lỗi bạn chưa chọn đơn vị nào!");
+
+        }
+    }
+
+    var lstDoctorApproved = [];
+    function ApprovedDoctor() {
+        var counx = 0;
+        lstDoctorApproved = [];
+        $('#selectable').find('input:checked').each(function () {
+            if ($(this).attr("id") != "cbx-check-all") {
+                if ($(this).attr("name") == 'groupItem') {
+                    var DoctorApproved = new Object();
+                    DoctorApproved.idItem = $(this).parent('.schedule-element').attr("id");
+                    DoctorApproved.idDoctor = $(this).attr("data-id");
+                    DoctorApproved.idCalendarduty = $(this).attr("data-calendarduty");
+                    DoctorApproved.idColumn = $(this).attr("data-column");
+                    DoctorApproved.dateStart = $(this).attr("data-date");
+                    DoctorApproved.typeAction = $(this).attr("data-typeaction");
+                    DoctorApproved.idDoctorChange = $(this).attr('data-iddoctorchange');
+                    lstDoctorApproved[counx] = DoctorApproved;
+                    counx++;
+                }
+            }
+
+        });
+        if (lstDoctorApproved.length > 0) {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "/CalendarDuty/ApprovedDoctors",
+                data: JSON.stringify({ lstDoctorApproved: lstDoctorApproved }),
+                success: function (data) {
+                    window.notice('Xác nhận lịch trực thành công!', window.notice_success);
+                    $('#selectable').find('input:checked').each(function () {
+                        if ($(this).attr("id") != "cbx-check-all") {
+                            if ($(this).attr("name") == 'groupItem') {
+                                var idItem1 = $(this).parent('.schedule-element').attr("id");
+                                for (var i = 0; i < lstDoctorApproved.length; i++) {
+                                    if (lstDoctorApproved[i].idItem == idItem1) {
+                                        // Trường hợp xóa
+                                        if ($(this).attr('data-typeaction') == 1) {
+                                            $(this).parent('.schedule-element').remove();
+                                        }
+                                        // Trường hợp thêm mới
+                                        if ($(this).attr('data-typeaction') == 3) {
+                                            $(this).parent('.schedule-element').removeAttr("style");
+                                            $(this).parent('.schedule-element').find('.element-close').remove();
+                                            $(this).remove();
+                                        }
+                                        // Trường hợp đổi lịch bổ sung
+                                        if ($(this).attr('data-typeaction') == 2) {
+                                            var idItem1 = $(this).parent('.schedule-element').attr("id");
+                                            var idDoctor = $('#' + idItem1).find(".textChange").attr("id");
+                                            var idChange = $('#' + idItem1).attr("data-idChange");
+                                            var doctorName = $('#' + idItem1).find(".textChange").text();
+                                            $('#' + idItem1).empty();
+                                            $('#' + idItem1).removeAttr('style');
+                                            $('#' + idItem1).append("<a  href='javascript:void(0)' id=" + idDoctor + ">" + doctorName + "</a>");
+                                        }
+                                        // Trường hợp đổi lịch hoán vị
+                                        if ($(this).attr('data-typeaction') == 22) {
+                                            var idItem1 = $(this).parent('.schedule-element').attr("id");
+                                            var idDoctor = $('#' + idItem1).find(".textChange").attr("id");
+                                            var idChange = $('#' + idItem1).attr("data-idChange");
+                                            var doctorName = $('#' + idItem1).find(".textChange").text();
+                                            $('#' + idItem1).empty();
+                                            $('#' + idItem1).removeAttr('style');
+                                            $('#' + idItem1).append("<a  ref='javascript:void(0)' id=" + idDoctor + ">" + doctorName + "</a>");
+
+                                            $('#selectable').find('.schedule-element').each(function () {
+                                                var idItem12 = $(this).attr("id");
+                                                if (idItem12 == idChange) {
+                                                    var idDoctor2 = $('#' + idItem12).find(".textChange").attr("id");
+                                                    var doctorName2 = $('#' + idItem12).find(".textChange").text();
+                                                    $('#' + idItem12).empty();
+                                                    $('#' + idItem12).removeAttr('style');
+                                                    $('#' + idItem12).append("<a  href='javascript:void(0)' id=" + idDoctor2 + ">" + doctorName2 + "</a>");
+
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    });
+                    lstApproved = [];
+                },
+                error: function (result) {
+                    window.notice('Xin lỗi xác nhận lịch trực không thành công!', window.notice_warning);
+                }
+            });
+
+        }
+        else {
+            alert("Xin lỗi bạn chưa chọn bác sĩ nào!");
+
+        }
+    }
+    function NoApprovedDoctor() {
+        var counx = 0;
+        lstDoctorApproved = [];
+        $('#selectable').find('input:checked').each(function () {
+            if ($(this).attr("id") != "cbx-check-all") {
+                if ($(this).attr("name") == 'groupItem') {
+                    var DoctorApproved = new Object();
+                    DoctorApproved.idItem = $(this).parent('.schedule-element').attr("id");
+                    DoctorApproved.idDoctor = $(this).attr("data-id");
+                    DoctorApproved.idCalendarduty = $(this).attr("data-calendarduty");
+                    DoctorApproved.idColumn = $(this).attr("data-column");
+                    DoctorApproved.dateStart = $(this).attr("data-date");
+                    DoctorApproved.typeAction = $(this).attr("data-typeaction");
+                    DoctorApproved.idDoctorChange = $(this).attr('data-iddoctorchange');
+                    lstDoctorApproved[counx] = DoctorApproved;
+                    counx++;
+                }
+            }
+
+        });
+        if (lstDoctorApproved.length > 0) {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "/CalendarDuty/NoApprovedDoctors",
+                data: JSON.stringify({ lstDoctorApproved: lstDoctorApproved }),
+                success: function (data) {
+                    window.notice('Hủy lịch trực thành công!', window.notice_success);
+                    $('#selectable').find('input:checked').each(function () {
+                        if ($(this).attr("id") != "cbx-check-all") {
+                            if ($(this).attr("name") == 'groupItem') {
+                                for (var i = 0; i < lstDoctorApproved.length; i++) {
+                                    var idItem1 = $(this).parent('.schedule-element').attr("id");
+
+                                    if (lstDoctorApproved[i].idItem == idItem1) {
+
+                                        // Trường hợp xóa
+                                        if ($(this).attr('data-typeaction') == 1) {
+                                            var idDoctor = $('#' + idItem1).find('a').attr("id");
+                                            var doctorName = $('#' + idItem1).text();
+                                            $('#' + idItem1).empty();
+                                            $('#' + idItem1).removeAttr('style');
+                                            $('#' + idItem1).append("<a href='javascript:void(0)' id=" + idDoctor + ">" + doctorName + "</a>");
+                                        }
+
+                                        // Trường hợp thêm mới
+                                        if ($(this).attr('data-typeaction') == 3) {
+                                            $('#' + idItem1).remove();
+                                        }
+                                        // Trường hợp đổi lịch bổ sung
+                                        if ($(this).attr('data-typeaction') == 2) {
+                                            var idDoctor = $('#' + idItem1).find(".textDoctor").attr("id");
+                                            var doctorName = $('#' + idItem1).find(".textDoctor").text();
+                                            $('#' + idItem1).empty();
+                                            $('#' + idItem1).removeAttr('style');
+                                            $('#' + idItem1).append("<a  href='javascript:void(0)' id=" + idDoctor + ">" + doctorName + "</a>");
+
+
+                                        }
+                                        // Trường hợp đổi lịch hoán vị
+                                        if ($(this).attr('data-typeaction') == 22) {
+                                            var idDoctor = $('#' + idItem1).find(".textDoctor").attr("id");
+                                            var idChange = $('#' + idItem1).attr("data-idChange");
+                                            var doctorName = $('#' + idItem1).find(".textDoctor").text();
+                                            $('#' + idItem1).empty();
+                                            $('#' + idItem1).removeAttr('style');
+                                            $('#' + idItem1).append("<a href='javascript:void(0)' id=" + idDoctor + ">" + doctorName + "</a>");
+                                            $('#selectable').find('.schedule-element').each(function () {
+                                                var idItem12 = $(this).attr("id");
+                                                if (idItem12 == idChange) {
+                                                    var idDoctor2 = $('#' + idItem12).find(".textDoctor").attr("id");
+                                                    var doctorName2 = $('#' + idItem12).find(".textDoctor").text();
+                                                    $('#' + idItem12).empty();
+                                                    $('#' + idItem12).removeAttr('style');
+                                                    $('#' + idItem12).append("<a href='javascript:void(0)' id=" + idDoctor2 + ">" + doctorName2 + "</a>");
+
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    });
+                    lstApproved = [];
+                },
+                error: function (result) {
+                    window.notice('Xin lỗi xác nhận lịch trực không thành công!', window.notice_warning);
+                }
+            });
+
+        }
+        else {
+            alert("Xin lỗi bạn chưa chọn bác sĩ nào!");
+
+        }
+    }
+    function CheckAll(value) {
+        $("input:checkbox[name='groupDoctor']").each(function (i) {
+            this.checked = value;
+        });
+    }
+</script>

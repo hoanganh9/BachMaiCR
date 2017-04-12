@@ -1,0 +1,112 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.DBMapping.ModelsExt
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.Utilities.Entity
+@using BachMaiCR.Web.Common
+@{
+    ViewBag.Title = Localization.WebPageActionsTitle;
+    var pagNar = ViewBag.Pagination as Pagination;
+    var lstItem = ViewBag.Actions as List<WEBPAGES_ACTIONS>;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+    var lstAction = ViewBag.ActionPermission as List<string>;
+    var user = ViewBag.User as string;
+    if (lstAction == null)
+    {
+        lstAction = new List<string>();
+    }
+    bool enableActive = lstAction.Contains(WebConst.ACTION_ACTION_ACTIVE_CODE);
+    bool enableEdit = lstAction.Contains(WebConst.ACTION_ACTION_EDIT_CODE);
+    bool enableUpdate = lstAction.Contains(WebConst.ACTION_ACTION_UPDATE_CODE);
+}
+
+
+<table style="width: 100%;">
+    <tr>
+        <th class="Table-title">Danh sách nhóm quyền</th>
+        <th style="float: right; height: 35px;"><span class="input-group-btn">
+            @if (enableUpdate || user == WebConst.DefaultAdminAccount)
+            {
+                <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonAddDisplay"  onclick="location.href = '@Url.Action("GenerateWebPageActions", "admin")'" ><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+            }
+        </span></th>
+    </tr>
+</table>
+<table class="tbl">
+    <tr>
+        <th>@Localization.ListItem</th>
+        <th>Mô tả</th>
+        <th>Mã</th>
+        @if (user.ToLower() == WebConst.DefaultAdminAccount.ToLower() || enableActive)
+        {
+            <th>Hoạt động</th>
+        }
+        @if (user.ToLower() == WebConst.DefaultAdminAccount.ToLower() || enableEdit)
+        {
+            <th>@Localization.ListEdit</th>
+        }
+    </tr>
+    <tbody id="ctg_content_body">
+        @for (int i = 0; i < lstItem.Count; i++)
+        {
+            <tr>
+                <td style="text-align: center; width: 5%">@(i + 1 + startIndex)</td>
+                <td style="text-align: left; width: 50%">@lstItem[i].DESCRIPTION</td>
+                <td style="text-align: left; width: 30%">@lstItem[i].CODE</td>
+                @if (user.ToLower() == WebConst.DefaultAdminAccount.ToLower() || enableActive)
+                {
+                    <td style="text-align: center; width: 10%">
+                        @if (lstItem[i].IS_ACTIVE.Equalstrue)
+                        {
+                        <input class = 'change-active' type='checkbox'  checked value= '@lstItem[i].WEBPAGES_ACTION_ID'/>
+                        }
+                        else
+                        {
+                        <input class = 'change-active' type='checkbox'   value= '@lstItem[i].WEBPAGES_ACTION_ID'/>
+                        }
+                    </td>
+                }
+                @if (user.ToLower() == WebConst.DefaultAdminAccount.ToLower() || enableEdit)
+                {
+                    <td style="text-align: center; width: 10%">
+                        <a title='Sửa thông tin chức năng' href='javascript:void(0)' class='action-edit' data-id='@lstItem[i].WEBPAGES_ACTION_ID'>
+                            <div class='glyphicon glyphicon-edit'></div>
+                        </a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_PaginationView", pagNar)
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("table.tbl-action-list").colResizable({
+            headerOnly: true,
+            defaultWith: ["auto", "auto", '50px', '36px']
+        });
+        $('.change-active').bind('change', function (event) {
+            var $self = $(this);
+            $.post('/WebpageActions/UpdateActive', { id: $self.val(), active: $self.is(":checked") == true }, function (response) {
+                if (response.status == 200) {
+                    window.notice(response.result, window.notice_success);
+                }
+                else {
+                    window.notice(response.result, window.notice_error);
+                }
+            });
+        });
+
+        $('.action-edit').bind('click', function (event) {
+            var $self = $(this);
+            $.get('/WebpageActions/AddAction', { id: $self.attr('data-id') }, function (data) {
+                var $roleModel = $('#action-model-container');
+                $roleModel.html(data);
+                $('#ActionModal').modal({
+                    keyboard: true
+                });
+            });
+        });
+    });
+</script>

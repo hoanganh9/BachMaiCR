@@ -1,0 +1,68 @@
+﻿@{
+    Layout = null;
+    string status = Request.QueryString["status"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Thông báo lỗi</title>
+</head>
+<body>
+    <div style="color: red; width: 100%; border: solid 1px lightgray; background: #f0f0f0; text-align: center;">
+        <div>
+        @if (status != null)
+        {
+           
+             if (status == "400")
+            {
+  @Html.Raw(Resources.Localization.Error400)   
+            }
+            else if (status == "401")
+            {
+ @Html.Raw(Resources.Localization.Error401) 
+            }
+            else if (status == "403")
+            {
+  @Html.Raw(Resources.Localization.Error403)    
+            }
+            else if (status == "404")
+            {
+                @Html.Raw(Resources.Localization.Error404)     
+            }
+            else if (status == "408")
+            {
+ @Html.Raw(Resources.Localization.Error408) 
+            }
+            else if (status == "500")
+            {
+ @Html.Raw(Resources.Localization.Error500)  
+            }
+             else if (status == "501")
+            {
+ @Html.Raw(Resources.Localization.Error501)  
+            }
+            else if (status == "502")
+            {
+ @Html.Raw(Resources.Localization.Error502) 
+            }
+            else if (status == "503")
+            {
+ @Html.Raw(Resources.Localization.Error503) 
+            }
+             else
+             {
+                  @Html.Raw(Resources.Localization.ErrorUnknow)    
+             }
+        }
+        else
+        {
+        @Html.Raw(Resources.Localization.ErrorUnknow)    
+        }
+      </div>
+      <div style="margin-bottom:10px;">  <a href='@Url.Action("Login","Account")'>@Html.Raw(Resources.Localization.ReturnBack)</a></div>
+    </div>
+</body>
+</html>

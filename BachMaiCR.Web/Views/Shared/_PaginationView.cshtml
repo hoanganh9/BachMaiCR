@@ -1,0 +1,100 @@
+﻿@using Resources
+@model BachMaiCR.Utilities.Entity.Pagination
+@{
+
+    var startIndex = Model.CurrentPage * Model.PageSize + 1;
+}
+
+
+@helper buildLinks(int start, int end, string innerContent)
+{
+
+    for (int i = start; i <= end; i++)
+    {
+        if (i - 1 == Model.CurrentPage)
+        {
+
+    <li class="active">
+        <a href="javascript:void(0)">@(innerContent ?? i.ToString())</a>
+    </li>
+        }
+        else
+        {
+    <li>
+        <a onclick="javascript: OnCriteria(@(i - 1))" href="javascript:void(0)">@(innerContent ?? i.ToString())</a>
+    </li>
+        }
+    }
+
+}
+@helper pageLinks()
+{
+    int maxPages = Model.MaxPages;
+
+    if (Model.TotalPages <= maxPages)
+    {
+    @buildLinks(1, (int)Model.TotalPages, null)
+        return;
+    }
+
+    int pagesAfter = Model.TotalPages - Model.CurrentPage; // Number of pages after current
+    int pagesBefore = Model.CurrentPage - 1; // Number of pages before current
+
+    if (pagesAfter <= 4)
+    {
+    @buildLinks(1, 1, null) // Show 1st page
+
+        int pageSubset = (int)Model.TotalPages - maxPages - 1 > 1 ? (int)Model.TotalPages - maxPages - 1 : 2;
+    @buildLinks(pageSubset, pageSubset, "...") // Show page subset (...)
+
+    @buildLinks((int)Model.TotalPages - maxPages + 3, (int)Model.TotalPages, null) // Show last pages
+
+        return; // Exit
+    }
+
+    if (pagesBefore <= 4)
+    {
+    @buildLinks(1, maxPages - 2, null) // Show 1st pages
+
+        int pageSubset = maxPages + 2 < Model.TotalPages ? maxPages + 2 : Model.TotalPages - 1;
+    @buildLinks(pageSubset, pageSubset, "...") // Show page subset (...)
+
+    @buildLinks((int)Model.TotalPages, (int)Model.TotalPages, null) // Show last page
+        return; // Exit
+    }
+
+    if (pagesAfter > 4)
+    {
+    @buildLinks(1, 1, null) // Show 1st pages
+
+        int pageSubset1 = Model.CurrentPage - 7 > 1 ? Model.CurrentPage - 7 : 2;
+        int pageSubset2 = Model.CurrentPage + 7 < Model.TotalPages ? Model.CurrentPage + 7 : Model.TotalPages - 1;
+    @buildLinks(pageSubset1, pageSubset1, pageSubset1 == Model.CurrentPage - 4 ? null : "...") // Show 1st page subset (...)
+    @buildLinks(Model.CurrentPage - 3, Model.CurrentPage + 3, null) // Show middle pages
+        // Show 2nd page subset (...)
+        // only show ... if page is contigous to the previous one.
+    @buildLinks(pageSubset2, pageSubset2, pageSubset2 == Model.CurrentPage + 4 ? null : "...")
+    @buildLinks((int)Model.TotalPages, (int)Model.TotalPages, null) // Show last page
+        return; // Exit
+
+    }
+}
+
+<div class="nav padding-top nav-pagination-bottom">
+
+    @if (Model.TotalPages > 1)
+    {
+        <div class="float-left">
+            <ul id="pageview_nav_bottom" class="pagination float-left padding-left">
+                <li class=""><a onclick="javascript: OnCriteria(@(Model.TotalPages + Model.CurrentPage - 1) % @Model.TotalPages)" href=" javascript:void(0)">&laquo;</a></li>
+                @pageLinks()
+                <li class=""><a onclick="javascript: OnCriteria(@(Model.CurrentPage + 1) % @Model.TotalPages)" class="" href="javascript:void(0)">&raquo;</a></li>
+            </ul>
+        </div>
+    }
+
+    <div class="float-right padding-right">
+        <span class="nav-pagination-content">Đang xem @startIndex - @(startIndex + Model.CurrentRow - 1) trên @Model.TotalRows bản ghi.
+        </span>
+    </div>
+</div>

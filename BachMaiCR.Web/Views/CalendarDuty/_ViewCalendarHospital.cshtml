@@ -1,0 +1,271 @@
+﻿@model BachMaiCR.DBMapping.ModelsExt.InforCalendarDutyX
+@using BachMaiCR.DBMapping.Models;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DataAccess;
+@using Resources
+@Scripts.Render("~/bundles/jqueryui")
+@{
+
+    int yearCurrent = System.DateTime.Now.Year + 2;
+    int yearStart = yearCurrent - 5;
+    List<SelectListItem> tmpYear = new List<SelectListItem>();
+    for (int i = yearStart; i < yearCurrent; i++)
+    {
+        tmpYear.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    List<SelectListItem> tmpMonths = new List<SelectListItem>();
+    for (int i = 1; i <= 12; i++)
+    {
+        tmpMonths.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    List<SelectListItem> tmpWeek = new List<SelectListItem>();
+    int monthss = System.DateTime.Now.Month;
+    int yearss = System.DateTime.Now.Year;
+    List<string> Days = new List<string>();
+    int dayNumber = DateTime.DaysInMonth(yearss, monthss);
+
+    Days.Add("1-7/" + monthss);
+    Days.Add("8-14/" + monthss);
+    Days.Add("15-21/" + monthss);
+    Days.Add("22-" + dayNumber.ToString() + "/" + monthss);  
+    for (int i = 0; i <= 3; i++)
+    {
+        tmpWeek.Add(new SelectListItem() { Text = "Tuần " + (i + 1).ToString() + "(" + Days[i] + ")", Value = i.ToString(), Selected = false });
+
+    }
+    int currentWeek = ViewBag.idWeek;
+    if (DateTime.Now.Day<8)
+    {
+        currentWeek = 0;
+    }
+    else if (DateTime.Now.Day < 15 && DateTime.Now.Day>7)
+    {
+        currentWeek = 1;
+    }
+    else if (DateTime.Now.Day < 21 && DateTime.Now.Day > 14)
+    {
+        currentWeek = 2;
+    }
+    else
+    {
+        currentWeek = 3; 
+    }
+    var times = ViewBag.times as List<TimeCalendarDuty>;
+    ViewBag.Title = Resources.Localization.CalendarHospitalTittle;
+    var objCalendarDuty = ViewBag.objCalendarDuty as CALENDAR_DUTY;
+    var DATE_WEEK = new SelectList(tmpWeek, "Value", "Text", currentWeek);
+    var DATE_MONTH = new SelectList(tmpMonths, "Value", "Text", objCalendarDuty.CALENDAR_MONTH);
+    var DATE_YEAR = new SelectList(tmpYear, "Value", "Text", objCalendarDuty.CALENDAR_YEAR);
+    var strContents = "Lịch trực toàn bệnh viện tháng " + objCalendarDuty.CALENDAR_MONTH + " năm " + objCalendarDuty.CALENDAR_YEAR;
+    var month = objCalendarDuty.CALENDAR_MONTH;
+    var year = objCalendarDuty.CALENDAR_YEAR;
+    var idCalendarDuty = objCalendarDuty.CALENDAR_DUTY_ID;
+}
+<style>
+    .selectpicker {
+        font-size: 12px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+
+
+    .btn-default {
+        height: 25px;
+        font-size: 12px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+</style>
+<script type="text/javascript">
+    var nextChange = false;
+    function selectWeeks() {
+        var nextMonth = $('.selectMonths').val();
+        var nextYear = $('.selectYears').val();
+        var currentWeek = $('.selectWeek').val();
+        $.ajax({
+            type: "POST",
+            url: "/CalendarDuty/LoadDay",
+            content: "application/json; charset=utf-8",
+            data: ({ Months: nextMonth, Years: nextYear, currentWeek: currentWeek }),
+            success: function (data) {
+                var result = '';
+                for (var i = 0, iL = data.length; i < iL; i++) {
+                    if (data[i].Selected == true) {
+                        result += '<option value="' + data[i].Value + '" selected = "selected"  >' + data[i].Text + '</option>';
+                    } else {
+
+                        result += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                    }
+                }
+                $('#DATE_WEEKX').html(result);
+                $('#DATE_WEEKX').selectpicker('refresh');
+
+            }
+        });
+    }
+    function selectChange() {
+
+        var nextMonth = $('.selectMonths').val();
+        var nextYear = $('.selectYears').val();
+        $('#inforContent').val($('.templates option:selected').text() + "Lịch trực toàn bệnh viện tháng " + $('.selectMonths').val() + " năm " + $('.selectYears').val());
+
+        $.ajax({
+            type: "GET",
+            url: '/CalendarDuty/LoadCalendarHospital',
+            data: { idweek: $('.selectWeek').val(), nextMonth: nextMonth, nextYear: nextYear, idCalendarDuty: '@idCalendarDuty' },
+            success: function (response) {
+                $('#cat_list_render').html(response);
+            }
+        });
+
+
+    }
+    $(document).ready(function (e) {
+        $('.selectMonths').change(function () {
+            if (!nextChange) {
+                selectChange();
+                selectWeeks();
+            }
+            nextChange = false;
+
+        });
+        $('.selectYears').change(function () {
+            if (!nextChange) {
+                selectChange();
+            }
+            nextChange = false;
+        });
+
+        $('.selectWeek').change(function () {
+            if (!nextChange) {
+                selectChange();
+            }
+            nextChange = false;
+        });
+
+    });
+
+    $(document).ready(function (e) {
+        $('.selectMonths').selectpicker();
+    });
+    $(document).ready(function (e) {
+        $('.selectYears').selectpicker();
+    });
+    $(document).ready(function (e) {
+        $('.selectWeek').selectpicker();
+    });
+
+    function NextCalendar(value) {
+        var iMonth = $('.selectMonths').val();
+        var iYear = $('.selectYears').val();
+        var nextMonth = new Date().getMonth();
+        var nextYear = parseFloat(iYear);
+        if (value == 1) {//ve thang truoc
+            nextMonth = parseFloat(iMonth) - 1;
+            if (nextMonth == 0) {
+                nextMonth = 12;
+                nextYear -= 1;
+            }
+        }
+        else if (value == 0) {//sang thang ke tiep
+            nextMonth = parseFloat(iMonth) + 1;
+            if (nextMonth > 12) {
+                nextMonth = 1;
+                nextYear += 1;
+            }
+        }
+        nextChange = true;
+        $('select[name=DATE_MONTHX]').selectpicker('val', nextMonth);
+        $('select[name=DATE_YEARX]').selectpicker('val', nextYear);
+    }
+
+</script>
+<div class="page-content" style="width:100%">
+    <div id="nav">
+        <table style="width:100%;border:0px">
+            <tr>
+                <td style=" width: 65%">
+                    <div style="margin-top:-3px;">    <a href="/CalendarDuty/CalendarHospitalAll" title=""> @Resources.Localization.ManageCalendarDutyTitle.ToUpper()</a> »  @ViewBag.Title.ToUpper()</div>
+                </td>
+                <td>
+                    <table border="0" style="width:100%;margin-top:10px; border-spacing:0px 0px;border-collapse: separate;">
+                        <tr>
+                            <td style="width:100px;background:#b6ff00"></td>
+                            <td style="text-align:left;width:100px; color:#302f2f"> <strong> Đổi lịch trực</strong></td>
+                            <td style="width:100px;background:#d5f76e;"></td>
+                            <td style="text-align:left;width:155px;color:#302f2f"> <strong> Bổ sung lịch trực</strong></td>
+                            <td style="text-align:left"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <table border="0" class="tbl_Search" style="width:98%">
+
+
+        <tr>
+            <td style="text-align: right; width: 65px; cursor: pointer;">
+                <img src="~/Images/prev-icon.jpg" style="width: 25px;" title="Trở về tháng trước" onclick="NextCalendar(1)" />
+                &nbsp;
+
+            </td>
+            <td style="text-align: right; width: 45px;">
+                @Resources.Localization.LabelWeek &nbsp;
+
+            </td>
+            <td style="width: 150px;">
+                @Html.DropDownListFor(m => m.DATE_WEEKX, DATE_WEEK, new { @class = "selectWeek", data_width = "150px", id = "DATE_WEEKX" })
+
+            </td>
+            <td style="text-align: right; width: 45px;">
+                @Resources.Localization.LabelMonthSearch &nbsp;
+
+            </td>
+            <td style="width: 65px;">
+                @Html.DropDownListFor(m => m.DATE_MONTHX, DATE_MONTH, new { @class = "selectMonths", data_width = "65px", id = "DATE_MONTHX" })
+
+            </td>
+            <td style="text-align: right; width: 60px;">
+                @Resources.Localization.LabelYear &nbsp;
+
+            </td>
+            <td style="width: 65px; text-align: left">
+                @Html.DropDownListFor(m => m.DATE_YEARX, DATE_YEAR, new { @class = "selectYears", data_width = "80px", id = "DATE_YEARX" })
+            </td>
+            <td style="text-align: left; width: 65px; cursor: pointer;">
+                &nbsp;
+                <img src="~/Images/Next-icon.png" style="width: 25px;" title="Sang tháng tiếp theo" onclick="NextCalendar(0)" />
+
+
+
+            </td>
+            <td class="Align_right" style="width: 65px;">
+                @Resources.Localization.LabelContent 	 &nbsp;
+            </td>
+            <td style="text-align: left">
+                @Html.TextBoxFor(m => m.CONTENTSX, new { @class = "TextBoxContent", id = "inforContent", @Value = @strContents, @Style = "width:100%;", @readonly = "true" })
+            </td>
+            <td style="width: 5%;"></td>
+
+        </tr>
+
+    </table>
+</div>
+<script>
+    $.ajax({
+        url: '@Url.Action("LoadCalendarHospital", "CalendarDuty")',
+        data: { idweek: $('.selectWeek').val(), nextMonth: '@month', nextYear: '@year', idCalendarDuty: '@idCalendarDuty' },
+        type: 'GET',
+        success: function (data) {
+            $('#cat_list_render').html(data);
+        }
+    });
+</script>
+
+<div class="page-content" style="margin-right:10px;margin-left:10px">
+    <div id="cat_list_render">
+
+
+    </div>
+</div>

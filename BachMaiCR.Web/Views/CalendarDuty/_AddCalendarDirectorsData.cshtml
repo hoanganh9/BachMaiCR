@@ -1,0 +1,230 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using Resources;
+@using System.Data;
+@using BachMaiCR.Web.Utils;
+@using BachMaiCR.Web.Common;
+<script type="text/javascript">
+    $(function () {
+        $('#selectable').selectable({
+            filter: 'td.item-schedule',
+            stop: function (event, ui) {
+                $('#popupStaff').fadeOut(50);
+                $('#box_staff').fadeOut(50);
+                $('#flag_accept').val(0);
+                $('.ui-icon-closethick').click();
+            }
+        })
+    });
+</script>
+@{ 
+    var times = ViewBag.times;
+    DateTime currentDate = Utils.GetDateTime();
+    DateTime date = currentDate;
+    date = Convert.ToDateTime(times);
+    DataTable tbl = Utils.CalendarWeekly(date);
+    var columnx = "";
+    var start = "";
+    var end = "";
+    string titlePopup = Localization.DoctorDetail;   
+    var listDoctor = ViewBag.doctors as List<DoctorCalendarLeader>;
+    var objCalendarDuty = ViewBag.objCalendarDuty as List<CALENDAR_DUTY>;
+    string lengh = "";
+    string doctorName = "";
+    string doctorId = "";
+    string doctorPhone = "", calendarDoctorId = "";
+    int? statusId = 0;
+    int idCalendarDuty = 0;
+    if (objCalendarDuty != null && objCalendarDuty.Count > 0)
+    {
+        statusId = objCalendarDuty[0].CALENDAR_STATUS;
+        idCalendarDuty = objCalendarDuty[0].CALENDAR_DUTY_ID;       
+    }
+    objCalendarDuty = null;
+    var lstAction = ViewBag.Actions as List<string>;
+    bool enableView = lstAction.Contains(WebConst.ACTION_VIEW_CALENDAR_DIRECTORS_CODE);
+    bool enableImport = lstAction.Contains(WebConst.ACTION_IMPORT_CALENDAR_DIRECTORS_CODE);
+    bool enableInsert = lstAction.Contains(WebConst.ACTION_INSERT_CALENDAR_DIRECTORS_CODE);
+    bool enableExport = lstAction.Contains(WebConst.ACTION_EXPORT_CALENDAR_DIRECTORS_CODE);
+    bool enableSend = lstAction.Contains(WebConst.ACTION_SEND_CALENDAR_DIRECTORS_CODE);
+    bool enableCancel = lstAction.Contains(WebConst.ACTION_CANCEL_APPROVED_CALENDAR_DIRECTORS_CODE);
+    bool enableAproved = lstAction.Contains(WebConst.ACTION_APPROVED_CALENDAR_DIRECTORS_CODE);
+    lstAction = null;
+}
+
+<div id="grid">
+    <table class="tbl" id="selectable">
+        <tr>
+            <th style="width: 5%;">@Localization.ListItem</th>
+            <th style="width: 20%;">@Localization.LabelWeek </th>
+            <th style="width: 50%;">@Localization.LabelDirectors </th>
+            <th style="width: 25%;">@Localization.LabelDirectorsPhone </th>
+        </tr>
+      
+        @for (int j = 0; j < tbl.Rows.Count; j++)
+        {
+            DataRow dr = tbl.Rows[j];
+            columnx = Convert.ToString(dr["Weekly"]);
+            start = Convert.ToString(dr["Start"]);
+            end = Convert.ToString(dr["End"]);
+            var id = start + "_" + end;
+            var tel = "tel_" + id;       
+            <tr>
+                <td class="item-scheduleOld item-font">@(j + 1)</td>
+                <td class="item-scheduleOld item-font">@columnx</td>
+                <td class="item-schedule"  id="@id" style="vertical-align:top;">
+
+                    @for (int tt = 0; tt < listDoctor.Count; tt++)
+                    {
+                        if (Convert.ToDateTime(listDoctor[tt].DATE_START).Day >= Convert.ToInt32(start) && Convert.ToDateTime(listDoctor[tt].DATE_START).Day <= Convert.ToInt32(end))
+                        {
+                            doctorName = listDoctor[tt].DOCTOR_NAME;
+                            doctorId = Convert.ToString(listDoctor[tt].DOCTORS_ID);
+                            doctorPhone = listDoctor[tt].CALENDAR_PHONE;
+                            if (!string.IsNullOrEmpty(doctorName))
+                            {
+                                lengh = Convert.ToString(doctorName.Length + 10) + "px";
+                            }
+                            else
+                            {
+                                lengh = "100%";
+                            }
+                            calendarDoctorId = id + "_" + doctorId + "_" + doctorPhone;                       
+                        <div class="schedule-element" style="width:@lengh" id="@doctorId">
+                            <a href="#" id="@calendarDoctorId" title="@doctorPhone" name="@calendarDoctorId">@doctorName</a>
+                            <span class="element-close fa fa-times-circle" title="Xóa bỏ" onclick="scheduleCloseClick(this)" />
+                        </div>
+                        }
+                    }
+                </td>
+                <td id="@tel" class="itemtel" style="vertical-align:top;">
+
+                    @for (int tt = 0; tt < listDoctor.Count; tt++)
+                    {
+                        if (Convert.ToDateTime(listDoctor[tt].DATE_START).Day >= Convert.ToInt32(start) && Convert.ToDateTime(listDoctor[tt].DATE_START).Day <= Convert.ToInt32(end))
+                        {
+                            doctorId = Convert.ToString(listDoctor[tt].DOCTORS_ID);
+                            doctorPhone = listDoctor[tt].CALENDAR_PHONE;
+                            string idTel = "content_" + id + "_" + doctorId + "_" + doctorPhone; 
+                        <div id="@idTel">@doctorPhone </div>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+<div id="popupStaff" style="border: 1px solid #D0DAFD; text-align: center; width: 100%; display: none; background-color: #dbe8fe;">
+</div>
+@if (tbl != null)
+{
+    tbl.Dispose();
+    listDoctor = null;
+}
+<div class="TextCenter">
+    @if (enableView)
+    {       
+    
+    <button class="btn btn-primary btn-sm" type="button"  onclick="location.href='@Url.Action("CalendarDirectors", "CalendarDuty")'">
+        <span class="glyphicon glyphicon-step-backward"></span>
+        @Resources.Localization.Template_list</button>
+    }
+    @if (statusId != 3 && enableInsert && currentDate.Month<=date.Month)
+    { 
+    
+        <button class="btn btn-primary btn-sm" id="saveCalendar" type="button">
+        <span class="glyphicon glyphicon-floppy-disk"></span>
+        @Localization.ButtonSaveDisplay</button> 
+    }
+    @if (((statusId < 2) || (statusId > 3)) && (enableSend))
+    {
+        <button type="button" class="btn btn-primary btn-sm" value="@Localization.ButtonSendApproved" onclick="SendCalendar()"><span class="glyphicon glyphicon-arrow-up"></span>@Localization.ButtonSendApproved</button>
+    }
+    @if (statusId == 3 && enableCancel)
+    {
+    <button type="button"  class="btn btn-primary btn-sm" value="@Localization.ButtonCancelApproved" onclick="CancelCalendar()"><span class="glyphicon glyphicon-arrow-down"></span>@Localization.ButtonCancelApproved</button>
+    }
+    @if ((statusId == 2)  && (enableAproved))
+    {
+        <button type="button" class="btn btn-primary btn-sm" value="@Localization.ButtonApprovedTemptDisplay" onclick="ApprovedCalendar()"><span class="glyphicon glyphicon-check"></span>@Localization.ButtonApprovedTemptDisplay</button>
+
+    }
+         @if (enableImport)
+    {       
+       
+    <button class="btn btn-primary btn-sm" id="" type="button">
+        <span class="glyphicon glyphicon-folder-open"></span>&nbsp;
+        @Localization.ButtonInputExcel</button>
+                 
+    }
+    @if (enableExport)
+{
+
+    <button class="btn btn-primary btn-sm" id="" type="button" onclick="return btnExportClick(@date.Month,@date.Year);">
+        <span class="glyphicon glyphicon-export"></span>&nbsp;
+        @Localization.ButtonExportExcel
+
+    </button>
+}
+</div>
+<div class="clear"></div>
+<div id="box_staff" class="box-staff " style="display: none">
+</div>
+<div id="popupAnser"></div>
+<script type="text/javascript" src="~/Scripts/TableCalendar.js"></script>
+<link type="text/css" href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script type="text/ecmascript" src="~/Scripts/Calendar/calendarDirectors.js">
+
+</script>
+<script type="text/javascript">
+    function SendCalendar() {
+
+        var idCalendarDuty = '@idCalendarDuty';
+         $.ajax({
+             type: "GET",
+             url: '/CalendarDuty/SendApprovedDirectors',
+             data: { idCalendarDuty: idCalendarDuty, types: '2' },
+             success: function (response) {
+                 RefreshCalendar(idCalendarDuty);
+                 window.notice('Gửi duyệt lịch thường trú Ban giám đốc thành công', window.notice_success);
+
+             }
+
+         })
+
+    }
+    function CancelCalendar() {
+        var idCalendarDuty = '@idCalendarDuty';
+        $.get('/CalendarDuty/ApprovedRequestDirector', { idCalendarDuty: idCalendarDuty, types: '5' }, function (data) {
+
+            $('#popupAnser').html(data);
+            $('#CalendarDutyRequest').modal({
+                keyboard: true
+            });
+        });
+    }
+    function ApprovedCalendar() {
+        var idCalendarDuty = '@idCalendarDuty';
+                $.ajax({
+                    type: "GET",
+                    url: '/CalendarDuty/ApprovedCalendarDirector',
+                    data: { idCalendarDuty: idCalendarDuty, types: '2' },
+                    success: function (response) {
+                       // RefreshCalendar(idCalendarDuty);
+                        window.notice('Duyệt thành công', window.notice_success);
+                        window.location = "/CalendarDuty/CalendarDirectors";
+                    }
+
+                })
+
+    }
+    function RefreshCalendar(idCalendarDuty)
+    {
+        $.get('@Url.Action("LoadCalendarDirectors", "CalendarDuty")', function (data) {
+            $('#loadTemplate').html(data);
+        });
+    }
+
+</script>

@@ -1,0 +1,113 @@
+﻿<!--
+
+-->
+@using BachMaiCR.Web.Common
+<script type="text/javascript">
+    var timeout = 4000;
+    $(document).ready(function () {
+        setTimeout('$(".notice-from-server").fadeOut("normal", function(){$(this).remove();})', timeout);
+
+        $('.notice').on('click', function (event) {
+            $(event.currentTarget).fadeOut('fast', function () {
+                $(this).remove();
+            });
+        });
+    });
+    /* phần notice dành cho client */
+    window.notice_success = 0;
+    window.notice_warning = 1;
+    window.notice_info = 2;
+    window.notice_error = 3;
+    
+    window.notice = function (message, type) {
+        var total = $('.notice').length;
+        var marginTop = total>0 ? parseFloat($('.notice').last().css('top').toString().replace('px', '')) + 52 : 2;
+        //    public enum NoticeType
+        //    {
+        //        /// <summary>
+        //        /// Thành công
+        //        /// </summary>
+        //        Success = 0,
+        //        /// <summary>
+        //        /// Cảnh báo
+        //        /// </summary>
+        //        Warning = 1,
+        //        /// <summary>
+        //        /// Thông tin, mang tính trung lập
+        //        /// </summary>
+        //        Info = 2,
+        //        /// <summary>
+        //        /// Lỗi
+        //        /// </summary>
+        //        Error = 3,
+        //    }
+        var cssClass = "alert alert-info";
+        switch (type) {
+            case 0:
+                cssClass = "alert alert-success";
+                break;
+            case 1:
+                cssClass = "alert alert-warning";
+                break;
+            case 2:
+                cssClass = "alert alert-info";
+                break;
+            case 3:
+                cssClass = "alert alert-danger";
+                break;
+            default:
+                break;
+        }
+
+        //cssClass += "";
+        var id = Math.random().toString().replace('.', '');
+        $('body').append(
+            [
+                '<div id="', id, '" class="notice ', cssClass, '" style="top:', marginTop, 'px;">',
+                    message,
+                '</div>'
+            ].join('')
+        );
+        setTimeout('$("#' + id + '").fadeOut("normal", function(){$(this).remove();})', timeout);
+        $('.notice').on('click', function (event) {
+            $(event.currentTarget).fadeOut('fast', function () {
+                $(this).remove();
+            });
+        });
+    };
+</script>
+@{
+    int totalNotice = Notice.TotalNotice();
+    if (totalNotice > 0)
+    {
+        for (var i = 0; i < totalNotice; i++)
+        {
+            string cssClass = @"alert alert-info";
+            string messageWithType = Notice.GetNoticeMessage(i);
+            if (string.IsNullOrWhiteSpace(messageWithType))
+            {
+                continue;
+            }
+            var type = (NoticeType)(int.Parse(messageWithType.Substring(0, 1)));
+            switch (type)
+            {
+                case NoticeType.Error:
+                    cssClass = @"alert alert-danger";
+                    break;
+                case NoticeType.Info:
+                    cssClass = @"alert alert-info";
+                    break;
+                case NoticeType.Success:
+                    cssClass = @"alert alert-success";
+                    break;
+                case NoticeType.Warning:
+                    cssClass = @"alert alert-warning";
+                    break;
+            }
+            <div class="notice-from-server notice @cssClass" style="top: @(2 * (i + 1) + i * 50)px;">
+                @messageWithType.Substring(1)
+            </div>
+        }
+        Notice.Clear();
+    }
+}

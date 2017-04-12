@@ -1,0 +1,186 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@{
+    
+    int typeAction = ViewBag.typeAction;
+
+    int idCalendarduty = 0;
+    int idDoctor = 0;
+    int idColumn = 0;
+    var idDate = "";
+    var Content = ViewBag.Content;
+    var idItem = ViewBag.idItem;
+   
+
+        idCalendarduty = ViewBag.idCalendarduty;
+        idDoctor = ViewBag.idDoctor;
+        if(ViewBag.idColumn!=null)
+        {
+         idColumn = ViewBag.idColumn;
+        }
+        idDate = ViewBag.idDate;
+        <table  style="border:0;width:100%;">
+           <tr>
+                <td style="padding-top:10px;font-size:12px;">
+                  
+                      @Html.Raw(HttpUtility.HtmlDecode(Content))
+                  
+                </td>
+               
+
+            </tr>
+        </table>
+    
+ }
+<div class="panel-search-button" style="margin-top:10px">
+        <input type="hidden" value="0" id="flag_accept" />
+        <input type="button" id="btnOk" value="Chấp nhận" onclick="onAccept()" />
+        <input type="button" id="btnCancel" value="Hủy bỏ" onclick="onClose();" />
+    </div>
+<script type="text/javascript">
+    //Gọi hàm xác nhận
+    function onAccept() {
+        var idItem = '@idItem';
+        var typeAction = '@typeAction';
+        var idCalendarDuty = '@idCalendarduty';
+        var idDoctor = '@idDoctor';
+        var idColumn = '@idColumn';
+        var idDate = '@idDate';
+        $.ajax(
+            {
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "/CalendarDuty/ApprovedDoctor?idCalendarDuty=" + idCalendarDuty + "&idDoctor=" + idDoctor + "&idColumn=" + idColumn + "&idDate=" + encodeURI(idDate) + "&typeAction=" + typeAction,
+                success: function (data) {
+
+                    window.notice(data.result, window.notice_success);
+                }
+            });
+        $('#selectable').find('.schedule-element').each(function () {
+            var idItem1 = $(this).attr("id");
+           
+            if (idItem1 == idItem) {
+              
+                //them moi
+                if (typeAction == 3) {
+                    $('#' + idItem1).removeAttr('style');
+                    $('#' + idItem1).find(".element-close").remove();
+                    $('#' + idItem1).find('input').remove();
+                }
+                //xoa
+                if (typeAction == 2) {
+                    $('#' + idItem1).remove();
+                }
+                //doi lich
+                if (typeAction == 4) {
+                 
+                    var idDoctor = $('#' + idItem1).find(".textChange").attr("id");
+                    var idChange = $('#' + idItem1).attr("data-idChange");
+                    var doctorName = $('#' + idItem1).find(".textChange").text();
+                    $('#' + idItem1).empty();
+                    $('#' + idItem1).removeAttr('style');
+                    $('#' + idItem1).append("<a href='javascript:void(0)' id=" + idDoctor + ">" + doctorName + "</a>");
+                    $('#' + idItem1).find('input').remove();
+                    
+                }
+                if (typeAction == 1) {
+                    var idDoctor = $('#' + idItem1).find(".textChange").attr("id");
+                    var idChange = $('#' + idItem1).attr("data-idChange");
+                    var doctorName = $('#' + idItem1).find(".textChange").text();
+                    $('#' + idItem1).empty();
+                    $('#' + idItem1).removeAttr('style');
+                    $('#' + idItem1).append("<a href='#' id=" + idDoctor + ">" + doctorName + "</a>");
+                    $('#' + idItem1).find('input').remove();
+                    $('#selectable').find('.schedule-element').each(function ()
+                    {
+                        var idItem12 = $(this).attr("id");
+                        if (idItem12 == idChange) {
+
+                            var idDoctor2 = $('#' + idItem12).find(".textChange").attr("id");
+                            var doctorName2 = $('#' + idItem12).find(".textChange").text();
+                            $('#' + idItem12).empty();
+                            $('#' + idItem12).removeAttr('style');
+                            $('#' + idItem12).append("<a href='javascript:void(0)' id=" + idDoctor2 + ">" + doctorName2 + "</a>");
+                            $('#' + idItem12).find('input').remove();
+                        }
+                    })
+                }
+            }
+        });
+        $('.ui-icon-closethick').click();
+       
+    }
+    function onClose() {
+        var idItem = '@idItem';
+        var typeAction = '@typeAction';
+        var idCalendarDuty = '@idCalendarduty';
+        var idDoctor = '@idDoctor';
+        var idColumn = '@idColumn';
+        var idDate = '@idDate';
+     
+            $.ajax(
+            {
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                url: "/CalendarDuty/NotApprovedDoctor?idCalendarDuty=" + idCalendarDuty + "&idDoctor=" + idDoctor + "&idColumn=" + idColumn + "&idDate=" + encodeURI(idDate) + "&typeAction=" + typeAction,
+                success: function (data) {
+                    window.notice(data.result, window.notice_success);
+
+                }
+            });
+       
+        $('#selectable').find('.schedule-element').each(function () {
+            var idItem1 = $(this).attr("id");
+           
+            if (idItem1 == idItem) {
+             
+                //them moi
+                if (typeAction == 3) {
+                    $('#' + idItem1).remove();
+                }
+                //xoa
+                if (typeAction == 2) {
+                    $('#' + idItem1).removeAttr('style');
+                    $('#' + idItem1).find('.StyleDelete').css({ 'color': '#000000' });
+                }
+                //doi lich
+                if (typeAction == 4) {
+                    var idDoctor = $('#' + idItem1).find(".textDoctor").attr("id");
+                    var doctorName = $('#' + idItem1).find(".textDoctor").text();
+                    $('#' + idItem1).empty();
+                    $('#' + idItem1).removeAttr('style');
+                    $('#' + idItem1).append("<a href='javascript:void(0)' id=" + idDoctor + ">" + doctorName + "</a>");
+                }
+                if (typeAction == 1) {
+                    var idDoctor = $('#' + idItem1).find(".textDoctor").attr("id");
+                    var idChange = $('#' + idItem1).attr("data-idChange");
+                    var doctorName = $('#' + idItem1).find(".textDoctor").text();
+                    $('#' + idItem1).empty();
+                    $('#' + idItem1).removeAttr('style');
+                    $('#' + idItem1).append("<a href='javascript:void(0)' id=" + idDoctor + ">" + doctorName + "</a>");
+                    $('#selectable').find('.schedule-element').each(function () {
+                        var idItem12 = $(this).attr("id");
+
+                        if (idItem12 == idChange) {
+
+                            var idDoctor2 = $('#' + idItem12).find(".textDoctor").attr("id");
+                            var doctorName2 = $('#' + idItem12).find(".textDoctor").text();
+                            $('#' + idItem12).empty();
+                            $('#' + idItem12).removeAttr('style');
+                            $('#' + idItem12).append("<a href='javascript:void(0)' id=" + idDoctor2 + ">" + doctorName2 + "</a>");
+
+                        }
+                    });
+                }
+            }
+        });
+
+
+        $('.ui-icon-closethick').click();
+        return false;
+    }
+ </script>
+

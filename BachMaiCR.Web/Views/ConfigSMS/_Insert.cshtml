@@ -1,0 +1,322 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.Models;
+@model BachMaiCR.Web.Models.ConfigSMS
+
+@{
+    ViewBag.Title = "AddCategory";
+    var strTitleForm = Model.CONFIG_SMS_ID.Equals(0) ? Localization.FormAddTitle : Localization.FormEditTitle;
+    var strName = Localization.LableNameDisplay;
+  
+    List<SelectListItem> tmpHour = new List<SelectListItem>();
+    for (int i = 0; i < 24; i++)
+    {
+        tmpHour.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    var DATE_HOUR = new SelectList(tmpHour, "Value", "Text", 0);
+    //Phút
+    List<SelectListItem> tmpMinutes = new List<SelectListItem>();
+    for (int i = 0; i <= 59; i++)
+    {
+        tmpMinutes.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    var DATE_MINUTES = new SelectList(tmpMinutes, "Value", "Text", 0);
+    //Số lần lặp
+    List<SelectListItem> lstCountAlarm = new List<SelectListItem>();
+    for (int i = 0; i <= 10; i++)
+    {
+        lstCountAlarm.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    var COUNT_ALARM = new SelectList(lstCountAlarm, "Value", "Text", 0);
+    //Số ngày  lặp
+    List<SelectListItem> lstCountAlarmDay = new List<SelectListItem>();
+    for (int i = 0; i <= 1; i++)
+    {
+        lstCountAlarmDay.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    var COUNT_ALARM_DAY = new SelectList(lstCountAlarmDay, "Value", "Text", 0);
+   //Lay danh sach bieu mau   
+    List<SelectListItem> tmpTemplates = new List<SelectListItem>();  
+    int idDepartment = Model.LM_DEPARTMENT_ID;
+    if (idDepartment!=null)
+    {
+        UnitOfWork unit = new UnitOfWork();
+        List<TEMPLATE> templateList = unit.Templates.GetListByDate(idDepartment, DateTime.Now, Convert.ToInt32(TemplateStatus.Aproved));
+        tmpTemplates.Add(new SelectListItem() { Text = Resources.Localization.CalendarDefault, Value = "0", Selected = false });
+        if (templateList != null && templateList.Count>0)
+        {
+            for (int i = 0; i < templateList.Count; i++)
+            {
+                tmpTemplates.Add(new SelectListItem() { Text = templateList[i].TEMPLATE_NAME.ToString(), Value = templateList[i].TEMPLATES_ID.ToString(), Selected = false });
+
+            }
+            templateList = null;            
+        }
+        
+    }
+    SelectListItem defaulrItem = new SelectListItem() { Text = Resources.Localization.LabelSelect, Value = "-1" };
+    tmpTemplates.Insert(0, defaulrItem);  
+    var TEMPLATES = new SelectList(tmpTemplates, "Value", "Text", -1);
+}
+<div class="modal fade" id="addCategoryModel" tabindex="-1000" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        @Html.ValidationSummary(false)
+        @using (Html.BeginForm(
+        actionName: "SubmitChange", controllerName: "ConfigSMS", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmModifyCategory", @class = "", @role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">@strTitleForm</h4>
+                </div>
+                <div class="modal-body min-width">
+                    <div class="row form-group">
+                        <!-- Hide value -->
+                        @Html.HiddenFor(m => m.CONFIG_SMS_ID)
+                        <table style="width:96%; margin:5px" border="0">
+
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(m => m.CONFIG_SMS_NAME, new { @class = "input-lable-control nowrap" })
+                                    <span class="color-error">*</span>
+                                </td>
+                                <td colspan="6">
+                                    <div>@Html.ValidationMessageFor(m => m.CONFIG_SMS_NAME)</div>
+                                    @Html.TextBoxFor(m => m.CONFIG_SMS_NAME, new { @class = "form-control index _first input-sm", @placeholder = Localization.LabelSMSName, @maxlength="150" })
+                               
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>@Localization.LabelSMSAlarmTime</td>
+                                <td>
+                                    <div style="height: 30px;">
+                                        @Html.DropDownListFor(m => m.ALARM_TIME_HOUR, DATE_HOUR, new { @class = "selectpicker", data_width = "100%" })
+                                    </div>
+                                </td>
+                                <td>&nbsp;@Localization.LabelSMSHour</td>
+                                <td>
+                                    @Html.DropDownListFor(m => m.ALARM_TIME_DAY, COUNT_ALARM_DAY, new { @class = "selectpicker", data_width = "100%" })
+                                </td>
+                                <td colspan="3">&nbsp;@Localization.LabelSMSNDay</td>
+                            </tr>
+                            <tr>
+                                <td>@Localization.LabelSMSAlarmCount</td>
+                                <td>
+                                    <div style="height: 30px;">
+                                        @Html.DropDownListFor(m => m.ALARM_COUNT, COUNT_ALARM, new { @class = "selectpicker", data_width = "100%" })
+                                    </div>
+                                </td>
+                                <td>&nbsp;@Localization.LabelSMSRepeatAlarm &nbsp;</td>
+                                <td>
+                                    @Html.DropDownListFor(m => m.REPEAT_ALARM_HOUR, DATE_HOUR, new { @class = "selectpicker", data_width = "100%" })
+                                </td>
+                                <td>&nbsp;@Localization.LabelSMSHour &nbsp;</td>
+                                <td>@Html.DropDownListFor(m => m.REPEAT_ALARM_MINUTES, DATE_MINUTES, new { @class = "selectpicker", data_width = "100%" })</td>
+                                <td>&nbsp;@Localization.LabelSMSMinutes</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(m => m.LM_DEPARTMENT_ID, new { @class = "input-lable-control nowrap" })
+                                    <span class="color-error">*</span>
+                                </td>
+                                <td colspan="6">
+                                    <div>@Html.ValidationMessageFor(m => m.LM_DEPARTMENT_ID)</div>
+                                <input type="text" name="@Html.IdFor(m => m.LM_DEPARTMENT_ID)" id="@Html.IdFor(m => m.LM_DEPARTMENT_ID)" data-id="@Html.ValueFor(m => m.LM_DEPARTMENT_ID)" data-name="@Html.ValueFor(m => m.LM_DEPARTMENT_NAME)" /></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(m => m.TEMPLATES_ID, new { @class = "input-lable-control nowrap" })                                  
+                                </td>
+                                <td colspan="6" valign="top">
+                                    <div style="height: 30px;">
+                                        @Html.DropDownListFor(m => m.TEMPLATES_ID, TEMPLATES, new { @class = "selectpicker", data_width = "100%" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Localization.LabelActived
+                                </td>
+                                <td colspan="6" valign="top">
+                                    <div style="height: 30px;">
+                                        @Html.CheckBoxFor(m => m.ISACTIVED, new { @checked = "checked" })
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(m => m.DATE_START, labelText: @Localization.LabelSMSDateApply, htmlAttributes: new { @class = "input-lable-control nowrap" })
+                                    <span class="color-error">*</span>
+                                </td>
+                                <td colspan="2">
+                                    <div class="input-group input-group-sm ">
+                                        @Html.TextBoxFor(m => m.DATE_START, "{0:dd/MM/yyyy}", new { @autocomplete = "off", @class = "form-control input-sm datePicker",  @placeholder = @Localization.LabelFromDate })
+                                        <span id="btnDateBeginPicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="margin-left:3px; margin-right:3px;">
+                                        @Html.LabelFor(m => m.DATE_END, labelText: @Localization.LabelToDate, htmlAttributes: new { @class = "input-lable-control nowrap" })
+                                     
+                                    </div>
+                                </td>
+                                <td colspan="3">
+                                    <div class="input-group input-group-sm ">
+                                        @Html.TextBoxFor(m => m.DATE_END, "{0:dd/MM/yyyy}", new { @autocomplete = "off", @class = "form-control input-sm datePicker", @placeholder = @Localization.LabelToDate })
+                                        <span id="btnDateEndPicker" class="btn input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td colspan="6"><div>@Html.ValidationMessageFor(m => m.DATE_START)</div> </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer padding-all">
+                    <button type="submit" class="btn btn-primary min-width"><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+                    <button type="button" class="btn btn-primary min-width" data-dismiss="modal"><span class="glyphicon glyphicon-off"></span>@Localization.ButtonCloseDisplay</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript" src="~/Scripts/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+        $('#LM_DEPARTMENT_ID').Department(
+            {
+                defaultDisplay: '-- Chọn --'
+            });
+        $('#DATE_START, #DATE_END').datepicker({
+            format: 'dd/mm/yyyy',
+            weekStart: 1,
+            autoclose: true
+        });
+        $('.input-group .datePicker').attr("data-val-date", '');
+        $('.input-group .datePicker').attr("data-val", "false");
+        $.mask.definitions['y'] = '[12]';
+        $.mask.definitions['m'] = '[01]';
+        $.mask.definitions['d'] = '[0-3]';
+        $("#DATE_START, #DATE_END").mask("d9/m9/y999", { placeholder: "_" });
+        // Sự kiện cho button birthdat click
+        $('#btnDateBeginPicker').delegate("", "click", function (evt) {
+            if (!$('.datepicker ').is(":visible"))
+                $('#DATE_START').datepicker('show')
+        });
+        $('#btnDateEndPicker').delegate("", "click", function (evt) {
+            if (!$('.datepicker ').is(":visible"))
+                $('#DATE_END').datepicker('show')
+        });
+        $('#DATE_START, #DATE_END').on('changeDate', function (ev) {
+            var date = $('#DATE_END').val();
+            var dateBegin = $('#DATE_START').val();            
+            var lableError = $('.field-validation-valid[data-valmsg-for="DATE_START"]');
+            lableError.css('color', 'red');
+            if (date != null && date != "" && dateBegin != null && dateBegin != "" && Date.parse(dateBegin) > Date.parse(date)) {
+                lableError.text('@Html.Raw(Localization.MsgCheckDateTimeAdd)');
+            } else {
+                lableError.text("");
+            }
+        });
+
+        // Set index cho datepicker lên trên
+        $(".datepicker").css('z-index', 9999);
+        var $catForm = $("#frmModifyCategory");
+        // Focus vào trường input đầu tiên
+        setTimeout(function () { $catForm.find('input:text:visible:first').focus(); }, 500);
+        $catForm.submit(function (event) {
+            event.preventDefault();
+            var checkForm = true;
+            if (!checkdepartment()) {              
+                checkForm = false;
+            }            
+            if (!checkdatettime()) {               
+                checkForm = false;
+            }           
+            if (checkForm && $catForm.valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: $catForm.attr('action'),
+                    data: $catForm.serialize(),
+                    dataType: '',//chú ý là form đặc biệt thì phải điền trường này
+                    success: function (response) {
+                        if (response != null && response.status == 200) {
+                            $('#addCategoryModel').modal('hide');
+                            var $catlist = $('#cat_list_render');
+                            if ($catlist == null || $catlist.length == 0) {
+                                window.notice('@Resources.Localization.MsgItemNotFound', window.notice_warning);
+                            }
+                            else {
+                                $catlist.html('');
+                                $catlist.load('/ConfigSMS/GetList');
+                            }
+                            window.notice(response.result, window.notice_success);
+                        } else {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    }
+                });
+            }
+            else {
+                window.notice($catForm.validate().errorList[0].message, window.notice_error);
+            }
+        });
+
+        function checkdepartment() {
+            var lableError = $('.field-validation-valid[data-valmsg-for="LM_DEPARTMENT_ID"]');
+            lableError.css('color', 'red');
+            var value = $("#LM_DEPARTMENT_ID").val();
+            if (value != null && value != "" && value != "0") {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text('@Html.Raw(Localization.MsgEmptyDeparment)');
+                return false;
+            }
+        }
+       
+        function checkdatettime() {
+            var date = $('#DATE_END').val();
+            var dateBegin = $('#DATE_START').val();
+            var lableError = $('.field-validation-valid[data-valmsg-for="DATE_START"]');
+            lableError.css('color', 'red');
+            if (date != null && date != "" && dateBegin != null && dateBegin != "" && Date.parse(dateBegin) > Date.parse(date)) {
+                lableError.text('@Html.Raw(Localization.MsgCheckDateTimeAdd)');
+                return false;
+            } else {
+                lableError.text("");
+                return true;
+            }
+        }
+        //hàm lay ten bieu mau theo don vi
+        $('#LM_DEPARTMENT_ID').change(function (e) {
+            var dpId = $(this).val();
+            var docId = 0;
+            $.getJSON('/ConfigSMS/GetTemplate', { departmentId: dpId }, function (data) {
+                var result = '';
+                for (var i = 0, iL = data.length; i < iL; i++) {
+                    if (data[i].Selected == true) {
+                        result += '<option value="' + data[i].Value + '" selected = "selected"  >' + data[i].Text + '</option>';
+                    } else {
+
+                        result += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                    }
+                }
+                $("#TEMPLATES_ID").html(result);
+                $('#TEMPLATES_ID').selectpicker('refresh');
+            });
+        });
+    });
+</script>

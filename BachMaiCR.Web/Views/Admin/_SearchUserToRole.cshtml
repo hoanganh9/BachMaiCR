@@ -1,0 +1,102 @@
+﻿@using BachMaiCR.DBMapping.Models
+@{
+    ViewBag.Title = "_SearchUserToRole";
+    var lstItem = ViewBag.ListUser as List<ADMIN_USER>;
+    var startIndex = 0;
+    var role = ViewBag.Role as WEBPAGES_ROLES;
+}
+<style>
+    .marginp {
+        margin-left: 3px;
+    }
+
+</style>
+@if (role != null)
+{
+    int countResize = lstItem.Count;
+    string css = "";
+    if (countResize > 9)
+    {
+        css = "marginp";
+    }
+       for (int i = 0; i < lstItem.Count; i++)
+    {
+    <div class="col-sm-1">@(i + 1 + startIndex)</div>
+    <div
+        class="col-sm-1" style="text-align: center; height:25px;">
+        @{
+        var check = false;
+        }
+        @foreach (var user in role.ADMIN_USER)
+        {
+            if (lstItem[i].ADMIN_USER_ID == user.ADMIN_USER_ID)
+            {
+                check = true;
+            }
+        }
+        @if (@check)
+        {
+          
+        
+    <div class="checkboxId @css"> <input class='add-user-role' checked='checked' type='checkbox' value="@lstItem[i].ADMIN_USER_ID" /></div>
+        }
+        else
+        {
+            <div class="checkboxId @css"> <input class='add-user-role' type='checkbox' value="@lstItem[i].ADMIN_USER_ID" /></div>
+        }
+    </div>
+    <div class="col-sm-3" style="text-align: left;">@lstItem[i].USERNAME</div>
+    <div class="col-sm-7" style="text-align: left;">@lstItem[i].LM_DEPARTMENT.DEPARTMENT_NAME</div>
+    <div class="col-sm-12" style="border-bottom: 1px solid #CCCCCC"></div>
+    }
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $cbxRole = $('.add-user-role');
+        var $cbxCheckAll = $('.check-all-user');     
+        $cbxRole.bind('change', function(event) {
+            var $self = $(this);
+            var checked = $self.is(":checked");
+            var arrRoleToSave = [];
+            arrRoleToSave.push($self.val());
+            var roleid = $('#RoleId').val();
+            $.post('/WebpageRoles/SaveConfigUser', $.param({ roleId: roleid, userIds: arrRoleToSave, isAdd: $self.is(":checked") == true }, true), function(response) {
+                if (response && response.status == 200) {
+                    window.notice(response.result, window.notice_success);
+                } else {
+                    window.notice(response.result, window.notice_error);
+                }
+            });
+        });
+        $cbxCheckAll.bind('change', function(event) {
+            var arrRoleToSave = [];
+            if ($cbxCheckAll.is(":checked")) {
+                _.each($cbxRole, function(item) {
+                    if (!$(item).is(":checked")) {
+                        arrRoleToSave.push($(item).val());
+                        $(item).attr('checked', "");
+                    }
+                });
+            } else {
+                _.each($cbxRole, function(item) {
+                    if ($(item).is(":checked")) {
+                        arrRoleToSave.push($(item).val());
+                        $(item).removeAttr('checked');
+                    }
+                });
+            }
+            if (arrRoleToSave.length > 0) {
+                var roleid = $('#RoleId').val();
+                $.post('/WebpageRoles/SaveConfigUser', $.param({ roleId: roleid, userIds: arrRoleToSave, isAdd: $cbxCheckAll.is(":checked") == true }, true), function(response) {
+                    if (response && response.status == 200) {
+                        window.notice(response.result, window.notice_success);
+                    } else {
+                        window.notice(response.result, window.notice_error);
+                    }
+                });
+            }
+        });
+      
+    });
+   
+   </script>

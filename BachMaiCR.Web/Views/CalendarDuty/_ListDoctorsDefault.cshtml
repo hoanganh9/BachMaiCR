@@ -1,0 +1,234 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using BachMaiCR.Utilities.Enums;
+@{
+    var arrayID = ViewBag.arrayid as string[];   
+    var allDoctor = ViewBag.allDoctor as List<DoctorList>;
+    string listId = "";
+    foreach (var idDoctor in arrayID)
+    {
+        listId = listId + "," + idDoctor;
+    }
+    listId += ",";
+    string changeId = ViewBag.changeId;
+
+    var allDoctorCalendar = ViewBag.allDoctorCalendar as List<DoctorInCalendar>;
+    var DateX = ViewBag.DateX;
+    DateTime date = Convert.ToDateTime(DateX);
+    int monthX = date.Month;
+    int yearX = date.Year;
+}
+<style>
+
+  
+    .colorbackground {
+        background-color:yellow;
+    }
+</style>
+<table id="table_list_staff1" class="tbl" style="height:20px;border:0;width:100%">
+    <tr>
+        <th style="vertical-align:top; width:8% " class="viewdoctors">
+            @Resources.Localization.ListItem
+        </th>
+        <th style="vertical-align:top; width:5%; text-align:center;" class="viewdoctors"><div class="checkboxId"> <input type="checkbox" id="abc" onclick="CheckAll(this.checked)" /></div> </th>
+        <th style=" text-align: center; vertical-align: top; width: 20%;" class="viewdoctors">
+            <div>@Resources.Localization.LabelShortName</div>
+        </th>
+        <th style="text-align: left;vertical-align:top; width:20%;" class="viewdoctors">
+            @Resources.Localization.ListDoctorDefault
+        </th>
+
+        <th style="text-align: left; vertical-align: top; width: 10%;" class="viewdoctors">
+            @Resources.Localization.LableDoctorLevel
+        </th>
+        <th style="text-align: left; vertical-align: top; width: 37%;" class="viewdoctors">
+            @Resources.Localization.CalendarExits
+        </th>
+</tr>
+</table>
+<div style="height: 180px; width:100%; overflow-y: auto;">
+    @if (allDoctor != null && allDoctor.Count > 0)
+    {
+        int countResize = allDoctor.Count;
+        var css = "";
+        string calendarName = "N/A";
+        int? statusId = 0;
+        int isApproved = 0;
+        int calendarDutyId = 0;
+        <table id="table_list_staff" class="table-view"  border="0">
+            @for (int i = 0; i < allDoctor.Count; i++)
+{
+    var doctorId = allDoctor[i].DOCTORS_ID;
+    List<DoctorInCalendar> listDoctorCalendar = allDoctorCalendar.Where(o => o.DOCTORS_ID == doctorId).ToList();
+    if (listDoctorCalendar != null && listDoctorCalendar.Count > 0)
+    {
+        statusId = listDoctorCalendar[0].CALENDAR_STATUS;
+        isApproved = listDoctorCalendar[0].ISAPPROVED;
+        calendarName = listDoctorCalendar[0].CALENDAR_NAME;
+        calendarDutyId = listDoctorCalendar[0].CALENDAR_DUTY_ID;
+
+    }
+    else
+    {
+        statusId = 0;
+        isApproved = 0;
+        calendarName = "N/A";
+        calendarDutyId = 0;
+    }
+    if (changeId.IndexOf("," + doctorId + ",") != -1)
+    {
+        css = "background-color:yellow";
+    }
+    else
+    {
+        css = "";
+    }
+    <tr id="divDoctor_@doctorId" style="@css">
+        <td style="vertical-align: top; width: 8%;" class="viewdoctors">
+            @(i + 1)
+            @Html.Hidden("H_" + doctorId, calendarDutyId)
+        </td>
+        <td style="vertical-align: top; text-align: center; width: 5%" class="viewdoctors">
+            @if (changeId.IndexOf("," + doctorId + ",") == -1)
+            {
+                if (listId.IndexOf("," + doctorId + ",") == -1)
+                {
+                    if (isApproved == 0 && statusId <= Convert.ToInt32(CalendarDutyStatus.SendApproved))
+                    {  
+                        <input type="checkbox" id="Checked_@doctorId" name="groupDoctor" onclick="CheckExits(this.checked, '@doctorId')" />
+                        
+                    }
+                     else
+                    {
+                          <script type="text/javascript">
+       
+                $('#divDoctor_@doctorId').css("background-color", "yellow");
+
+            </script>
+                    }               
+                }
+                else
+                {
+                    <input type="checkbox" id="Checked_@doctorId" name="groupDoctor" checked="checked" />
+                }
+            }
+
+        </td>
+        <td style="text-align: left; vertical-align: top; width: 20%;" class="viewdoctors">
+            <div id="@Html.DisplayFor(modelItem => doctorId)" title="@Html.DisplayFor(modelItem => allDoctor[i].DOCTOR_NAME)">
+                @Html.DisplayFor(modelItem => allDoctor[i].ABBREVIATION)
+            </div>
+        </td>
+        <td style="text-align: left; vertical-align: top; width: 20%;" class="viewdoctors">
+            <a title='Xem lịch cá nhân' href='javascript:void(0)' class='detailDoctor' data-id='@doctorId'>
+                <span style=" color: #0B55C4; ">     @Html.DisplayFor(modelItem => allDoctor[i].DOCTOR_NAME)</span>
+            </a>           
+        </td>
+        <td class="viewdoctors" style=" vertical-align: top; width: 10%;">
+            @Html.DisplayFor(modelItem => allDoctor[i].LEVEL_NAME)
+        </td>
+        <td style="text-align: left; width: 37%; vertical-align: top; " class="viewdoctors" id="Calendar_@doctorId">
+            @calendarName
+        </td>
+    </tr>
+}
+
+            @foreach (var idDoctor in arrayID)
+            {
+                <script type="text/javascript">               
+                    $('#divDoctor_@idDoctor').css("background-color", "yellow");                   
+                </script>
+            }
+
+        </table>
+        <script type="text/javascript">
+            $(function () {
+                var count = '@countResize'
+                if (parseFloat(count) > 7) {
+                    $('.checkboxId').addClass("marginp");
+                }
+                else {
+                    $('.checkboxId').removeClass("marginp");
+                }
+            });
+        </script>
+    }
+    @{
+
+        arrayID = null;
+        allDoctor = null;
+    }
+</div>
+
+    <div class="panel-search-button" style="margin-top:10px">
+        <input type="hidden" value="0" id="flag_accept" />
+        <input type="button" id="btnOk" value="Chọn" onclick="return onAccept();" class="btn btn-primary min-width" />
+        <input type="button" id="btnCancel" value="Đóng" onclick="return onClose();" class="btn btn-primary min-width" />
+    </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#popupStaff").css('display', 'block');
+    });
+    function onAccept() {
+        $('#flag_accept').val(1);
+        $('.ui-icon-closethick').click();
+    };
+    $(".detailDoctor").bind('click', function (event) {
+        var $self = $(this);       
+        $.get('/CalendarDuty/DetailCalendarPersonal', {
+            doctorId: $self.attr('data-id'), monthx: '@monthX', yearx: '@yearX',
+        },
+            function (data) {
+                var $categoryModel = $('#view_model_container');
+                $categoryModel.html(data);
+                $('#viewEntityModel').modal({
+                    keyboard: false
+                });
+
+            });
+
+    });
+    function onClose() {
+        $('#flag_accept').val(0);
+        $('.ui-icon-closethick').click();
+        return false;
+    }
+    function CheckAll(value) {
+        $("input:checkbox[name='groupDoctor']").each(function (i) {
+            this.checked = value;
+        });
+    }
+    function CheckExits(value, doctorId) {
+        var calendarName = $("#Calendar_" + doctorId).text().trim();
+        var calendarId = $("#H_" + doctorId).val();
+        if (calendarId != "0") {
+            var conttent = "Cán bộ đã tồn tại trong lịch '" + calendarName + "' , nếu bạn chọn có nghĩa bạn đồng ý hủy trực của cán bộ trong lịch đó?";
+            if (value == true || value == "1") {
+                if (confirm(conttent)) {
+                    this.checked = true;
+                    $("#Calendar_" + doctorId).html('N/A');
+                    $.ajax({
+                        type: "POST",
+                        url: '/CalendarDuty/DeleteDoctorInCalendar',
+                        data: { calendarDutyId: parseFloat(calendarId), doctorId: parseFloat(doctorId), date: '@DateX' },
+                        success: function (data) {
+
+                        }
+                    });
+
+                }
+                else {
+                    var idCheckDoctor = "Checked_" + doctorId;
+                    $("input:checkbox[id='" + idCheckDoctor + "']").each(function (i) {
+                        this.checked = false;
+                    });
+                }
+            }
+        }
+        return false;
+    }
+</script>
+
+

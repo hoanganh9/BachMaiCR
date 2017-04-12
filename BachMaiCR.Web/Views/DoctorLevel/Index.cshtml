@@ -1,0 +1,89 @@
+﻿@model BachMaiCR.Web.Models.DoctorLevel
+@using Resources;
+@using BachMaiCR.DBMapping.Models;
+@using BachMaiCR.Utilities.Enums;
+@{
+    var typeName = "vị trí cán bộ";
+    ViewBag.Title = "Danh mục " + typeName;
+    //var ctgType = (int)ViewBag.Type;
+    var strButtionAdd = Localization.ButtonAddDisplay;
+    var strName = "Tên " + typeName;
+    // render table
+    var lstItem = ViewBag.Category as List<DOCTOR_LEVEL>;
+    //this.onin
+    var actUpdate = (bool)ViewBag.ActionUpdate;
+}
+
+
+@*<div class="clear"></div>*@
+<div class="content-wrapper">
+    <div id="nav"><a href="/Department" title="">@Localization.ManageCategorysTitle.ToUpper()</a> » @ViewBag.Title.ToUpper()</div>
+    <div id="search_form" class="row">
+        <div class="col-md-12">
+            <div class="input-group">
+                <span class="input-group-addon">Tên/kí hiệu</span>
+                <input type="text" id="txt_search_form" autocomplete="off" class="input-text form-control input-sm" placeholder="@Localization.InputTextSearch" />
+            </div>
+        </div>
+        <div class="col-md-12 align-center">
+            <button class="btn btn-primary" type="button" onclick="return btnSearchClick();">
+                <span class="glyphicon glyphicon-search"></span>Tìm kiếm
+            </button>
+            @if (actUpdate)
+            {
+                <button type="submit" class="btn-add btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    @Localization.ButtonAddDisplay
+                </button>
+            }
+        </div>
+    </div>
+    <div class="page-content">
+
+        <div id="cat_list_render">
+
+            @{
+                Html.RenderAction("DoctorLevelList", "DoctorLevel", new { type = 0 });
+            }
+        </div>
+    </div>
+
+    <div id="add_category_model_container"></div>
+</div>
+
+
+<script type="text/javascript">
+
+    var itemX;
+
+
+    function btnSearchClick() {
+        OnCriteria(0);
+    }
+
+    $(document).ready(function () {
+        $(".btn-add").live('click', function (event) {
+            $.get('/DoctorLevel/OnInsert', { type: 0 }, function (data) {
+                var $categoryModel = $('#add_category_model_container');
+                $categoryModel.html(data);
+                $('#addEntityModel').modal({
+                    keyboard: true
+                });
+            });
+        });
+    });
+
+
+    $('#txt_search_form').keyup(function (e) {
+        if (e.keyCode == 13)
+        { OnCriteria(0); }
+
+    });
+
+
+
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/bootstrapjs")
+    @Scripts.Render("~/bundles/underscore")
+}

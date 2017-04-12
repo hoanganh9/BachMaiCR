@@ -1,0 +1,239 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.DBMapping.ModelsExt
+@model BachMaiCR.DBMapping.Models.ADMIN_LOG
+
+@{
+
+    var strTitleForm = Localization.FormViewTitle;
+    //var lstDoctor = ViewBag.ListDoctors as List<SelectListItem>;
+    var status = EnumHelper<enLogType>.GetStringName(Model.STATUS);
+    var action = EnumHelper<enActionType>.GetStringName(Model.ACTION_TYPE);
+}
+<!-- Valid data enable -->
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/jquery.form.js"></script>
+<script src="~/Scripts/chosen.jquery.js"></script>
+<link href="~/Content/chosen.css" rel="stylesheet" />
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg" id="viewModelContainer" tabindex="-1000" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        @Html.ValidationSummary(false)
+        @using (Html.BeginForm(
+        actionName: "SubmitChange", controllerName: "ReportOfDay", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmModifyCategory", @class = "", @role = "form", @enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">@strTitleForm</h4>
+                </div>
+
+                <div class="modal-body padding-all padding-bottom-0">
+                    <div class="row">
+                        <div>
+                            <div class="col-md-12"></div>
+                            <div class="col-md-2">
+                                <label class="input-lable-control nowrap"> @Localization.LabelDateCreate</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label>@Model.START_TIME.ToString("dd/MM/yyyy HH:mm")</label>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="input-lable-control nowrap"> @Localization.LabelUser</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label>@Model.USER_NAME</label>
+                            </div>
+                        </div>
+                        <!---->
+
+                        <div>
+                            <div class="col-md-12"></div>
+                            <div class="col-md-2">
+                                <label class="input-lable-control nowrap"> @Localization.LabelIpAddress</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label>@Model.IP_ADDRESS</label>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="input-lable-control nowrap"> @Localization.LabelAdminLogType</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label>@status</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="col-md-12"></div>
+                            <div class="col-md-2">
+                                <label class="input-lable-control nowrap"> @Localization.LabelAdminLogAction</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label>@action</label>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="input-lable-control nowrap"> @Localization.LabelMenu</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label>@Model.MENU_NAME</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12"></div>
+                        <div class="col-md-2">
+                            <label class="input-lable-control nowrap">Hoạt động </label>
+                        </div>
+                        <div class="col-md-10">
+                            <label>@Model.ACTION_NAME</label>
+                        </div>
+
+                        <div class="col-md-12"></div>
+                        <div class="col-md-2">
+                            <label class="input-lable-control nowrap"> @Localization.LabelContent</label>
+                        </div>
+                        <div class="col-md-10">
+                            <label>@Model.CONTENT</label>
+                        </div>
+
+                        <div class="col-md-12"></div>
+                        <div class="col-md-2">
+                            <label class="input-lable-control nowrap"> @Localization.LabelDescription</label>
+                        </div>
+                        <div class="col-md-10">
+                            <label>@Model.DESCRIPTION</label>
+                        </div>
+
+                        <div class="col-md-12"></div>
+                        <div class="col-md-2">
+                            <label class="input-lable-control nowrap"> @Localization.LabelError</label>
+                        </div>
+                        <div class="col-md-10">
+                            <label>@Model.ERROR_CODE</label>
+                        </div>
+                        @*<div class="col-md-2">
+                                <label class="input-lable-control nowrap"> @Localization.LabelDescription</label>
+                            </div>
+                            <div class="col-md-4">
+                                <label>@Model.DESCRIPTION</label>
+                            </div>*@
+                        <div class="col-md-12"></div>
+                    </div>
+
+                </div>
+                <div class="clear"></div>
+                <div class="modal-footer btn-group-sm padding-all margin-top-0">
+                    @*<button type="submit" class="btn btn-primary btn-group-sm min-width ">@Localization.ButtonSaveDisplay</button>
+                        <button type="button" class="btn btn-primary btn-group-sm min-width ">@Localization.ButtonSaveSent</button>*@
+                    <button type="button" class="btn btn-primary btn-group-sm min-width " data-dismiss="modal">@Localization.ButtonCloseDisplay</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#DateCreate').datepicker({
+            format: 'dd/mm/yyyy',
+            weekStart: 1
+        });
+
+        $('#btnDateCreatePicker').delegate("", "click", function (evt) {
+            if (!$('.datepicker ').is(":visible"))
+                $('#DateCreate').datepicker('show')
+        });
+
+        // Select Mutil
+        $(".chosen-select").chosen({
+            no_results_text: "@Localization.MsgItemNotFound",
+            width: "100%",
+            search_contains: true,
+        });
+        // Chỉ cho phép nhập số
+        $(".only-number").keydown(function (e) {
+            // Allow: backspace, delete, tab, escape, enter and .
+            if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                // Allow: Ctrl+A
+                (e.keyCode == 65 && e.ctrlKey === true) ||
+                // Allow: home, end, left, right
+                (e.keyCode >= 35 && e.keyCode <= 39)) {
+                // let it happen, don't do anything
+                return;
+            }
+            // Ensure that it is a number and stop the keypress
+            if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                e.preventDefault();
+            }
+        });
+
+
+        $('.only-number').focus(function () {
+            $(this).select();
+        });
+
+        var $catForm = $("#frmModifyCategory");
+        // Focus vào trường input đầu tiên
+        setTimeout(function () { $catForm.find('._focus').focus(); }, 500);
+
+        //$('#btnADDXX').click(function () {
+        //    var lstItem = $('#UserRecipientName').val();
+        //    if (lstItem != null && lstItem.length > 0) {
+        //        lstItem = "," + $('#UserRecipientName').val().join(',') + ",";
+        //        $('#UserRecipientId').val(lstItem);
+        //    }
+        //    else
+        //        $('#UserRecipientId').val("");
+        //   //console.log($('#UserRecipientId').val())
+        //});
+        //Submit form
+        $catForm.submit(function (event) {
+
+            var lstItem = $('#UserRecipientName').val();
+            if (lstItem != null && lstItem.length > 0) {
+                lstItem = "," + $('#UserRecipientName').val().join(',') + ",";
+                $('#UserRecipientId').val(lstItem);
+            }
+            else
+                $('#UserRecipientId').val("");
+            event.preventDefault();
+            if ($catForm.valid()) {
+
+
+
+
+                $.ajax({
+                    type: "POST",
+                    url: $catForm.attr('action'),
+                    data: $catForm.serialize(),
+                    dataType: '',//chú ý là form đặc biệt thì phải điền trường này
+                    success: function (response) {
+                        if (response != null && response.status == 200) {
+                            $('#viewModelContainer').modal('hide');
+                            var $catlist = $('#cat_list_render');
+                            if ($catlist == null || $catlist.length == 0) {
+                                window.notice('@Resources.Localization.MsgItemNotFound', window.notice_warning);
+                            }
+                            else {
+                                $catlist.html('');
+                                $catlist.load('/ReportOfDay/GetList');
+                            }
+                            window.notice(response.result, window.notice_success);
+                        } else {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    }
+                });
+            }
+            else {
+                window.notice("Điền đầy đủ thông tin trên form", window.notice_warning);
+            }
+        });
+
+        // Set index cho datepicker lên trên
+        $('.datepicker').css('z-index', 9999);
+    });
+</script>

@@ -1,0 +1,270 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@{
+    var idCalendarDuty = ViewBag.idCalendarDuty;
+    var allDoctor = ViewBag.allDoctor as List<DoctorList>;
+    var idDoctorChange = ViewBag.idDoctorChange;
+    var dateDoctorChange = ViewBag.dateDoctorChange;
+    var arrayID = ViewBag.arrayid as string;
+    string changeId = ViewBag.changeId;
+    DateTime date = Convert.ToDateTime(dateDoctorChange);
+    int monthX = date.Month;
+    int yearX = date.Year;
+}
+
+<table id="table_list_staff1" class="tbl" style="height:20px;border:0;width:425px">
+    <tr>
+        <th style="vertical-align:top; " class="col-sm-1 viewdoctors">
+            @Resources.Localization.ListItem
+        </th>
+        <th style="vertical-align:top;" class="col-sm-1 viewdoctors"></th>
+        <th style=" text-align: center; vertical-align: top;" class="col-sm-3 viewdoctors">
+            <div>@Resources.Localization.LabelShortName</div>
+        </th>
+        <th style="text-align: center; vertical-align: top;" class="col-sm-4 viewdoctors">
+            @Resources.Localization.ListDoctorDefault
+        </th>
+
+        <th style="text-align: center; vertical-align: top;" class="col-sm-3 viewdoctors">
+            @Resources.Localization.LableDoctorLevel
+        </th>
+
+    </tr>
+</table>
+<div style="height: 180px; width:425px; overflow-y: auto;">
+    <table id="table_list_staff" class="table-view">
+      @if (allDoctor != null && allDoctor.Count>0)
+    {
+ for (int i = 0; i < allDoctor.Count; i++)
+ {
+     var doctorId = allDoctor[i].DOCTORS_ID;
+        int index=arrayID.IndexOf("," + doctorId.ToString() + ",");
+        int indexChange = changeId.IndexOf("," + doctorId.ToString()+"," );
+
+        if (index == -1 && indexChange==-1)
+        {
+           <tr>
+               <td class="col-sm-1 viewdoctors">
+                   @(i + 1)
+               </td>
+               <td class="col-sm-1 viewdoctors">
+                   <input type="radio" id="@doctorId" name="doctors" value="@doctorId" data-name="@allDoctor[i].ABBREVIATION">
+
+               </td>
+               <td class="col-sm-3 viewdoctors">
+                   <div id="@doctorId" title="@allDoctor[i].ABBREVIATION">
+                       @allDoctor[i].ABBREVIATION
+                   </div>
+               </td>
+               <td style="text-align:left" class="col-sm-4 viewdoctors">
+                   <a title='Xem lịch cá nhân' href='javascript:void(0)' class='detailDoctor' data-id='@doctorId'>
+                       <span style=" color: #0B55C4; ">@allDoctor[i].DOCTOR_NAME</span>
+                   </a> 
+                  
+               </td>
+               <td class="col-sm-3 viewdoctors">
+                   @allDoctor[i].LEVEL_NAME
+               </td>
+            </tr>
+      }
+        else
+        {           
+            string color = "background-color:#b6ff00";                        
+            <tr style="@color">
+                <td class="col-sm-1 viewdoctors">
+                    @(i + 1)
+                </td>
+                <td class="col-sm-1 viewdoctors"></td>
+                <td class="col-sm-3 viewdoctors">
+                    <div id="@doctorId" title="@allDoctor[i].ABBREVIATION">
+                        @allDoctor[i].ABBREVIATION
+                    </div>
+                </td>
+                <td style="text-align:left" class="col-sm-4 viewdoctors">
+                    <a title='Xem lịch cá nhân' href='javascript:void(0)' class='detailDoctor' data-id='@doctorId'>
+                        <span style=" color: #0B55C4; ">@allDoctor[i].DOCTOR_NAME</span>
+                    </a>                 
+                </td>
+                <td class="col-sm-3 viewdoctors">
+                    @allDoctor[i].LEVEL_NAME
+                </td>
+            </tr>
+
+      }
+
+ }
+    }
+            
+       
+   
+ </table>
+    </div>
+    <div class="DatesChange" id="DatesChange"  style="height:30px; padding-bottom:5px;"> </div>
+    <div class="panel-search-button">
+        <input type="hidden" value="0" id="flag_accept" />
+        <input type="button" id="btnOkDuty" value="Đổi lịch" onclick="return onChangeDuty();" class="btn btn-primary min-width" />
+        <input type="button" id="btnCancelDuty" value="Đóng" onclick="return onClose();" class="btn btn-primary min-width" />
+    </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {      
+        $("#popupStaff").css('display', 'block');
+    });
+    $(".detailDoctor").bind('click', function (event) {
+        var $self = $(this);
+        $.get('/CalendarDuty/DetailCalendarPersonal', {
+            doctorId: $self.attr('data-id'), monthx: '@monthX', yearx: '@yearX',
+        },
+            function (data) {
+                var $categoryModel = $('#view_model_container');
+                $categoryModel.html(data);
+                $('#viewEntityModel').modal({
+                    keyboard: false
+                });
+
+            });
+
+    });
+    $("input[type=radio]").click(function (event) {
+        var idDoctor = this.id;
+        var doctorName = $(this).attr('data-name');       
+        var idDoctorChange = '@idDoctorChange';
+        var idCalendarDuty = '@idCalendarDuty';
+        $.ajax(
+                 {
+                     type: "GET",
+                     contentType: "application/json; charset=utf-8",
+                     url: "/CalendarDuty/ListDateChangeDefault?idDoctorChange=" + idDoctorChange + "&idDoctorIsChange=" + idDoctor + "&idCalendarDuty=" + idCalendarDuty,
+                     success: function (data) {
+                         $('#DatesChange').html(data);
+                         $('#spDoctorChange').html(doctorName);
+                     },
+                });
+    })
+    function onChangeDuty() {        
+     
+        var idCalendarDuty = '@idCalendarDuty'.toString();
+        var idDoctorChange = '@idDoctorChange'.toString();
+        var dateDoctorChange = '@dateDoctorChange'.toString();         
+        var idDoctorIsChange = $("input[name='doctors']:checked").val().toString();
+        var strDate = $('#DatesChange').find($('.selectDateX')).val().toString();       
+        var arrDatesIsChange = strDate.split('_');
+        var DatesIsChange;        
+        if (strDate == -1) {           
+            DatesIsChange = "";
+        }
+        else {
+            DatesIsChange = strDate;          
+
+        }
+      
+        $.ajax(
+        {
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: "/CalendarDuty/ChangeCalendarDutyDefault?idCalendarDuty=" + idCalendarDuty + "&idDoctorChange=" + idDoctorChange + "&dateDoctorChange=" + dateDoctorChange + "&idDoctorIsChange=" + idDoctorIsChange + "&DatesIsChange=" + DatesIsChange,
+            success: function (data) {
+                if (data.DATE_CHANGE_START != null) {
+                    var date = new Date(parseInt(data.DATE_START.substr(6)));                   
+                    var datex = $.datepicker.formatDate('dd/mm/yy', date);
+                    var tzOffset = new Date(datex);
+                    var data_idstart = ((tzOffset.getTime() * 10000) + 621355968000000000).toString() + data.DOCTORS_ID;
+
+                    var dateChange = new Date(parseInt(data.DATE_CHANGE_START.substr(6)));
+                    var dateChangex = $.datepicker.formatDate('dd/mm/yy', dateChange);
+                    var tzOffsetx = new Date(dateChangex);
+                    var data_idchange = ((tzOffsetx.getTime() * 10000) + 621355968000000000).toString() + data.DOCTORS_CHANGE_ID;
+                    var idStart = data.DOCTORS_ID;
+                    var doctorName = data.DOCTORS_NAME;
+                    var doctorNameChange = data.DOCTORS_CHANGE_NAME;
+                    var idChangeDoctor = data.DOCTORS_CHANGE_ID;
+
+                    var data_vt = datex.toString() + "," + data.DOCTORS_ID;
+                    var data_vt_Change = dateChangex.toString() + "," + data.DOCTORS_CHANGE_ID;
+                    var data_duty = data.CALENDAR_DUTY_ID;
+                                              
+                    $('#selectable').find('.item-schedule .schedule-element').each(function () {
+                        var idItem = $(this).attr("id");
+                        var css = "css" + $.datepicker.formatDate('d', date) + idStart;
+                        var data_date = $.datepicker.formatDate('d/m/yy', date);
+                        var data_data = $.datepicker.formatDate('d', dateChange);
+                        if (idItem == data_vt) {                          
+
+                            $(this).empty();
+                            $(this).append('<a id="' + idStart + '" href="#" class="choseId listdoctor">' + doctorName + '</a>');
+                            $(this).append('<img style="width:12px; height:12px;" src="/Images/Forward_Arrow.png"><a id="' + idChangeDoctor + '" href="#" class="changeId">' + doctorNameChange + '</a>');
+                            $(this).append('<span class="element-close fa fa-rotate-left" data-doctorname-change="' + doctorNameChange + '" data-doctorname="' + doctorName
+                                + '" data-doctor="' + idStart + '" data-doctorchange="' + idChangeDoctor + '" data-date="' + data_date + '" data-duty="' + data_duty + '" data-data="' + data_data + '" onclick="scheduleRemoveCalendarChange(this)" title="Hủy đổi lịch trực" style="display: none;"></span>');
+                            $(this).removeAttr("style");
+                            $(this).removeClass("current-calendar").addClass("changed").addClass("change-calendar").addClass(css).removeClass("del-calendar").removeClass("deleted");
+                          
+                        }
+                    });
+
+
+                    $('#selectable').find('.item-schedule .schedule-element').each(function () {
+                        var idItem = $(this).attr("id");
+                        var css = "css" + $.datepicker.formatDate('d', dateChange) + idChangeDoctor;
+                        var data_date = $.datepicker.formatDate('d/m/yy', dateChange);
+                        var data_data = $.datepicker.formatDate('d', date);
+                        if (idItem == data_vt_Change) {
+                            $(this).empty();
+                            $(this).append('<a id="' + idChangeDoctor + '" href="#" class="choseId listdoctor">' + doctorNameChange + '</a>');
+                            $(this).append('<img style="width:12px; height:12px;" src="/Images/Forward_Arrow.png"><a id="' + idStart + '" href="#" class="changeId">' + doctorName + '</a>');
+                            $(this).append('<span class="element-close fa fa-rotate-left" data-doctorname-change="' + doctorName + '" data-doctorname="' + doctorNameChange
+                                + '" data-doctor="' + idChangeDoctor + '" data-doctorchange="' + idStart + '" data-date="' + data_date + '" data-duty="' + data_duty + '" data-data="' + data_data + '" onclick="scheduleRemoveCalendarChange(this)" title="Hủy đổi lịch trực" style="display: none;"></span>');
+                            $(this).removeAttr("style");
+                            $(this).removeClass("current-calendar").addClass("change-calendar").addClass(css).removeClass("del-calendar").removeClass("deleted");
+                            //$(this).addClass("changed");
+                          //  $(this).css({ 'background': '#d5f76e', 'padding-left': '3px', 'max-width': '100px' });                           
+                        }
+                    });
+
+                }
+                else {
+
+                    var date = new Date(parseInt(data.DATE_START.substr(6)));
+                  
+                    var datex = $.datepicker.formatDate('dd/mm/yy', date);
+                    var tzOffset = new Date(datex);
+                    var data_idstart = ((tzOffset.getTime() * 10000) + 621355968000000000).toString() + data.DOCTORS_ID;
+
+
+                    var idStart = data.DOCTORS_ID;
+                    var doctorName = data.DOCTORS_NAME;
+                    var doctorNameChange = data.DOCTORS_CHANGE_NAME;
+                    var idChangeDoctor = data.DOCTORS_CHANGE_ID;
+
+                    var data_vt = datex.toString() + "," + data.DOCTORS_ID;
+                    var data_duty = data.CALENDAR_DUTY_ID;
+                    var data_data = "";
+                    var data_date = $.datepicker.formatDate('d/m/yy', date);
+                    var css = "css" + $.datepicker.formatDate('d', date) + idStart;
+                    //alert(data_date);
+                    $('#selectable').find('.item-schedule .schedule-element').each(function () {
+                        var idItem = $(this).attr("id");
+                        if (idItem == data_vt) {                            
+                            $(this).empty();
+                            $(this).append('<a id="' + idStart + '" href="#" class="choseId listdoctor">' + doctorName + '</a>');
+                            $(this).append('<img style="width:12px; height:12px;" src="/Images/Forward_Arrow.png"><a id="' + idChangeDoctor + '" href="#" class="changeId">' + doctorNameChange + '</a>');
+                            $(this).append('<span class="element-close fa fa-rotate-left" data-doctorname-change="' + doctorNameChange + '" data-doctorname="' + doctorName
+                                + '" data-doctor="' + idStart + '" data-doctorchange="' + idChangeDoctor + '" data-date="' + data_date + '" data-duty="' + data_duty + '" data-data="' + data_data + '" onclick="scheduleRemoveCalendarChange(this)" title="Hủy đổi lịch trực" style="display: none;"></span>');
+                            $(this).removeAttr("style");
+                            $(this).removeClass("current-calendar").addClass("changed").addClass("change-calendar").addClass(css).removeClass("del-calendar").removeClass("deleted");
+                        }
+                    });
+
+                }              
+            }
+        });
+        $('.ui-icon-closethick').click();
+    };
+    function onClose() {
+        $('#flag_accept').val(0);
+        $('.ui-icon-closethick').click();
+        return false;
+    }
+</script>
+
+

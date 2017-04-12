@@ -1,0 +1,44 @@
+﻿@Scripts.Render("~/bundles/jqueryui")
+@{
+    ViewBag.Title = @Resources.Localization.CalendarDirectorsAdd;
+}
+<div class="content">
+    <div class="clear"></div>
+
+    <table style="width: 98%">
+        <tr>
+            <td style="height: 40px;">
+                <div id="nav"><a href="/CalendarDuty/CalendarDirectors" title="">@Resources.Localization.ManageCalendarDutyTitle.ToUpper()</a> »  @ViewBag.Title.ToUpper() </div>
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                @Html.Partial("~/Views/CalendarDuty/_AddCalendarDirectorsInfo.cshtml")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <script type="text/javascript">
+                    $(function () {
+                        var strDate = $('.selectMonths').val() + "_" + $('.selectYears').val();                       
+                        $.ajax({
+                            type: "GET",
+                            url: '/CalendarDuty/LoadCalendarDirectors',
+                            data: { strDate: strDate },
+                            success: function (response) {
+                                $('#loadTemplate').html(response);
+                            }
+                        });
+                    });
+                </script>
+                <div id="loadTemplate"></div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+<div id="view_model_container">
+</div>
+

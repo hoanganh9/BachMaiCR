@@ -1,0 +1,146 @@
+﻿@using Resources;
+@using BachMaiCR.DBMapping.Models;
+@model BachMaiCR.DBMapping.ModelsExt.DoctorSearch
+@{
+        var lstDoctorLevel = ViewBag.DoctorLevel as List<SelectListItem>;
+    var lstEducation = ViewBag.ListEducation as List<SelectListItem>;
+    var lstDepartment = ViewBag.ListDepartment as List<SelectListItem>;
+    var lstProvince = ViewBag.ListProvince as List<SelectListItem>;
+    var lstPosition = ViewBag.ListPosition as List<SelectListItem>;
+    var actUpdate = (bool)ViewBag.ActionUpdate;
+    var actExport = (bool)ViewBag.ActionExport;
+    var actImport = (bool)ViewBag.ActionImport;
+    var RootDepartment = ViewBag.RootDepartment as List<LM_DEPARTMENT>;
+    string DeptId = "", DeptName = "";
+    if (RootDepartment!=null && RootDepartment.Count>0)
+    {
+        DeptId = Convert.ToString(RootDepartment[0].LM_DEPARTMENT_ID);
+        DeptName = RootDepartment[0].DEPARTMENT_NAME;    
+    }
+    RootDepartment = null;
+ 
+}
+<link href="~/Content/gpcp-department.css" rel="stylesheet" />
+<script src="~/Scripts/gpcp-department.js"></script>
+<link href="~/Content/jquery.treeview.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.cookie.js"></script>
+<script src="~/Scripts/jquery.treeview.js"></script>
+<div class="content-wrapper">
+    <div id="search_form" class="row" style="width:75%; margin:0 auto">
+
+        <!--Name & Identity-->
+        <div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelDoctorName</label>
+            </div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.SearchName, new { @class = "form-control input-sm", @placeholder = @Localization.LabelDoctorName })
+            </div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelPhone</label>
+            </div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.SearchPhone, new { @class = "form-control input-sm", @placeholder = @Localization.LabelPhone })
+            </div>
+        </div>
+        <div class="col-md-12"></div>
+
+        <!-- Department & Position-->
+        <div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelDepartment</label>
+            </div>
+            <div class="col-md-4" style="margin-bottom: -3px;">        
+                <input id="SearchDeprtId" data-id="@DeptId" data-name="@DeptName" />           
+            </div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelPosition</label>
+            </div>
+            <div class="col-md-4" style="margin-bottom: -3px;">
+                @Html.DropDownListFor(m => m.SearchPositionId, lstPosition, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+            </div>
+        </div>
+        <div class="col-md-12"></div>
+
+        <!--Level & Education-->
+        <div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelLevel</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownListFor(m => m.SearchDoctorLevelId, lstDoctorLevel, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+            </div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelEducation</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownListFor(m => m.SearchDegreeId, lstEducation, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+            </div>
+        </div>
+        <div class="col-md-12"></div>
+
+        <div class="col-md-12 align-center">
+            <button class="btn btn-primary" type="button" onclick="return btnSearchClick();">
+                <span class="glyphicon glyphicon-search"></span>Tìm kiếm
+            </button>
+            @if (actUpdate)
+            {
+                <button type="submit" class="btn-add btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    @Localization.ButtonAddDisplay
+                </button>
+            }
+            @if (actExport)
+            {
+                <button class="btn btn-primary" type="button" onclick="btnExportClick();">
+                    <span class="glyphicon glyphicon-export"></span>@Resources.Localization.ButtonExportExcel
+                </button>
+            }
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.selectpicker').selectpicker({
+            style: 'btn btn-default btn-sm',
+            size: 5,
+        });
+
+        $('#search_form input[type=text]').keyup(function (e) {
+            if (e.keyCode == 13)
+                btnSearchClick();
+        });
+
+        $('.selectpicker, #SearchDeprtId').change(function (e) {
+            btnSearchClick();
+        });
+    });
+
+    $('#SearchDeprtId').Department(
+        {
+           
+        });
+
+    function btnSearchClick() {
+        OnCriteria(0);
+    }
+
+    function btnExportClick() {
+        //OnExportExcel();
+        var queryParam = ["?",
+            "SearchName=", $('#SearchName').val().trim(), "&"
+            , "SearchPhone=", $('#SearchPhone').val().trim(), "&"
+            , "SearchDeprtId=", $('#SearchDeprtId').val().trim(), "&"
+            , "SearchDoctorLevelId=", $('#SearchDoctorLevelId').val().trim(), "&"
+            , "SearchDegreeId=", $('#SearchDegreeId').val().trim(), "&"
+            , "SearchPositionId=", $('#SearchPositionId').val().trim(), "&"
+            , "pageIndex=", "0"
+        ].join('');
+        var url = '@Url.Action("Export", "Doctor")' + queryParam
+        window.open(url, '_blank');
+    }
+</script>

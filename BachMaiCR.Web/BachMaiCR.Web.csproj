@@ -64,12 +64,48 @@
     <Reference Include="Boilerplate.Web.Mvc5">
       <HintPath>..\packages\Boilerplate.Web.Mvc5.1.0.25\lib\net45\Boilerplate.Web.Mvc5.dll</HintPath>
     </Reference>
+    <Reference Include="DotNetOpenAuth.AspNet, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetOpenAuth.AspNet.4.3.4.13329\lib\net45-full\DotNetOpenAuth.AspNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetOpenAuth.Core.4.3.4.13329\lib\net45-full\DotNetOpenAuth.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetOpenAuth.OAuth.Core.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OAuth.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OAuth.Consumer, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetOpenAuth.OAuth.Consumer.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OAuth.Consumer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetOpenAuth.OpenId.Core.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OpenId.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DotNetOpenAuth.OpenId.RelyingParty, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetOpenAuth.OpenId.RelyingParty.4.3.4.13329\lib\net45-full\DotNetOpenAuth.OpenId.RelyingParty.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
     </Reference>
     <Reference Include="Elmah.Mvc, Version=2.1.2.1389, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Elmah.MVC.2.1.2\lib\net40\Elmah.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Glimpse.AspNet">
@@ -84,6 +120,34 @@
     <Reference Include="Glimpse.Mvc5">
       <HintPath>..\packages\Glimpse.Mvc5.1.5.3\lib\net45\Glimpse.Mvc5.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AI.Agent.Intercept, Version=2.0.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.2.0.6\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.DependencyCollector, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.DependencyCollector.2.2.0\lib\net45\Microsoft.AI.DependencyCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.PerfCounterCollector, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.PerfCounterCollector.2.2.0\lib\net45\Microsoft.AI.PerfCounterCollector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.ServerTelemetryChannel, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.TelemetryChannel.2.2.0\lib\net45\Microsoft.AI.ServerTelemetryChannel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.Web, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.Web.2.2.0\lib\net45\Microsoft.AI.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AI.WindowsServer, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.2.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ApplicationInsights, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ApplicationInsights.2.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -93,8 +157,24 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="MiniProfiler, Version=3.2.0.157, Culture=neutral, PublicKeyToken=b44f9351044011a3, processorArchitecture=MSIL">
+      <HintPath>..\packages\MiniProfiler.3.2.0.157\lib\net40\MiniProfiler.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.0.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject.Web.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Web.Common.3.2.0.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.MVC5.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NWebsec, Version=4.2.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
@@ -117,7 +197,17 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20505.0\lib\net40\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20505.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Cors, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -164,24 +254,76 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http">
-    </Reference>
-    <Reference Include="System.Net.Http.WebRequest">
-    </Reference>
     <Reference Include="System.Web.Optimization">
       <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
+    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.2.0.20710.0\lib\net40\WebMatrix.WebData.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_GlobalResources\Localization.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_GlobalResources\Localization.vi-VN.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.vi-VN.resx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Start\AppUser.cs" />
+    <Compile Include="App_Start\BachMaiCRConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\MiniProfiler.cs" />
+    <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Container.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\Attributes\ActionDescriptionAttribute.cs" />
+    <Compile Include="Common\Attributes\CustomAuthorizeAttribute.cs" />
+    <Compile Include="Common\Attributes\DigitAttribute.cs" />
+    <Compile Include="Common\Attributes\DoubleAttribute.cs" />
+    <Compile Include="Common\Attributes\EmailAddressAttribute.cs" />
+    <Compile Include="Common\Attributes\LocalizationDisplayAttribute.cs" />
+    <Compile Include="Common\Attributes\NoCacheAttribute.cs" />
+    <Compile Include="Common\Attributes\PhoneNumberAttribute.cs" />
+    <Compile Include="Common\Attributes\StrongPasswordAttribute.cs" />
+    <Compile Include="Common\Attributes\ValidateJsonAntiForgeryTokenAttribute.cs" />
+    <Compile Include="Common\CaptchaImage.cs" />
+    <Compile Include="Common\CrossDomain\JsonHelper.cs" />
+    <Compile Include="Common\CrossDomain\JsonpFilterAttribute.cs" />
+    <Compile Include="Common\CrossDomain\JsonpResult.cs" />
+    <Compile Include="Common\CustomActionResult\DownloadResult.cs" />
+    <Compile Include="Common\DocVFields.cs" />
+    <Compile Include="Common\ExportReport.cs" />
+    <Compile Include="Common\Extensions\HtmlHelperExtension.cs" />
+    <Compile Include="Common\Extensions\WebGridExtension.cs" />
+    <Compile Include="Common\Helpers\CultureHelper.cs" />
+    <Compile Include="Common\Helpers\GenerateDepartmentTreeHelper.cs" />
+    <Compile Include="Common\Helpers\GetAttributeHelper.cs" />
+    <Compile Include="Common\Helpers\GetMenuHelper.cs" />
+    <Compile Include="Common\Helpers\MvcHelper.cs" />
+    <Compile Include="Common\Json2.cs" />
+    <Compile Include="Common\JsonResponse.cs" />
+    <Compile Include="Common\Notice.cs" />
+    <Compile Include="Common\ValidateType.cs" />
+    <Compile Include="Common\WebpageConstant.cs" />
     <Compile Include="Constants\Application.cs" />
     <Compile Include="Constants\CacheSetting.cs" />
     <Compile Include="Constants\CacheProfileName.cs" />
@@ -191,11 +333,56 @@
     <Compile Include="Constants\ErrorController\ErrorControllerRoute.cs" />
     <Compile Include="Constants\HomeController\HomeControllerAction.cs" />
     <Compile Include="Constants\HomeController\HomeControllerRoute.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AdminLogController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CalendarDutyController.cs" />
+    <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ConfigDirectController.cs" />
+    <Compile Include="Controllers\ConfigHolidaysController.cs" />
+    <Compile Include="Controllers\ConfigParameterController.cs" />
+    <Compile Include="Controllers\ConfigSMSController.cs" />
+    <Compile Include="Controllers\DepartmentController.cs" />
+    <Compile Include="Controllers\DeveloperController.cs" />
+    <Compile Include="Controllers\DoctorController.cs" />
+    <Compile Include="Controllers\DoctorLevelController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FeastController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PartialController.cs" />
+    <Compile Include="Controllers\PersonalCalendarController.cs" />
+    <Compile Include="Controllers\PublishController.cs" />
+    <Compile Include="Controllers\ReportOfDayController.cs" />
+    <Compile Include="Controllers\ReportOfHolidayController.cs" />
+    <Compile Include="Controllers\ReportOfHospitalController.cs" />
+    <Compile Include="Controllers\TemplateController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\WebpageActionsController.cs" />
+    <Compile Include="Controllers\WebpageRolesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AccountModel.cs" />
+    <Compile Include="Models\AutoMapperStartup.cs" />
+    <Compile Include="Models\CalendarChangeModel.cs" />
+    <Compile Include="Models\CalendarDuty.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\ConfigDirect.cs" />
+    <Compile Include="Models\ConfigHoliday.cs" />
+    <Compile Include="Models\ConfigParametter.cs" />
+    <Compile Include="Models\ConfigSMS.cs" />
+    <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\Doctor.cs" />
+    <Compile Include="Models\DoctorLevel.cs" />
+    <Compile Include="Models\Feast.cs" />
+    <Compile Include="Models\MappingModelEntityExtensions.cs" />
+    <Compile Include="Models\ReportOfDay.cs" />
+    <Compile Include="Models\RoleModel.cs" />
+    <Compile Include="Models\Template.cs" />
+    <Compile Include="Models\UserMenuModel.cs" />
+    <Compile Include="Models\UserModel.cs" />
+    <Compile Include="Models\WebPageActionModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BrowserConfig\BrowserConfigService.cs" />
     <Compile Include="Services\BrowserConfig\IBrowserConfigService.cs" />
@@ -217,7 +404,15 @@
     </Compile>
     <Compile Include="Services\Feed\IFeedService.cs" />
     <Compile Include="Services\Feed\FeedService.cs" />
+    <Compile Include="Services\WebpageActionService.cs" />
+    <Compile Include="Service References\ServiceSMS6x00\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\DataTemplate.cs" />
+    <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\fonts\bootstrap\glyphicons-halflings-regular.woff2" />
@@ -315,6 +510,9 @@
     <Content Include="Content\fontawesome\bordered-pulled.less" />
     <Content Include="Content\fontawesome\animated.less" />
     <Content Include="Content\fonts\fontawesome\fontawesome-webfont.woff2" />
+    <Content Include="ApplicationInsights.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -407,8 +605,12 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\site.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Views\Error\BadRequest.cshtml" />
-    <Content Include="Views\Error\InternalServerError.cshtml" />
+    <None Include="Service References\ServiceSMS6x00\configuration91.svcinfo" />
+    <None Include="Service References\ServiceSMS6x00\configuration.svcinfo" />
+    <None Include="Service References\ServiceSMS6x00\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -423,20 +625,195 @@
     </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Error\NotFound.cshtml" />
-    <Content Include="Views\Error\Unauthorized.cshtml" />
-    <Content Include="Views\Error\Forbidden.cshtml" />
-    <Content Include="Views\Error\MethodNotAllowed.cshtml" />
+    <Content Include="Views\Shared\ExcelTemplate\DoctorsTemplate.xls" />
+    <Content Include="Views\Shared\ExcelTemplate\DoctorsTemplate.xlsx" />
+    <Content Include="Views\Shared\ExcelTemplate\FormLandscapeA4.xlsx" />
+    <Content Include="Views\Shared\ExcelTemplate\ReportOfAllHospital.xlsx" />
+    <Content Include="Views\Shared\ExcelTemplate\ReportOfCalendarDefault.xlsx" />
+    <Content Include="Views\Shared\ExcelTemplate\ReportOfCalendarDirector.xlsx" />
+    <Content Include="Service References\ServiceSMS6x00\InsertMT.wsdl" />
+    <Content Include="Service References\ServiceSMS6x00\InsertMTInf.wsdl" />
+    <Content Include="Service References\ServiceSMS6x00\BachMaiCR.Web.ServiceSMS6x00.deliverObject.datasource" />
+    <Content Include="Service References\ServiceSMS6x00\BachMaiCR.Web.ServiceSMS6x00.objectProgTctResultBean.datasource" />
+    <None Include="Service References\ServiceSMS6x00\InsertMT.wsdl" />
+    <None Include="Service References\ServiceSMS6x00\InsertMTInf.wsdl" />
+    <Content Include="Service References\ServiceSMS6x00\BachMaiCR.Web.ServiceSMS6x00.deliverObject.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ServiceSMS6x00\BachMaiCR.Web.ServiceSMS6x00.objectProgTctResultBean.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Views\Shared\ExcelTemplate\ReportOfCalendarDuty.xlsx" />
+    <Content Include="Views\Shared\ExcelTemplate\ReportOfCalendarLeader.xlsx" />
+    <Content Include="Views\Shared\ExcelTemplate\ReportOfHoliday.xlsx" />
+    <Content Include="Views\Shared\_AccountLayout.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\Shared\_ConfigUser.cshtml" />
+    <Content Include="Views\Shared\_LanguagePartial.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_MenuViewPartial.cshtml" />
+    <Content Include="Views\Shared\_NoticePartial.cshtml" />
+    <Content Include="Views\Shared\_PaginationView.cshtml" />
+    <Content Include="Views\Shared\_WebpageActionTreeViewPartial.cshtml" />
+    <Content Include="Views\Template\Index.cshtml" />
+    <Content Include="Views\Template\_Add.cshtml" />
+    <Content Include="Views\Template\_Detail.cshtml" />
+    <Content Include="Views\Template\_Edit.cshtml" />
+    <Content Include="Views\Template\_List.cshtml" />
+    <Content Include="Views\Template\_Template.cshtml" />
+    <Content Include="Views\Template\_View.cshtml" />
+    <Content Include="Views\Users\ConfigUser.cshtml" />
+    <Content Include="Views\Users\_ViewStart.cshtml" />
+    <Content Include="Views\Publish\_DepartmentTree.cshtml" />
+    <Content Include="Views\ReportOfDay\Index.cshtml" />
+    <Content Include="Views\ReportOfDay\_Detail.cshtml" />
+    <Content Include="Views\ReportOfDay\_Insert.cshtml" />
+    <Content Include="Views\ReportOfDay\_Lists.cshtml" />
+    <Content Include="Views\ReportOfDay\_Search.cshtml" />
+    <Content Include="Views\ReportOfHoliday\Index.cshtml" />
+    <Content Include="Views\ReportOfHoliday\_AddReportOfHolidayData.cshtml" />
+    <Content Include="Views\ReportOfHoliday\_AddReportOfHolidayInfo.cshtml" />
+    <Content Include="Views\ReportOfHospital\Index.cshtml" />
+    <Content Include="Views\ReportOfHospital\_AddReportOfHospitalData.cshtml" />
+    <Content Include="Views\ReportOfHospital\_AddReportOfHospitalInfo.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\_ViewStart.cshtml" />
+    <Content Include="Views\AdminLog\Index.cshtml" />
+    <Content Include="Views\AdminLog\_Detail.cshtml" />
+    <Content Include="Views\AdminLog\_Lists.cshtml" />
+    <Content Include="Views\AdminLog\_Search.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\ManageActions.cshtml" />
+    <Content Include="Views\Admin\ManageRoles.cshtml" />
+    <Content Include="Views\Admin\ManageUsers.cshtml" />
+    <Content Include="Views\Admin\_ActionList.cshtml" />
+    <Content Include="Views\Admin\_AddAction.cshtml" />
+    <Content Include="Views\Admin\_AddRole.cshtml" />
+    <Content Include="Views\Admin\_AddUser.cshtml" />
+    <Content Include="Views\Admin\_AddUserToRole.cshtml" />
+    <Content Include="Views\Admin\_ResetPassword.cshtml" />
+    <Content Include="Views\Admin\_RoleList.cshtml" />
+    <Content Include="Views\Admin\_SearchUserToRole.cshtml" />
+    <Content Include="Views\Admin\_TreeDepartment.cshtml" />
+    <Content Include="Views\Admin\_UserList.cshtml" />
+    <Content Include="Views\Admin\_ViewStart.cshtml" />
+    <Content Include="Views\CalendarDuty\Index.cshtml" />
+    <Content Include="Views\CalendarDuty\ViewDoctor.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarDefault.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarDirectors.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarDirectorsData.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarDirectorsInfo.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarDuty.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarDutyData.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarDutyInfo.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarHospital.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarLeader.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarLeaderData.cshtml" />
+    <Content Include="Views\CalendarDuty\_AddCalendarLeaderInfo.cshtml" />
+    <Content Include="Views\CalendarDuty\_ApprovedCalendarHospital.cshtml" />
+    <Content Include="Views\CalendarDuty\_ApprovedRequest.cshtml" />
+    <Content Include="Views\CalendarDuty\_CalendarList.cshtml" />
+    <Content Include="Views\CalendarDuty\_DetailCalendar.cshtml" />
+    <Content Include="Views\CalendarDuty\_EditCalendarDefault.cshtml" />
+    <Content Include="Views\CalendarDuty\_EditCalendarDirectors.cshtml" />
+    <Content Include="Views\CalendarDuty\_EditCalendarDuty.cshtml" />
+    <Content Include="Views\CalendarDuty\_EditCalendarLeader.cshtml" />
+    <Content Include="Views\CalendarDuty\_HistoryCalendar.cshtml" />
+    <Content Include="Views\CalendarDuty\_IsExistCalendar.cshtml" />
+    <Content Include="Views\CalendarDuty\_ListButtons.cshtml" />
+    <Content Include="Views\CalendarDuty\_ListButtonView.cshtml" />
+    <Content Include="Views\CalendarDuty\_ListDateChange.cshtml" />
+    <Content Include="Views\CalendarDuty\_ListDirectors.cshtml" />
+    <Content Include="Views\CalendarDuty\_ListDoctors.cshtml" />
+    <Content Include="Views\CalendarDuty\_ListDoctorsChange.cshtml" />
+    <Content Include="Views\CalendarDuty\_ListDoctorsChangeDefault.cshtml" />
+    <Content Include="Views\CalendarDuty\_ListDoctorsDefault.cshtml" />
+    <Content Include="Views\CalendarDuty\_ListWeeks.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewCalendarDefault.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewCalendarDirectors.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewCalendarDuty.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewCalendarHospital.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewCalendarHospitalData.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewCalendarHospitalDetail.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewCalendarHospitalInfo.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewCalendarLeader.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewListCalendarDirectors.cshtml" />
+    <Content Include="Views\CalendarDuty\_ViewListCalendarLeader.cshtml" />
+    <Content Include="Views\Calendar\PersonalCalendar.cshtml" />
+    <Content Include="Views\Category\AddCategory.cshtml" />
+    <Content Include="Views\Category\Index.cshtml" />
+    <Content Include="Views\Category\_PartialCategoryList.cshtml" />
+    <Content Include="Views\ConfigDirect\Index.cshtml" />
+    <Content Include="Views\ConfigDirect\_GetList.cshtml" />
+    <Content Include="Views\ConfigDirect\_Insert.cshtml" />
+    <Content Include="Views\ConfigDirect\_Search.cshtml" />
+    <Content Include="Views\ConfigHolidays\Index.cshtml" />
+    <Content Include="Views\ConfigHolidays\_GetList.cshtml" />
+    <Content Include="Views\ConfigHolidays\_Insert.cshtml" />
+    <Content Include="Views\ConfigHolidays\_Search.cshtml" />
+    <Content Include="Views\ConfigParameter\_Add.cshtml" />
+    <Content Include="Views\ConfigSMS\Index.cshtml" />
+    <Content Include="Views\ConfigSMS\_GetList.cshtml" />
+    <Content Include="Views\ConfigSMS\_Insert.cshtml" />
+    <Content Include="Views\ConfigSMS\_Search.cshtml" />
+    <Content Include="Views\Department\Index.cshtml" />
+    <Content Include="Views\Department\_GetList.cshtml" />
+    <Content Include="Views\Department\_Insert.cshtml" />
+    <Content Include="Views\DoctorLevel\Index.cshtml" />
+    <Content Include="Views\DoctorLevel\_AddDoctorLevel.cshtml" />
+    <Content Include="Views\DoctorLevel\_DoctorLevelList.cshtml" />
+    <Content Include="Views\Doctor\Index.cshtml" />
+    <Content Include="Views\Doctor\_Detail.cshtml" />
+    <Content Include="Views\Doctor\_GetList.cshtml" />
+    <Content Include="Views\Doctor\_Insert.cshtml" />
+    <Content Include="Views\Doctor\_Search.cshtml" />
+    <Content Include="Views\Feast\Add.cshtml" />
+    <Content Include="Views\Feast\Index.cshtml" />
+    <Content Include="Views\Feast\_PartialList.cshtml" />
+    <Content Include="Views\Error\ShowErrorPage.cshtml" />
+    <Content Include="Views\Home\ManageAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\ManageDoctor\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BachMaiCR.DataAccess\BachMaiCR.DataAccess.csproj">
+      <Project>{f749c0f8-cfe6-4ac1-bcef-150958518002}</Project>
+      <Name>BachMaiCR.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BachMaiCR.DBMapping\BachMaiCR.DBMapping.csproj">
+      <Project>{d32808f9-ba77-45a4-b707-080eebc990dc}</Project>
+      <Name>BachMaiCR.DBMapping</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BachMaiCR.Utilities\BachMaiCR.Utilities.csproj">
+      <Project>{5bc72b47-124f-440c-a25e-b33f13aa2255}</Project>
+      <Name>BachMaiCR.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ServiceSMS6x00\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_GlobalResources\Localization.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Localization.designer.cs</LastGenOutput>
+    </Content>
+    <Content Include="App_GlobalResources\Localization.vi-VN.resx">
+      <Generator>GlobalResourceProxyGenerator</Generator>
+      <LastGenOutput>Localization.vi-VN.designer.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <PropertyGroup>

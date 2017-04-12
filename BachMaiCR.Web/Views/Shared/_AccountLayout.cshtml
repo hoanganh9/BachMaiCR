@@ -1,0 +1,46 @@
+﻿@using StackExchange.Profiling
+<![if !IE]>
+<!DOCTYPE html>
+<![endif]>
+<![if IE]>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<![endif]>
+
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Images/Calendar-icon.png" rel="shortcut icon" type="image/x-icon" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+   @* @MiniProfiler.RenderIncludes()*@
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    @RenderSection("featured", required: false)
+    <div id="page-container">
+        <div id="page-header">
+            <div id="page-header-banner">
+                <img src="~/Images/logo-name.png" />
+            </div>
+      
+        </div>
+        <div class="clear"></div>
+        @RenderBody()
+        <div class="clear"></div>
+        <div id="page-footer" class="fixed bottom-0" style="display:none;">
+            <div class="page-footer-text">© Trung tâm Giải pháp Chính phủ 2013</div>
+            <div class="margin-5 font-11">
+                @Html.Partial("~/Views/Shared/_LanguagePartial.cshtml")
+            </div>
+        </div>
+        @Html.Partial("~/Views/Shared/_NoticePartial.cshtml")
+    </div>
+</body>
+</html>

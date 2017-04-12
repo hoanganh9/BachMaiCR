@@ -1,0 +1,274 @@
+﻿@using Resources
+@{
+    ViewBag.Title = Localization.ManagePersonalCalendar;
+}
+@{
+    int yearCurrent = System.DateTime.Now.Year + 20;
+    int yearStart = yearCurrent - 40;
+    List<SelectListItem> tmpYear = new List<SelectListItem>();
+    for (int i = yearStart; i < yearCurrent; i++)
+    {
+        tmpYear.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+
+
+
+    List<SelectListItem> tmpMonths = new List<SelectListItem>();
+    for (int i = 1; i <= 12; i++)
+    {
+        tmpMonths.Add(new SelectListItem() { Text = "Tháng " + i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+
+
+    var DATE_MONTH = new SelectList(tmpMonths, "Value", "Text", System.DateTime.Now.Month);
+
+    var DATE_YEAR = new SelectList(tmpYear, "Value", "Text", System.DateTime.Now.Year);
+    tmpMonths = null;
+    tmpYear = null;
+}
+
+<link rel='stylesheet' href='~/Content/fullcalendar/jquery-ui.min.css' />
+<link href="~/Content/fullcalendar/fullcalendar.css" rel='stylesheet' />
+<link href="~/Content/fullcalendar/fullcalendar.print.css" rel='stylesheet' media='print' />
+<link rel='stylesheet' type='text/css' href="~/Content/formset.css" />
+<script src='~/Scripts/fullcalendar/jquery-ui.custom.min.js'></script>
+<script type='text/javascript' src="~/Scripts/fullcalendar/fullcalendar-1.6.4.js"></script>
+
+
+<script type='text/javascript'>
+
+    $(document).ready(function () {
+
+        var calendar = $('#calendar').fullCalendar({
+            contentHeight: 600,//độ cao của lịch
+            theme: true, //theme cho lich
+            header: {
+
+                right: 'next, today',
+                center: 'title',
+               // left: 'month,agendaWeek,agendaDay, prev'
+                left: 'month, prev'
+            },
+
+            selectable: true,
+            selectHelper: true,
+            editable: false,
+            disableResizing: false,
+            events: {
+                url: '@Url.Action("GetEvents", "PersonalCalendar")',
+                type: 'POST',
+                data: function () { // truyền biến ngày tháng
+                    var date = $("#calendar").fullCalendar('getDate');
+                    date.setMonth(date.getMonth() + 1);
+                    var month_int = date.getMonth();
+
+                    var year_int = date.getFullYear();
+                    if (month_int == 0) {
+                        month_int = 12;
+                        year_int = year_int - 1;
+                    }
+                    document.getElementById("searchMonth").value = month_int;
+                    document.getElementById("searchYear").value = year_int;
+                    return {
+                        imonth: month_int,
+                        iyear: year_int
+                    };
+                },               
+                error: function () {
+                }
+
+            },
+
+            loading: function (bool) {
+                if (bool) $('#loading').show();
+                else $('#loading').hide();
+            }
+        });
+    });
+
+
+</script>
+<style type='text/css'>
+    #calendar
+    {
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    h2, .h2
+    {
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    #loading
+    {
+        position: absolute;
+    }
+
+    .popup_block
+    {
+        display: none; /*--hidden by default--*/
+        background: #fff;
+        padding: 10px;
+        border: 10px solid #ddd;
+        text-decoration: none;
+        float: left;
+        font-size: 1.2em;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        z-index: 9999999999;
+        /*--CSS3 Box Shadows--*/
+        -webkit-box-shadow: 0px 0px 10px #000;
+        -moz-box-shadow: 0px 0px 10px #000;
+        box-shadow: 0px 0px 10px #000;
+        /*--CSS3 Rounded Corners--*/
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+    }
+    .fc-event-time {
+   
+        padding-right: 3px;     
+        padding-left: 3px;
+    }
+    .fc-view-month .fc-event-time
+    {
+        display: none;
+    }
+</style>
+<div class="content-wrapper">
+     <div id="nav">@Localization.ManageCalendarDutyTitle.ToUpper() » @ViewBag.Title.ToUpper()</div>
+    <div class="page-nav-top" style="margin-top: 5px;">        
+        <div class="page-nav-search padding-right" style="margin-right: 5px;">
+            <div class="input-group input-group-sm">
+                <b style="font-size: 12px;">@Localization.LabelMonth<img src="~/Images/search.png" style="width: 25px;" />
+                </b>@Html.DropDownList("searchMonth", DATE_MONTH, new { @style = "width:90px;" })
+
+                <b style="font-size: 12px;">@Localization.LabelYear  </b>@Html.DropDownList("searchYear", DATE_YEAR, new { @style = "width:90px;" })
+            </div>
+            <!-- /input-group -->
+        </div>
+
+    </div>
+    <div class="content page-content">
+
+        <div id='calendar'></div>
+
+    </div>
+
+
+</div>
+
+
+<div id="loading" style="display: none; text-align: center;" class="popup_block">
+    <img src="~/Images/ajax-loader.gif" /><br />
+    <p style="font-size: 12px;">
+        @Localization.txtLoading
+    </p>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#prev").bind('click', function (event) {
+            var date = $("#calendar").fullCalendar('getDate');
+            date.setMonth(date.getMonth() + 1);
+            var month_int = date.getMonth();
+
+            var year_int = date.getFullYear();
+            if (month_int == 0) {
+                month_int = 12;
+                year_int = year_int - 1;
+            }
+            document.getElementById("searchMonth").value = month_int;
+            document.getElementById("searchYear").value = year_int;
+
+
+        });
+        $("#next").bind('click', function (event) {
+
+            var date = $("#calendar").fullCalendar('getDate');
+            date.setMonth(date.getMonth() + 1);
+            var month_int = date.getMonth();
+            var year_int = date.getFullYear();
+            if (month_int == 0) {
+                month_int = 12;
+                year_int = year_int - 1;
+            }
+            document.getElementById("searchMonth").value = month_int;
+            document.getElementById("searchYear").value = year_int;
+
+        });
+
+        $("#today").bind('click', function (event) {
+            var date = $("#calendar").fullCalendar('getDate');
+            date.setMonth(date.getMonth() + 1);
+            var month_int = date.getMonth();
+            var year_int = date.getFullYear();
+            var month_int = date.getMonth();
+            var year_int = date.getFullYear();
+            if (month_int == 0) {
+                month_int = 12;
+                year_int = year_int - 1;
+            }           
+            document.getElementById("searchMonth").value = month_int;
+            document.getElementById("searchYear").value = year_int;
+
+        });
+
+        $('#searchMonth').change(function () {
+            var month_int = $(this).val();
+            var year_int = document.getElementById("searchYear").value;
+            $("#calendar").fullCalendar('gotoDate', parseFloat(year_int), parseFloat(month_int) - 1);                 
+
+        });
+        $('#searchYear').change(function () {
+            var year_int = $(this).val();
+            var month_int = document.getElementById("searchMonth").value;
+            $("#calendar").fullCalendar('gotoDate', parseFloat(year_int), parseFloat(month_int) - 1);
+
+        });
+        function RenderCalendar(iMonth, iYear, iMonthChange) {
+            var calendar = $('#calendar').fullCalendar({
+                year: iYear,
+                month: iMonthChange,
+                date: 1,
+                contentHeight: 600,//độ cao của lịch
+                theme: true, //theme cho lich
+                header: {
+
+                    right: 'next, today',
+                    center: 'title',
+                    left: 'month,agendaWeek,agendaDay, prev'
+                },
+
+                selectable: true,
+                selectHelper: true,
+                editable: false,
+                disableResizing: false,
+                events: {
+                    url: 'PersonalCalendar/GetEvents',
+                    type: 'POST',
+                    data: {
+                        imonth: iMonth,
+                        iyear: iYear
+                    },
+                    error: function () {
+                    }
+
+                },
+                loading: function (bool) {
+                    if (bool) $('#loading').show();
+                    else $('#loading').hide();
+                }
+            });
+        }
+
+    })
+
+
+</script>

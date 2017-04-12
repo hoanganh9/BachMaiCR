@@ -1,0 +1,40 @@
+﻿@using Resources
+@{
+    // var ctgType = 1;
+}
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/bootstrapjs")
+@section Scripts {
+    @Scripts.Render("~/bundles/bootstrapjs")
+}
+
+<div class="content page-content">
+    <div class="clear"></div>
+    <table style="width: 100%">
+        <tr>
+            <td style="height: 40px;">
+                <div id="nav">
+                    <a title="">@Localization.ReportConfig.ToUpper()</a> » @ViewBag.Title.ToUpper()
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.Partial("~/Views/ReportOfHospital/_AddReportOfHospitalInfo.cshtml")
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <script type="text/javascript">
+                    var strDate = $('.selectWeek').val() + "_" + $('.selectMonths').val() + "_" + $('.selectYears').val();
+                    $.get('@Url.Action("LoadReportOfHospital", "ReportOfHospital")', { strDate: strDate }, function (data) {
+                        $('#loadTemplate').html(data);
+                    });
+                </script>
+                <div id="loadTemplate"></div>
+            </td>
+        </tr>
+    </table>
+
+</div>

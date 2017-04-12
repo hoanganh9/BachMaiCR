@@ -1,0 +1,137 @@
+﻿@using Resources;
+@using BachMaiCR.Web.Utils;
+@model BachMaiCR.DBMapping.ModelsExt.DoctorSearch
+@{
+    var lstPosition = ViewBag.ListPosition as List<SelectListItem>;
+    var lstFeast = ViewBag.ListFeast as List<SelectListItem>;
+}
+<style>
+    .selectpicker {
+        font-size: 12px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+
+
+    .btn-default {
+        height: 25px;
+        font-size: 12px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+</style>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('.selectpicker').selectpicker({
+            style: 'btn btn-default btn-sm',
+            size: 5,
+        });
+        $('#SearchDeprtId').Department(
+           {
+           });
+        $('#search_form input[type=text]').keyup(function (e) {
+            if (e.keyCode == 13)
+                btnSearchClick();
+        });
+
+        $('.selectpicker, #SearchDeprtId').change(function (e) {
+            btnSearchClick();
+        });
+    });
+
+    function btnSearchClick() {
+        OnCriteria(0);
+    }
+    function OnCriteria(pageIndex) {
+        $.ajax({
+            type: "GET",
+            url: '/ReportOfHoliday/LoadReportOfHoliday',
+            data: {
+                SearchName: $('#SearchName').val().trim()
+                , SearchFeastId: $('#SearchFeastId').val().trim()
+                , SearchDeprtId: $('#SearchDeprtId').val().trim()
+                , SearchPositionId: $('#SearchPositionId').val().trim()
+                , CalendarYear: $('#CalendarYear').val().trim()
+                , pageIndex: pageIndex
+            },
+            success: function (response) {
+                $('#cat_list_render').html(response);
+            }
+        });
+    }
+</script>
+
+<link href="~/Content/gpcp-department.css" rel="stylesheet" />
+<script src="~/Scripts/gpcp-department.js"></script>
+<link href="~/Content/jquery.treeview.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.cookie.js"></script>
+<script src="~/Scripts/jquery.treeview.js"></script>
+<div class="content-wrapper">
+    <div id="search_form" class="row" style="width: 75%; margin: 0 auto">
+        <!-- Department & Position-->
+        <div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelDepartment</label>
+            </div>
+            <div class="col-md-4" style="margin-bottom: -3px;">
+                @*@Html.TextBoxFor(m => m.SearchDeprtId)*@
+                <input id="SearchDeprtId" data-id="1" data-name="BỆNH VIỆN BẠCH MAI" />
+                @*@Html.TextBoxFor(m => m.SearchDeprtId)*@
+            </div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelFeast</label>
+            </div>
+            <div class="col-md-4" style="margin-bottom: -3px;">
+                @Html.DropDownListFor(m => m.SearchFeastId, lstFeast, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+            </div>
+        </div>
+
+        <!--Name & Identity-->
+        <div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelDoctorName</label>
+            </div>
+            <div class="col-md-4">
+                @Html.TextBoxFor(m => m.SearchName, new { @class = "form-control input-sm", @placeholder = @Localization.LabelDoctorName })
+            </div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelPosition</label>
+            </div>
+            <div class="col-md-4">
+                @Html.DropDownListFor(m => m.SearchPositionId, lstPosition, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+            </div>
+        </div>
+        <div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelYear</label>
+            </div>
+            <div class="col-md-4">
+                @{
+                    DateTime date = Utils.GetDateTime();
+                    int yearCurrent = date.Year + 2;
+                    int yearStart = yearCurrent - 5;
+                    List<SelectListItem> tmpYear = new List<SelectListItem>();
+                    for (int i = yearStart; i < yearCurrent; i++)
+                    {
+                        tmpYear.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+                    }
+                    var DATE_YEAR = new SelectList(tmpYear, "Value", "Text", date.Year);  
+
+                }
+                @Html.DropDownListFor(m => m.CalendarYear, DATE_YEAR, new { @class = "form-control dropdown-toggle selectpicker btn-sm", data_width = "80px", id = "CalendarYear" })
+            </div>
+        </div>
+
+        <div class="col-md-12 align-center">
+            <button class="btn btn-primary" type="button" onclick="return btnSearchClick();">
+                <span class="glyphicon glyphicon-search"></span>Tìm kiếm
+            </button>
+            <button class="btn btn-primary btn-sm" id="exportExcel" type="button" onclick="return btnExportExcel();">
+                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;
+                @Localization.ButtonExportExcel
+            </button>
+        </div>
+    </div>
+
+</div>

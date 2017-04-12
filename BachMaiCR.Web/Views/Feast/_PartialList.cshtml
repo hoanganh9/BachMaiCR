@@ -1,0 +1,171 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.Utilities.Entity
+@{
+
+    var pagNar = ViewBag.Pagination as Pagination;
+    var typeName = "";
+    ViewBag.Title = "Danh mục " + typeName;
+    var ctgType = pagNar.CtgType;
+    var strButtionAdd = Localization.ButtonAddDisplay;
+    var lstItem = ViewBag.Category as List<FEAST>;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+    var actDel = (bool)ViewBag.ActionDelete;
+    var actUpdate = (bool)ViewBag.ActionUpdate;
+}
+
+<div class="content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+    }
+    else
+    {
+        <table class="tbl">
+            <tr>
+                <th class="index width36">@Resources.Localization.LabelIndex</th>
+                <th>@Resources.Localization.LabelFeast</th>
+                <th>@Resources.Localization.LabelTime</th>
+                <th class="width96">@Resources.Localization.LabelActived</th>
+                @if (actDel)
+                {
+                    <th class="width36">@Localization.LabelDel</th>
+                }
+
+                @if (actUpdate)
+                {
+                    <th class="width36">@Resources.Localization.LabelEdit</th>
+                }
+            </tr>
+            <tbody id="ctg_content_body">
+                @for (int i = 0; i < lstItem.Count; i++)
+                {
+                    string dateBegin = "";
+                    string dateEnd = "";
+                    if (lstItem[i].DATE_BEGIN.HasValue)
+                    {
+                        dateBegin = String.Format("{0:dd/MM/yyyy}", lstItem[i].DATE_BEGIN.Value);
+                    }
+                    if (lstItem[i].DATE_END.HasValue)
+                    {
+                        dateEnd = String.Format("{0:dd/MM/yyyy}", lstItem[i].DATE_END.Value);
+                    }
+                    string dateValue = "";
+                    if (dateBegin == dateEnd)
+                    {
+                        dateValue = dateBegin;
+                    }
+                    else
+                    {
+                        dateValue = dateBegin + " đến " + dateEnd;
+                    }
+
+                    <tr>
+                        <td class="align-center">@(i + 1 + startIndex)</td>
+                        <td>@lstItem[i].FEAST_TITLE</td>
+                        <td>@dateValue</td>
+                        <td style="text-align: center;">
+                            @if (lstItem[i].ISACTIVED.Equalstrue)
+                            {
+                                <input class='change-active disabled' type='checkbox' checked value='@lstItem[i].FEAST_ID' />
+                            }
+                            else
+                            {
+                                <input class='change-active disabled' type='checkbox' value='@lstItem[i].FEAST_ID' />
+                            }
+                        </td>
+
+
+                        @if (actDel)
+                        {
+                            <td class="align-center"><a title='@Resources.Localization.TitleDisplayDel' data-toggle='confirmation' href='javascript:void(0)' class='cat-delete' data-id='@lstItem[i].FEAST_ID'><span class='glyphicon glyphicon-trash'></span></a></td>
+                        } @if (actUpdate)
+                        {
+                        <td class="align-center"><a title='@Resources.Localization.TitleDisplayEdit' href='javascript:void(0)' class='cat-edit' data-id='@lstItem[i].FEAST_ID'><span class='glyphicon glyphicon-edit'></span></a></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationView", pagNar);
+    }
+</div>
+<div id="navigate_bottom_panel" class="nav-bottom ">
+</div>
+
+<script type="text/javascript">
+
+    function OnCriteria(pageIndex) {
+        var ctrSearch = $('@pagNar.InputSearchId');
+        ctrSearch = ctrSearch != null ? ctrSearch.val().trim() : "";
+        $.ajax({
+            type: "GET",
+            url: '/@pagNar.ModelName/@pagNar.ActionName',
+            data: { type: @pagNar.CtgType, name: ctrSearch, pageIndex: pageIndex },
+            success: function (response) {
+                var $catlist = $('@pagNar.TagetReLoadId');
+                if ($catlist == null || $catlist.length == 0) {
+                    window.notice('@Resources.Localization.MsgItemNotFound', window.notice_error);
+                }
+                else {
+                    $catlist.html(response);
+                }
+            }
+        });
+        setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+    }
+
+    $(document).ready(function () {
+        $(".modal").on('shown', function() {
+            $(this).find("[autofocus]:first").focus();
+        });
+
+        $(".cat-edit").bind('click', function (event) {
+            var $self = $(this);
+            $.get('/Feast/OnUpdate', {id: $self.attr('data-id')
+            },
+                function (data) {
+                    var $categoryModel = $('#add_category_model_container');
+                    $categoryModel.html(data);
+                    $('#addCategoryModel').modal({
+                        keyboard: true
+                    });
+                    $('#addCategoryModel').find('input:text:visible:first').focus();
+                });
+        });
+
+        $('.cat-delete').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'btnOkClass': 'btn-danger',
+                'title': '@Resources.Localization.MsgConfirmDisplayDel',
+                'yesButtonTitle': '<span class="glyphicon glyphicon-trash"></span> @Resources.Localization.LabelDel',
+                'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+                onComplete: function (e) {
+                    $.post('/Feast/OnDelete', { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            //$self.parents('tr').remove();
+                            OnCriteria(0);
+                            window.notice(response.result, window.notice_success);
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                    //alert(0);
+                }
+            });
+        });
+
+
+
+    });
+</script>

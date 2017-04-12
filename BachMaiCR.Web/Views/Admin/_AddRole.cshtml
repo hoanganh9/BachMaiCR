@@ -1,0 +1,310 @@
+﻿@*@inherits System.Web.Mvc.WebViewPage
+Luon phai bat dau bang inherits nay*@
+@using Resources
+@model BachMaiCR.Web.Models.RoleModel
+<!-- Modal -->
+@{
+    var strTitleForm = Model.WEBPAGES_ROLES_ID.Equals(0) ? Localization.FormAddTitle : Localization.FormEditTitle;
+    var departmentName = "";
+
+    if (Model.LM_DEPARTMENT_ID != null && Model.LM_DEPARTMENT_ID > 0)
+    {
+        departmentName = BachMaiCR.Web.Common.Helpers.GetMenuHelper.GetDepartmentName(Model.LM_DEPARTMENT_ID);
+    }
+}
+
+@Scripts.Render("~/bundles/jqueryval")
+<link href="~/Content/jquery.treeview.css" rel="stylesheet" />
+<link href="~/Content/gpcp-department.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.cookie.js"></script>
+<script src="~/Scripts/jquery.treeview.js"></script>
+<script src="~/Scripts/gpcp-department.js"></script>
+<style>
+    .Validation_Error
+    {
+       margin-left:120px;
+      
+    }
+    .TopDivs
+    {
+        clear:both;
+        vertical-align:top;
+        text-align:left;
+        margin-bottom: 5px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight:100;
+    }
+    .modal-title {
+        margin: 0;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight:bold;
+    }
+    .modal-header {
+     
+     padding: 5px 10px 10px;
+     
+    }
+    .modal-footer {
+      padding: 5px 10px 10px;
+      margin-top: 5px;
+      text-align: center;
+      border-top: 1px solid #e5e5e5;
+    }
+    .modal-body {
+      position: relative;
+      padding:5px 10px 0px 10px;
+     
+    }
+    .form-group {
+      margin-bottom: 5px;
+    }
+    .modal-dialog
+    {
+        width:430px;
+    }
+
+    .department_dialog
+        {
+            display: none;
+            position: fixed;
+            /*width: 380px;
+            height: 200px;*/
+            /*top: 50%;
+            left: 50%;*/
+            margin-left: -190px;
+            margin-top: -100px;
+            background-color: #ffffff;
+        border: 1px solid #C4C4C4;/*1px solid rgba(0, 0, 0, 0.2); 1px solid #336699;*/
+            padding: 0px;
+            box-shadow: 0 0 8px #D9D9D9;
+            z-index: 1060 ! important;
+            font-family: Verdana;
+            font-size: 10pt;
+            border-radius: 6px;
+        }
+    .department_hearder{float: left; width: 100%; background: #e5e5e5; padding-left: 5px;border-top-left-radius:6px;border-top-right-radius: 6px;height: 25px;}
+    .department_body{float: left;overflow-x: hidden; padding-left: 5px; overflow-y: auto; height: auto; max-height: 200px; width: 100%}
+
+</style>
+<style>
+    .Validation_Error
+    {
+        margin-left: 80px;
+    }
+
+    .TopDivs
+    {
+        clear: both;
+        vertical-align: top;
+        text-align: left;
+        margin-bottom: 5px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight: 100;
+    }
+
+    .modal-title
+    {
+        margin: 0;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .modal-header
+    {
+        padding: 5px 10px 10px;
+    }
+
+    .modal-footer
+    {
+        padding: 5px 10px 10px;
+        margin-top: 5px;
+        text-align: center;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .modal-body
+    {
+        position: relative;
+        padding: 5px 10px 0px 10px;
+    }
+
+    .form-group
+    {
+        margin-bottom: 5px;
+    }
+
+    .modal-dialog
+    {
+        width: 550px;
+    }
+</style>
+<div class="modal fade" id="RoleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        @Html.ValidationSummary(false)
+        @using (
+            Html.BeginForm(
+                actionName: "AddRole", controllerName: "WebpageRoles", routeValues: new { }, method: FormMethod.Post, htmlAttributes: new { @id = "role-form", @class = "form-inline", @role = "form", @style = "width: 100%;" }
+            )
+        )
+        {
+            @Html.AntiForgeryToken()
+              
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">@strTitleForm</h4>
+                </div>
+                <div class="modal-body min-width">
+                    <div class="row form-group">
+                        <!-- Hide value -->
+                        @Html.HiddenFor(m => m.WEBPAGES_ROLES_ID)
+
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.DESCRIPTION, labelText: Localization.RoleModelDisplayNameRoleName, htmlAttributes: new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">*</span>
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.ROLES_NAME, new { @class = "form-control index _first input-sm", @placeholder = Localization.RoleModelDisplayNameRoleName, style = "width:400px;" })
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            @Html.ValidationMessageFor(m => m.ROLES_NAME)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.ABBREVIATION, labelText: Localization.RoleAbb, htmlAttributes: new { @class = "input-lable-control nowrap" })
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.ABBREVIATION, new { @class = "form-control index input-sm", @placeholder = Localization.RoleAbb, style = "width:400px;" })
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            @Html.ValidationMessageFor(m => m.ABBREVIATION)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.ISACTIVE, labelText: Localization.RoleModelDisplayIsActive, htmlAttributes: new { @class = "input-lable-control nowrap" })
+
+                        </div>
+                        <div class="col-md-10">
+                            @Html.CheckBoxFor(m => m.ISACTIVE, new { @checked = "checked" })
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.DESCRIPTION, labelText: Localization.CategoryDisplayDescription, htmlAttributes: new { @class = "input-lable-control nowrap" })
+
+                        </div>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.DESCRIPTION, new { @class = "form-control input-sm", @placeholder = Localization.CategoryDisplayDescription, style = "width:400px;" })
+                        </div>
+
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.LM_DEPARTMENT_ID, labelText: Localization.LabelDepartment, htmlAttributes: new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">*</span>
+
+                        </div>
+                         <div class="col-md-10">
+                            @Html.ValidationMessageFor(m => m.LM_DEPARTMENT_ID)
+                        </div>
+                        <div class="col-md-10">
+                            <div class="input-group" style="float: left; width:400px;">
+                                <input type="text" name="@Html.IdFor(m => m.LM_DEPARTMENT_ID)" id="@Html.IdFor(m => m.LM_DEPARTMENT_ID)"
+                                 data-id="@Html.ValueFor(m => m.LM_DEPARTMENT_ID)" data-name="@Html.ValueFor(m => m.LM_DEPARTMENT_NAME)" />
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer padding-all">
+                    <button type="submit" class="btn btn-primary min-width"><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+                    <button type="button" class="btn btn-primary min-width" data-dismiss="modal"><span class="glyphicon glyphicon-off"></span>@Localization.ButtonCloseDisplay</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    $(document).ready(function () {
+        setTimeout(function () { $('._first').focus(); }, 500);
+        var $roleForm = $("#role-form");
+        $roleForm.submit(function (event) {
+            var departmentId = $('#LM_DEPARTMENT_ID').val();
+            var lableError = $('.field-validation-valid[data-valmsg-for="LM_DEPARTMENT_ID"]');
+            if (departmentId == "0" || departmentId == "") {
+                lableError.css('color', 'red');
+                lableError.text("Phải chọn đơn vị");
+                return false;
+            } else {
+                lableError.text("");
+                event.preventDefault();
+                if ($roleForm.valid()) {
+                    $.ajax({
+                        type: "POST",
+                        url: $roleForm.attr('action'),
+                        data: $roleForm.serialize(),
+                        dataType: '',//chú ý là form đặc biệt thì phải điền trường này
+                        success: function(response) {
+                            if (response != null && response.status == 200) {
+                                $('#RoleModal').modal('hide');
+                                //location.reload();
+                                var $role_list = $('#role-list');
+                                if ($role_list == null || $role_list.length == 0) {
+                                    alert('@@LTV: để tải lại được danh sách role, div chứa cần có id là "role-list"');
+                                } else {
+                                    $role_list.html('');
+                                    $role_list.load('/Admin/ManageRoles' + jQuery.browser.msie ? '?nocache=' + Math.random() : '');
+                                }
+                                window.notice(response.result, window.notice_success);
+                            } else {
+                                window.notice(response.result, window.notice_error);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        
+        $("#treedepartment").treeview({
+            persist: "location",
+            collapsed: true,
+            unique: true
+        });
+        
+        $("#Department").mouseleave(function () {
+            HideDepartment();
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    function ShowDepartment() {
+        var divDepartment = $('#Department');
+        var input = $('#dropdown');
+        var offset = input.offset();
+        divDepartment.css('top', (offset.top + input.height() + 55) + 'px').css('left', (offset.left + 25) + 'px');
+        divDepartment.css('display', 'inline');
+        divDepartment.css('width', $('#dropdown').width() + 'px');
+        divDepartment.css('display', 'inline');
+    }
+
+    function HideDepartment() {
+        var divDepartment = $('#Department');
+        divDepartment.css('display', 'none');
+    }
+
+    function SelectDepartment(name, id) {
+        $("#dropdown").val(name);
+        $("#LM_DEPARTMENT_ID").val(id);
+        HideDepartment();
+    }
+
+    $('#LM_DEPARTMENT_ID').Department(
+      {
+          defaultDisplay: '-- Chọn --'
+      });
+
+</script>

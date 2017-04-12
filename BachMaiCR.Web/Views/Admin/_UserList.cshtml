@@ -1,0 +1,317 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.DBMapping.ModelsExt
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.Utilities.Entity
+@using BachMaiCR.Web.Common
+@{
+
+    var pagNar = ViewBag.Pagination as Pagination;
+    var lstItem = ViewBag.Users as List<ADMIN_USER>;
+    var lstAction = ViewBag.Actions as List<string>;
+    var user = User.Identity.Name;
+    if (user == null)
+    {
+        user = "";
+    }
+    user = user.ToLower();
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+    if (lstAction == null)
+    {
+        lstAction = new List<string>();
+    }
+    bool enableEditPermission = lstAction.Contains(WebConst.ACTION_USER_UPDATEPER_CODE);
+    bool enableActive = lstAction.Contains(WebConst.ACTION_USER_ACTIVE_CODE);
+    bool enableAddUser = lstAction.Contains(WebConst.ACTION_USER_ADD_CODE);
+    bool enableDelete = lstAction.Contains(WebConst.ACTION_USER_DELETE_CODE);
+    bool enableResetPass = lstAction.Contains(WebConst.ACTION_USER_RESETPASS_CODE);
+    bool isAdmin = user == WebConst.DefaultAdminAccount.ToLower();
+}
+
+<style>
+    .width30 {
+        width: 30px;
+        line-height: 30px;
+    }
+
+    .width60 {
+        width: 60px;
+        line-height: 30px;
+    }
+
+    .width80 {
+        width: 80px;
+        line-height: 30px;
+    }
+
+    .width120 {
+        width: 120px;
+        line-height: 30px;
+    }
+</style>
+
+
+
+<div class="page-content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+    }
+    else
+    {
+        <table>
+            <tr>
+                <th class="Table-title">Danh sách người dùng</th>
+
+            </tr>
+        </table>
+        <table class="tbl">
+            <tr>
+                <th style="width:3%">@Localization.ListItem</th>
+                <th style="width:10%">Tài khoản</th>
+                <th style="width:13%">Họ tên</th>
+                <th style="width:18%">Đơn vị </th>
+                <th style="width:10%">Thư điện tử</th>
+                <th style="width:10%">Điện thoại </th>
+                @if (isAdmin || enableActive)
+                {
+                    <th style="width:10%">Hoạt động</th>
+                }
+                @if (isAdmin || enableEditPermission)
+                {
+                    <th style="width:10%">Phân quyền</th>
+                }
+
+                @if (isAdmin || enableResetPass)
+                {
+                    <th style="width:10%">Cấp lại mật khẩu</th>
+                }
+                @if (isAdmin || enableDelete)
+                {
+                    <th style="width:3%">@Localization.ListDelete</th>
+                }
+                @if (isAdmin || enableAddUser)
+                {
+                    <th style="width:3%">@Localization.ListEdit</th>
+                }
+            </tr>
+            <tbody id="ctg_content_body">
+                @for (int i = 0; i < lstItem.Count; i++)
+                {
+                    <tr>
+                        <td style="text-align: center;">@(i + 1 + startIndex)</td>
+                        <td style="text-align: left;">@lstItem[i].USERNAME</td>
+                        <td style="text-align: left;">@lstItem[i].FULLNAME</td>
+                        <td style="text-align: left;">
+                            @if (lstItem[i].LM_DEPARTMENT_ID != null)
+                            {
+                                @lstItem[i].LM_DEPARTMENT.DEPARTMENT_CODE
+                            }
+
+                        </td>
+                        <td style="text-align: left;">@lstItem[i].MAIL</td>
+                        <td style="text-align: left;">@lstItem[i].PHONE</td>
+                        @if (isAdmin || (lstItem[i].USERNAME.ToLower() != user && enableActive))
+                        {
+                            <td style="text-align: center;">
+                                @if (lstItem[i].ISACTIVED.Equalstrue)
+                                {
+                                    <input class='change-active' type='checkbox' checked value='@lstItem[i].ADMIN_USER_ID' />
+                                }
+                                else
+                                {
+                                    <input class='change-active' type='checkbox' value='@lstItem[i].ADMIN_USER_ID' />
+                                }
+                            </td>
+                        }
+                        else if ((lstItem[i].USERNAME.ToLower() == user && enableActive))
+                        {
+                            <td style="text-align: center;"></td>
+                        }
+
+                        @if (isAdmin || (lstItem[i].USERNAME.ToLower() != user && enableEditPermission))
+                        {
+                            <td style="text-align: center;">
+                                <a title='Phân quyền' href='javascript:void(0)' class='user-config' data-id='@lstItem[i].ADMIN_USER_ID'>
+                                    <div class='glyphicon glyphicon-wrench'></div>
+                                </a>
+                            </td>
+                        }
+                        else if ((lstItem[i].USERNAME.ToLower() == user && enableEditPermission))
+                        {
+                            <td style="text-align: center; "></td>
+                        }
+
+                        @if (isAdmin || (lstItem[i].USERNAME.ToLower() != user && enableResetPass))
+                        {
+                            <td style="text-align: center;">
+                                <a title='Cấp lại mật khẩu' href='javascript:void(0)' class='reset-pass' data-id='@lstItem[i].ADMIN_USER_ID'>
+                                    <div class='glyphicon glyphicon-refresh'></div>
+                                </a>
+                            </td>
+                        }
+                        else if ((lstItem[i].USERNAME.ToLower() == user && enableResetPass))
+                        {
+                            <td style="text-align: center;"></td>
+                        }
+
+                        @if (isAdmin || (lstItem[i].USERNAME.ToLower() != user && enableDelete))
+                        {
+                            <td style="text-align: center;">
+                                <a title='Xóa người dùng' data-toggle='confirmation' href='javascript:void(0)' class='user-delete' data-id='@lstItem[i].ADMIN_USER_ID'>
+                                    <div class='glyphicon glyphicon-trash'></div>
+                                </a>
+                            </td>
+                        }
+                        else if ((lstItem[i].USERNAME.ToLower() == user && enableDelete))
+                        {
+                            <td style="text-align: center;"></td>
+                        }
+
+                        @if (isAdmin || (lstItem[i].USERNAME.ToLower() != user && enableAddUser))
+                        {
+                            <td style="text-align: center;">
+                                <a title='Sửa thông tin' href='javascript:void(0)' class='user-edit' data-id='@lstItem[i].ADMIN_USER_ID'>
+                                    <div class='glyphicon glyphicon-edit'></div>
+                                </a>
+                            </td>
+                        }
+                        else if ((lstItem[i].USERNAME.ToLower() == user && enableAddUser))
+                        {
+                            <td style="text-align: center;"></td>
+                        }
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationView", pagNar)
+    }
+</div>
+<div id="navigate_bottom_panel" class="nav-bottom ">
+</div>
+
+
+
+<script type="text/javascript">
+
+
+    function OnCriteria(pageIndex) {
+        var ctrSearch = $('#input-search');
+        var ctrdepartmentId = $('#input-deparment').val();
+        if (ctrdepartmentId == null || ctrdepartmentId == "") {
+            ctrdepartmentId = 0;
+        }
+        ctrSearch = ctrSearch != null ? ctrSearch.val().trim() : "";
+        $.ajax({
+            type: "GET",
+            url: '/@pagNar.ModelName/@pagNar.ActionName',
+            data: { key: ctrSearch, departmentId: ctrdepartmentId, pageIndex: pageIndex },
+            success: function (response) {
+                var $catlist = $('@pagNar.TagetReLoadId');
+                if ($catlist == null || $catlist.length == 0) {
+                    window.notice('@Resources.Localization.MsgItemNotFound', window.notice_error);
+                }
+                else {
+                    $catlist.html(response);
+                }
+            }
+        });
+        setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+    }
+
+
+    $(document).ready(function () {
+        $('a').tipsy();
+
+        $("table.tbl-user-list").colResizable({
+            headerOnly: true,
+            defaultWith: ["auto", "auto", "auto", "auto", "60px", '30px', '30px', '30px']
+        });
+
+        $('.user-config').bind('click', function (event) {
+            var $self = $(this);
+            //thay doi giao dien
+            var $table = $self.parents('table');
+            var $all_tr = $table.find('tr');
+            $all_tr.css(
+                {
+                    'background-color': 'transparent'
+                });
+            var $tr = $self.parents('tr');
+            //$tr.css('background-color', '#FAC58F');
+
+            $.get('/users/configuser', { userId: $self.attr('data-id') }, function (response) {
+                var $userlist = $('.content');
+                $('.tipsy-n').css('display', 'none');
+                $userlist.html(response);
+                //$userlist.html($tr.find('td').first().html());//.css('background-color', '#FAC58F');
+
+            });
+        });
+
+
+        $('.change-active').bind('change', function (event) {
+            var $self = $(this);
+            $.post('/users/ActiveChage', { userId: $self.val(), active: $self.is(":checked") == true }, function (response) {
+                if (response.status == 200) {
+                    window.notice(response.result, window.notice_success);
+                }
+                else {
+                    window.notice(response.result, window.notice_error);
+                }
+            });
+        });
+
+        $('.user-edit').bind('click', function (event) {
+            var $self = $(this);
+            $.get('/Users/AddUser', { userId: $self.attr('data-id') }, function (data) {
+                var $userModel = $('#user-model-container');
+                $userModel.html(data);
+                $('#UserModal').modal({
+                    keyboard: true
+                });
+            });
+        });
+
+        $('.reset-pass').bind('click', function (event) {
+            var $self = $(this);
+            $.get('/Users/ResetPass', { userId: $self.attr('data-id') }, function (data) {
+                var $userModel = $('#resetpass-model-container');
+                $userModel.html(data);
+                $('#ResetPassModal').modal({
+                    keyboard: true
+                });
+            });
+        });
+
+        $('.user-delete').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'btnOkClass': 'btn-danger',
+                'title': '@Resources.Localization.MsgConfirmDisplayDel',
+                'yesButtonTitle': 'Xóa',
+                'cancelButtonTitle': 'Không xóa',
+                onComplete: function (e) {
+                    $.post('/Users/Delete', { userId: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            OnCriteria(0);
+                            window.notice(response.result, window.notice_success);
+                        }
+                        else {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                    //alert(0);
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,34 @@
+﻿@model BachMaiCR.DBMapping.Models.DOCTOR
+@using BachMaiCR.Web.Utils;
+@using Resources;
+<table style="width: 310px; " border="0">
+    <tr>
+        @{
+    var item = Model;
+    var scrImg = item.DOCTOR_IMAGE;
+    <td style="width: 100px;" class="viewdoctors">
+        <div style="padding:5px;">
+            <img id="avatarUser1" style="width:90px; height:100px;" src="@Utils.GetPathUserImage(scrImg)" alt="..." title="Chọn ảnh đại diện">
+        </div>
+    </td>
+}
+
+        <td style="vertical-align:top;">
+            <table style="width: 100%" border="0">
+                <tr>
+                    <td class="viewdoctors">
+                        <b>@Localization.LabelDoctorName:</b> @Html.DisplayFor(m => m.DOCTOR_NAME)<br />
+                        <b> @Localization.LabelEducation :</b> <span id="staff_education">@Html.DisplayFor(m => m.EDUCATION_NAMEs)</span><br />
+                        <b> @Localization.LabelPosition :</b> <span id="staff_position">@Html.DisplayFor(m => m.POSITION_NAMEs)</span><br />
+                        <b> @Localization.LabelPhone:</b> <span id="staff_phone">@Html.DisplayFor(m => m.PHONE)</span><br />
+                        <b> @Localization.LabelDepartment:</b> <span id="staff_phone">@Html.DisplayFor(m => m.LM_DEPARTMENT_NAMEs)</span>
+                    </td>
+                </tr>
+            </table>
+
+        </td>
+
+    </tr>
+</table>
+
+

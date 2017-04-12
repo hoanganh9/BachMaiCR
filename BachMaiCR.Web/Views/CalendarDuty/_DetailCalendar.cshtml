@@ -1,0 +1,221 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.Web.Common
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.Web.Utils;
+@using System.Data;
+@{
+    var times = ViewBag.times;
+    var title = ViewBag.title;
+    DateTime date = Utils.GetDateTime();
+    date = Convert.ToDateTime(times);
+    DataTable tbl = Utils.Fill(date);
+    string[] thu = { "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật" };
+    var columnx = "";
+    var listDoctor = ViewBag.doctors as List<DoctorCalendarLeader>;
+    string doctorName = "";
+    string doctorId = "", calendarDoctorId = "";
+}
+<style>
+    .title {
+        float: left;
+        color: #900000;
+        min-height: 25px;
+        font-size: 12px;
+    }
+
+    .tdfirt {
+        text-align: left;
+        width: 150px;
+        font-weight: bold;
+        vertical-align: top;
+        font-size: 12px;
+    }
+
+    .tdline {
+        text-align: left;
+        font-weight: bold;
+        vertical-align: top;
+        font-size: 12px;
+    }
+    .schedule-element {
+        min-width: 70px;
+        max-width: 100px;
+        height: 30px;
+        padding-top: 0px;
+    }
+    .tbl td:first-child {
+        text-align: left;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        $('#selectableNone').selectable({
+            filter: 'td.item-schedule',
+            stop: function (event, ui) {
+                $('#box_staff').fadeOut(50);
+                $('.ui-icon-closethick').click();
+            }
+        });
+        bmcr.tableUtils.setWidthColTable('selectableNone', 7);
+    });
+</script>
+<!-- Modal -->
+
+<div class="modal fade" id="viewEntityModel" tabindex="-1000" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">@Localization.LableDetailCalendar</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <div id="grid" class="page-content">
+                        <div style="font-weight:bold; margin-bottom:3px;">@title</div>
+                        <div style="max-height:700px; overflow:auto;">
+                            <table class="tbl" id="selectableNone">
+                                <tr>
+                                    @for (int i = 0; i < 7; i++)
+                                {
+                                        <th>@thu[i] </th>
+                                }
+
+                                </tr>
+                                @for (int j = 0; j < tbl.Rows.Count; j++)
+                            {
+                                DataRow dr = tbl.Rows[j];
+                                    <tr>
+
+                                        @for (int k = 0; k < 7; k++)
+                                    {
+                                        columnx = dr[k].ToString();
+                                        var columnId = "";
+                                        var id = columnx;
+                                        if (k == 5 || k == 6)
+                                        {
+                                            if (String.IsNullOrEmpty(columnx))
+                                            {
+                                                <td class="item-scheduleOld" id="@id">
+                                                    <div style="vertical-align: top; float: right;">@columnx</div>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                var css = "item-schedule";
+                                                if (Convert.ToInt32(columnx) == DateTime.Now.Day && DateTime.Now.Month == date.Month && DateTime.Now.Year == date.Year)
+                                                {
+                                                    css += " item-current";
+                                                }
+                                                DateTime dateX = Utils.ToDateTime(columnx + "/" + date.Month + "/" + date.Year, "dd/MM/yyyy");
+                                                columnId = String.Format("{0:dd/MM/yyyy}", dateX);
+                                                <td class="@css sundayCalendar" id="@id" style="vertical-align:top;">
+                                                    <span class="itemspan_@columnx" id="@columnId" style="float:right; font-weight:bold;">  @columnx</span>
+                                                    <br />
+                                                    @for (int tt = 0; tt < listDoctor.Count; tt++)
+                                                    {
+                                                        if (Convert.ToInt32(columnx) == Convert.ToDateTime(listDoctor[tt].DATE_START).Day)
+                                                        {
+                                                            doctorName = listDoctor[tt].ABBREVIATION;
+                                                            doctorId = Convert.ToString(listDoctor[tt].DOCTORS_ID);
+                                                            calendarDoctorId = id + "_" + doctorId;
+                                                            var divId = String.Format("{0:dd/MM/yyyy}", dateX) + "," + doctorId;
+                                                            <div class="schedule-element current-calendar" id="@divId">
+                                                                <a href="#" id="@calendarDoctorId" class="choseId">@doctorName</a>
+                                                            </div>
+                                                        }
+                                                    }
+
+                                                </td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (String.IsNullOrEmpty(columnx))
+                                            {
+                                                <td class="item-scheduleOld" id="@id" style="vertical-align:top;">
+                                                    <div style="vertical-align: top; float: right;">@columnx</div>
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                var css = "item-schedule";
+                                                if (Convert.ToInt32(columnx) == DateTime.Now.Day && DateTime.Now.Month == date.Month && DateTime.Now.Year == date.Year)
+                                                {
+                                                    css += " item-current";
+                                                }
+                                                DateTime dateX = Utils.ToDateTime(columnx + "/" + date.Month + "/" + date.Year, "dd/MM/yyyy");
+                                                columnId = String.Format("{0:dd/MM/yyyy}", dateX);
+                                                <td class="@css" id="@id" style="vertical-align:top;">
+                                                    <span class="itemspan_@columnx" id="@columnId" style="float:right; font-weight:bold;">  @columnx</span>
+                                                    <br />
+                                                    @for (int tt = 0; tt < listDoctor.Count; tt++)
+                                                    {
+                                                        if (Convert.ToInt32(columnx) == Convert.ToDateTime(listDoctor[tt].DATE_START).Day)
+                                                        {
+                                                            doctorName = listDoctor[tt].ABBREVIATION;
+                                                            doctorId = Convert.ToString(listDoctor[tt].DOCTORS_ID);
+                                                            calendarDoctorId = id + "_" + doctorId;
+                                                            var divId = String.Format("{0:dd/MM/yyyy}", dateX) + "," + doctorId;
+                                                            <div class="schedule-element current-calendar" id="@divId">
+                                                                <a href="#" id="@calendarDoctorId" class="choseId">@doctorName</a>
+                                                            </div>
+                                                        }
+                                                    }
+                                                </td>
+                                            }
+                                        }
+
+                                    }
+                                    </tr>
+                            }
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="box_staff"  style="display: none">
+</div>
+<link type="text/css" href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.24.js"></script>
+<script type="text/javascript">
+
+    // Hiển thị thông tin cá nhân của bác sĩ trực
+    $("#" + $('#selectableNone').attr('id')).delegate(" td.item-schedule .schedule-element a", "click", function (e) {
+        //Cập nhật lại tên bác sĩ theo vị trí Click
+        $('#box_staff #staff_name').text($(e.currentTarget).text().trim());
+        var x = e.clientX;
+        var y = e.clientY;
+        var idparent = $(this).attr('id');
+        var res = $(this).attr('id').split("_");
+        var idparent = res[1];
+        if (idparent != null) {          
+            $("#box_staff").dialog({
+                title: 'Chi tiết thông tin cán bộ',
+                modal: true,
+                height: 'auto',
+                width: 340,
+                resizable: false,
+                draggable: true,
+                position: [x, y],
+                close: function () {
+                    $("#box_staff").css('display', 'none');
+                }
+            }).load("/CalendarDuty/GetInforDoctor/?idDoctor=" + idparent + "");
+            $("#box_staff").removeClass("ui-dialog-content");
+            $("#box_staff").fadeIn(50);
+            $(".ui-dialog").css('z-index', 9999); 
+            $("#ui-dialog-title-box_staff").css("margin-top", "-5px");
+            $(".ui-widget-overlay").remove();
+        }
+    });
+</script>
+

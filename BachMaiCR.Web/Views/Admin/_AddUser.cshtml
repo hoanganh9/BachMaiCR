@@ -1,0 +1,515 @@
+﻿@{
+    ViewBag.Title = "_AddUser";
+}
+@using Resources
+@model BachMaiCR.Web.Models.UserModel
+
+<link href="~/Content/jquery.treeview.css" rel="stylesheet" />
+<link href="~/Content/gpcp-department.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.cookie.js"></script>
+<script src="~/Scripts/jquery.treeview.js"></script>
+<script src="~/Scripts/gpcp-department.js"></script>
+<script src="~/Scripts/bootstrap.js"></script>
+<script type="text/javascript">
+    $(document).ready(function (e) {
+      
+        $("#DOCTORS_ID").attr("data-live-search", "true");
+        $('#DOCTORS_ID').selectpicker({
+            size: 10
+        });
+        
+    });
+
+</script>
+<style>
+    .Validation_Error
+    {
+        margin-left: 120px;
+    }
+
+    .TopDivs
+    {
+        clear: both;
+        vertical-align: top;
+        text-align: left;
+        margin-bottom: 5px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight: 100;
+    }
+
+    .modal-title
+    {
+        margin: 0;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .modal-header
+    {
+        padding: 5px 10px 10px;
+    }
+
+    .modal-footer
+    {
+        padding: 5px 10px 10px;
+        margin-top: 5px;
+        text-align: center;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    .modal-body
+    {
+        position: relative;
+        padding: 5px 10px 0px 10px;
+    }
+
+    .form-group
+    {
+        margin-bottom: 5px;
+    }
+
+    .modal-dialog
+    {
+        width: 430px;
+    }
+
+    .department_dialog
+    {
+        display: none;
+        position: fixed;
+        /*width: 380px;
+            height: 200px;*/
+        /*top: 50%;
+            left: 50%;*/
+        margin-left: -190px;
+        margin-top: -100px;
+        background-color: #ffffff;
+        border: 1px solid #C4C4C4; /*1px solid rgba(0, 0, 0, 0.2); 1px solid #336699;*/
+        padding: 0px;
+        box-shadow: 0 0 8px #D9D9D9;
+        z-index: 1060 !important;
+        font-family: Verdana;
+        font-size: 10pt;
+        border-radius: 6px;
+    }
+
+    .department_hearder
+    {
+        float: left;
+        width: 100%;
+        background: #e5e5e5;
+        padding-left: 5px;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        height: 25px;
+    }
+
+    .department_body
+    {
+        float: left;
+        overflow-x: hidden;
+        padding-left: 5px;
+        overflow-y: auto;
+        height: auto;
+        max-height: 200px;
+        width: 100%;
+    }
+</style>
+
+
+@{
+    var lstDoctor = ViewBag.ListDoctor as List<SelectListItem>;
+    var lstUrl = ViewBag.ListUrlMenu as List<SelectListItem>;
+    var departmentId = Model.DOCTORS_ID == null ? 0 : (int)Model.DOCTORS_ID;
+}
+
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg" id="UserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                @if (Model != null && Model.ADMIN_USER_ID > 0)
+                {
+                    <h4 class="modal-title" id="myModalLabel">Cập nhật người dùng</h4>
+                }
+                else
+                {
+                    <h4 class="modal-title" id="myModalLabel">Thêm mới người dùng</h4>
+                }
+            </div>
+
+            @Html.ValidationSummary(false)
+            @using (
+                Html.BeginForm(
+                    actionName: "AddUser", controllerName: "Users", routeValues: new { }, method: FormMethod.Post, htmlAttributes: new { @id = "user-form", @class = "form-inline", @role = "form", @style = "width: 100%;" }
+                    )
+                )
+            {
+                <div class="modal-body min-width">
+                    <div class="form-group">
+
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.ADMIN_USER_ID)
+                        <input type="hidden" value='@departmentId'  id="doctorId"/>
+                        @if ((Model != null) && (Model.ADMIN_USER_ID == 0))
+                        {
+                            <div>
+                                @Html.LabelFor(m => m.USERNAME, new { @class = "labels", style = "width:100px;" })<span class="field-validation-error"> * </span>
+                                @Html.TextBoxFor(m => m.USERNAME, new { @class = "TextBoxContent", style = "width:260px", @placeholder = "" })
+                                @Html.ValidationMessageFor(m => m.USERNAME, null, new { @class = "Validation_Error" })
+                            </div>
+                            <div>
+                                @Html.LabelFor(m => m.FULLNAME, new { @class = "labels", style = "width:100px;" })<span class="field-validation-error"> * </span>
+                                @Html.TextBoxFor(m => m.FULLNAME, new { @class = "TextBoxContent", style = "width:260px", @placeholder = "" })
+                                @Html.ValidationMessageFor(m => m.FULLNAME, null, new { @class = "Validation_Error" })
+                            </div>
+                            <div>
+                                @Html.LabelFor(m => m.PASSWORD, new { @class = "labels", style = "width:100px;" })<span class="field-validation-error"> * </span>
+                                @Html.PasswordFor(m => m.PASSWORD, new { @class = "TextBoxContent", style = "width:260px", @placeholder = "" })
+                                @Html.ValidationMessageFor(m => m.PASSWORD, null, new { @class = "Validation_Error" })
+                            </div>
+                            <div>
+                                @Html.LabelFor(m => m.ConfirmPassword, new { @class = "labels", style = "width:100px;" })<span class="field-validation-error"> * </span>
+                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "TextBoxContent", style = "width:260px", @placeholder = "" })
+                                @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "Validation_Error" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                @Html.LabelFor(m => m.USERNAME, new { @class = "labels", style = "width:110px;" })
+                                <span style="font-weight: bold">
+                                    @Model.USERNAME
+                                </span>
+                            </div>
+                            <div>
+                                @Html.LabelFor(m => m.FULLNAME, new { @class = "labels", style = "width:100px;" })<span class="field-validation-error"> * </span>
+                                @Html.TextBoxFor(m => m.FULLNAME, htmlAttributes: new { @class = "TextBoxContent", style = "width:260px", @placeholder = "" })
+                                @Html.ValidationMessageFor(m => m.FULLNAME, null, new { @class = "Validation_Error" })
+                            </div>
+                        }
+                        <div>
+                            @Html.LabelFor(m => m.MAIL, new { @class = "labels", style = "width:110px;" })
+                            @Html.TextBoxFor(m => m.MAIL, htmlAttributes: new { @class = "TextBoxContent", style = "width:260px", @placeholder = "" })
+                            @Html.ValidationMessageFor(m => m.MAIL, null, new { @class = "Validation_Error" })
+                        </div>
+                        <div>
+                            @Html.LabelFor(m => m.PHONE, new { @class = "labels", style = "width:110px;" })
+                            @Html.TextBoxFor(m => m.PHONE, htmlAttributes: new { @class = "TextBoxContent", style = "width:260px", @placeholder = "", autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.PHONE, null, new { @class = "Validation_Error" })
+                        </div>
+                        <div>
+                            <div class="input-group">
+                                @Html.LabelFor(m => m.LM_DEPARTMENT_ID, new { @class = "labels", style = "width:100px;" })<span class="field-validation-error"> * </span>
+                                <div style="width: 260px; float: right; margin-right: 32px;">
+                                    <input type="text" name="@Html.IdFor(m => m.LM_DEPARTMENT_ID)" id="@Html.IdFor(m => m.LM_DEPARTMENT_ID)" data-id="@Html.ValueFor(m => m.LM_DEPARTMENT_ID)" data-name="@Html.ValueFor(m => m.LM_DEPARTMENT_NAME)" />
+                                </div>
+                                <span data-valmsg-replace="true" data-valmsg-for="LM_DEPARTMENT_ID" class="Validation_Error field-validation-valid" style="color: red;"></span>
+                            </div>
+                        </div>
+                        <div>
+                            @Html.LabelFor(m => m.DOCTORS_ID, new { @class = "labels", style = "width:110px;" })                        
+                            @Html.DropDownListFor(m => m.DOCTORS_ID, lstDoctor, new { @class = "form-control dropdown-toggle selectpicker btn-sm", data_width = "260px" })
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+                        <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><span class="glyphicon glyphicon-off"></span>@Localization.ButtonCloseDisplay</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div id="overlay" class="web_dialog_overlay"></div>
+@Scripts.Render("~/bundles/jqueryval")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $submitUserForm = $('#user-form');
+        setTimeout(function () { $submitUserForm.find('input:text:visible:first').focus(); }, 500);
+        function checklength() {
+            var lableError = $('.field-validation-valid[data-valmsg-for="PASSWORD"]');
+            lableError.css('color', 'red');
+            if ($("#PASSWORD").val().length >= 6 && $("#PASSWORD").val().length <= 100) {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text("Mật khẩu phải lớn hơn 6 ký tự và nhỏ hơn 100 ký tự ");
+                return false;
+            }
+        }
+        function confirmPassword() {
+            var lableError = $('.field-validation-valid[data-valmsg-for="ConfirmPassword"]');
+            lableError.css('color', 'red');
+            if ($("#ConfirmPassword").val() != $("#PASSWORD").val()) {
+                lableError.text("Mật khẩu xác nhận không đúng");
+                return false;
+            } else {
+                lableError.text("");
+                return true;
+            }
+        }
+        function checkstrongpassedit() {
+            var value = $("#PASSWORD").val();
+            var patt = /(?=^.{6,100}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@@#!$%^&*()_+}{:;'?/>.<,])(?!.*\s)/;
+            var lableError = $('.field-validation-valid[data-valmsg-for="PASSWORD"]');
+            lableError.css('color', 'red');
+            if (patt.test(value)) {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text("Mật khẩu chưa đủ mạnh");
+                return false;
+            }
+        }
+        function checkdepartment() {
+            var lableError = $('.field-validation-valid[data-valmsg-for="LM_DEPARTMENT_ID"]');
+            lableError.css('color', 'red');
+            var value = $("#LM_DEPARTMENT_ID").val();
+            if (value != null && value != "" && value != "0") {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text("Hãy chọn phòng ban !");
+                return false;
+            }
+        }
+        function checkphonenumber() {
+            var value = $("#PHONE").val().trim();
+            $("#PHONE").val(value);
+            var patt = /^\+?[0-9]{7,15}$/i;
+            var lableError = $('.field-validation-valid[data-valmsg-for="PHONE"]');
+            lableError.css('color', 'red');
+            if (value == null || value == "" || patt.test(value)) {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text("Số điện thoại không hợp lệ");
+                return false;
+            }
+        }
+        function checkmail() {
+            var value = $("#MAIL").val().trim();
+            $("#MAIL").val(value);
+            var patt = /^[+a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i;
+            var lableError = $('.field-validation-valid[data-valmsg-for="MAIL"]');
+            lableError.css('color', 'red');
+            if (value == null || value == "" || patt.test(value)) {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text("Địa chỉ mail không hợp lệ");
+                return false;
+            }
+        }
+        function checkUsername() {
+            var u = $('#ADMIN_USER_ID');
+
+            if (u.val() == null || u.val() == "0" || u.val() == "") {
+                var value = $("#USERNAME").val().trim();
+                var patt = /^[A-Za-z0-9_]+$/i;
+                var lableError = $('.field-validation-valid[data-valmsg-for="USERNAME"]');
+                lableError.css('color', 'red');
+                if (patt.test(value)) {
+                    lableError.text("");
+                    return true;
+                } else {
+                    lableError.text("Tên đăng nhập không hợp lệ");
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        }
+
+        function checkusernamenull() {
+            var value = $("#USERNAME").val();
+            var lableError = $('.field-validation-valid[data-valmsg-for="USERNAME"]');
+            lableError.css('color', 'red');
+            if (value != null && value != "") {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text("Phải nhập tên đăng nhập");
+                return false;
+            }
+        }
+
+        $("#PHONE").on('change', function (e) {
+            checkphonenumber();
+        });
+
+        $("#USERNAME").off('change').on('change', function (e) {
+            if (checkusernamenull()) { checkUsername(); }
+        });
+
+        $("#MAIL").on('change', function (e) {
+            checkmail();
+        });
+
+        $("#PASSWORD").on('change', function (e) {
+            if (checklength()) {
+                checkstrongpassedit();
+            }
+        });
+
+        $("#ConfirmPassword").on('change', function (e) {
+            confirmPassword();
+        });
+
+        $("#Department").mouseleave(function () {
+            HideDepartment();
+        });
+
+        $("#treedepartment").treeview({
+            persist: "location",
+            collapsed: true,
+            unique: true
+        });
+
+        var $userForm = $("#user-form");
+        $userForm.submit(function (event) {
+            event.preventDefault();
+            var u = $('#ADMIN_USER_ID');
+            var checkForm = true;
+            if (u.val() == null || u.val() == "0" || u.val() == "") {
+                if (!checklength()) {
+                    checkForm = false;
+                }
+                if (!checkstrongpassedit()) {
+                    checkForm = false;
+                }
+                if (!confirmPassword()) {
+                    checkForm = false;
+                }
+                if (!checkusernamenull()) {
+                    checkForm = false;
+                }
+            }
+            //if (!checkphonenumber()) {
+            //    checkForm = false;
+            //}
+            if (!checkdepartment()) {
+                checkForm = false;
+            }
+            if (!checkmail()) {
+                checkForm = false;
+            }
+            if (checkForm && $userForm.valid()) {
+                if (checkUsername()) {
+                    $.ajax({
+                        type: "POST",
+                        url: $userForm.attr('action'),
+                        data: $userForm.serialize(),
+                        dataType: '',//chú ý là form đặc biệt thì phải điền trường này
+                        success: function (response) {
+                            if (response != null && response.status == 200) {
+                                $('#UserModal').modal('hide');
+                                var $userList = $('#user-list');
+                                if ($userList == null || $userList.length == 0) {
+                                    alert('@@LTV: để tải lại được danh sách role, div chứa cần có id là "user-list"');
+                                } else {
+                                    $userList.html('');
+                                    $userList.load('/Admin/ManageUsers' + jQuery.browser.msie ? '?nocache=' + Math.random() : '');
+                                }
+                                window.notice(response.result, window.notice_success);
+                            } else {
+                                window.notice(response.result, window.notice_error);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        $('#LM_DEPARTMENT_ID').change(function (e) {
+            var dpId = $(this).val();
+            var docId = $('#doctorId').val();
+            $.getJSON('/Users/GetDoctor', { departmentId: dpId, currentDoctorId: docId }, function (data) {
+                var result = '';
+                for (var i = 0, iL = data.length; i < iL; i++) {
+                    if (data[i].Selected == true) {
+                        result += '<option value="' + data[i].Value + '" selected = "selected"  >' + data[i].Text + '</option>';
+                    } else {
+
+                        result += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                    }
+                }               
+                //$('#DOCTORS_ID').find("option").remove();
+                $("#DOCTORS_ID").html(result);
+                $('#DOCTORS_ID').selectpicker('refresh');
+            });
+        });
+        
+        $("#DOCTORS_ID").change(function () {
+            var docId = this.value;
+            $.getJSON('/Users/GetDoctorInfo', { doctorId: docId}, function (data) {
+                var result = '';
+                var email = "";
+                var phone = "";
+                for(code in data) {
+                    email = data["email"];
+                    phone = data["phone"];
+                }
+                if(email!=null && email!="") {
+                    $('#MAIL').val(email);
+                }
+                if (phone != null && phone != "") {
+                    $('#PHONE').val(phone);
+                }
+                //console.log(data);
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    function ShowDepartment() {
+        var divDepartment = $('#Department');
+        var input = $('#dropdown');
+        var offset = input.offset();
+        divDepartment.css('top', (offset.top + input.height() + 55) + 'px').css('left', (offset.left + 25) + 'px');
+        divDepartment.css('display', 'inline');
+        divDepartment.css('width', $('#dropdown').width() + 'px');
+        divDepartment.css('display', 'inline');
+    }
+
+    function HideDepartment() {
+        var divDepartment = $('#Department');
+        divDepartment.css('display', 'none');
+    }
+
+    function SelectDepartment(name, id, doctorId) {
+        $.getJSON('/Users/GetDoctor', { departmentId: id, currentDoctorId: doctorId }, function (data) {
+            var result = '';
+            for (var i = 0, iL = data.length; i < iL; i++) {
+                if (data[i].Selected == true) {
+                    result += '<option value="' + data[i].Value + '" selected = "selected"  >' + data[i].Text + '</option>';
+                } else {
+
+                    result += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                }
+            }
+          //  $('#DOCTORS_ID').find("option").remove();
+            $("#DOCTORS_ID").html(result);
+            $('#DOCTORS_ID').selectpicker('refresh');
+        });
+
+        $("#dropdown").val(name);
+        $("#LM_DEPARTMENT_ID").val(id);
+        HideDepartment();
+    }
+
+    $('#LM_DEPARTMENT_ID').Department(
+       {
+           defaultDisplay: '-- Chọn --'
+       });
+
+
+</script>

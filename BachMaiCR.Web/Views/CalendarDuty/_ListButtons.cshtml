@@ -1,0 +1,366 @@
+﻿@using BachMaiCR.DBMapping.Models;
+@using Resources
+@using BachMaiCR.Web.Common
+@{
+
+    var lstAction = ViewBag.ActionPermission as List<string>;
+    bool enableSave = false;
+    bool enableSend = false;
+    bool enableApproved = false;
+    bool enableCancel = false;
+    bool enableImport = false;
+    bool enableExport = false;
+    bool enableHistory = false;
+
+    enableSave = lstAction.Contains(WebConst.ACTION_INSERT_CALENDAR_DUTY_CODE);
+    enableSend = lstAction.Contains(WebConst.ACTION_SEND_CALENDAR_DUTY_CODE);
+    enableApproved = lstAction.Contains(WebConst.ACTION_APPROVED_CALENDAR_DUTY_CODE);
+    enableCancel = lstAction.Contains(WebConst.ACTION_CANCEL_CALENDAR_DUTY_CODE);
+    enableImport = lstAction.Contains(WebConst.ACTION_IMPORT_EXCEL_CALENDAR_DUTY_NAME);
+    enableExport = lstAction.Contains(WebConst.ACTION_EXPORT_EXCEL_CALENDAR_DUTY_CODE);
+    enableHistory = lstAction.Contains(WebConst.ACTION_HISTORY_EXCEL_CALENDAR_DUTY_CODE);
+
+
+    var objCalendarDuty1 = ViewBag.objCalendarDuty as CALENDAR_DUTY;
+    int? templateId = 0;
+    int idCalendarDuty = 0;
+    int isApproved = 0;
+    if (objCalendarDuty1 != null)
+    {
+        templateId = objCalendarDuty1.TEMPLATES_ID;
+        idCalendarDuty = objCalendarDuty1.CALENDAR_DUTY_ID;
+        isApproved = objCalendarDuty1.ISAPPROVED;
+    }
+}
+<span class="input-group-btn">
+
+
+    <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("Index", "CalendarDuty")'">
+        <span class="glyphicon glyphicon-step-backward"></span>
+        @Localization.PageBack
+    </button>
+
+    @if (((objCalendarDuty1.CALENDAR_STATUS == 1) || (objCalendarDuty1.CALENDAR_STATUS == 4)) && (enableSave))
+    {
+
+        <button style="margin-left: 10px;" class="btn btn-primary btn-sm" id="saveCalendar" onclick="saveCalendar()" type="button">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            @Localization.ButtonSaveDuty
+        </button>
+    }
+    @if (((objCalendarDuty1.CALENDAR_STATUS < 2) || (objCalendarDuty1.CALENDAR_STATUS > 3)) && (enableSend))
+    {
+        <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonSendApproved" onclick="SendCalendar()">   <span class="glyphicon glyphicon-arrow-up"></span> @Localization.ButtonSendApproved</button>
+    }
+    @if (((objCalendarDuty1.CALENDAR_STATUS == 3) && (DateTime.Now.Hour >= 8) && (DateTime.Now.Hour <= 22)) && (enableCancel))
+    {
+        <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonCancelApproved" onclick="CancelCalendar()">   <span class="glyphicon glyphicon-arrow-down"></span> @Localization.ButtonCancelApproved</button>
+    }
+    @if ((objCalendarDuty1.CALENDAR_STATUS == 2) && (enableApproved))
+    {
+        <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonApprovedTemptDisplay" onclick="ApprovedCalendar()">   <span class="glyphicon glyphicon-check"></span> @Localization.ButtonApprovedTemptDisplay</button>
+    }
+    @if (enableImport)
+    {
+        <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonInputExcel" onclick="location.href='@Url.Action("AddCalendarDuty", "CalendarDuty")'">   <span class="glyphicon glyphicon-folder-open"></span> &nbsp; @Localization.ButtonInputExcel</button>
+    }
+    @if (enableExport)
+    {
+        <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonExportExcel" onclick="return ExportExcel();"><span class="glyphicon glyphicon-folder-open"></span>&nbsp; @Localization.ButtonExportExcel</button>
+
+    }
+    @if (isApproved == 1)
+    {
+        <button type="button" style="margin-left: 10px;" class="btn btn-primary btn-sm" value="@Localization.ButtonHistoryCalendar" onclick="return hisCalendar();">   <span class="glyphicon glyphicon-file"></span> @Localization.ButtonHistoryCalendar</button>
+    }
+</span>
+
+
+@{
+    if ((objCalendarDuty1.CALENDAR_STATUS == 3) || (objCalendarDuty1.CALENDAR_STATUS == 2))
+    {
+        if (templateId != 0 && templateId != null)
+        {
+            <script type="text/javascript">
+
+                //Thực hiện mở cửa sổ thêm mới danh sách bác sĩ
+                //Danh sách mảng id bác sĩ sẽ được chuyền qua biến arrayid vào controller
+                $("#" + $('#selectable').attr('id')).undelegate(" td.ui-selected", "dblclick");
+                $(document).ready(function (e) {
+
+                    $(document).delegate(".schedule-elementDelete", "hover", function (event) {
+                        if (event.type == 'mouseenter') {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        } else {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        }
+                    });
+
+
+                    $(document).delegate(".schedule-element-NewX", "hover", function (event) {
+                        if (event.type == 'mouseenter') {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        } else {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        }
+                    });
+
+
+                    $(document).delegate(".schedule-elementView", "hover", function (event) {
+                        if (event.type == 'mouseenter') {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        } else {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        }
+                    });
+
+                    $(document).delegate(".schedule-elementChangeOne", "hover", function (event) {
+                        if (event.type == 'mouseenter') {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        } else {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        }
+                    });
+
+                    $(document).delegate(".schedule-elementChangeTwo", "hover", function (event) {
+                        if (event.type == 'mouseenter') {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        } else {
+                            $(this).find(".element-close").fadeOut(0);
+                            $(this).find(".element-change").fadeOut(0);
+                        }
+                    });
+
+                })
+
+            </script>
+        }
+        else
+        {
+            <script type="text/javascript">   
+           
+                //Đoạn script áp dụng cho lịch mặc định
+                $(document).delegate(".schedule-element", "hover", function (event) {                   
+                    if (event.type == 'mouseenter') {
+                        $(this).find(".element-close").fadeOut(0);
+                        $(this).find(".element-change").fadeOut(0);
+
+                    } else {
+                        $(this).find(".element-close").fadeOut(0);
+                        $(this).find(".element-change").fadeOut(0);
+
+                    }
+                });
+            </script>
+        }
+    }
+    else
+    {
+        if (templateId != 0 && templateId != null)
+        {
+
+            <script type="text/javascript">
+
+                //Thực hiện mở cửa sổ thêm mới danh sách bác sĩ
+                //Danh sách mảng id bác sĩ sẽ được chuyền qua biến arrayid vào controller
+                $("#" + $('#selectable').attr('id')).delegate(" td.ui-selected", "dblclick", function (e) {
+
+                    var x = e.clientX;
+                    var y = e.clientY;
+                    var optionTexts = "";
+                    var arrayView = "";
+                    var ii = 0;
+                    var jj = 0;
+                    var idColumn = $(this).attr('id');
+                    $('.ui-selected').find('.viewInfor').each(function () {
+                        if ($(this).parent('.schedule-elementDelete').attr('data-isDelete') != 1) {
+                            ii++;
+                            if (ii == 1) {
+                                optionTexts = $(this).attr('id');
+                            }
+                            else {
+                                optionTexts = optionTexts + "_" + $(this).attr('id');
+                            }
+                        }
+                        if ($(this).attr('data-viewX') == 1) {
+                            jj++;
+                            if (jj == 1) {
+                                arrayView = $(this).attr('id');
+                            }
+                            else {
+                                arrayView = arrayView + "_" + $(this).attr('id');
+                            }
+                        }
+                    })
+                    $("#popupStaff").empty();
+                    $("#popupStaff").dialog({
+                        title: 'Danh sách cán bộ',
+                        modal: true,
+                        position: [x, y],
+                        width: 540,
+                        height: 290,
+                        resizable: false,
+                        draggable: false,
+                    }).load("/CalendarDuty/ListDoctors/?arrayid=" + optionTexts + "&arrayView=" + arrayView + "&idColumn=" + idColumn + "&idTemplate=" + '@templateId');
+                    $("#popupStaff").removeClass("ui-dialog-content ui-widget-content");
+                    $("#btnSearch").remove();
+                    $('#popupStaff').after('<input value="" id="btnSearch" style="height: 22px; width: 200px; font-size: 11px; color: black; font-weight: normal; top:4px; position: absolute; right: 35px;" placeholder="Tìm cán bộ"/>');
+                    $('#btnSearch').val('');
+                    $('#btnSearch').live('keyup', function () {
+                        searchTable($(this).val());
+                    });
+                });
+
+                //Hàm tìm kiếm trên table
+                function searchTable(inputVal) {
+                    var count = 0;
+                    var table = $('#table_list_staff');
+                    table.find('tr').each(function (index, row) {
+                        var allCells = $(row).find('td');
+                        if (allCells.length > 0) {
+                            var found = false;
+                            allCells.each(function (index, td) {
+                                var regExp = new RegExp(inputVal.trim(), 'i');
+                                if (regExp.test($(td).text())) {
+                                    found = true;
+                                    count++;
+                                    return false;
+                                }
+                            });
+                            if (found == true) $(row).show(); else $(row).hide();
+                        }
+                    });
+                    if (parseFloat(count) > 7) {
+                        $('.checkboxId').addClass("marginp");
+                    }
+                    else {
+                        $('.checkboxId').removeClass("marginp");
+                    }
+                }
+
+                $(document).delegate(".schedule-elementDelete", "hover", function (event) {
+                    if (event.type == 'mouseenter') {
+                        $(this).find(".element-close").fadeIn(0);
+                        $(this).find(".element-change").fadeIn(0);
+                    } else {
+                        $(this).find(".element-close").fadeOut(0);
+                        $(this).find(".element-change").fadeOut(0);
+                    }
+                });
+
+                $(document).delegate(".schedule-element-NewX", "hover", function (event) {
+                    if (event.type == 'mouseenter') {
+                        $(this).find(".element-close").fadeIn(0);
+                        $(this).find(".element-change").fadeIn(0);
+                    } else {
+                        $(this).find(".element-close").fadeOut(0);
+                        $(this).find(".element-change").fadeOut(0);
+                    }
+                });
+                $(document).delegate(".schedule-elementView", "hover", function (event) {
+                    if (event.type == 'mouseenter') {
+                        $(this).find(".element-close").fadeIn(0);
+                        $(this).find(".element-change").fadeIn(0);
+                    } else {
+                        $(this).find(".element-close").fadeOut(0);
+                        $(this).find(".element-change").fadeOut(0);
+                    }
+                });
+
+                $(document).delegate(".schedule-elementChangeOne", "hover", function (event) {
+                    if (event.type == 'mouseenter') {
+                        $(this).find(".element-close").fadeIn(0);
+                        $(this).find(".element-change").fadeIn(0);
+                    } else {
+                        $(this).find(".element-close").fadeOut(0);
+                        $(this).find(".element-change").fadeOut(0);
+                    }
+                });
+
+                $(document).delegate(".schedule-elementChangeTwo", "hover", function (event) {
+                    if (event.type == 'mouseenter') {
+                        $(this).find(".element-close").fadeIn(0);
+                        $(this).find(".element-change").fadeIn(0);
+                    } else {
+                        $(this).find(".element-close").fadeOut(0);
+                        $(this).find(".element-change").fadeOut(0);
+                    }
+                });
+
+            </script>
+
+        }
+        else
+        {
+            //Đoạn script áp dụng cho lịch mặc định
+            <script type="text/javascript">
+                $(document).delegate(".schedule-element", "hover", function (event) {
+                    var isChange = $('#isChange').val();
+                    if (isChange == 0) {
+                        if (event.type == 'mouseenter') {
+                            $(this).find(".element-close").fadeIn(50);
+                            $(this).find(".element-change").fadeIn(50);
+
+                        } else {
+                            $(this).find(".element-close").fadeOut(50);
+                            $(this).find(".element-change").fadeOut(50);
+
+
+                        }
+                    }
+                    else {
+                        var calendarStatus = $('#calendarStatus').val();
+                        var dayCurrent = $('#dayCurrent').val();
+                        var isEnableEdit = $('#isEnableEdit').val();
+                        var checkCurrentTime = $('#checkCurrentTime').val();
+                        var idDiv = $(this).parent(".item-schedule").attr("id");
+                        if (isEnableEdit == "0") {//Truong hop chua qua gio 16h30 cho phep thi duoc them
+                            if (calendarStatus != 3 && calendarStatus != 2 && ((parseFloat(idDiv) >= parseFloat(dayCurrent) && checkCurrentTime == "1") || checkCurrentTime == "0")) {
+                                if (event.type == 'mouseenter') {
+                                    $(this).find(".element-close").fadeIn(50);
+                                    $(this).find(".element-change").fadeIn(50);
+
+                                } else {
+                                    $(this).find(".element-close").fadeOut(50);
+                                    $(this).find(".element-change").fadeOut(50);
+
+
+                                }
+                            }
+                        }
+                    }
+
+
+                });
+            </script>
+        }
+    }
+
+}
+
+<script type="text/javascript">
+    function hisCalendar() {
+        //  alert("edit");
+        var $self = $(this);
+        $.get('/CalendarDuty/HistoryCalendarDuty', {
+            idCalendarDuty: '@idCalendarDuty',
+        },
+            function (data) {
+                var $categoryModel = $('#view_model_container');
+                $categoryModel.html(data);
+                $('#viewEntityModel').modal({
+                    keyboard: true
+                });
+            })
+    };
+
+</script>

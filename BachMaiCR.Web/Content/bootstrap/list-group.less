@@ -1,9 +1,6 @@
 //
 // List groups
-// --------------------------------------------------
-
-
-// Base class
+// --------------------------------------------------// Base class
 //
 // Easily usable on <ul>, <ol>, or <div>.
 
@@ -11,10 +8,7 @@
   // No need to set list-style: none; since .list-group-item is block level
   margin-bottom: 20px;
   padding-left: 0; // reset padding because ul and ol
-}
-
-
-// Individual list items
+}// Individual list items
 //
 // Use on `li`s or `div`s within the `.list-group` parent.
 
@@ -35,10 +29,7 @@
     margin-bottom: 0;
     .border-bottom-radius(@list-group-border-radius);
   }
-}
-
-
-// Interactive list items
+}// Interactive list items
 //
 // Use anchor or button elements instead of `li`s or `div`s to create interactive items.
 // Includes an extra `.active` modifier class for showing selected items.
@@ -102,10 +93,7 @@ button.list-group-item {
       color: @list-group-active-text-color;
     }
   }
-}
-
-
-// Contextual variants
+}// Contextual variants
 //
 // Add modifier classes to change text and background color on individual items.
 // Organizationally, this must come after the `:hover` states.
@@ -113,10 +101,7 @@ button.list-group-item {
 .list-group-item-variant(success; @state-success-bg; @state-success-text);
 .list-group-item-variant(info; @state-info-bg; @state-info-text);
 .list-group-item-variant(warning; @state-warning-bg; @state-warning-text);
-.list-group-item-variant(danger; @state-danger-bg; @state-danger-text);
-
-
-// Custom content options
+.list-group-item-variant(danger; @state-danger-bg; @state-danger-text);// Custom content options
 //
 // Extra classes for creating well-formatted content within `.list-group-item`s.
 

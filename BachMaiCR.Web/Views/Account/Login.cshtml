@@ -1,0 +1,61 @@
+﻿@model BachMaiCR.Web.Models.LoginModel
+@using Resources
+@{
+    ViewBag.Title = Localization.LoginTitle;
+}
+
+<div class="login-form">
+    <div class="login-form-left float-left">
+        <img src="~/Images/lich-login.png" />
+    </div>
+    <div class="login-form-right float-right">
+
+        <div class="login-form-body">
+            <div class="login-form-header">
+                @Localization.LoginTitle
+            </div>
+            @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+            {
+            @Html.AntiForgeryToken()
+            @*@Html.LabelFor(m => m.UserName, htmlAttributes: new { @class = "label-title" })*@
+            @Html.TextBoxFor(m => m.UserName, htmlAttributes: new { @class = "input-text form-control _first", @placeholder = Localization.LoginModelDisplayUserName })
+            @Html.ValidationMessageFor(m => m.UserName)
+
+            @*@Html.LabelFor(m => m.Password, htmlAttributes: new { @class = "label-title" })*@
+            @Html.PasswordFor(m => m.Password, htmlAttributes: new { @class = "input-text form-control", @placeholder = Localization.LoginModelDisplayPassword })
+            @Html.ValidationMessageFor(m => m.Password)
+            <div class="clear"></div>
+            @Html.CheckBoxFor(m => m.RememberMe)
+            @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox input-checkbox-title remember" })
+            <div class="clear margin-top-10"></div>
+                if (ViewBag.EnableCaptcha != null && ViewBag.EnableCaptcha ==1 )
+                {
+                       @Html.TextBoxFor(m => m.ConfirmCaptcha, htmlAttributes: new { @class = "input-text form-control _first", @placeholder = Localization.LocalCaptchaModelConfirmCaptcha })
+                       @Html.ValidationMessageFor(m => m.ConfirmCaptcha)
+                <div style="margin-bottom:5px;">
+                      <img src='@Url.Action("CaptchaImage")' alt="" /></div>
+                }
+                
+            <div class="text-right">
+                <button type="submit" class="btn btn-warning">@Localization.Login</button>
+            </div>
+            @*<a href="/Account/ForgotPassword">@Localization.LoginForgetPassword</a>*@
+            }
+        </div>
+    </div>
+</div>
+
+<div class="login-line-bottom"> .</div>
+
+<div id="footer">
+        <p> @Localization.Company </p>
+        <p>@Localization.Address</p>
+        <p>@Html.Raw(Localization.Copyright)</p>
+    </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+    
+        setTimeout(function () { $('._first').focus(); }, 500);
+
+    });
+</script>

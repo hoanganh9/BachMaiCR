@@ -1,0 +1,229 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using Resources;
+@using System.Data;
+@using BachMaiCR.Web.Utils;
+@using BachMaiCR.Web.Common;
+<script type="text/javascript">
+    $(function () {
+        $('#selectable').selectable({
+            filter: 'td.item-schedule',
+            stop: function (event, ui) {
+                $('#popupStaff').fadeOut(50);
+                $('#box_staff').fadeOut(50);
+                $('#flag_accept').val(0);
+                $('.ui-icon-closethick').click();
+            }
+        })
+
+        setWidthTd();
+        var $page_nav_content = $('#page-nav-content');
+        $page_nav_content.css('overflow-x', "scroll");
+
+    });
+
+    function setWidthTd() {
+        var widthTable = $('#selectable').width();
+        var colWidth = parseFloat(widthTable) / 7;     
+        $('#selectable tr td').each(function () {
+            $(this).width(parseFloat(colWidth).toFixed());
+        });
+    }
+
+</script>
+
+
+@{
+    var times = ViewBag.times;
+    DateTime date = Utils.GetDateTime();
+
+    date = Convert.ToDateTime(times);
+
+    DataTable tbl = Utils.Fill(date);
+    string[] thu = { "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật" };
+    var columnx = "";
+    var listDoctor = ViewBag.doctors as List<DoctorCalendarLeader>;
+    string lengh = "";
+    string doctorName = "";
+    string doctorId = "", calendarDoctorId = "";   
+    var lstAction = ViewBag.ActionPermission as List<string>;
+    bool enableSave = lstAction.Contains(WebConst.ACTION_INSERT_CALENDAR_DUTY_CODE);
+    bool enableImport = lstAction.Contains(WebConst.ACTION_IMPORT_EXCEL_CALENDAR_DUTY_CODE);
+    lstAction = null;
+    //Check status
+    var objCalendarDuty = ViewBag.objCalendarDuty as List<CALENDAR_DUTY>;
+    int? statusId = 0;
+    if (objCalendarDuty != null && objCalendarDuty.Count > 0)
+    {
+        statusId = objCalendarDuty[0].CALENDAR_STATUS;
+    }
+    objCalendarDuty = null;
+}
+
+<style>
+    .tbl td:first-child {
+        text-align: left;
+    }
+
+    .tbl {
+        table-layout: fixed;
+    }
+
+        .tbl td, .tbl td div {
+            text-overflow: ellipsis;
+            overflow: hidden;
+               }
+    .schedule-element {       
+        min-width: 100%;
+        max-width: 100%;
+    }
+</style>
+@Html.Hidden("isChange", 0)
+<div id="grid" class="page-content">
+    <table class="tbl" id="selectable">
+        <tr>
+
+
+            @for (int i = 0; i < 7; i++)
+            {
+                <th>@thu[i] </th>
+            }
+
+        </tr>
+        @for (int j = 0; j < tbl.Rows.Count; j++)
+        {
+            DataRow dr = tbl.Rows[j];
+            <tr>
+
+                @for (int k = 0; k < 7; k++)
+                {
+                    columnx = dr[k].ToString();
+                    var columnId = "";
+                    var id = columnx;
+                    if (k == 5 || k == 6)
+                    {
+                        if (String.IsNullOrEmpty(columnx))
+                        {
+                            <td class="item-scheduleOld" id="@id">
+                                <div style="vertical-align: top; float: right;">@columnx</div>
+                            </td>
+                        }
+                        else
+                        {
+                            var css = "item-schedule";
+                            if (Convert.ToInt32(columnx) == DateTime.Now.Day && DateTime.Now.Month == date.Month && DateTime.Now.Year == date.Year)
+                            {
+                                css += " item-current";
+                            }
+                            DateTime dateX = Utils.ToDateTime(columnx + "/" + date.Month + "/" + date.Year, "dd/MM/yyyy");
+                            columnId = String.Format("{0:dd/MM/yyyy}", dateX);
+                            <td class="@css sundayCalendar" id="@id" style="vertical-align:top;">                              
+                                <span class="itemspan_@columnx" id="@columnId" style="float:right; font-weight:bold;">  @columnx</span>
+                                <br />
+                                @for (int tt = 0; tt < listDoctor.Count; tt++)
+{
+    if (Convert.ToInt32(columnx) == Convert.ToDateTime(listDoctor[tt].DATE_START).Day)
+    {
+        doctorName = listDoctor[tt].ABBREVIATION;
+        doctorId = Convert.ToString(listDoctor[tt].DOCTORS_ID);
+        calendarDoctorId = id + "_" + doctorId;
+        var divId = String.Format("{0:dd/MM/yyyy}", dateX) + "," + doctorId;
+        <div class="schedule-element current-calendar" id="@divId">
+            <a href="#" id="@calendarDoctorId" class="choseId">@doctorName</a>
+            <span class="element-close fa fa-times-circle" title="Xóa bỏ" onclick="scheduleRemoveClick(this)" />
+        </div>
+    }
+}
+
+                            </td>
+                        }
+                    }
+                    else
+                    {
+                        if (String.IsNullOrEmpty(columnx))
+                        {
+                            <td class="item-scheduleOld" id="@id" style="vertical-align:top;">
+                                <div style="vertical-align: top; float: right;">@columnx</div>
+                            </td>
+                        }
+                        else
+                        {
+                            var css = "item-schedule";
+                            if (Convert.ToInt32(columnx) == DateTime.Now.Day && DateTime.Now.Month == date.Month && DateTime.Now.Year == date.Year)
+                            {
+                                css += " item-current";
+                            }
+                            DateTime dateX = Utils.ToDateTime(columnx + "/" + date.Month + "/" + date.Year, "dd/MM/yyyy");
+                            columnId = String.Format("{0:dd/MM/yyyy}", dateX);
+                            <td class="@css" id="@id" style="vertical-align:top;">
+                                <span class="itemspan_@columnx" id="@columnId" style="float:right; font-weight:bold;">  @columnx</span>
+                                <br />
+                                @for (int tt = 0; tt < listDoctor.Count; tt++)
+{
+    if (Convert.ToInt32(columnx) == Convert.ToDateTime(listDoctor[tt].DATE_START).Day)
+    {       
+        doctorName = listDoctor[tt].ABBREVIATION;
+        doctorId = Convert.ToString(listDoctor[tt].DOCTORS_ID);
+        calendarDoctorId = id + "_" + doctorId;
+        var divId = String.Format("{0:dd/MM/yyyy}", dateX) + "," + doctorId;
+        <div class="schedule-element current-calendar"  id="@divId">
+            <a href="#" id="@calendarDoctorId" class="choseId">@doctorName</a>
+            <span class="element-close fa fa-times-circle" title="Xóa bỏ" onclick="scheduleRemoveClick(this)" />
+        </div>
+    }
+}
+                            </td>
+                        }
+                    }
+
+                }
+            </tr>
+        }
+
+    </table>
+    
+
+
+</div>
+<div id="popupStaff" style="border: 1px solid #D0DAFD; text-align: center; width: 100%; display: none; background-color: #dbe8fe;">
+</div>
+@if (tbl != null)
+{
+    tbl.Dispose();
+    listDoctor = null;
+}
+
+
+<div class="TextCenter">
+
+    <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("Index", "CalendarDuty")'">
+        <span class="glyphicon glyphicon-step-backward"></span>
+        @Localization.PageBack
+    </button>
+@if ((statusId != 3) && (enableSave))  
+    {
+        <button class="btn btn-primary btn-sm" id="saveAddCalendar" type="button">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            @Localization.ButtonSaveDuty
+        </button>
+    }
+    @if (enableImport)
+    {
+        <button class="btn btn-primary btn-sm" id="" type="button">
+            <span class="glyphicon glyphicon-folder-open"></span>&nbsp;
+            @Localization.ButtonInputExcel
+        </button>
+    }
+</div>
+
+
+
+<div class="clear"></div>
+<div id="box_staff" class="box-staff " style="display: none">
+</div>
+<link type="text/css" href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.24.js"></script>
+<script type="text/ecmascript" src="~/Scripts/Calendar/calendarDefault.js"></script>
+
+

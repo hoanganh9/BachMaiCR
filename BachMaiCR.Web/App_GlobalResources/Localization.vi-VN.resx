@@ -1,0 +1,1050 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="WebPageActionsTitle" xml:space="preserve">
+    <value>Danh danh chức năng trên trang web</value>
+  </data>
+  <data name="ManageRolesTitle" xml:space="preserve">
+    <value>Quản lý nhóm quyền</value>
+  </data>
+  <data name="ManageUsersTitle" xml:space="preserve">
+    <value>Quản lý người dùng</value>
+  </data>
+  <data name="RoleModelDisplayNameRoleName" xml:space="preserve">
+    <value>Tên quyền</value>
+  </data>
+  <data name="RoleModelDisplayIsActive" xml:space="preserve">
+    <value>Kích hoạt</value>
+  </data>
+  <data name="Error401" xml:space="preserve">
+    <value>(401) Bạn không đủ quyền để thực hiện chức năng này.</value>
+  </data>
+  <data name="Error403" xml:space="preserve">
+    <value>(403) Bạn không đủ quyền để thực hiện chức năng này.</value>
+  </data>
+  <data name="Error404" xml:space="preserve">
+    <value>(404) Không tìm thấy trang bạn yêu cầu.</value>
+  </data>
+  <data name="Error500" xml:space="preserve">
+    <value>(500) Không thể thực hiện được yêu cầu. Xin vui lòng thử lại.</value>
+  </data>
+  <data name="ErrorUnknow" xml:space="preserve">
+    <value>(U) Lỗi không xác định!</value>
+  </data>
+  <data name="ShowErrorPageTitle" xml:space="preserve">
+    <value>Thông báo lỗi</value>
+  </data>
+  <data name="HomePage" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="UserModelDisplayNameConfirmPassword" xml:space="preserve">
+    <value>Nhập lại mật khẩu</value>
+  </data>
+  <data name="UserModelDisplayNameEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="UserModelDisplayNameFullName" xml:space="preserve">
+    <value>Tên đầy đủ</value>
+  </data>
+  <data name="UserModelDisplayNameHobby" xml:space="preserve">
+    <value>Bí danh</value>
+  </data>
+  <data name="UserModelDisplayNameIsActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="UserModelDisplayNamePassword" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+  <data name="UserModelDisplayNamePhone" xml:space="preserve">
+    <value>Điện thoại</value>
+  </data>
+  <data name="UserModelDisplayNameSex" xml:space="preserve">
+    <value>Giới tính</value>
+  </data>
+  <data name="UserModelDisplayNameUserName" xml:space="preserve">
+    <value>Tên đăng nhập</value>
+  </data>
+  <data name="EmailAddressAttributeInvalid" xml:space="preserve">
+    <value>Thư điện tử không đúng định dạng</value>
+  </data>
+  <data name="UserModelUserNameExist" xml:space="preserve">
+    <value>Tài khoản đã tồn tại</value>
+  </data>
+  <data name="MsgPhoneInvalid" xml:space="preserve">
+    <value>Số điện thoại không hợp lệ</value>
+  </data>
+  <data name="UpdateUserPageTitle" xml:space="preserve">
+    <value>Cập nhập người dùng</value>
+  </data>
+  <data name="AddUserPageTitle" xml:space="preserve">
+    <value>Thêm mới người dùng</value>
+  </data>
+  <data name="UserModelUserNameRequired" xml:space="preserve">
+    <value>Phải nhập tài khoản người dùng</value>
+  </data>
+  <data name="UserModelPasswordRequired" xml:space="preserve">
+    <value>Phải nhập mật khẩu</value>
+  </data>
+  <data name="UserModelPasswordRequiredLength" xml:space="preserve">
+    <value>Mật khẩu phải từ 6 đến 100 ký tự</value>
+  </data>
+  <data name="UserModelConfirmPasswordRequired" xml:space="preserve">
+    <value>Xác nhận mật khẩu không đúng</value>
+  </data>
+  <data name="UserModelFullNameRequired" xml:space="preserve">
+    <value>Phải nhập tên người dùng</value>
+  </data>
+  <data name="ConfigUserTitle" xml:space="preserve">
+    <value>Phân quyền người dùng </value>
+  </data>
+  <data name="LoginTitle" xml:space="preserve">
+    <value>Đăng nhập hệ thống</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Quay lại</value>
+  </data>
+  <data name="ChangePasswordTitle" xml:space="preserve">
+    <value>Đổi mật khẩu </value>
+  </data>
+  <data name="ForgotPasswordButton" xml:space="preserve">
+    <value>Lấy lại mật khẩu</value>
+  </data>
+  <data name="ForgotPasswordTip" xml:space="preserve">
+    <value>Nhập tên tài khoản của ban. Ấn nút Lấy  lại mật khẩu, sau đó kiểm tra thư điện tử bạn đăng ký với hệ thống để làm theo hướng dẫn </value>
+  </data>
+  <data name="ForgotPasswordTitle" xml:space="preserve">
+    <value>Quên mật khẩu</value>
+  </data>
+  <data name="region" xml:space="preserve">
+    <value>en-US</value>
+  </data>
+  <data name="LocalPasswordModelNewPassword" xml:space="preserve">
+    <value>Mật khẩu mới</value>
+  </data>
+  <data name="LocalPasswordModelNewPasswordCompare" xml:space="preserve">
+    <value>Xác nhận mật khẩu mới không đúng</value>
+  </data>
+  <data name="LocalPasswordModelNewPasswordRequired" xml:space="preserve">
+    <value>Phải nhập mật khẩu mới</value>
+  </data>
+  <data name="LocalPasswordModelNewPasswordStringLength" xml:space="preserve">
+    <value>Mật khẩu phải từ 6 đến 100 ký tự</value>
+  </data>
+  <data name="LocalPasswordModelConfirmPassword" xml:space="preserve">
+    <value>Nhắc lại mật khẩu</value>
+  </data>
+  <data name="LocalPasswordModelOldPassword" xml:space="preserve">
+    <value>Mật khẩu cũ</value>
+  </data>
+  <data name="LocalPasswordModelOldPasswordRequired" xml:space="preserve">
+    <value>Phải nhập mật khẩu cũ</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="LoginFail" xml:space="preserve">
+    <value>Tên tài khoản hoặc mật khẩu không đúng</value>
+  </data>
+  <data name="LoginForgetPassword" xml:space="preserve">
+    <value>Quên mật khẩu</value>
+  </data>
+  <data name="LoginModelDisplayPassword" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+  <data name="LoginModelDisplayRemember" xml:space="preserve">
+    <value>Nhớ tài khoản</value>
+  </data>
+  <data name="LoginModelDisplayUserName" xml:space="preserve">
+    <value>Tài khoản</value>
+  </data>
+  <data name="LoginModelPasswordRequired" xml:space="preserve">
+    <value>Phải nhập mật khẩu</value>
+  </data>
+  <data name="LoginModelUserNameRequired" xml:space="preserve">
+    <value>Phải nhập tài khoản</value>
+  </data>
+  <data name="LogOff" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="RegisterModelUserName" xml:space="preserve">
+    <value>Tên tài khoản</value>
+  </data>
+  <data name="RegisterModelUserNameRequired" xml:space="preserve">
+    <value>Phải nhập tên tài khoản</value>
+  </data>
+  <data name="ResetPasswordTip" xml:space="preserve">
+    <value>Nhập mật khẩu mới để thay đổi cho mật khẩu cũ.</value>
+  </data>
+  <data name="ResetPasswordTitle" xml:space="preserve">
+    <value>Đổi mật khẩu</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Xin chào</value>
+  </data>
+  <data name="ResetPasswordInValidToken" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ResetPasswordOk" xml:space="preserve">
+    <value>Đổi mật khẩu thành công</value>
+  </data>
+  <data name="HomePageTitle" xml:space="preserve">
+    <value>Hệ thống Quản lý lịch trực - Bệnh viện Bạch Mai</value>
+  </data>
+  <data name="ChangeLanguage" xml:space="preserve">
+    <value>Chọn ngôn ngữ </value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="ManageUsersSearchPlaceHolder" xml:space="preserve">
+    <value>Tìm kiếm theo tài khoản</value>
+  </data>
+  <data name="ManageUsersRequiredSearchInput" xml:space="preserve">
+    <value>Phải nhập khóa tìm kiếm</value>
+  </data>
+  <data name="ManageUsersSearchClear" xml:space="preserve">
+    <value>Bỏ tìm kiếm</value>
+  </data>
+  <data name="ManageUsersNoData" xml:space="preserve">
+    <value>Không có bản ghi nào</value>
+  </data>
+  <data name="SetPassWordOk" xml:space="preserve">
+    <value>Thiết lập mật khẩu thành công</value>
+  </data>
+  <data name="CategoryModelRequiredCode" xml:space="preserve">
+    <value>Kí hiệu không được trống</value>
+  </data>
+  <data name="CategoryModelRequiredName" xml:space="preserve">
+    <value>Tên không được trống</value>
+  </data>
+  <data name="InputTextSearch" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="ButtonAddDisplay" xml:space="preserve">
+    <value>Thêm mới</value>
+  </data>
+  <data name="LableCodeDisplay" xml:space="preserve">
+    <value>Kí hiệu</value>
+  </data>
+  <data name="LableDesriptionDisplay" xml:space="preserve">
+    <value>Mô tả</value>
+  </data>
+  <data name="ButtonCloseDisplay" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="ButtonSaveDisplay" xml:space="preserve">
+    <value>Lưu giữ</value>
+  </data>
+  <data name="LableNameDisplay" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="FormAddTitle" xml:space="preserve">
+    <value>Thêm mới thông tin</value>
+  </data>
+  <data name="FormEditTitle" xml:space="preserve">
+    <value>Cập nhật thông tin</value>
+  </data>
+  <data name="MsgAddFaild" xml:space="preserve">
+    <value>Thêm mới lỗi!</value>
+  </data>
+  <data name="MsgAddSuccess" xml:space="preserve">
+    <value>Thêm mới thành công!</value>
+  </data>
+  <data name="MsgEditFaild" xml:space="preserve">
+    <value>Cập nhật thất bại!</value>
+  </data>
+  <data name="MsgEditSuccess" xml:space="preserve">
+    <value>Cập nhật thành công!</value>
+  </data>
+  <data name="ButtonCancelDisplay" xml:space="preserve">
+    <value>Hủy bỏ</value>
+  </data>
+  <data name="MsgDelFailed" xml:space="preserve">
+    <value>Xóa thất bại</value>
+  </data>
+  <data name="MsgDelSuccess" xml:space="preserve">
+    <value>Xóa thành công!</value>
+  </data>
+  <data name="MsgSearchNotFound" xml:space="preserve">
+    <value>&lt;strong&gt;Thông báo!&lt;/strong&gt; Không tìm thấy dữ liệu mong muốn.</value>
+  </data>
+  <data name="APPROVED_Date" xml:space="preserve">
+    <value>Ngày duyệt</value>
+  </data>
+  <data name="APPROVED_User" xml:space="preserve">
+    <value>Người duyệt</value>
+  </data>
+  <data name="Create_Date" xml:space="preserve">
+    <value>Ngày lập</value>
+  </data>
+  <data name="Create_User" xml:space="preserve">
+    <value>Người lập</value>
+  </data>
+  <data name="ManagePersonalCalendar" xml:space="preserve">
+    <value>Lịch cá nhân</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="Template_Abb" xml:space="preserve">
+    <value>Tên viết tắt</value>
+  </data>
+  <data name="Template_DEPARTMENT" xml:space="preserve">
+    <value>Đơn vị quản lý</value>
+  </data>
+  <data name="Template_Name" xml:space="preserve">
+    <value>Tên biểu mẫu</value>
+  </data>
+  <data name="Template_Title" xml:space="preserve">
+    <value>Danh sách biểu mẫu</value>
+  </data>
+  <data name="txtLoading" xml:space="preserve">
+    <value>Đang tải dữ liệu ...</value>
+  </data>
+  <data name="MsgContentEmptyRequired" xml:space="preserve">
+    <value>Nội dung không được để trống!</value>
+  </data>
+  <data name="MsgMaxLenghtRequired" xml:space="preserve">
+    <value>Nội dung quá dài!</value>
+  </data>
+  <data name="MsgMinLenghtRequired" xml:space="preserve">
+    <value>Nội dung quá ngắn!</value>
+  </data>
+  <data name="MsgNumberOnlyRequired" xml:space="preserve">
+    <value>Chỉ được nhập số</value>
+  </data>
+  <data name="MsgItemNotExist" xml:space="preserve">
+    <value>&lt;strong&gt;Lỗi:&lt;/strong&gt; Thông tin không tìm thấy</value>
+  </data>
+  <data name="Template_add_columName" xml:space="preserve">
+    <value>Thêm cột hiển thị</value>
+  </data>
+  <data name="Template_columName" xml:space="preserve">
+    <value>Tên cột hiển thị</value>
+  </data>
+  <data name="Template_endDate" xml:space="preserve">
+    <value>Thời gian kết thúc</value>
+  </data>
+  <data name="Template_err_Abb" xml:space="preserve">
+    <value>Bạn chưa nhập tên viết tắt.</value>
+  </data>
+  <data name="Template_err_Abb_maxLengh" xml:space="preserve">
+    <value>Tên mẫu không được nhập quá 20 ký tự.</value>
+  </data>
+  <data name="Template_err_fromDate" xml:space="preserve">
+    <value>Bạn phải nhập thời gian kết thúc.</value>
+  </data>
+  <data name="Template_err_fromDate1" xml:space="preserve">
+    <value>Thời gian kết thúc phải là ngày cuối tháng.</value>
+  </data>
+  <data name="Template_err_fromDate2" xml:space="preserve">
+    <value>Thời gian kết thúc phải lớn hơn hoặc bằng thời gian bắt đầu</value>
+  </data>
+  <data name="Template_err_fromDate_checkDate" xml:space="preserve">
+    <value>Thời gian kết thúc không đúng định dạng dd/MM/yyyy.</value>
+  </data>
+  <data name="Template_err_Name" xml:space="preserve">
+    <value>Bạn chưa nhập tên mẫu.</value>
+  </data>
+  <data name="Template_err_Name_maxLengh" xml:space="preserve">
+    <value>Tên mẫu không được nhập quá 250 ký tự.</value>
+  </data>
+  <data name="Template_err_toDate" xml:space="preserve">
+    <value>Bạn phải nhập thời gian bắt đầu.</value>
+  </data>
+  <data name="Template_err_toDate1" xml:space="preserve">
+    <value>Thời gian bắt đầu phải từ đầu tháng.</value>
+  </data>
+  <data name="Template_err_toDate_checkDate" xml:space="preserve">
+    <value>Thời gian bắt đầu không đúng định dạng dd/MM/yyyy.</value>
+  </data>
+  <data name="Template_list" xml:space="preserve">
+    <value>Xem danh sách</value>
+  </data>
+  <data name="Template_note" xml:space="preserve">
+    <value>Ghi chú</value>
+  </data>
+  <data name="Template_startDate" xml:space="preserve">
+    <value>Thời gian bắt đầu</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Địa chỉ: 78 Đường Giải Phóng, Phương Mai, Đống Đa, Hà Nội - Tel: 844 3869 3731 - Fax: 844 3869 1607</value>
+  </data>
+  <data name="Company" xml:space="preserve">
+    <value>HỆ THỐNG QUẢN LÝ LỊCH TRỰC BỆNH VIỆN BẠCH MAI</value>
+  </data>
+  <data name="ButtonSearch" xml:space="preserve">
+    <value>Tìm kiếm</value>
+  </data>
+  <data name="Template_DateApproved" xml:space="preserve">
+    <value>Ngày ban hành</value>
+  </data>
+  <data name="Template_UserApproved" xml:space="preserve">
+    <value>Người duyệt</value>
+  </data>
+  <data name="Template_UserCreated" xml:space="preserve">
+    <value>Người  khai báo</value>
+  </data>
+  <data name="Template_Detail" xml:space="preserve">
+    <value>Chi tiết biểu mẫu</value>
+  </data>
+  <data name="Template_Notes" xml:space="preserve">
+    <value>&lt;strong&gt;Chú ý:&lt;/strong&gt;  Trường hợp đơn vị không khai báo biểu mẫu, hệ thống mặc định lấy biểu mẫu lịch trực theo tháng có sẵn:</value>
+  </data>
+  <data name="Template_ViewTemp" xml:space="preserve">
+    <value>Xem biểu mẫu tại đây</value>
+  </data>
+  <data name="ButtonCancelTemptDisplay" xml:space="preserve">
+    <value>Hủy ban hành</value>
+  </data>
+  <data name="ButtonDelTemptDisplay" xml:space="preserve">
+    <value>Xóa biểu mẫu</value>
+  </data>
+  <data name="ConfirmCancelTemplate" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn hủy ban hành biểu mẫu?</value>
+  </data>
+  <data name="ConfirmDelTemplate" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn xóa biểu mẫu?</value>
+  </data>
+  <data name="ButtonApprovedTemptDisplay" xml:space="preserve">
+    <value>Phê duyệt</value>
+  </data>
+  <data name="ConfirmApprovedTemplate" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn phê duyệt để ban hành biểu mẫu?</value>
+  </data>
+  <data name="ConfirmRestoreTemplate" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn khôi phục để ban hành lại biểu mẫu?</value>
+  </data>
+  <data name="LabelMonth" xml:space="preserve">
+    <value>Chuyển lịch Tháng</value>
+  </data>
+  <data name="LabelYear" xml:space="preserve">
+    <value>Năm</value>
+  </data>
+  <data name="LabelIndex" xml:space="preserve">
+    <value>STT</value>
+  </data>
+  <data name="DateText" xml:space="preserve">
+    <value>Ngày trực</value>
+  </data>
+  <data name="DayText" xml:space="preserve">
+    <value>Thứ</value>
+  </data>
+  <data name="UpdateCalendarFail" xml:space="preserve">
+    <value>Xin lỗi sửa lịch trực không thành công</value>
+  </data>
+  <data name="UpdateCalendarSuccess" xml:space="preserve">
+    <value>Sửa lịch trực thành công</value>
+  </data>
+  <data name="AddCalendarFail" xml:space="preserve">
+    <value>Xin lỗi không thể cập nhật lịch trực</value>
+  </data>
+  <data name="AddCalendarSuccess" xml:space="preserve">
+    <value>Đã thêm mới lịch trực thành công</value>
+  </data>
+  <data name="DataIsNotValid" xml:space="preserve">
+    <value>Xin lỗi dữ liệu không hợp lệ</value>
+  </data>
+  <data name="IsEmptyCalendar" xml:space="preserve">
+    <value>Xin lỗi không tìm thấy dữ liệu lịch trực đơn vị!</value>
+  </data>
+  <data name="ListCalendarDuty" xml:space="preserve">
+    <value>Danh sách lịch trực đơn vị</value>
+  </data>
+  <data name="QuestionDeleteCalendar" xml:space="preserve">
+    <value>Bạn có muốn xóa lịch trực này?</value>
+  </data>
+  <data name="StatusCancelApproval" xml:space="preserve">
+    <value>Hủy duyệt </value>
+  </data>
+  <data name="StatusCreateNew" xml:space="preserve">
+    <value>Tạo mới</value>
+  </data>
+  <data name="StatusIsApproval" xml:space="preserve">
+    <value>Đã duyệt</value>
+  </data>
+  <data name="StatusPendingApproval" xml:space="preserve">
+    <value>Chờ duyệt</value>
+  </data>
+  <data name="StatusALL" xml:space="preserve">
+    <value>--Tất cả--</value>
+  </data>
+  <data name="SearchCalendarDuty" xml:space="preserve">
+    <value>Tìm kiếm lịch trực</value>
+  </data>
+  <data name="DateApprovalCalendar" xml:space="preserve">
+    <value>Ngày duyệt lịch</value>
+  </data>
+  <data name="DateCreateCalendar" xml:space="preserve">
+    <value>Ngày lập lịch</value>
+  </data>
+  <data name="StatusCalendar" xml:space="preserve">
+    <value>Trạng thái</value>
+  </data>
+  <data name="UserApprovalCalendar" xml:space="preserve">
+    <value>Người duyệt lịch</value>
+  </data>
+  <data name="UserCreateCalendar" xml:space="preserve">
+    <value>Người lập lịch</value>
+  </data>
+  <data name="DateFeast" xml:space="preserve">
+    <value>Ngày nghỉ/Ngày lễ</value>
+  </data>
+  <data name="LabelDepartment" xml:space="preserve">
+    <value>Đơn vị</value>
+  </data>
+  <data name="CalendarMonth" xml:space="preserve">
+    <value>Lịch trực của tháng</value>
+  </data>
+  <data name="LabelTemplate" xml:space="preserve">
+    <value>Mẫu lịch trực</value>
+  </data>
+  <data name="TitleCreateCalendar" xml:space="preserve">
+    <value>Lập lịch trực đơn vị</value>
+  </data>
+  <data name="LabelContent" xml:space="preserve">
+    <value>Nội dung</value>
+  </data>
+  <data name="DepartmentList" xml:space="preserve">
+    <value>Danh sách phòng ban</value>
+  </data>
+  <data name="ManageCalendarDutyTitle" xml:space="preserve">
+    <value>Quản lý lịch trực</value>
+  </data>
+  <data name="MsgEmptyCodeDepartment" xml:space="preserve">
+    <value>Mã phòng ban không được để trống</value>
+  </data>
+  <data name="MsgEmptyNameDepartment" xml:space="preserve">
+    <value>Tên phòng ban không được để trống</value>
+  </data>
+  <data name="MsgEmptyPhoneDepartment" xml:space="preserve">
+    <value>Điện thoại không được để trống</value>
+  </data>
+  <data name="TemplateNameDisplay" xml:space="preserve">
+    <value>Lịch trực mẫu tháng 03/2014</value>
+  </data>
+  <data name="MsgRulesError" xml:space="preserve">
+    <value>Xin lỗi bạn chưa nhập tên nhóm quyền</value>
+  </data>
+  <data name="MsgConfirmDisplayDel" xml:space="preserve">
+    <value>Bạn có chắc chắn xóa thông tin này?</value>
+  </data>
+  <data name="ManagerAdminTitle" xml:space="preserve">
+    <value>Quản trị hệ thống</value>
+  </data>
+  <data name="Copyright" xml:space="preserve">
+    <value>&amp;copy; Trung tâm Giải Pháp Công nghệ thông tin và Viễn thông Viettel</value>
+  </data>
+  <data name="TitleViewCalendar" xml:space="preserve">
+    <value>Hiển thị lịch trực đơn vị</value>
+  </data>
+  <data name="LableNote" xml:space="preserve">
+    <value>&lt;i&gt;(Nhấp chuột vào dòng cần lập lịch để thực hiện lập lịch)&lt;/i&gt;</value>
+  </data>
+  <data name="TitleCalendarCreateLeader" xml:space="preserve">
+    <value>Lập lịch lãnh đạo</value>
+  </data>
+  <data name="UserModelDisplayNameDepartment" xml:space="preserve">
+    <value>Phòng ban</value>
+  </data>
+  <data name="PageBack" xml:space="preserve">
+    <value>Quay lại</value>
+  </data>
+  <data name="ButtonCancelApproved" xml:space="preserve">
+    <value>Hủy duyệt</value>
+  </data>
+  <data name="ButtonIsApproved" xml:space="preserve">
+    <value>Duyệt</value>
+  </data>
+  <data name="ButtonSendApproved" xml:space="preserve">
+    <value>Gửi duyệt</value>
+  </data>
+  <data name="ListCalendarLeader" xml:space="preserve">
+    <value>Danh sách lịch lãnh đạo</value>
+  </data>
+  <data name="RoleConfig" xml:space="preserve">
+    <value>Phân quyền</value>
+  </data>
+  <data name="RoleTitle" xml:space="preserve">
+    <value>Danh sách nhóm quyền</value>
+  </data>
+  <data name="RoleUser" xml:space="preserve">
+    <value>Người dùng</value>
+  </data>
+  <data name="RoleAbb" xml:space="preserve">
+    <value>Tên viết tắt</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>&lt;h3 style="padding: 0px;"&gt;Có lỗi xảy ra &lt;/h3&gt;</value>
+  </data>
+  <data name="ReturnBack" xml:space="preserve">
+    <value>Trở về trang đăng nhập</value>
+  </data>
+  <data name="TitleEditCalendar" xml:space="preserve">
+    <value>Sửa lịch trực đơn vị</value>
+  </data>
+  <data name="ButtonExportExcel" xml:space="preserve">
+    <value>Xuất Excel</value>
+  </data>
+  <data name="UpdateCalendarIsNotPermission" xml:space="preserve">
+    <value>Xin lỗi lịch trực đã được duyệt, Bạn không được phép sửa</value>
+  </data>
+  <data name="MsgCancelCalendarSuccess" xml:space="preserve">
+    <value>Hủy duyệt lịch trực thành công</value>
+  </data>
+  <data name="MsgSendCalendarSuccess" xml:space="preserve">
+    <value>Gửi duyệt lịch trực thành công</value>
+  </data>
+  <data name="MsgApprovedCalendarSuccess" xml:space="preserve">
+    <value>Duyệt lịch trực thành công</value>
+  </data>
+  <data name="MsgEmptyContentCalendar" xml:space="preserve">
+    <value>Nội dung hủy duyệt lịch trực không được trống</value>
+  </data>
+  <data name="LabelDirectors" xml:space="preserve">
+    <value>Lãnh đạo trực</value>
+  </data>
+  <data name="LabelDirectorsPhone" xml:space="preserve">
+    <value>Điện thoại liên hệ</value>
+  </data>
+  <data name="LabelDirectorsTitle" xml:space="preserve">
+    <value>Bảng thường trú Ban giám đốc</value>
+  </data>
+  <data name="LabelMonthSearch" xml:space="preserve">
+    <value>Tháng</value>
+  </data>
+  <data name="LabelTime" xml:space="preserve">
+    <value>Thời gian</value>
+  </data>
+  <data name="ButtonEditCalendarDuty" xml:space="preserve">
+    <value>Sửa lịch trực</value>
+  </data>
+  <data name="CalendarDirectorsTittle" xml:space="preserve">
+    <value>Danh sách bảng thường trú</value>
+  </data>
+  <data name="CalendarNote" xml:space="preserve">
+    <value>&lt;i&gt;(Chọn tên lãnh đạo để xem thông tin chi tiết)&lt;/i&gt;</value>
+  </data>
+  <data name="DoctorDetail" xml:space="preserve">
+    <value>Chi tiết thông tin cán bộ</value>
+  </data>
+  <data name="CalendarDirectorsAdd" xml:space="preserve">
+    <value>Lập bảng thường trú Ban giám đôc</value>
+  </data>
+  <data name="CalendarDirectorsEdit" xml:space="preserve">
+    <value>Sửa bảng thường trú Ban giám đôc</value>
+  </data>
+  <data name="ChangeCalendarSuccess" xml:space="preserve">
+    <value>Đổi lịch trực thành công</value>
+  </data>
+  <data name="TitleCalendarEditLeader" xml:space="preserve">
+    <value>Sửa lịch lãnh đạo</value>
+  </data>
+  <data name="TitleCalendarViewLeader" xml:space="preserve">
+    <value>Xem thông tin chi tiết lịch lãnh đạo</value>
+  </data>
+  <data name="ListDoctorDefault" xml:space="preserve">
+    <value>Tên cán bộ</value>
+  </data>
+  <data name="ListDoctorDirector" xml:space="preserve">
+    <value>Tên ban giám đốc</value>
+  </data>
+  <data name="ListDoctorLeader" xml:space="preserve">
+    <value>Tên lãnh đạo</value>
+  </data>
+  <data name="LabelCalendarHospital" xml:space="preserve">
+    <value>Tổng hợp lịch trực toàn viện</value>
+  </data>
+  <data name="Error400" xml:space="preserve">
+    <value>(400) Lỗi tại bạn gõ... sai cú pháp đường dẫn. Xin vui lòng thử lại.</value>
+  </data>
+  <data name="Error408" xml:space="preserve">
+    <value>(408) Đường truyền bị ngẽn. Xin vui lòng thử lại.</value>
+  </data>
+  <data name="Error501" xml:space="preserve">
+    <value>(501) Web Server không hỗ trợ yêu cầu đặc biệt mà bạn muốn nó làm.</value>
+  </data>
+  <data name="Error502" xml:space="preserve">
+    <value>(502) Lỗi nghẽn mạng. Xin vui lòng thử lại.</value>
+  </data>
+  <data name="Error503" xml:space="preserve">
+    <value>(503) Máy chủ hệ thống đang bận. Xin vui lòng thử lại.</value>
+  </data>
+  <data name="CalendarHospitalTittle" xml:space="preserve">
+    <value>Danh sách lịch trực toàn bệnh viện</value>
+  </data>
+  <data name="ButtonHistoryCalendar" xml:space="preserve">
+    <value>Lịch sử đổi lịch</value>
+  </data>
+  <data name="LabelAccept" xml:space="preserve">
+    <value>Đồng ý</value>
+  </data>
+  <data name="MsgConfirmDisplayCalendar" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn gửi nhắc lịch đến đơn vị này không?</value>
+  </data>
+  <data name="LabelWarningSendCalendar" xml:space="preserve">
+    <value>Nhắc gửi lịch</value>
+  </data>
+  <data name="LableAddTemplateTitle" xml:space="preserve">
+    <value>Lập biểu mẫu</value>
+  </data>
+  <data name="LableEditTemplateTitle" xml:space="preserve">
+    <value>Sửa biểu mẫu</value>
+  </data>
+  <data name="MsgApproveSuccess" xml:space="preserve">
+    <value>Phê duyệt thành công!</value>
+  </data>
+  <data name="StatusAproved" xml:space="preserve">
+    <value>Đã ban hành</value>
+  </data>
+  <data name="StatusCancelAproved" xml:space="preserve">
+    <value>Hủy ban hành</value>
+  </data>
+  <data name="StatusCreate" xml:space="preserve">
+    <value>Chờ ban hành</value>
+  </data>
+  <data name="LabelFeast" xml:space="preserve">
+    <value>Ngày nghỉ lễ</value>
+  </data>
+  <data name="LabelAm" xml:space="preserve">
+    <value>Ngày</value>
+  </data>
+  <data name="LabelPm" xml:space="preserve">
+    <value>Đêm</value>
+  </data>
+  <data name="DirectorDetail" xml:space="preserve">
+    <value>Chi tiết thông tin lãnh đạo</value>
+  </data>
+  <data name="CalendarDefault" xml:space="preserve">
+    <value>Biểu mẫu mặc định</value>
+  </data>
+  <data name="MsgEmptyCalendarHospital" xml:space="preserve">
+    <value>Nội dung lịch trực không được để trống</value>
+  </data>
+  <data name="LableDoctorLevelName" xml:space="preserve">
+    <value>Tên vị trí cán bộ</value>
+  </data>
+  <data name="Template_err_Contents_maxLengh" xml:space="preserve">
+    <value>Nội dung ghi chú không được nhập quá 500 ký tự</value>
+  </data>
+  <data name="TimeEffect" xml:space="preserve">
+    <value>Thời gian hiệu lực</value>
+  </data>
+  <data name="MsgEmptyNameReport" xml:space="preserve">
+    <value>Tên báo cáo không được để trống</value>
+  </data>
+  <data name="MsgEmptyStaffBusinessTrip" xml:space="preserve">
+    <value>Nhập số lượng cán bộ đi công tác</value>
+  </data>
+  <data name="MsgEmptyStaffDirect" xml:space="preserve">
+    <value>Nhập số lượng cán bộ trực</value>
+  </data>
+  <data name="MsgEmptyStaffLeave" xml:space="preserve">
+    <value>Nhập số lượng cán bộ nghỉ không phép</value>
+  </data>
+  <data name="MsgEmptyStaffMaternity" xml:space="preserve">
+    <value>Nhập số lượng cán bộ nghỉ sinh</value>
+  </data>
+  <data name="MsgEmptyStaffSick" xml:space="preserve">
+    <value>Nhập số lượng cán bộ nghỉ ốm</value>
+  </data>
+  <data name="MsgEmptyStaffUnpaid" xml:space="preserve">
+    <value>Nhập số lượng cán bộ nghỉ không lương</value>
+  </data>
+  <data name="MsgEmptyStaffVacation" xml:space="preserve">
+    <value>Nhập số lượng cán bộ nghỉ có phép</value>
+  </data>
+  <data name="MsgEmptyUserRecipient" xml:space="preserve">
+    <value>Người nhận không được để trống</value>
+  </data>
+  <data name="ButtonRefresh" xml:space="preserve">
+    <value>Làm mới</value>
+  </data>
+  <data name="ReportOfDayStatusCreate" xml:space="preserve">
+    <value>Chưa gửi</value>
+  </data>
+  <data name="ReportOfDayStatusSend" xml:space="preserve">
+    <value>Đã gửi</value>
+  </data>
+  <data name="MsgstatusApproved" xml:space="preserve">
+    <value>Ban hành biểu mẫu thành công</value>
+  </data>
+  <data name="MsgstatusCancel" xml:space="preserve">
+    <value>Hủy ban hành biểu mẫu thành công</value>
+  </data>
+  <data name="MsgstatusResore" xml:space="preserve">
+    <value>Khôi phục ban hành biểu mẫu thành công</value>
+  </data>
+  <data name="ReportConfig" xml:space="preserve">
+    <value>Quản lý báo cáo</value>
+  </data>
+  <data name="TemplateConfig" xml:space="preserve">
+    <value>Cấu hình biểu mẫu</value>
+  </data>
+  <data name="CalendarExits" xml:space="preserve">
+    <value>Lịch đã lập</value>
+  </data>
+  <data name="LabelActived" xml:space="preserve">
+    <value>Hoạt động</value>
+  </data>
+  <data name="LableDateChange" xml:space="preserve">
+    <value>Ngày đổi</value>
+  </data>
+  <data name="LableDateDirectly" xml:space="preserve">
+    <value>Ngày trực</value>
+  </data>
+  <data name="LableStatusApproved" xml:space="preserve">
+    <value>Trạng thái duyệt</value>
+  </data>
+  <data name="LableStatusChange" xml:space="preserve">
+    <value>Trạng thái đổi</value>
+  </data>
+  <data name="LableUserChange" xml:space="preserve">
+    <value>Cán bộ đổi</value>
+  </data>
+  <data name="LableUserDirectly" xml:space="preserve">
+    <value>Cán bộ trực</value>
+  </data>
+  <data name="MsgConfirmDisplayCalendarLeader" xml:space="preserve">
+    <value>Bạn có chắc chắn muốn gửi nhắc lịch lãnh đạo không?</value>
+  </data>
+  <data name="LabelFromDate" xml:space="preserve">
+    <value>Từ ngày</value>
+  </data>
+  <data name="LabelToDate" xml:space="preserve">
+    <value>Đến ngày</value>
+  </data>
+  <data name="MsgEmptyFeast" xml:space="preserve">
+    <value>Tên ngày nghỉ lễ không được để trống</value>
+  </data>
+  <data name="MsgEmptyFeastFromDate" xml:space="preserve">
+    <value>Ngày bắt đầu không được để trống</value>
+  </data>
+  <data name="MsgEmptyFeastToDate" xml:space="preserve">
+    <value>Ngày kết thúc không được để trống</value>
+  </data>
+  <data name="LableAutoGenerate" xml:space="preserve">
+    <value>Tạo tự động</value>
+  </data>
+  <data name="LableTypeOfHoliday" xml:space="preserve">
+    <value>Loại ngày nghỉ</value>
+  </data>
+  <data name="LabelChosenDoctor" xml:space="preserve">
+    <value>-- Chọn cán bộ --</value>
+  </data>
+  <data name="LabelDoctor" xml:space="preserve">
+    <value>Cán bộ</value>
+  </data>
+  <data name="ManageAutoCalendarTitle" xml:space="preserve">
+    <value>Tiêu chí lập lịch động</value>
+  </data>
+  <data name="MsgCheckDateTime" xml:space="preserve">
+    <value>Khoảng thời gian cần tìm kiếm không chính xác</value>
+  </data>
+  <data name="MsgEmptyDeparment" xml:space="preserve">
+    <value>Hãy chọn phòng ban</value>
+  </data>
+  <data name="MsgEmptyDoctor" xml:space="preserve">
+    <value>Hãy chọn cán bộ</value>
+  </data>
+  <data name="MsgEmptyTypeOfHoliday" xml:space="preserve">
+    <value>Hãy chọn loại ngày nghỉ</value>
+  </data>
+  <data name="LabelConfigParameter" xml:space="preserve">
+    <value>Tham số lập lịch động</value>
+  </data>
+  <data name="LabelFemaleDirectAM" xml:space="preserve">
+    <value>Cán bộ nữ nuôi con nhỏ chỉ trực ngày</value>
+  </data>
+  <data name="LabelFixWeekend" xml:space="preserve">
+    <value>Không xếp lịch cố định 1 ngày trong tuần</value>
+  </data>
+  <data name="LabelNormsDirect" xml:space="preserve">
+    <value>Định mức trực của cán bộ trong 1 năm</value>
+  </data>
+  <data name="LabelNumberDoctorInDay" xml:space="preserve">
+    <value>Số lượng cán bộ trong 1 ngày</value>
+  </data>
+  <data name="LabelTimeDistance" xml:space="preserve">
+    <value>Khoảng cách thời gian giữa các lần trực</value>
+  </data>
+  <data name="LabelTimeDistanceOfHoliday" xml:space="preserve">
+    <value>Thời gian trực tiếp sau thời gian nghỉ</value>
+  </data>
+  <data name="MsgEmptyNormsDirect" xml:space="preserve">
+    <value>Định mức trực của cán bộ trong 1 năm không được để trống</value>
+  </data>
+  <data name="MsgEmptyNumberDoctorInDay" xml:space="preserve">
+    <value>Số lượng cán bộ trong 1 ngày trực không được để trống</value>
+  </data>
+  <data name="MsgEmptyTimeDistance" xml:space="preserve">
+    <value>Khoảng cách thời gian giữa các lần trực không được để trống</value>
+  </data>
+  <data name="MsgEmptyTimeDistanceOfHoliday" xml:space="preserve">
+    <value>Thời gian nghỉ tiếp sau khi nghỉ chế độ không được để trống</value>
+  </data>
+  <data name="LabelSMSName" xml:space="preserve">
+    <value>Tên cấu hình</value>
+  </data>
+  <data name="LabelSMSAlarmCount" xml:space="preserve">
+    <value>Số lần lặp</value>
+  </data>
+  <data name="LabelSMSAlarmTime" xml:space="preserve">
+    <value>Gửi tin nhắn trước ca trực</value>
+  </data>
+  <data name="LabelSMSDeparmentApply" xml:space="preserve">
+    <value>Đơn vị áp dụng</value>
+  </data>
+  <data name="LabelSMSHour" xml:space="preserve">
+    <value>giờ</value>
+  </data>
+  <data name="LabelSMSMinutes" xml:space="preserve">
+    <value>phút</value>
+  </data>
+  <data name="LabelSMSNDay" xml:space="preserve">
+    <value>ngày</value>
+  </data>
+  <data name="LabelSMSRepeatAlarm" xml:space="preserve">
+    <value>Lặp lại sau</value>
+  </data>
+  <data name="LabelSMSTemplateApply" xml:space="preserve">
+    <value>Loại lịch trực áp dụng</value>
+  </data>
+  <data name="LabelSMSDateApply" xml:space="preserve">
+    <value>Thời gian áp dụng từ ngày</value>
+  </data>
+  <data name="MsgEmptySMSName" xml:space="preserve">
+    <value>Tên cấu hình không được để trống</value>
+  </data>
+  <data name="LableSMSWarning" xml:space="preserve">
+    <value>Cấu hình hết hiệu lực</value>
+  </data>
+  <data name="LableTemplateWarning" xml:space="preserve">
+    <value>Biểu mẫu hết hiệu lực</value>
+  </data>
+  <data name="MsgCheckDateTimeAdd" xml:space="preserve">
+    <value>Khoảng thời gian cần lập không chính xác</value>
+  </data>
+  <data name="LableCalendarDuty" xml:space="preserve">
+    <value>Lịch trực đơn vị</value>
+  </data>
+  <data name="LableDetailCalendar" xml:space="preserve">
+    <value>Chi tiết lịch</value>
+  </data>
+</root>

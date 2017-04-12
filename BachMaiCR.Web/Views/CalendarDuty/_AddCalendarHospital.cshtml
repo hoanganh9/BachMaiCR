@@ -1,0 +1,210 @@
+﻿@model BachMaiCR.Web.Models.CalendarDutyModel
+@using Resources
+@{
+
+    int yearCurrent = System.DateTime.Now.Year + 2;
+    int yearStart = yearCurrent - 5;
+    List<SelectListItem> tmpYear = new List<SelectListItem>();
+    for (int i = yearStart; i < yearCurrent; i++)
+    {
+        tmpYear.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    List<SelectListItem> tmpMonths = new List<SelectListItem>();
+    for (int i = 1; i <= 12; i++)
+    {
+        tmpMonths.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    var DATE_MONTH = new SelectList(tmpMonths, "Value", "Text", System.DateTime.Now.Month);
+    var DATE_YEAR = new SelectList(tmpYear, "Value", "Text", System.DateTime.Now.Year);
+    var ValueCalendar = "Lịch trực toàn bệnh viện tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year;
+}
+
+<style>
+    .TextBoxContent
+    {
+        border: 1px solid #c4c4c4;
+        height: 25px;
+        width: 320px;
+        font-size: 12px;
+        padding: 4px 4px 4px 4px;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        box-shadow: 0px 0px 8px #d9d9d9;
+        -moz-box-shadow: 0px 0px 8px #d9d9d9;
+        -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+    }
+
+        .TextBoxContent:focus
+        {
+            outline: none;
+            border: 1px solid #7bc1f7;
+            box-shadow: 0px 0px 8px #7bc1f7;
+            -moz-box-shadow: 0px 0px 8px #7bc1f7;
+            -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+        }
+        
+    .Validation_Error
+    {
+       margin-left:0px;
+    }
+   
+    .modal-title {
+        margin: 0;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        font-size: 12px;
+        font-weight:bold;
+    }
+    .modal-header {
+     
+     padding: 5px 10px 10px;
+     
+    }
+    .modal-footer {
+      padding: 5px 10px 10px;
+      margin-top: 5px;
+      text-align: center;
+      border-top: 1px solid #e5e5e5;
+    }
+    .modal-body {
+      position: relative;
+      padding:5px 10px 0px 10px;
+     
+    }
+    .form-group {
+      margin-bottom: 5px;
+    }
+    .modal-dialog
+    {
+        width:450px;
+    }
+     .selectpicker
+    {
+        font-size: 12px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+   
+   
+    .btn-default
+    {
+        height: 25px;
+        font-size: 12px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+</style>
+<!-- Modal -->
+
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/bootstrap-select.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="~/Content/bootstrap-select.css">
+<script type="text/javascript">
+
+    $(document).ready(function (e) {
+      
+
+        $('.selectMonthsAdd').change(function () {
+          
+            $('#inforContent').val('Lịch trực toàn bệnh viện tháng ' + $('.selectMonthsAdd').val() + " năm " + $('.selectYearsAdd').val());
+
+        });
+        $('.selectYearsAdd').change(function () {
+            $('#inforContent').val('Lịch trực toàn bệnh viện tháng ' + $('.selectMonthsAdd').val() + " năm " + $('.selectYearsAdd').val());
+
+        });
+        $('.selectMonthsAdd').selectpicker();
+        $('.selectYearsAdd').selectpicker();
+
+    });
+   
+    $(document).ready(function () {
+        setTimeout(function () { $('._first').focus(); }, 500);
+         $("#frmCalendarHospital").submit(function (event) {
+            event.preventDefault();
+            if ($("#frmCalendarHospital").valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: $("#frmCalendarHospital").attr('action'),
+                    data: $("#frmCalendarHospital").serialize(),
+                    dataType: '',
+                    success: function (response) {
+                        if (response) {
+                            $('#CalendarHospitalForm').modal('hide');
+                            $('#cat_list_render').html(response);
+                            window.notice('Thêm mới lịch toàn bệnh viện thành công', window.notice_success);
+                        } else {
+
+
+                        }
+                        
+                    }
+                });
+            }
+            else {
+                window.notice("Điền đầy đủ thông tin trên form", window.notice_warning);
+            }
+         });
+
+    });
+    
+</script>
+<div class="modal fade" id="CalendarHospitalForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+
+          @Html.ValidationSummary(false)
+        
+          @using (Html.BeginForm(
+        actionName: "AddValueCalendarHospital", controllerName: "CalendarDuty", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmCalendarHospital", @class = "", @role = "form" }))
+        {
+        
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Thêm mới lịch trực toàn bệnh viện</h4>
+                </div>
+                <div class="modal-body min-width">
+                    <div class="form-group">
+
+                        <table border="0" style="width:100%">
+                         
+                            <tr>
+                                <td>
+                                                                @Resources.Localization.LabelMonthSearch &nbsp;
+
+                                </td>
+                                <td  style="height:40px;"> 
+                                      @Html.DropDownListFor(m => m.CALENDAR_MONTH, DATE_MONTH, new { @class = "selectMonthsAdd", data_width = "100px",id="monthx" })
+                                      @Resources.Localization.LabelYear   &nbsp; @Html.DropDownListFor(m => m.CALENDAR_YEAR, DATE_YEAR, new { @class = "selectYearsAdd", data_width = "120px",id="yearx" })
+           
+                                </td>
+                            </tr>
+                          
+                            <tr>
+                                <td style="vertical-align:top;width:15%;height:40px;">
+
+                       <div style="margin-top:10px">           @Resources.Localization.LabelContent  <span class="field-validation-error"> * </span></div>
+                                </td>
+                                <td style="text-align:left">
+                                        @Html.TextBoxFor(m => m.CALENDAR_NAME, new {@class = "TextBoxContent",style="width:320px;",id = "inforContent", @Value = ValueCalendar })
+                                        @Html.ValidationMessageFor(model => model.CALENDAR_NAME,null, new {@class="Validation_Error"})
+                      
+
+
+                                </td>
+                            </tr>
+                            
+                        </table>
+    
+                </div>
+                <div class="modal-footer">
+                       <button type="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+                    <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal"><span class="glyphicon glyphicon-off"></span> @Localization.ButtonCloseDisplay</button>
+                 
+                </div>
+            </div>
+        </div>
+        }
+        </div>
+    </div>

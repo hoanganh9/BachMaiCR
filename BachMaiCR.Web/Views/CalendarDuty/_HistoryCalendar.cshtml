@@ -1,0 +1,265 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.Web.Common
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.Web.Utils;
+@{
+    var lstItem = ViewBag.calendarChange as List<CALENDAR_CHANGE>;
+
+    var objCalendarDuty = ViewBag.objCalendarDuty as CALENDAR_DUTY;
+    //chi tiet lich
+    DateTime? approvedDate = null;
+    DateTime? createDate = null;
+    String content = "", userCreate = "", statusCalendar = "", userAproved = "";
+    int? statusId = 0;
+    int isApproved = 0;
+    string valueDefault = "N/A";
+    if (objCalendarDuty != null)
+    {
+        approvedDate = objCalendarDuty.DATE_APPROVED;
+        createDate = objCalendarDuty.DATE_CREATE;
+        content = objCalendarDuty.CALENDAR_NAME;
+        if (objCalendarDuty.USER_CREATE_ID != null)
+        {
+            userCreate = objCalendarDuty.ADMIN_USER.FULLNAME.ToString();
+        }
+        statusId = objCalendarDuty.CALENDAR_STATUS;
+        statusCalendar = Utils.GetStatusCalendar(statusId);
+        if (objCalendarDuty.USER_APPROVED_ID != null)
+        {
+            userAproved = objCalendarDuty.ADMIN_USER1.FULLNAME.ToString();
+        }
+
+    }
+    objCalendarDuty = null;
+}
+
+<!-- Modal -->
+<style>
+    #dv_table_add_user {
+        display: block;
+        max-height: 250px !important;
+        overflow-y: auto;
+        min-height: 100px;
+        position: relative;
+        width: 100% !important;
+        border: 1px solid #DDDDDD;
+    }
+
+    .table-view tr td {
+        padding: 5px;
+        max-height: 25px;
+        text-align: left;
+        vertical-align: top;
+    }
+
+        .table-view tr td:first-child {
+            text-align: center;
+        }
+</style>
+<div class="modal fade" id="viewEntityModel" tabindex="-1000" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:750px;">
+
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">@Localization.ButtonHistoryCalendar</h4>
+            </div>
+            <div class="modal-body" style="width:745px;">
+                <table>
+
+                    <tr>
+                        <td>
+                            <b >@Localization.ListUserCreate:&nbsp;</b>
+
+                            @if (String.IsNullOrEmpty(userCreate))
+                            {
+                                @valueDefault
+                            }
+                            else
+                            {
+                                @HttpUtility.HtmlDecode(userCreate)
+                            }
+                            <b style="margin-left: 20px;">@Localization.ListDateCreate:&nbsp;</b>
+                            @if (createDate.HasValue)
+                            {
+                                @createDate.Value.ToString("dd/MM/yyyy hh:mm");
+                            }
+                            else
+                            {
+                                @valueDefault
+                            }
+                            <b style="margin-left: 20px;">@Localization.ListStatus: &nbsp; </b>
+                            @if (String.IsNullOrEmpty(statusCalendar))
+                            {
+                                @valueDefault
+                            }
+                            else
+                            {
+                                @Html.Raw(HttpUtility.HtmlDecode(statusCalendar))
+                            }
+                           
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td><b>@Localization.ListUserApproved:</b>
+@if (String.IsNullOrEmpty(userAproved))
+{
+    @valueDefault
+}
+else
+{  @Html.Raw(HttpUtility.HtmlDecode(userAproved))}
+<b style="margin-left: 20px;">@Localization.ListDateApproved:&nbsp;</b>
+@if (approvedDate.HasValue)
+{
+    @approvedDate.Value.ToString("dd/MM/yyyy hh:mm");
+}
+else
+{
+    @valueDefault
+}</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b> @Localization.ListContent:</b>
+
+                            @if (String.IsNullOrEmpty(content))
+                            {
+                                @valueDefault
+                            }
+                            else
+                            {
+                                @HttpUtility.HtmlDecode(content)
+                            }
+                        </td>
+                    </tr>
+                </table>
+                <table class="tbl" style="width: 100%">
+                    <tr>
+                        <th style="width:5%">@Localization.ListItem</th>
+                        <th style="width:15%">@Localization.DateText</th>
+                        <th style="width:15%">@Localization.LableUserDirectly</th>
+                        <th style="width:15%">@Localization.LableUserChange</th>
+                        <th style="width:10%">@Localization.LableDateChange</th>
+                        <th style="width:20%">@Localization.LableStatusChange</th>
+                        <th style="width:20%">@Localization.LableStatusApproved</th>
+                    </tr>
+                </table>
+                <div id="dv_table_add_user">
+                    @if (lstItem == null || lstItem.Count == 0)
+                    {
+                        <div class="padding-all">
+                            <div class="alert alert-warning alert-dismissable">
+                                @Html.Raw(Localization.MsgSearchNotFound)
+                            </div>
+                        </div>
+                    }
+                    else
+                    {                        <table style="width: 100%" class="table-view">
+
+                        @for (int i = 0; i < lstItem.Count; i++)
+                        {
+                            var status = lstItem[i].STATUS; var statusApproved = lstItem[i].STATUS_APPROVED;
+
+                            <tr>
+                                <td style="width:5%">@(i + 1)</td>
+                                <td style="width:15%; text-align:center;">@lstItem[i].DATE_START.Value.ToString("dd/MM/yyyy")</td>
+
+                                <td style="width:16%">
+                                    @if (status == CalendarChangeType.Add.GetHashCode())
+                                    { <div class="add-calendar">
+                                        @lstItem[i].DOCTORS_NAME
+                                    </div>
+                                    }
+                                    else if (status == CalendarChangeType.Change.GetHashCode())
+                                    {
+                                        <div class="change-calendar" style="height:20px;">
+                                            @lstItem[i].DOCTORS_NAME
+                                        </div>
+                                    }
+                                    else if (status == CalendarChangeType.Deleted.GetHashCode())
+                                    {
+                                        <div class="del-calendarH" style="height:20px; color:red; width:100%;">
+                                            @lstItem[i].DOCTORS_NAME
+                                        </div>
+                                    }
+
+                                </td>
+                                <td style="width:16%">
+                                    @if (status == CalendarChangeType.Change.GetHashCode())
+                                    {
+                                        <div class="change-calendar" style="height:20px;">
+                                            @lstItem[i].DOCTORS_CHANGE_NAME
+                                        </div>
+                                    }
+
+                                </td>
+                                <td style="width:11%">
+                                    @if (lstItem[i].DATE_CHANGE_START.HasValue)
+                                    {
+                                        @lstItem[i].DATE_CHANGE_START.Value.ToString("dd/MM/yyyy")
+                                    }
+                                </td>
+                                <td style="width:20%">
+                                    @if (status == CalendarChangeType.Add.GetHashCode())
+                                    {
+                                        <div class="add-calendar">
+                                            @StringEnum.GetStringValue(CalendarChangeType.Add)
+                                        </div>
+                                    }
+                                    else if (status == CalendarChangeType.Change.GetHashCode())
+                                    {
+                                        <div class="change-calendar" style="height:20px;">
+                                            @StringEnum.GetStringValue(CalendarChangeType.Change)
+                                        </div>
+                                    }
+                                    else if (status == CalendarChangeType.Deleted.GetHashCode())
+                                    {
+                                        <div class="del-calendarH" style="height:20px; color:red; width:100%;">
+                                            @StringEnum.GetStringValue(CalendarChangeType.Deleted)
+                                        </div>
+                                    }
+                                </td>
+                                <td style="width:20%">
+
+                                    @if (statusApproved == CalendarChangeApproved.Created.GetHashCode())
+                                    {
+                                        @StringEnum.GetStringValue(CalendarChangeApproved.Created)
+                                    }
+                                    else if (statusApproved == CalendarChangeApproved.SendApproved.GetHashCode())
+                                    {
+                                        @StringEnum.GetStringValue(CalendarChangeApproved.SendApproved)
+                                    }
+                                    else if (statusApproved == CalendarChangeApproved.Approved.GetHashCode())
+                                    {
+                                        @StringEnum.GetStringValue(CalendarChangeApproved.Approved)
+                                    }
+                                    else if (statusApproved == CalendarChangeApproved.CancelApproved.GetHashCode())
+                                    {
+                                        @StringEnum.GetStringValue(CalendarChangeApproved.CancelApproved)
+                                    }
+                                </td>
+
+                            </tr>
+                        }
+                    </table>
+                    }
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" style="width:100px;"><span class="glyphicon glyphicon-off"></span> @Localization.ButtonCloseDisplay</button>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+@{
+    lstItem = null;
+
+}

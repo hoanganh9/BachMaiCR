@@ -1,0 +1,134 @@
+﻿@using Resources;
+@{
+    var ctgType = 1;
+}
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/bootstrapjs")
+<script type="text/javascript" src="~/Scripts/ajaxfileupload.js"></script>
+<div class="content-wrapper">
+    <div id="nav">
+        <a title="">@Localization.ManageCategorysTitle.ToUpper()</a> » @ViewBag.Title.ToUpper()
+    </div>
+    @{
+        Html.RenderAction("OnSearch", "Doctor");
+    }
+    <div class="page-content">
+
+        <div id="cat_list_render">
+
+            @{
+                Html.RenderAction("GetList", "Doctor", new { type = @ctgType });
+            }
+        </div>
+
+    </div>
+
+    <div id="add_category_model_container"></div>
+    <div id="view_model_container"></div>
+</div>
+
+
+
+@*<input type="file" id="submitFile" value="Click here" />
+<input type="button" value="Import" id="btnImport" /><div id="divTest">
+    <img id="imgTest" src='@Url.Action("CaptchaImage","Account")' alt="" />
+</div>*@
+
+<script type="text/javascript">
+
+    var itemX;
+
+
+    function btnSearchClick() {
+        OnCriteria(0);
+    }
+
+    $(document).ready(function () {
+
+        $('#btnImport').click(function () {
+            //var formData = new FormData($('*formId*')[0]);
+            //$.ajax({
+            //    url: '/Doctor/AjaxUpload',  //server script to process data
+            //    type: 'POST',
+            //    xhr: function () {  // custom xhr
+            //        myXhr = $.ajaxSettings.xhr();
+            //        if (myXhr.upload) { // if upload property exists
+            //            myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // progressbar
+            //        }
+            //        return myXhr;
+            //    },
+            //    //Ajax events
+            //    success: function (data) {
+            //        alert(1);
+            //    },
+            //    error: errorHandler = function () {
+            //        alert("lỗi");
+            //    },
+            //    // Form data
+            //    //data: formData,
+            //    //Options to tell JQuery not to process data or worry about content-type
+            //    cache: false,
+            //    contentType: false,
+            //    processData: false
+            //}, 'json');
+
+            //$.ajaxFileUpload(
+            //            {
+            //                url: '/Doctor/AjaxUpload',
+            //                secureuri: false,
+            //                fileElementId: 'submitFile',
+            //                dataType: 'json',
+            //                //data: JSON.stringify({day}) ,
+            //                success: function (data, status) {
+            //                    console.log(data);
+            //                }
+            //            });
+        });
+
+    });
+
+    $('#txt_search_form').keyup(function (e) {
+        if (e.keyCode == 13)
+        { OnCriteria(0); }
+
+    });
+
+
+    $(".btn-add").live('click', function (event) {
+        var $self = $(this);
+        $.get('/Doctor/OnInsert', { id: 0 }, function (data) {
+            var $categoryModel = $('#add_category_model_container');
+            $categoryModel.html(data);
+            $('#addCategoryModel').modal({
+                keyboard: true
+            });
+        });
+        @* 
+        $.get('/Account/TestCaptcha', function (data) {
+           // $('#imgTest').attr('src', data);
+
+            $('#imgTest').attr('src', function () {
+                // the datetime portion appended to the url avoids caching issues
+                // and ensures that a fresh image will be loaded every time
+                var d = new Date();
+                return this.src + '?' + d.getTime();
+            });
+
+            // Remark: not sure about the return false here. This will cancel the 
+            // default action of the image button => might not be what you need => 
+            // adapt to your requirements
+            
+          if (data.status == 200) {
+                console.log(data.result);
+                $("#imgTest").attr("src", "");
+                $('#imgTest').attr('src', '@Url.Action("CaptchaImage","Account")');
+            }
+            
+        });
+        return false;*@
+    });
+
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/bootstrapjs")
+}

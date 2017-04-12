@@ -1,9 +1,6 @@
 //
 // Forms
-// --------------------------------------------------
-
-
-// Normalize non-controls
+// --------------------------------------------------// Normalize non-controls
 //
 // Restyle and baseline non-control form elements.
 
@@ -34,10 +31,7 @@ label {
   max-width: 100%; // Force IE8 to wrap long content (see https://github.com/twbs/bootstrap/issues/13141)
   margin-bottom: 5px;
   font-weight: bold;
-}
-
-
-// Normalize form controls
+}// Normalize form controls
 //
 // While most of our form styles require extra classes, some basic normalization
 // is required to ensure optimum display with or without those classes to better
@@ -86,10 +80,7 @@ output {
   font-size: @font-size-base;
   line-height: @line-height-base;
   color: @input-color;
-}
-
-
-// Common form controls
+}// Common form controls
 //
 // Shared size and type resets for form controls. Apply `.form-control` to any
 // of the following form controls:
@@ -159,10 +150,7 @@ output {
   textarea& {
     height: auto;
   }
-}
-
-
-// Search inputs in iOS
+}// Search inputs in iOS
 //
 // This overrides the extra rounded corners on search inputs in iOS so that our
 // `.form-control` class can properly style them. Note that this cannot simply
@@ -171,10 +159,7 @@ output {
 
 input[type="search"] {
   -webkit-appearance: none;
-}
-
-
-// Special styles for iOS temporal inputs
+}// Special styles for iOS temporal inputs
 //
 // In Mobile Safari, setting `display: block` on temporal inputs causes the
 // text within the input to become vertically misaligned. As a workaround, we
@@ -202,20 +187,14 @@ input[type="search"] {
       line-height: @input-height-large;
     }
   }
-}
-
-
-// Form groups
+}// Form groups
 //
 // Designed to help with the organization and spacing of vertical forms. For
 // horizontal forms, use the predefined grid classes.
 
 .form-group {
   margin-bottom: @form-group-margin-bottom;
-}
-
-
-// Checkboxes and radios
+}// Checkboxes and radios
 //
 // Indent the labels to position radios/checkboxes as hanging controls.
 
@@ -294,10 +273,7 @@ input[type="checkbox"] {
       cursor: @cursor-disabled;
     }
   }
-}
-
-
-// Static form control text
+}// Static form control text
 //
 // Apply class to a `p` element to make any string of text align with labels in
 // a horizontal form layout.
@@ -315,10 +291,7 @@ input[type="checkbox"] {
     padding-left: 0;
     padding-right: 0;
   }
-}
-
-
-// Form control sizing
+}// Form control sizing
 //
 // Build on `.form-control` with modifier classes to decrease or increase the
 // height and font-size of form controls.
@@ -380,10 +353,7 @@ input[type="checkbox"] {
     font-size: @font-size-large;
     line-height: @line-height-large;
   }
-}
-
-
-// Form control feedback states
+}// Form control feedback states
 //
 // Apply contextual and semantic states to individual form controls.
 
@@ -444,10 +414,7 @@ input[type="checkbox"] {
   &.sr-only ~ .form-control-feedback {
     top: 0;
   }
-}
-
-
-// Help text
+}// Help text
 //
 // Apply to any element you wish to create light text for placement immediately
 // below a form control. Use for general help, formatting, or instructional text.
@@ -457,10 +424,7 @@ input[type="checkbox"] {
   margin-top: 5px;
   margin-bottom: 10px;
   color: lighten(@text-color, 25%); // lighten the text some for contrast
-}
-
-
-// Inline forms
+}// Inline forms
 //
 // Make forms appear inline(-block) by adding the `.form-inline` class. Inline
 // forms begin stacked on extra small (mobile) devices and then go inline when
@@ -539,10 +503,7 @@ input[type="checkbox"] {
       top: 0;
     }
   }
-}
-
-
-// Horizontal forms
+}// Horizontal forms
 //
 // Horizontal forms are built on grid classes and allow you to create forms with
 // labels on the left and inputs on the right.

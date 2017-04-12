@@ -1,0 +1,122 @@
+﻿@using BachMaiCR.Web.Utils;
+@Styles.Render("~/Content/css")
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#side-menu').css('display', '');
+    });
+</script>
+@helper GenerateAdminMenu()
+{
+    if (!string.IsNullOrEmpty(User.Identity.Name))
+    {
+        var actionCode = BachMaiCR.Web.Common.Helpers.GetMenuHelper.GetCodeActionByUser(User.Identity.Name);
+        //var rootMenu = BachMaiCR.Web.Common.Helpers.GetMenuHelper.GetMenuByParrent(0, actionCode);
+        var allMenu = BachMaiCR.Web.Common.Helpers.GetMenuHelper.GetAllMenu(actionCode);
+        var rootMenu = allMenu.Where(o => o.MENU_PARENT_ID == 0).ToList();
+        if (rootMenu.Count > 0 && actionCode.Count > 0)
+        {
+            int i = 0;
+    <ul id="side-menu" class="nav" style="display: none">
+
+        @foreach (var menu in rootMenu)
+        {
+            var listmenu = allMenu.Where(o => o.MENU_PARENT_ID == menu.MENU_ID).ToList();
+            if (listmenu.Count > 0)
+            {
+                var cssClass = "menu-parent menu-root";
+                i++;
+            <li class="@cssClass">
+                <a href="@menu.MENU_URL">
+                    <i class="@menu.MENU_CLASS"></i>
+                    @menu.MENU_NAME
+                    <span class="fa arrow"></span>
+                </a>
+                @GenerateNote(menu.MENU_ID, menu.MENU_NAME, 0, actionCode, listmenu, allMenu)
+            </li>
+            }
+        }
+    </ul>
+        }
+    }
+}
+
+@helper GenerateNote(int parrentId, string departmentName, int level, List<string> actionCode, List<BachMaiCR.DBMapping.Models.ADMIN_MENU> listMenu, List<BachMaiCR.DBMapping.Models.ADMIN_MENU> allMenu)
+{
+    level++;
+    if (listMenu.Count > 0)
+    {
+        var classLevelul = "";
+        if (level == 1)
+        {
+            classLevelul = "nav nav-second-level";
+        }
+        else if (level == 2)
+        {
+            classLevelul = "nav nav-third-level";
+        }
+    <ul class="@classLevelul">
+        @foreach (var menu in listMenu)
+        {
+            var listChild = allMenu.Where(o => o.MENU_PARENT_ID == menu.MENU_ID).ToList();
+            var classLevel = "";
+            if (level == 1)
+            {
+                classLevel = "li-nav-second-level";
+            }
+            else if (level == 2)
+            {
+                classLevel = "li-nav-third-level";
+            }
+
+            if (HttpContext.Current.Request.Url.AbsoluteUri.Contains(menu.MENU_URL))
+            {
+                classLevel += " active";
+            }
+            if (menu.MENU_URL.Equals("#"))
+            {
+                if (listChild.Count > 0)
+                {
+            <li class="@classLevel">
+                <a href="@menu.MENU_URL">
+                    <i class="@menu.MENU_CLASS"></i>
+                    <span style="color: black;">@menu.MENU_NAME</span>
+                    <span class="fa arrow"></span>
+                </a>
+                @GenerateNote(menu.MENU_ID, menu.MENU_NAME, level, actionCode, listChild, allMenu)
+            </li>
+                }
+            }
+            else
+            {
+            <li class="@classLevel">
+                <a href="@menu.MENU_URL">
+                    <i class="@menu.MENU_CLASS"></i>
+                    <span style="color: black;">@menu.MENU_NAME</span>
+                </a>
+            </li>
+            }
+        }
+    </ul>
+    }
+}
+
+<div id="menu_left_content" class="navbar-default navbar-static-side" style="width: 200px" role="navigation">
+    <div class="sidebar-collapse">
+        @GenerateAdminMenu()
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var $rootmenu = $("#side-menu");
+        var $allLi = $rootmenu.find('li');
+        _.each($allLi, function (itemli) {
+            var allUl = $(itemli).find('ul');
+            if (allUl.length > 0) {
+                var hasli = allUl.find('li').length > 0;
+                if(!hasli) {
+                    $(itemli).remove();
+                }
+            }
+        });
+    });
+</script>

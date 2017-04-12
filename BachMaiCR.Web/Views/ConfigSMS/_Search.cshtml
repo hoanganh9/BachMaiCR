@@ -1,0 +1,80 @@
+﻿@using Resources;
+@using BachMaiCR.DBMapping.Models;
+@model BachMaiCR.DBMapping.ModelsExt.ConfigSMSSearch
+@{   
+    var actUpdate = (bool)ViewBag.ActionUpdate;
+    var RootDepartment = ViewBag.RootDepartment as List<LM_DEPARTMENT>;
+    string DeptId = "", DeptName = "";
+    if (RootDepartment != null && RootDepartment.Count > 0)
+    {
+        DeptId = Convert.ToString(RootDepartment[0].LM_DEPARTMENT_ID);
+        DeptName = RootDepartment[0].DEPARTMENT_NAME;
+    }
+    RootDepartment = null;
+
+}
+<link href="~/Content/gpcp-department.css" rel="stylesheet" />
+<script src="~/Scripts/gpcp-department.js"></script>
+<link href="~/Content/jquery.treeview.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.cookie.js"></script>
+<script src="~/Scripts/jquery.treeview.js"></script>
+<div class="content-wrapper">
+    <div id="search_form" class="row" style="width:75%; margin:0 auto">
+        <!-- Department & Position-->
+        <div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelSMSDeparmentApply</label>
+            </div>
+            <div class="col-md-4" style="margin-bottom: -3px;">
+                <input id="SearchDeprtId" data-id="@DeptId" data-name="@DeptName" />
+
+            </div>
+            <div class="col-md-2">
+                <label class="input-lable-control nowrap">@Localization.LabelSMSName</label>
+            </div>
+            <div class="col-md-4" style="margin-bottom: -3px;">
+                @Html.TextBoxFor(m => m.SearchName, new { @class = "form-control input-sm", @placeholder = @Localization.LabelSMSName })
+            </div>
+        </div>
+        <div class="col-md-12"></div>
+
+        <div class="col-md-12 align-center">
+            <button class="btn btn-primary" type="button" onclick="return btnSearchClick();">
+                <span class="glyphicon glyphicon-search"></span>@Localization.ButtonSearch
+            </button>
+            @if (actUpdate)
+            {
+                <button type="submit" class="btn-add btn btn-primary">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    @Localization.ButtonAddDisplay
+                </button>
+            }
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="~/Scripts/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#SearchDeprtId').Department(
+       {
+
+       });
+        $('#search_form input[type=text]').keyup(function (e) {
+            if (e.keyCode == 13)
+                btnSearchClick();
+        });
+
+        $('.selectpicker, #SearchDeprtId').change(function (e) {
+            btnSearchClick();
+        });
+    });
+
+
+    function btnSearchClick() {
+        OnCriteria(0);
+    }
+
+</script>

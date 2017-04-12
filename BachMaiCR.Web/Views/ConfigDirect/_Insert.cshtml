@@ -1,0 +1,226 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@model BachMaiCR.Web.Models.ConfigDirect
+
+@{
+    ViewBag.Title = "AddCategory";
+    var strTitleForm = Model.ConfigDirectId.Equals(0) ? Localization.FormAddTitle : Localization.FormEditTitle;
+    var strName = Localization.LableNameDisplay;
+    var lstDoctor = ViewBag.ListDoctor as List<SelectListItem>;
+    var ListEducation = ViewBag.ListEducation as List<SelectListItem>;
+}
+<div class="modal fade" id="addCategoryModel" tabindex="-1000" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        @Html.ValidationSummary(false)
+        @using (Html.BeginForm(
+        actionName: "SubmitChange", controllerName: "ConfigDirect", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmModifyCategory", @class = "", @role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">@strTitleForm</h4>
+                </div>
+                <div class="modal-body min-width">
+                    <div class="row form-group">
+                        <!-- Hide value -->
+                        @Html.HiddenFor(m => m.ConfigDirectId)
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            @Html.ValidationMessageFor(m => m.DeparmentId)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.DeparmentId, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">*</span>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="text" name="@Html.IdFor(m => m.DeparmentId)" id="@Html.IdFor(m => m.DeparmentId)" data-id="@Html.ValueFor(m => m.DeparmentId)" data-name="@Html.ValueFor(m => m.DeparmentName)" />
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            @Html.ValidationMessageFor(m => m.DoctorId)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.DoctorId, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">*</span>
+                        </div>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.DoctorId, lstDoctor, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            @Html.ValidationMessageFor(m => m.FeastId)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.FeastId, new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">*</span>
+                        </div>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(m => m.FeastId, ListEducation, new { @class = "form-control dropdown-toggle selectpicker btn-sm" })
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            @Html.ValidationMessageFor(m => m.Date_Begin)
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.Date_Begin, labelText: @Localization.LabelFromDate, htmlAttributes: new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">*</span>
+                        </div>
+                        <div class="col-md-4" style="height:33px;">
+                            @Html.TextBoxFor(m => m.Date_Begin, "{0:dd/MM/yyyy}", new { @readonly = "true", @autocomplete = "off", @class = "form-control input-sm datePicker", @id = "Date_Begin", @placeholder = @Localization.LabelFromDate })
+                        </div>
+                        <div class="col-md-2">
+                            @Html.LabelFor(m => m.Date_End, labelText: @Localization.LabelToDate, htmlAttributes: new { @class = "input-lable-control nowrap" })
+                            <span class="color-error">*</span>
+                        </div>
+                        <div class="col-md-4" style="height:33px;">
+                            @Html.TextBoxFor(m => m.Date_End, "{0:dd/MM/yyyy}", new { @readonly = "true", @autocomplete = "off", @class = "form-control input-sm datePicker", @id = "Date_End", @placeholder = @Localization.LabelToDate })
+                        </div>
+                        <div class="col-md-2"></div>
+                        <div class="col-md-10">
+                            @Html.ValidationMessageFor(m => m.Date_End)
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer padding-all">
+                    <button type="submit" class="btn btn-primary min-width"><span class="glyphicon glyphicon-floppy-disk"></span>@Localization.ButtonSaveDisplay</button>
+                    <button type="button" class="btn btn-primary min-width" data-dismiss="modal"><span class="glyphicon glyphicon-off"></span>@Localization.ButtonCloseDisplay</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript" src="~/Scripts/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#DeparmentId').Department(
+            {
+                defaultDisplay: '-- Chọn --'
+            });
+        $("#DoctorId").attr("data-live-search", "true");
+        $('#DoctorId').selectpicker({
+            size: 10
+        });
+        $('#FeastId').selectpicker({});
+
+        $('#DeparmentId').change(function (e) {
+            var dpId = $(this).val();
+            var docId = 0;
+            $.getJSON('/Users/GetDoctor', { departmentId: dpId, currentDoctorId: docId }, function (data) {
+                var result = '';
+                for (var i = 0, iL = data.length; i < iL; i++) {
+                    if (data[i].Selected == true) {
+                        result += '<option value="' + data[i].Value + '" selected = "selected"  >' + data[i].Text + '</option>';
+                    } else {
+
+                        result += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                    }
+                }
+                $("#DoctorId").html(result);
+                $('#DoctorId').selectpicker('refresh');
+            });
+        });
+        var $catForm = $("#frmModifyCategory");
+
+
+        $catForm.submit(function (event) {
+            event.preventDefault();
+            var checkForm = true;
+            if (!checkdepartment()) {               
+                checkForm = false;
+            }
+            if (!checkdoctor()) {              
+                checkForm = false;
+            }           
+            if (!checkTypeOfHoliday()) {               
+                checkForm = false;
+            }           
+            if (checkForm && $catForm.valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: $catForm.attr('action'),
+                    data: $catForm.serialize(),
+                    dataType: '',//chú ý là form đặc biệt thì phải điền trường này
+                    success: function (response) {
+                        if (response != null && response.status == 200) {
+                            $('#addCategoryModel').modal('hide');
+                            var $catlist = $('#cat_list_render');
+                            if ($catlist == null || $catlist.length == 0) {
+                                window.notice('@Resources.Localization.MsgItemNotFound', window.notice_warning);
+                            }
+                            else {
+                                $catlist.html('');
+                                $catlist.load('/ConfigDirect/GetList');
+                            }
+                            window.notice(response.result, window.notice_success);
+                        } else {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    }
+                });
+            }
+            else {
+                window.notice($catForm.validate().errorList[0].message, window.notice_error);
+            }
+        });
+
+        function checkdepartment() {
+            var lableError = $('.field-validation-valid[data-valmsg-for="DeparmentId"]');
+            lableError.css('color', 'red');
+            var value = $("#DeparmentId").val();
+            if (value != null && value != "" && value != "0") {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text('@Html.Raw(Localization.MsgEmptyDeparment)');
+                return false;
+            }
+        }
+        function checkdoctor() {
+            var lableError = $('.field-validation-valid[data-valmsg-for="DoctorId"]');
+            lableError.css('color', 'red');
+            var value = $("#DoctorId").val();
+            if (value != null && value != "" && value != "0") {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text('@Html.Raw(Localization.MsgEmptyDoctor)');
+                return false;
+            }
+        }
+        function checkTypeOfHoliday() {
+            var lableError = $('.field-validation-valid[data-valmsg-for="FeastId"]');
+            lableError.css('color', 'red');
+            var value = $("#FeastId").val();          
+            if (value != null && value != "" && value != "0") {
+                lableError.text("");
+                return true;
+            } else {
+                lableError.text('@Html.Raw(Localization.MsgEmptyTypeOfHoliday)');
+                return false;
+            }
+        }    
+        $("#FeastId").change(function () {
+            var feastId = this.value;
+            $.getJSON('/Feast/GetFeastInfo', { feastId: feastId }, function (data) {
+                var result = '';
+                var dateBegin = "";
+                var dateEnd = "";
+                for (code in data) {
+                    dateBegin = data["dateBegin"];
+                    dateEnd = data["dateEnd"];
+                }
+                if (dateBegin != null && dateBegin != "") {
+                    $('#Date_Begin').val(dateBegin);
+                }
+                if (dateEnd != null && dateEnd != "") {
+                    $('#Date_End').val(dateEnd);
+                }
+                //console.log(data);
+            });
+        });
+    });
+</script>

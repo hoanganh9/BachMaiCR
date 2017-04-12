@@ -1,0 +1,319 @@
+﻿@using Resources
+@using BachMaiCR.Web.Models
+@{
+    ViewBag.Title = Localization.ConfigUserTitle;
+}
+
+<div class="content">
+    <div id="nav">
+        <a href="/admin/ManageUsers" title="">@Resources.Localization.ManageUsersTitle.ToUpper()</a> »  @ViewBag.Title.ToUpper()   @if (ViewBag.User != null)
+                                                                                                                                   {
+            <i><strong style="color: red;">(@ViewBag.User.FULLNAME)</strong></i> 
+          
+                                                                                                                                   }
+
+    </div>
+
+    <div class="clear"></div>
+    <div class="float-left  margin-right-10" style="width: 49.5%; margin-right: 0.5%;">
+        @{
+            var gridRoles = new WebGrid(rowsPerPage: int.MaxValue, canPage: true, canSort:false);
+            gridRoles.Bind(source: ViewBag.Roles, rowCount: int.MaxValue, autoSortAndPage: false);
+        }
+        @gridRoles.GetHtml(
+            tableStyle: "tbl",
+            columns: gridRoles.Columns(
+                gridRoles.Column(columnName: "Value", header: @"Chọn/bỏ quyền", style: "center width130", format: (item) => @Html.Raw("<input class='cbx-role-user' " + (item.Selected ? "checked='checked'" : "") + " type='checkbox' value='" + (item.Id.ToString()) + "'/>")),
+                gridRoles.Column(columnName: "Text", header: "Tên quyền")
+        ))
+        <div>
+            <button type="button" style="margin-top: 10px;" class="btn btn-primary btn-sm" value="@Localization.Back"  onclick="location.href='@Url.Action("ManageUsers", "admin")'" ><span class="glyphicon glyphicon-step-backward"></span>@Localization.Back</button>
+        </div>
+    </div>
+    <div class="float-left" style="width: 49.5%;">
+        <table style="width: 100%">
+
+            <tr>
+                <td style="background-color: #dbe8fe; height: 25px; font-weight: bold; padding-bottom: 4px; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #008dc2; padding: 5px; color: #0b55c4;">Danh sách chức năng</td>
+            </tr>
+            <tr>
+                <td>
+                    <div style="max-height: 600px; overflow: scroll;">
+                        <ul class="main-menu">
+                            @{
+                                var list = ViewBag.UserMenuModel as List<UserMenuModel>;
+                                if (list != null && list.Any())
+                                {
+                                    var groupedMenu = list.GroupBy(o => o.GroupCode).Select(o => o.Key).ToList();
+                                    if (groupedMenu.Any())
+                                    {
+                                        foreach (string s in groupedMenu)
+                                        {
+                                            var menu = list.Where(o => o.GroupCode == s).ToList();
+                                @Html.Raw(@"<li class='main-title'>")
+                                            UserMenuModel random = list.FirstOrDefault(o => o.GroupCode == s);
+                                @Html.Raw(@"<span><b>");
+                                @(random == null || string.IsNullOrWhiteSpace(random.GroupName) ? "Chưa phân nhóm" : random.GroupName)
+                                @Html.Raw(@"</b></span>");
+
+                                                         if (menu.Any())
+                                                         {
+                                @Html.Raw(@"<ul class='sub-menu'>")
+                                                             foreach (UserMenuModel m in menu)
+                                                             {
+                                <text>
+                                <li class="sub-title">
+                                    @Html.Raw(string.Join(@"", new string[]
+                                            {
+                                                "<input class='cbx-action-user' ",
+                                                m.Selected == true ? @"checked='checked' " : " ",
+                                                " style='float:left; margin-left:30px; margin-right:3px; margin-top:7px;' value ='" + m.Id + "' ",
+                                                "type='checkbox'/>"
+                                            }))
+                                    <span>
+                                        @m.Description
+                                        <i style="color: red; font-size: 10px;">
+                                            @m.Roles
+                                        </i>
+                                    </span>
+                                </li>
+                                </text>
+                                                             }
+                                @Html.Raw(@"</ul>")
+                                                         }
+                                @Html.Raw(@"</li>")
+                                        }
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+</div>
+
+
+<style type="text/css">
+    .center
+    {
+        text-align: center;
+    }
+
+    .width130
+    {
+        width: 130px;
+    }
+
+    .main-menu
+    {
+        list-style: none;
+        float: left;
+        padding: 0px;
+    }
+
+    .main-title
+    {
+        list-style: none;
+        min-height: 30px;
+        clear: both;
+        float: left;
+    }
+
+    .main-title span
+    {
+        min-height: 30px;
+        float: left;
+        display: inline;
+        /*border-bottom: solid 1px gray;*/
+        margin-left: 5px;
+        padding-top: 4px;
+    }
+
+    .sub-menu
+    {
+        list-style: none;
+        float: left;
+        clear: both;
+        padding: 0px;
+    }
+
+    .sub-title
+    {
+        list-style: none;
+        min-height: 30px;
+        clear: both;
+        float: left;
+    }
+
+    .sub-title span
+    {
+        min-height: 30px;
+        float: left;
+        display: inline;
+        /*border-bottom: solid 1px gray;*/
+        /*margin-left: 30px;*/
+    }
+
+    .sub-title span a
+    {
+        color: red;
+    }
+
+    a.tree-point:hover
+    {
+        width: 12px !important;
+        height: 12px !important;
+        margin-left: -1px;
+    }
+</style>
+   <script type="text/javascript">
+       var nodePoint = [
+           "<div style='float:left; height:30px;'>",
+               "<a class='tree-point' style='float:left; margin-top:10px; width:9px; height:9px; border-radius:50%; background-color:gray; cursor:pointer;'>",
+               "</a>",
+               "<div class='clear'></div>",
+               "<div style='float:left; border-left:solid 1px gray;height:13px; margin-left:4px;'>",
+               "</div>",
+           "</div>"
+       ].join('');
+
+       var midPoint = [
+           "<div style='float:left; border-left:solid 1px gray;height:30px; margin-left:4px;'>",
+           "</div>"
+       ].join('');
+
+       var endPoint = [
+           "<div style='float:left; border-left:solid 1px gray;height:15px; margin-left:4px;'>",
+           "</div>",
+       ].join('');
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var backUrl = document.referrer;
+            if (backUrl.toLowerCase().search("manageusers") > 0) {
+                $.cookie("btn-configuser-back", backUrl);
+            }
+            else {
+                $('#btn-configuser-back').attr('href', $.cookie("btn-configuser-back"));
+            }
+
+            var $cbxAction = $('.cbx-action-user');
+            var $cbxRole = $('.cbx-role-user');
+
+            $cbxRole.bind('change', function (event) {
+                var $self = $(this);
+                var checked = $self.is(":checked");
+                var arrAction = $self.attr('action-data-id') != null ? JSON.parse($self.attr('action-data-id')) : [];
+                if (arrAction == null || arrAction.length == 0) {
+                    $.get('/WebpageRoles/GetActionIds', { roleId: $self.val() }, function (response) {
+                        if (response.status == 200) {
+                            arrAction = response.result;
+                            $self.attr('action-data-id', JSON.stringify(arrAction));
+                            $cbxAction = $('.cbx-action-user');
+                            _.each(arrAction, function (v) {
+                                _.each($cbxAction, function (item) {
+                                    if ($(item).val() == v.toString()) {
+                                        if (checked) {
+                                            $(item).attr('checked', "");
+                                        }
+                                        else {
+                                            $(item).removeAttr('checked');
+                                        }
+                                    }
+                                });
+                            });
+
+                            save();
+                        }
+                    });
+                }
+                else {
+                    _.each(arrAction, function (v) {
+                        _.each($cbxAction, function (item) {
+                            if ($(item).val() == v.toString()) {
+                                if (checked) {
+                                    $(item).attr('checked', "");
+                                }
+                                else {
+                                    $(item).removeAttr('checked');
+                                }
+                            }
+                        });
+                    });
+                    save();
+                }
+            });
+
+            var $main_title = $('.main-title');
+            _.each($main_title, function (item) {
+                var hasUl = $(item).find('ul').length > 0;
+                if (hasUl) {
+                    $(item).html(nodePoint + $(item).html());
+                }
+                var $li = $(item).find('li');
+                var totalLi = $li.length;
+                _.each($li, function (li, index) {
+                    if (index < totalLi - 1) {
+                        $(li).html(midPoint + $(li).html());
+                    } else {
+                        $(li).html(endPoint + $(li).html());
+                    }
+                });
+            });
+
+            $('.tree-point').bind('click', function (event) {
+                var collapse = $(this).attr('collapse') == "true";
+                if (collapse) {
+                    var $ul = $(this).parent().parent().find('ul');
+                    $ul.fadeIn("fast");
+                    $(this).parent().find('div').last().show();
+                    $(this).attr('collapse', false);
+                } else {
+                    var $ul = $(this).parent().parent().find('ul');
+                    $ul.fadeOut("fast");
+                    $(this).parent().find('div').last().hide();
+                    $(this).attr('collapse', true);
+                }
+            });
+
+            $('.cbx-action-user').bind('click', function (event) {
+
+                save();
+            });
+
+            var save = function () {
+                var arrActionToSave = [];
+                var arrRoleToSave = [];
+
+                $cbxAction = $('.cbx-action-user');
+                $cbxRole = $('.cbx-role-user');
+
+                _.each($cbxAction, function (item) {
+                    if ($(item).is(":checked")) {
+                        arrActionToSave.push($(item).val());
+                       //console.log("arrActionToSave", arrActionToSave);
+                    }
+                });
+
+                _.each($cbxRole, function (item) {
+                    if ($(item).is(":checked")) {
+                        arrRoleToSave.push($(item).val());
+                    }
+                });
+
+                var userId = @Request.QueryString["userId"]
+                $.post('/Users/SaveConfigUser', $.param({ actionIds: arrActionToSave, roleIds: arrRoleToSave, userId: userId }, true), function (response) {
+                    if (response && response.status == 200) {
+                        window.notice(response.result, window.notice_success);
+                    }
+                    else {
+                        window.notice(response.result, window.notice_error);
+                    }
+                });
+            };
+        });
+    </script>

@@ -1,0 +1,47 @@
+﻿@using Resources
+@{
+    var ctgType = 1;
+}
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/bootstrapjs")
+@section Scripts {
+    @Scripts.Render("~/bundles/bootstrapjs")
+}
+
+
+<div class="content-wrapper">
+    <div id="nav">
+        <a title="">@Localization.ManagerAdminTitle.ToUpper()</a> » @ViewBag.Title.ToUpper()
+    </div>
+    @{
+        Html.RenderAction("OnSearch", "AdminLog");
+    }
+    <div class="page-content" style="margin-right:10px;">
+        <div id="cat_list_render">
+
+            @{
+                Html.RenderAction("GetList", "AdminLog", new { type = @ctgType });
+            }
+        </div>
+    </div>
+
+    <div id="add_category_model_container"></div>
+    <div id="view_model_container"></div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(".btn-add").live('click', function (event) {
+            var $self = $(this);
+            $.get('/ReportOfDay/OnInsert', { id: 0 }, function (data) {
+                var $categoryModel = $('#add_category_model_container');
+                $categoryModel.html(data);
+                $('#addCategoryModel').modal({
+                    keyboard: true
+                });
+            });
+        });
+    });
+</script>

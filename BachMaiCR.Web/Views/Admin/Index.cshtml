@@ -1,0 +1,114 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Trang quản trị";
+    ViewBag.Focus = "layout0";
+}
+
+@*@{
+    Html.RenderAction("UserMenu","Partial");
+}*@
+    @Styles.Render("~/Content/css")
+<div style="width: 20px; float: left">a</div>
+@*<div id="page-nav-left" style="height: 668px; width: 200px;float: left">
+    <nav class="div-navbar">*@
+        <div class="navbar-default navbar-static-side" style="width: 200px" role="navigation">
+            <div class="sidebar-collapse">
+                @GenerateAdminMenu()
+            </div>
+        </div>
+   @* </nav>
+</div>*@
+
+
+@helper GenerateAdminMenu()
+{
+    if(ViewBag.RootMenu!=null && ViewBag.ActionCode!=null)
+    {
+        var rootMenu = ViewBag.RootMenu as List<BachMaiCR.DBMapping.Models.ADMIN_MENU>;
+        var actionCode = ViewBag.ActionCode as List<string>;
+        if (rootMenu.Count > 0 && actionCode.Count > 0)
+        {
+            int i = 0;
+            <ul id="side-menu1" class="nav">
+        
+                @foreach (var menu in rootMenu)
+                {
+                    int level = 0;
+                    var listmenu = BachMaiCR.Web.Common.Helpers.GetMenuHelper.GetMenuByParrent(menu.MENU_ID, actionCode);
+                    if (listmenu.Count > 0)
+                    {
+                        var cssClass = "";
+                        if (i == 0)
+                        {
+                            cssClass = "menu-root active";
+                        }
+                        else
+                        {
+                            cssClass = "menu-parent menu-root";
+                        }
+                        i++;
+                        <li class="@cssClass">
+                            <a  href="@menu.MENU_URL">
+                                <i class="@menu.MENU_CLASS"></i>    
+                                @menu.MENU_NAME
+                                <span class="fa arrow"></span>
+                            </a>
+                            @GenerateNote(menu.MENU_ID, menu.MENU_NAME, 0, actionCode)
+                        </li>
+                    }
+                }
+            </ul>
+        }
+    }
+}
+
+@helper GenerateNote(int parrentId, string departmentName, int level, List<string> actionCode)
+{
+    level++;
+    var listMenu = BachMaiCR.Web.Common.Helpers.GetMenuHelper.GetMenuByParrent(parrentId, actionCode);
+    if (listMenu.Count > 0)
+    {
+        var classLevelul = "";
+        if (level == 1)
+        {
+            classLevelul = "nav nav-second-level";
+        }
+        else if (level == 2)
+        {
+            classLevelul = "nav nav-third-level";
+        }
+        <ul class="@classLevelul">
+            @foreach (var menu in listMenu)
+            {
+                var exitChild = BachMaiCR.Web.Common.Helpers.GetMenuHelper.GetMenuByParrent(menu.MENU_ID, actionCode);
+                var classLevel = "";
+                if (level==1)
+                {
+                    classLevel = "li-nav-second-level";
+                }
+                else if (level == 2)
+                {
+                    classLevel = "li-nav-third-level";
+                }
+                <li class="@classLevel">
+                    <a href="@menu.MENU_URL">
+                       <i class="@menu.MENU_CLASS"></i>    
+                              <span style="color: black;">@menu.MENU_NAME</span>
+                        @if (exitChild.Count>0)
+                        {
+                            <span class="fa arrow"></span>
+                        }
+                    </a>
+                    @GenerateNote(menu.MENU_ID, menu.MENU_NAME,level,actionCode)
+                </li>
+            }
+        </ul>
+    }
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#side-menu1').metisMenu();
+    });
+</script>

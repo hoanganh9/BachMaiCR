@@ -1,0 +1,417 @@
+﻿@using BachMaiCR.Web.Utils;
+@using BachMaiCR.Web.Common;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.Utilities.Enums;
+@model IEnumerable<BachMaiCR.DBMapping.Models.DOCTOR>
+@{
+    var arrayID = ViewBag.arrayid as string;
+
+    var isChange = ViewBag.isChange == null ? 0 : Convert.ToInt32(ViewBag.isChange);
+    var lstCalendarDoctor = ViewBag.lstCalendarDoctor as string;
+    var lstCalendarDoctorAll = ViewBag.lstCalendarDoctorAll as List<BachMaiCR.DBMapping.Models.DoctorCalendarLeader>;
+    var groupId = Convert.ToString(ViewBag.groupId);
+    string title = Resources.Localization.ListDoctorDefault;
+    var allDoctorCalendar = null as List<DoctorInCalendar>; ;
+    var DateX = ViewBag.DateX;
+    DateTime date = Convert.ToDateTime(DateX); 
+
+    if (groupId == "1")
+    {
+        title = Resources.Localization.ListDoctorDirector;
+       
+    }
+    else if (groupId == "2")
+    {
+        title = Resources.Localization.ListDoctorLeader;
+        //Them ngay 25.06
+        allDoctorCalendar = ViewBag.allDoctorCalendar as List<DoctorInCalendar>;
+    }
+    int monthX = date.Month;
+    int yearX = date.Year;
+    var lstDoctors = Model.Select(t => new
+                {
+                    DOCTORS_ID = t.DOCTORS_ID
+                    ,
+                    DOCTOR_NAME = Utils.StripHTML(t.DOCTOR_NAME)
+                    ,
+                    ABBREVIATION = t.ABBREVIATION
+                    ,
+                    PHONE = t.PHONE
+                    ,
+                    LM_DEPARTMENT_IDs = t.LM_DEPARTMENT_IDs
+                    ,
+                    LM_DEPARTMENT_NAMEs = Utils.StripHTML(t.LM_DEPARTMENT_NAMEs)
+                }).StringifyJs(false);
+}
+<script type="text/javascript" src="~/Scripts/Utils/bmcrUtils.js"></script>
+<script type="text/javascript" src="~/Scripts/Utils/dateUtils.js"></script>
+<script type="text/javascript" src="~/Scripts/jQuery.tmpl.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap.typeahead.js"></script>
+<style>
+    th {
+        font-size: 12px;
+    }
+</style>
+<table id="table_list_staff1" class="tbl" border="0" style="max-height: 30px; width: 100%">
+    <tr>
+        <th style="vertical-align: top;text-align:left; width:8%" class="viewdoctors">
+            @Resources.Localization.ListItem
+        </th>
+        <th style="vertical-align: top; text-align: center; width: 5%" class="viewdoctors">
+            @if (isChange == 0)
+            {
+                <div class="checkboxId"> <input type="checkbox" id="cbx-check-all" onclick="CheckAll(this.checked)" /></div>
+            }
+        </th>
+        <th style="width: 17%;" class="viewdoctors">
+            @Resources.Localization.LabelShortName
+        </th>
+
+
+        @if (groupId == "2")
+        {
+            <th style="vertical-align: top; width:20%;" class="viewdoctors">
+                @title
+            </th>
+            <th style="text-align: left; vertical-align: top; width: 27%;" class="viewdoctors">
+                @Resources.Localization.LabelDepartment
+            </th>
+            <th style="text-align: left; vertical-align: top; width: 23%" class="viewdoctors">
+                @Resources.Localization.CalendarExits
+            </th>
+        }
+        else
+        {
+            <th style="vertical-align: top; width:30%;" class="viewdoctors">
+                @title
+            </th>
+            <th style="text-align: left; vertical-align: top; width: 40%" class="viewdoctors">
+                @Resources.Localization.LabelDepartment
+            </th>
+
+        }
+    </tr>
+</table>
+<div style="height: 180px; width: 100%; overflow-y: auto;">
+    <table id="table_list_staff" class="table-view" border="0">
+        <tbody></tbody>
+        @{
+            int i = 1;
+            int countResize = 0;
+            string calendarName = "N/A";
+            int? statusId = 0;
+            int isApproved = 0;
+            int calendarDutyId = 0;
+        }
+        @foreach (var item in Model)
+        {
+            countResize++;
+            if (groupId == "2")
+            {
+                List<DoctorInCalendar> listDoctorCalendar = allDoctorCalendar.Where(o => o.DOCTORS_ID == item.DOCTORS_ID).ToList();
+                if (listDoctorCalendar != null && listDoctorCalendar.Count > 0)
+                {
+                    statusId = listDoctorCalendar[0].CALENDAR_STATUS;
+                    isApproved = listDoctorCalendar[0].ISAPPROVED;
+                    calendarName = listDoctorCalendar[0].CALENDAR_NAME;
+                    calendarDutyId = listDoctorCalendar[0].CALENDAR_DUTY_ID;
+
+                }
+                else
+                {
+                    statusId = 0;
+                    isApproved = 0;
+                    calendarName = "N/A";
+                    calendarDutyId = 0;
+                }
+            }
+            <tr id="divDoctor_@item.DOCTORS_ID">
+                <td style="vertical-align: top; width:8%;" class="viewdoctors">
+                    @(i++)
+                </td>
+                <td style="vertical-align: top; text-align: center; width: 5%" class="viewdoctors">
+                    @if (isChange == 0)
+                    {
+                        if (groupId == "2")
+                        {
+                            @Html.Hidden("H_" + item.DOCTORS_ID, calendarDutyId)
+                            if (isApproved == 0 && statusId <= Convert.ToInt32(CalendarDutyStatus.SendApproved))
+                            {
+                                <input type="checkbox" id="Checked_@item.DOCTORS_ID" name="groupDoctor" onclick="CheckExits(this.checked, '@item.DOCTORS_ID')" />
+                            }
+                            else
+                            {
+                                <script type="text/javascript">
+
+                                    $('#divDoctor_@item.DOCTORS_ID').css("background-color", "yellow");
+
+                                </script>
+                            }
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="Checked_@item.DOCTORS_ID" name="groupDoctor" />
+                        }
+                    }
+                    else
+                    {
+                        <input type="radio" id="Checked_@item.DOCTORS_ID" name="groupDoctor" />
+                    }
+                </td>
+                <td style="vertical-align: top; width:17%" class="viewdoctors">
+                    <div id="@Html.DisplayFor(modelItem => item.DOCTORS_ID)" title="@Html.DisplayFor(modelItem => item.PHONE)">
+                        @Html.DisplayFor(modelItem => item.ABBREVIATION)
+                    </div>
+                </td>
+
+
+                @if (groupId == "2")
+                {
+                    <td style="text-align: left; vertical-align: top; width: 20%" class="viewdoctors">
+                        <a title='Xem lịch cá nhân' href='javascript:void(0)' class='detailDoctor' data-id='@item.DOCTORS_ID'>
+                            <span style=" color: #0B55C4; ">     @Html.DisplayFor(modelItem => item.DOCTOR_NAME)</span>
+                        </a>
+                    </td>
+                    <td style="vertical-align: top; text-align: left; width: 27%" class="viewdoctors">
+                        <div style="margin-left:5px;">    @Html.DisplayFor(modelItem => item.LM_DEPARTMENT_NAMEs)</div>
+                    </td>
+                    <td style="vertical-align: top; text-align: left; width: 23%;" id="Calendar_@item.DOCTORS_ID" class="viewdoctors">
+                        @calendarName
+                    </td>
+                }
+                else
+                {
+                    <td style="text-align: left; vertical-align: top; width: 30%" class="viewdoctors">
+                        <a title='Xem lịch cá nhân' href='javascript:void(0)' class='detailDoctor' data-id='@item.DOCTORS_ID'>
+                            <span style=" color: #0B55C4; ">    @Html.DisplayFor(modelItem => item.DOCTOR_NAME)</span>
+                        </a>
+                    </td>
+                    <td style="vertical-align: top; text-align: left; width:40%" class="viewdoctors">
+                        <div style="margin-left:5px;">    @Html.DisplayFor(modelItem => item.LM_DEPARTMENT_NAMEs)</div>
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+</div>
+<div class="panel-search-button" style="margin-top: 5px;">
+    <input type="hidden" value="0" id="flag_accept" />
+    <div class="DatesChange" id="DatesChange" style="height: 30px; display: none; font-size:12px;">
+        Đổi lịch với: <span id="spDoctorChange" style="font-weight: bold; color: maroon"></span>
+        Vào ngày:
+        <select id="slDateChanges" style="width: 100px;"></select>
+    </div>
+    <input type="button" id="btnOk" value="@(isChange == 0 ? "Chọn" : "Đổi lịch")" onclick="return onAccept();" class="btn btn-primary min-width" data-type="add" />
+    <input type="button" id="btnCancel" value="Đóng" onclick="return onClose();" class="btn btn-primary min-width" />
+</div>
+
+<script id="rowDirectorTemplate" type="text/x-jquery-tmpl">
+    <tr id="divDoctor_${DOCTORS_ID}">
+        <td style="vertical-align: top; width: 40px;" class="rowIndex"></td>
+        <td style="vertical-align: top; width: 30px; text-align: center">
+            {{if IS_CHANGE == 0}}
+            <input type="checkbox" id="Checked_${DOCTORS_ID}" name="groupDoctor" />
+            {{else}}
+            <input type="radio" id="Checked_${DOCTORS_ID}" name="groupDoctor" />
+            {{/if}}
+        </td>
+        <td style="vertical-align: top; width: 80px">
+            <div id="${DOCTORS_ID}" title="${PHONE}">
+                ${ABBREVIATION}
+            </div>
+        </td>
+        <td style="text-align: left; width: 150px">
+            ${DOCTOR_NAME}
+        </td>
+        <td style="vertical-align: top; text-align: left">
+            ${DEPARTMENT_CODE}
+        </td>
+    </tr>
+</script>
+<script type="text/javascript">
+    var idSelected = @(string.IsNullOrEmpty(arrayID) ? MvcHtmlString.Create("[]") : Html.Raw("[" + arrayID + "]"));
+    var lstCalendarDoctor = @(string.IsNullOrEmpty(lstCalendarDoctor) ? MvcHtmlString.Create("[]") : Html.Raw(lstCalendarDoctor));
+    var lstDoctors = @(string.IsNullOrEmpty(lstDoctors) ? MvcHtmlString.Create("[]") : Html.Raw(lstDoctors));
+    var isChange = @isChange;
+    var idDoctorChange ;
+    function onAccept() {
+        $('#flag_accept').val(1);
+        $('.ui-icon-closethick').click();
+    };
+    $(".detailDoctor").bind('click', function (event) {
+        var $self = $(this);     
+        $.get('/CalendarDuty/DetailCalendarPersonal', {
+            doctorId: $self.attr('data-id'), monthx: '@monthX', yearx: '@yearX',
+        },
+            function (data) {
+                var $categoryModel = $('#view_model_container');
+                $categoryModel.html(data);
+                $('#viewEntityModel').modal({
+                    keyboard: false
+                });
+
+            });
+
+    });
+    function onClose() {
+        $('#flag_accept').val(0);
+        $('.ui-icon-closethick').click();
+        return false;
+    }
+    function CheckAll(value) {
+        $("input:checkbox[name='groupDoctor']").each(function (i) {
+            this.checked = value;
+        });
+    }
+
+    function loadDoctorData()
+    {
+        //console.log(lstCalendarDoctor);
+        //$("#rowDirectorTemplate").tmpl(lstDoctors).appendTo("#table_list_staff tbody");
+        //Chuyển các input checkbox thành radio
+        if(isChange==1)
+        {
+            var id = "";
+            if(idSelected.length >0)
+            {
+                id = idSelected[0];
+            }
+            var idColumnSelect = $('.ui-selected').attr('id');
+            var day = $('.ui-selected').attr('day');
+            var hour = 0;
+            if (day != undefined) {
+                hour = day == 'ngay' ? 10 : 22;
+            }
+            var date = new Date(window.calendarMonth + "/" + idColumnSelect + "/" + window.calendarYear);
+            var newDate = new Date(date.setHours(hour));
+
+            $('#table_list_staff input[name="groupDoctor"]').each(function () {
+                var parentInput = $(this).parent();
+                var idDoctor =  $(this).attr('id').replace('Checked_','');
+                var inputRadio = '<input type="radio" name="groupDoctor"  id="' + idDoctor + '">';
+                //console.log(doctorCalendar);
+                var divDoctor = $('.ui-selected div.schedule-element').map(function () { return parseInt(this.id); }).get();
+                var aDoctorChange = $('.ui-selected div.schedule-element a.namechange');
+                if(aDoctorChange.length >0)
+                {
+                    aDoctorChange.each(function() {
+                        var id = $(this).attr('id');
+                        if(id.indexOf('_') >-1)
+                        {
+                            divDoctor.push(parseInt(id.split('_')[1]));
+                        }
+                    });
+                }
+                if(_.contains(divDoctor, parseInt(idDoctor)))
+                {
+                    $(this).remove();
+                    parentInput.parent().css('background-color','#b6ff00');
+                }
+            });
+        }
+        else
+        {
+            if(idSelected.length >0)
+            {
+                for(var i =0;i<idSelected.length;i++)
+                {
+                    $('#Checked_'+idSelected[i]).prop("checked", true);
+                    $('#divDoctor_'+ idSelected[i]).css("background-color", "yellow");
+                }
+            }
+        }
+    }
+
+    $(function () {
+
+        loadDoctorData();
+        bmcr.checkboxUtils.checkAndUnCheckAll($('#cbx-check-all'),$("input:checkbox[name='groupDoctor']"));
+        $("#popupStaff").css('display', 'block');
+        $("#table_list_staff input[type=radio]").click(function (event) {
+            var idDoctor = $(this).attr('id').replace('Checked_','');
+            var idColumnSelect = $('.ui-selected').attr('id');
+
+            var day = $('.ui-selected').attr('day');
+            var hour = 0;
+            if (day != undefined) {
+                hour = day == 'ngay' ? 10 : 22;
+            }
+            var date = new Date(window.calendarMonth + "/" + idColumnSelect + "/" + window.calendarYear);
+            var newDate = new Date(date.setHours(hour));
+
+            var doctorCalendar = _.filter(lstCalendarDoctor,function(obj) {
+                return obj.DOCTORS_ID === parseInt(idDoctor) && new Date(obj.DATE_START).valueOf() != newDate.valueOf();
+            });
+
+            idDoctorChange = parseInt(idDoctor);
+            $('#DatesChange').show();
+
+            $('#DatesChange #slDateChanges').html('');
+            if(doctorCalendar.length >0)
+            {
+                $('#DatesChange #spDoctorChange').text(doctorCalendar[0].ABBREVIATION);
+                $('#DatesChange #slDateChanges').append('<option value="">---</option>');
+                _.each(doctorCalendar,function(obj) {
+                    var existRemove = _.find(lstCalendarChange,function(num) {
+                        return num.DOCTORS_ID === parseInt(idDoctor) && new Date(num.DATE_START).valueOf() == new Date(obj.DATE_START).valueOf();
+                    });
+                    if(!existRemove)
+                    {
+                        $('#DatesChange #slDateChanges').append('<option value='+ obj.CALENDAR_DATA_ID +'>'+ dateUtils.convertDateTime(obj.DATE_START) + '</option>');
+                    }
+                });
+            }
+            else
+            {
+                $('#DatesChange').hide();
+            }
+            $('#DatesChange #slDateChanges').selectpicker({width:120});
+            $('#DatesChange #slDateChanges').selectpicker("refresh");
+        });
+    });
+    $(function () {
+        var count = '@countResize'
+
+        if (parseFloat(count)>6) {
+            $('.checkboxId').addClass("marginp");
+        }
+        else
+        {
+            $('.checkboxId').removeClass("marginp");
+        }
+    });
+    function CheckExits(value, doctorId) {
+        var groupId='@groupId';
+        if (groupId=="2") {
+            var calendarName = $("#Calendar_" + doctorId).text().trim();
+            var calendarId = $("#H_" + doctorId).val();
+            if (calendarId != "0") {
+                var conttent = "Cán bộ đã tồn tại trong lịch '" + calendarName + "' , nếu bạn chọn có nghĩa bạn đồng ý hủy trực của cán bộ trong lịch đó?";
+                if (value == true || value == "1") {
+                    if (confirm(conttent)) {
+                        this.checked = true;
+                        $("#Calendar_" + doctorId).html('N/A');
+                        $.ajax({
+                            type: "POST",
+                            url: '/CalendarDuty/DeleteDoctorInCalendar',
+                            data: { calendarDutyId: parseFloat(calendarId), doctorId: parseFloat(doctorId), date: '@DateX' },
+                            success: function (data) {
+
+                            }
+                        });
+
+                    }
+                    else {
+                        var idCheckDoctor = "Checked_" + doctorId;
+                        $("input:checkbox[id='" + idCheckDoctor + "']").each(function (i) {
+                            this.checked = false;
+                        });
+                    }
+                }
+            }
+        }
+        return false;
+    }
+</script>
+
+

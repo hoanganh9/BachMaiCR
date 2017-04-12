@@ -1,0 +1,67 @@
+﻿@model BachMaiCR.DBMapping.ModelsExt.DateChange
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.Models;
+@using BachMaiCR.DBMapping.ModelsExt;
+@{
+    var type = ViewBag.Type;
+    var Dates = ViewBag.Dates;
+    if (type=="1")
+    {
+        Dates = ViewBag.Dates as List<DateChangeList>;       
+    }
+    else
+    {
+        Dates = ViewBag.Dates as List<DocTorDate>;
+     
+    }
+    var idCalendarDuty = ViewBag.idCalendarDuty;
+    
+    List<SelectListItem> tmpDate = new List<SelectListItem>();
+    tmpDate.Add(new SelectListItem() { Text = "---", Value = "-1", Selected = true });
+    foreach(var item in Dates)
+    {
+        if (type == "1")
+        { 
+        tmpDate.Add(new SelectListItem() { Text = String.Format("{0:dd/MM/yyyy}", item.DATE_START), Value = String.Format("{0:dd/MM/yyyy}", item.DATE_START), Selected = false });
+        }
+        else
+        {
+            tmpDate.Add(new SelectListItem() { Text = String.Format("{0:dd/MM/yyyy}", item.DATE_START), Value = String.Format("{0:dd/MM/yyyy}", item.DATE_START) + "_" + item.TEMPLATE_COLUM_ID, Selected = false });
+        }
+    }
+    var Listdates = new SelectList(tmpDate, "Value", "Text", -1);
+ 
+}
+
+<style>
+  
+    
+    .selectDateX
+    {
+        font-size: 12px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+        text-align:left;
+    }
+   
+ 
+   
+</style>
+<script type="text/javascript">
+
+    $(document).ready(function (e) {
+        $('.selectDateX').selectpicker();
+    });
+   
+ </script>
+<table style="width:100%" border="0">
+    <tr>
+        <td style="height:30px;margin-top:5px;font-size:12px;font-family:Arial, Verdana, Tahoma, sans-serif;">
+             &nbsp;<strong> Đổi lịch với </strong> &nbsp;'<span id="spDoctorChange" style="font-weight:bold;color:maroon"></span>' <strong> vào ngày:</strong>
+</td>
+        <td style="text-align:left">
+            @Html.DropDownListFor(model=>model.Dates, Listdates, new { @class = "selectDateX", data_width = "150px",id = "selectWeekX" })
+
+        </td>
+    </tr>
+
+</table>

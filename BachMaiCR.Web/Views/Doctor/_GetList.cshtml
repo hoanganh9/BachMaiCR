@@ -1,0 +1,222 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.Web.Common
+@{
+    var pagNar = ViewBag.Pagination as BachMaiCR.Utilities.Entity.Pagination;
+    ViewBag.Title = Localization.MenuCategoryDoctor;
+    //var strName = "Tên bác sĩ";
+    var lstItem = ViewBag.Category as List<DOCTOR>;
+    var startIndex = pagNar.CurrentPage * pagNar.PageSize;
+
+
+    var lstAction = ViewBag.Actions as List<string>;
+    var actDel = lstAction.Contains(WebConst.ACTION_DOCTOR_DELETE_CODE);
+    var actUpdate = lstAction.Contains(WebConst.ACTION_DOCTOR_SAVE_CODE);
+    var actView = lstAction.Contains(WebConst.ACTION_DOCTOR_VIEW_CODE);
+    bool enableActive = lstAction.Contains(WebConst.ACTION_DOCTOR_ACTIVE_CODE);
+
+}
+
+<script src="~/Scripts/bootbox.min.js"></script>
+<div class="content">
+    <div class="clear"></div>
+    @if (pagNar.TotalRows.Equals(0))
+    {
+        <div class="padding-all">
+            <div class="alert alert-warning alert-dismissable">
+                @Html.Raw(Localization.MsgSearchNotFound)
+            </div>
+        </div>
+    }
+    else
+    {
+        <table class="tbl">
+            <tr>
+                <th class="index width36">@Resources.Localization.LabelIndex</th>
+                <th class="width96">@Resources.Localization.LabelShortName</th>
+                <th>@Resources.Localization.LabelDoctorName</th>
+                <th>@Resources.Localization.LabelPhone</th>
+                <th>@Resources.Localization.LabelEducation</th>
+                <th>@Resources.Localization.LabelLevel</th>
+                <th>@Resources.Localization.LabelDepartment</th>
+                <th>@Resources.Localization.LabelPosition</th>
+                @if (enableActive)
+                {
+                    <th>@Resources.Localization.LabelActived</th>
+                }
+                @if (actView)
+                {
+                    <th class="width36">@Localization.LabelView</th>
+                }
+                @if (actDel)
+                {
+                    <th class="width36">@Resources.Localization.LabelDel</th>
+                }
+                @if (actUpdate)
+                {
+                    <th class="width36">@Resources.Localization.LabelEdit</th>
+                }
+            </tr>
+            <tbody id="ctg_content_body">
+                @for (int i = 0; i < lstItem.Count; i++)
+                {
+                    <tr>
+                        <td class="align-center">@(i + 1 + startIndex)</td>
+                        <td>@lstItem[i].ABBREVIATION</td>
+                        <td>@lstItem[i].DOCTOR_NAME</td>
+                        <td>@lstItem[i].PHONE</td>
+                        <td>@lstItem[i].EDUCATION_NAMEs</td>
+                        <td>@lstItem[i].DOCTOR_LEVEL.LEVEL_NAME</td>
+                        <td>@lstItem[i].LM_DEPARTMENT_NAMEs</td>
+                        <td>@lstItem[i].POSITION_NAMEs</td>
+                        @if (enableActive)
+                        {
+                            <td style="text-align: center;">
+                                @if (lstItem[i].ISACTIVED.Equalstrue)
+                                {
+                                    <input class='change-active' type='checkbox' checked value='@lstItem[i].DOCTORS_ID' />
+                                }
+                                else
+                                {
+                                    <input class='change-active' type='checkbox' value='@lstItem[i].DOCTORS_ID' />
+                                }
+                            </td>
+                        }
+                        @if (actView)
+                        {
+                            <td class="align-center">
+                                <a title='@Localization.TitleDisplayView' href='javascript:void(0)' class='cat-view' data-id='@lstItem[i].DOCTORS_ID'><span class='glyphicon glyphicon-list-alt'></span></a>
+                            </td>
+                        }
+                        @if (actDel)
+                        {
+                            <td class="align-center"><a title='@Resources.Localization.TitleDisplayDel' data-bb="dialog" data-toggle='confirmation' href='javascript:void(0)' class='cat-delete' data-id='@lstItem[i].DOCTORS_ID'><span class='glyphicon glyphicon-trash'></span></a></td>
+                        }
+                        @if (actUpdate)
+                        {
+                            <td class="align-center"><a title='@Resources.Localization.TitleDisplayEdit' href='javascript:void(0)' class='cat-edit' data-id='@lstItem[i].DOCTORS_ID'><span class='glyphicon glyphicon-edit'></span></a></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @Html.Partial("_PaginationView", pagNar);
+    }
+</div>
+<div id="navigate_bottom_panel" class="nav-bottom ">
+</div>
+
+
+<script type="text/javascript">
+
+    function OnCriteria(pageIndex) {
+        $.ajax({
+            type: "GET",
+            url: '/@pagNar.ModelName/@pagNar.ActionName',
+            data: {
+                SearchName: $('#SearchName').val().trim()
+                , SearchPhone: $('#SearchPhone').val().trim()
+                , SearchDeprtId: $('#SearchDeprtId').val().trim()
+                , SearchDoctorLevelId: $('#SearchDoctorLevelId').val().trim()
+                , SearchDegreeId: $('#SearchDegreeId').val().trim()
+                , SearchPositionId: $('#SearchPositionId').val().trim()
+                , pageIndex: pageIndex
+            },
+            success: function (response) {
+                var $catlist = $('@pagNar.TagetReLoadId');
+                if ($catlist == null || $catlist.length == 0) {
+                    window.notice('@Resources.Localization.MsgItemNotFound', window.notice_error);
+                }
+                else {
+                    $catlist.html(response);
+                }
+            }
+        });
+        setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+    }
+
+    // Hàm xử lý yêu cầu Export dữ liệu từ người dùng ra Excel
+    function OnExportExcel() {
+        if ($('table tr').size() == 0) {
+            window.notice('@Resources.Localization.MsDataEmpty', window.notice_error);
+        }
+        else {
+
+        }
+    };
+
+
+    $(document).ready(function () {
+        $(".modal").on('shown', function () {
+            $(this).find("[autofocus]:first").focus();
+        });
+
+
+        $(".cat-view").bind('click', function (event) {
+            var $self = $(this);
+            $.get('/@pagNar.ModelName/OnDetail', {
+                id: $self.attr('data-id')
+            },
+                function (data) {
+                    var $categoryModel = $('#view_model_container');
+                    $categoryModel.html(data);
+                    $('#viewModelContainer').modal({
+                        keyboard: true
+                    });
+                });
+        });
+
+        $(".cat-edit").bind('click', function (event) {
+            var $self = $(this);
+            $.get('/Doctor/OnUpdate', {
+                id: $self.attr('data-id')
+
+            },
+                function (data) {
+                    var $categoryModel = $('#add_category_model_container');
+                    $categoryModel.html(data);
+                    $('#addCategoryModel').modal({
+                        keyboard: true
+                    });
+                });
+        });
+      
+        $('.change-active').bind('change', function (event) {
+            var $self = $(this);
+            $.post('/Doctor/ActiveChage', { doctorId: $self.val(), active: $self.is(":checked") == true }, function (response) {
+                if (response.status == 200) {
+                    window.notice(response.result, window.notice_success);
+                }
+                else {
+                    window.notice(response.result, window.notice_error);
+                }
+            });
+        });
+        $('.cat-delete').bind('click', function (event) {
+            var $self = $(this);
+            $self.confirmation({
+                'popout': true,
+                'btnOkClass': 'btn-danger',
+                'title': '@Resources.Localization.MsgConfirmDisplayDel',
+                'yesButtonTitle': '<span class="glyphicon glyphicon-trash"></span> @Localization.LabelDel',
+                'cancelButtonTitle': '@Localization.ButtonCancelDisplay',
+                'placement': 'left',
+                onComplete: function (e) {
+                    $.post('/Doctor/OnDelete', { id: $self.attr('data-id') }, function (response) {
+                        if (response.status == 200) {
+                            //$self.parents('tr').remove();
+                            OnCriteria(0);
+                            window.notice(response.result, window.notice_success);
+                        }
+                        else if (response.status == 500) {
+                            window.notice(response.result, window.notice_error);
+                        }
+                    });
+                },
+                onCancel: function (e) {
+                    //alert(0);
+                }
+            });
+        });
+    });
+</script>

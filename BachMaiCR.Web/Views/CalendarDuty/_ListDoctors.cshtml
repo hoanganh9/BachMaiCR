@@ -1,0 +1,228 @@
+﻿@model IEnumerable<BachMaiCR.DBMapping.Models.DOCTOR>
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using Resources;
+@using System.Data.Entity.SqlServer;
+@using BachMaiCR.Utilities.Enums;
+@{
+    var arrayID = ViewBag.arrayid as string[];
+    var arrayView = ViewBag.arrayView as string[];
+    var allDoctor = ViewBag.allDoctor as List<DoctorColumn>;
+    var allDoctorCalendar = ViewBag.allDoctorCalendar as List<DoctorInCalendar>;
+    var DateX = ViewBag.DateX;
+    DateTime date = Convert.ToDateTime(DateX);
+    int monthX = date.Month;
+    int yearX = date.Year;
+}
+
+<table id="table_list_staff1" class="tbl" style="height:20px;border:0;width:100%">
+    <tr>
+        <th style="vertical-align:top; width:8% " class="viewdoctors">
+            @Localization.ListItem
+        </th>
+        <th style="vertical-align:top; width:5%; text-align:left;" class="viewdoctors"><div class="checkboxId"><input type="checkbox" id="cbx-check-all" onclick="CheckAll(this.checked)" /></div></th>
+        <th style=" text-align: center; vertical-align: top; width: 20%;" class="viewdoctors">
+            @Localization.LabelShortName
+        </th>
+        <th style="text-align: left;vertical-align:top; width:20%;" class="viewdoctors">
+            @Localization.ListDoctorDefault
+        </th>
+
+        <th style="text-align: left; vertical-align: top; width: 10%;" class="viewdoctors">
+            @Localization.LableDoctorLevel
+        </th>
+        <th style="text-align: left; vertical-align: top; width: 37%;" class="viewdoctors">
+            @Localization.CalendarExits
+        </th>
+    </tr>
+</table>
+<div style="height: 180px; width:100%; overflow-y: auto;">
+    <table id="table_list_staff" class="table-view">
+        @{
+            int i = 1;
+            int countResize = 0;
+            string calendarName = "N/A";
+            int? statusId = 0;
+            int isApproved = 0;
+            int calendarDutyId = 0;
+        }
+        @foreach (var item in Model)
+        {
+            List<DoctorColumn> listDoctor = allDoctor.Where(o => o.DOCTORS_ID == item.DOCTORS_ID).ToList();
+            if (listDoctor.Count != 0)
+            {
+                countResize++;
+                List<DoctorInCalendar> listDoctorCalendar = allDoctorCalendar.Where(o => o.DOCTORS_ID == item.DOCTORS_ID).ToList();
+                if (listDoctorCalendar != null && listDoctorCalendar.Count > 0)
+                {
+                    statusId = listDoctorCalendar[0].CALENDAR_STATUS;
+                    isApproved = listDoctorCalendar[0].ISAPPROVED;
+                    calendarName = listDoctorCalendar[0].CALENDAR_NAME;
+                    calendarDutyId = listDoctorCalendar[0].CALENDAR_DUTY_ID;
+
+                }
+                else
+                {
+                    statusId = 0;
+                    isApproved = 0;
+                    calendarName = "N/A";
+                    calendarDutyId = 0;
+                }
+                if (arrayView.Contains(item.DOCTORS_ID.ToString()) == false)
+                {
+                    <tr id="divDoctor_@item.DOCTORS_ID">
+                        <td style="width:8% " class="viewdoctors">
+                            @(i++)
+                            @Html.Hidden("H_" + @item.DOCTORS_ID, @calendarDutyId)
+                        </td>
+                        <td style=" text-align: center; width: 5%;" class="viewdoctors">
+                            @if (isApproved == 0 && statusId <= Convert.ToInt32(CalendarDutyStatus.SendApproved))
+                            {
+                                <input type="checkbox" id="Checked_@item.DOCTORS_ID" name="groupDoctor" onclick="CheckExits(this.checked, '@item.DOCTORS_ID')" />
+                            }
+                            else
+                            {
+                                <script type="text/javascript">
+
+                                    $('#divDoctor_@item.DOCTORS_ID').css("background-color", "yellow");
+
+                                </script>
+                            }
+
+                        </td>
+                        <td style=" text-align: left; width: 20%;" class="viewdoctors">
+                            <div id="@Html.DisplayFor(modelItem => item.DOCTORS_ID)" title="@Html.DisplayFor(modelItem => item.DOCTOR_NAME)">
+                                @Html.DisplayFor(modelItem => item.ABBREVIATION)
+                            </div>
+                        </td>
+                        <td style="text-align: left; width: 20%;" class="viewdoctors">
+                            <a title='Xem lịch cá nhân' href='javascript:void(0)' class='detailDoctor' data-id='@item.DOCTORS_ID'>
+                                <span style=" color: #0B55C4; ">     @Html.DisplayFor(modelItem => item.DOCTOR_NAME)</span>
+                            </a>
+                        </td>
+                        <td style="text-align: left; width: 10%;" class="viewdoctors">
+                            @Html.DisplayFor(modelItem => item.DOCTOR_LEVEL.LEVEL_NAME)
+                        </td>
+                        <td style="text-align: left; width: 37%;" class="viewdoctors" id="Calendar_@item.DOCTORS_ID">
+                            @calendarName
+                        </td>
+                    </tr>
+
+                }
+                else
+                {
+                    <tr style="background-color:#b6ff00">
+                        <td style=" width:8% " class="viewdoctors">
+                            @(i++)
+                        </td>
+                        <td style=" text-align: center; width: 5%" class="viewdoctors"></td>
+                        <td style=" text-align: left; width: 20%;" class="viewdoctors">
+                            <div id="@Html.DisplayFor(modelItem => item.DOCTORS_ID)" title="@Html.DisplayFor(modelItem => item.DOCTOR_NAME)">
+                                @Html.DisplayFor(modelItem => item.ABBREVIATION)
+                            </div>
+                        </td>
+                        <td style="text-align: left; width: 20%;" class="viewdoctors">
+                            <a title='Xem lịch cá nhân' href='javascript:void(0)' class='detailDoctor' data-id='@item.DOCTORS_ID'>
+                                <span style=" color: #0B55C4; ">     @Html.DisplayFor(modelItem => item.DOCTOR_NAME)</span>
+                            </a>
+
+                        </td>
+                        <td style="text-align: left; width: 10%;" class="viewdoctors">
+                            @Html.DisplayFor(modelItem => item.DOCTOR_LEVEL.LEVEL_NAME)
+                        </td>
+                        <td style=" text-align: left; width: 37%;" class="viewdoctors" id="Calendar_@item.DOCTORS_ID">
+                            @calendarName
+
+                        </td>
+                    </tr>
+
+                }
+
+
+            }
+        }
+
+        @foreach (var idDoctor in arrayID)
+        {
+
+            <script type="text/javascript">
+                $('#Checked_@idDoctor').prop("checked", true);
+                $('#divDoctor_@idDoctor').css("background-color", "yellow");
+
+            </script>
+        }
+
+    </table>
+</div>
+
+<div class="panel-search-button" style="margin-top:5px">
+    <input type="hidden" value="0" id="flag_accept" />
+    <input type="button" id="btnOk" value="Chọn" onclick="return onAccept();" class="btn btn-primary min-width viewdoctors" />
+    <input type="button" id="btnCancel" value="Đóng" onclick="return onClose();" class="btn btn-primary min-width viewdoctors" />
+</div>
+
+<script type="text/javascript">
+    function onAccept() {
+
+        $('#flag_accept').val(1);
+        $('.ui-icon-closethick').click();
+
+    };
+    $(".detailDoctor").bind('click', function (event) {
+        var $self = $(this);
+        $.get('/CalendarDuty/DetailCalendarPersonal', {
+            doctorId: $self.attr('data-id'), monthx: '@monthX', yearx: '@yearX',
+        },
+            function (data) {
+                var $categoryModel = $('#view_model_container');
+                $categoryModel.html(data);
+                $('#viewEntityModel').modal({
+                    keyboard: false
+                });
+
+            });
+
+    });
+    function onClose() {
+        $('#flag_accept').val(0);
+        $('.ui-icon-closethick').click();
+        return false;
+    }
+    function CheckAll(value) {
+        $("input:checkbox[name='groupDoctor']").each(function (i) {
+            this.checked = value;
+        });
+    }
+    function CheckExits(value, doctorId) {
+        var calendarName = $("#Calendar_" + doctorId).text().trim();
+        var calendarId = $("#H_" + doctorId).val();
+        if (calendarId != "0") {
+            var conttent = "Cán bộ đã tồn tại trong lịch '" + calendarName + "' , nếu bạn chọn có nghĩa bạn đồng ý hủy trực của cán bộ trong lịch đó?";
+            if (value == true || value == "1") {
+                if (confirm(conttent)) {
+                    this.checked = true;
+                    $("#Calendar_" + doctorId).html('N/A');
+                    $.ajax({
+                        type: "POST",
+                        url: '/CalendarDuty/DeleteDoctorInCalendar',
+                        data: { calendarDutyId: parseFloat(calendarId), doctorId: parseFloat(doctorId), date: '@DateX' },
+                        success: function (data) {
+
+                        }
+                    });
+
+                }
+                else {
+                    var idCheckDoctor = "Checked_" + doctorId;
+                    $("input:checkbox[id='" + idCheckDoctor + "']").each(function (i) {
+                        this.checked = false;
+                    });
+                }
+            }
+        }
+        return false;
+    }
+</script>
+
+

@@ -1,0 +1,438 @@
+﻿@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.ModelsExt;
+@using BachMaiCR.DBMapping.Models;
+@using BachMaiCR.Web.Models;
+@using Resources;
+@using System.Data;
+@using BachMaiCR.Web.Utils;
+@using BachMaiCR.Web.Common;
+@using BachMaiCR.Utilities.Enums;
+
+<script type="text/javascript" src="~/Scripts/Utils/bmcrUtils.js"></script>
+<script type="text/javascript">
+    var lstCalendarDoctorAdd = [];
+    var lstCalendarDoctorRemove = [];
+    $(function () {
+        $('#selectable').selectable({
+            filter: 'td.item-schedule',
+            stop: function (event, ui) {
+                $('#popupStaff').fadeOut(50);
+                $('#box_staff').fadeOut(50);
+                $('#flag_accept').val(0);
+                $('.ui-icon-closethick').click();
+            }
+        })
+        bmcr.tableUtils.setWidthColTable('selectable', 9);
+    });
+
+
+</script>
+
+
+@{
+    var lstCalendarChange = ViewBag.lstCalendarChange as List<CALENDAR_CHANGE>;
+    var strCalendarChange = lstCalendarChange.ToListModel().StringifyJs();
+    var times = ViewBag.times;
+    DateTime date = DateTime.Now;
+
+    date = Convert.ToDateTime(times);
+
+    DataTable tbl = Utils.Fill(date);
+    string[] thu = { "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ nhật" };
+    var columnx = "";
+    var listDoctor = ViewBag.doctors as List<DoctorCalendarLeader>;
+    var strListDoctor = listDoctor.Select(t => new DoctorCalendarLeader
+    {
+        CALENDAR_DATA_ID = t.CALENDAR_DATA_ID,
+        CALENDAR_DUTY_ID = t.CALENDAR_DUTY_ID,
+        DOCTORS_ID = t.DOCTORS_ID,
+        DOCTOR_NAME = t.DOCTOR_NAME,
+        CALENDAR_DUTY_NAME = t.CALENDAR_DUTY_NAME.Replace("<script>", "&lt;script&gt;").Replace("</script>", "&lt;&#47;script&gt;").Replace("\"", "'"),
+        ABBREVIATION = t.ABBREVIATION,
+        DATE_START = t.DATE_START,
+        CALENDAR_MONTH = t.CALENDAR_MONTH,
+        CALENDAR_YEAR = t.CALENDAR_YEAR,
+        CALENDAR_STATUS = t.CALENDAR_STATUS
+    }).StringifyJs();
+    var objCalendarDuty = ViewBag.objCalendarDuty as CALENDAR_DUTY;
+    var idCalendarDuty = 0;
+    int? statusId = 0;
+    int isApproved = 0;
+    if (objCalendarDuty != null)
+    {
+        statusId = objCalendarDuty.CALENDAR_STATUS;
+        idCalendarDuty = objCalendarDuty.CALENDAR_DUTY_ID;
+        isApproved = objCalendarDuty.ISAPPROVED;
+    }
+
+    var lstDoctorDay = new List<DoctorCalendarLeader>();
+    var lstDoctorNight = new List<DoctorCalendarLeader>();
+    var lstDoctorNormal = new List<DoctorCalendarLeader>();
+
+    if (listDoctor.Any())
+    {
+        lstDoctorDay = listDoctor.Where(t => t.DATE_START.HasValue.Equals(false) || ((t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Saturday)
+            || t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Sunday)) && (t.DATE_START.Value.Hour == (int)DayType.Day || t.DATE_START.Value.Hour == (int)DayType.Middle))).Distinct().ToList();
+
+        lstDoctorNight = listDoctor.Where(t => t.DATE_START.HasValue.Equals(false) || ((t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Saturday)
+            || t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Sunday)) && (t.DATE_START.Value.Hour == (int)DayType.Night))).Distinct().ToList();
+
+        lstDoctorNormal = listDoctor.Where(t => t.DATE_START.HasValue.Equals(false) || (!t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Saturday)
+            && !t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Sunday))).Distinct().ToList();
+    }
+
+
+    if (listDoctor.Any())
+    {
+        lstDoctorDay = listDoctor.Where(t => t.DATE_START.HasValue.Equals(false) || ((t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Saturday)
+            || t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Sunday)) && (t.DATE_START.Value.Hour == (int)BachMaiCR.Utilities.Enums.DayType.Day || t.DATE_START.Value.Hour == 12))).Distinct().ToList();
+
+        lstDoctorNight = listDoctor.Where(t => t.DATE_START.HasValue.Equals(false) || ((t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Saturday)
+            || t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Sunday)) && (t.DATE_START.Value.Hour == (int)BachMaiCR.Utilities.Enums.DayType.Night))).Distinct().ToList();
+
+        lstDoctorNormal = listDoctor.Where(t => t.DATE_START.HasValue.Equals(false) || (!t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Saturday)
+            && !t.DATE_START.Value.DayOfWeek.Equals(DayOfWeek.Sunday))).Distinct().ToList();
+    }
+
+    var lstDtChangeOrDel = lstCalendarChange.Where(t => t.STATUS.Equals((int)CalendarChangeType.Change) || t.STATUS.Equals((int)CalendarChangeType.Deleted)).ToList();
+    var lstDtCreate = lstCalendarChange.Where(t => t.STATUS.Equals((int)CalendarChangeType.Add)).ToList();
+
+    var lstDtChangeOrDelDay = lstDtChangeOrDel.Where(t => t.DATE_START.Value.Hour == (int)BachMaiCR.Utilities.Enums.DayType.Day).ToList();
+    var lstDtChangeOrDelNight = lstDtChangeOrDel.Where(t => t.DATE_START.Value.Hour == (int)BachMaiCR.Utilities.Enums.DayType.Night).ToList();
+    var lstDtCreateDay = lstDtCreate.Where(t => t.DATE_START.Value.Hour == (int)BachMaiCR.Utilities.Enums.DayType.Day).ToList();
+    var lstDtCreateNight = lstDtCreate.Where(t => t.DATE_START.Value.Hour == (int)BachMaiCR.Utilities.Enums.DayType.Night).ToList();
+
+    //Danh sach quyen
+    var lstAction = ViewBag.Actions as List<string>;
+    bool enableView = lstAction.Contains(WebConst.ACTION_VIEW_CALENDAR_LEADER_CODE);
+    bool enableAproved = lstAction.Contains(WebConst.ACTION_APPROVED_CALENDAR_LEADER_CODE);
+    bool enableInsert = lstAction.Contains(WebConst.ACTION_INSERT_CALENDAR_LEADER_CODE);
+    bool enableExport = lstAction.Contains(WebConst.ACTION_EXPORT_CALENDAR_LEADER_CODE);
+    bool enableEdit = lstAction.Contains(WebConst.ACTION_EDIT_CALENDAR_LEADER_CODE);
+    bool enableSend = lstAction.Contains(WebConst.ACTION_SEND_CALENDAR_LEADER_CODE);
+    bool enableCancel = lstAction.Contains(WebConst.ACTION_CANCEL_APPROVED_CALENDAR_LEADER_CODE);
+
+}
+
+
+@helper CalendarCell(List<DoctorCalendarLeader> lstDt, List<CALENDAR_CHANGE> lstDtChangeOrDel, List<CALENDAR_CHANGE> lstDtCreate, int col, CALENDAR_DUTY objCalendarDuty, bool? isNight = null)
+{
+
+
+    //Hiển thị thông tin lịch đã được tạo
+    for (int tt = 0; tt < lstDt.Count; tt++)
+    {
+        if (col == Convert.ToDateTime(lstDt[tt].DATE_START).Day)
+        {
+            var isChange = false;
+            var doctorName = lstDt[tt].ABBREVIATION;
+            var doctorId = Convert.ToString(lstDt[tt].DOCTORS_ID);
+            var doctorChangeName = "";
+            var calendarChangeId = 0;
+            var doctorChangeId = 0;
+            var calendarChangeStatus = 0;
+            var strDay = "";
+            if (isNight.HasValue)
+            {
+                strDay = isNight.Value ? "_dem" : "_ngay";
+            }
+            var calendarDoctorId = col.ToString() + "_" + doctorId + strDay;
+            var existChange = lstDtChangeOrDel.FirstOrDefault(t => t.DOCTORS_ID.Equals(lstDt[tt].DOCTORS_ID) && t.DATE_START.Equals(lstDt[tt].DATE_START));
+            if (existChange != null)
+            {
+                isChange = true;
+                doctorChangeId = existChange.DOCTORS_CHANGE_ID.HasValue ? existChange.DOCTORS_CHANGE_ID.Value : 0;
+                doctorChangeName = existChange.DOCTORS_CHANGE_NAME;
+                calendarChangeId = existChange.CALENDAR_CHANGE_ID;
+                calendarChangeStatus = existChange.STATUS.Value;
+            }
+            else
+            {
+                var existChange1 = lstDtChangeOrDel.FirstOrDefault(t => t.DOCTORS_CHANGE_ID.Equals(lstDt[tt].DOCTORS_ID) && t.DATE_CHANGE_START.Equals(lstDt[tt].DATE_START));
+                if (existChange1 != null)
+                {
+                    isChange = true;
+                    doctorChangeName = existChange1.DOCTORS_NAME;
+                    doctorChangeId = existChange1.DOCTORS_ID.HasValue ? existChange1.DOCTORS_ID.Value : 0;
+                    calendarChangeId = existChange1.CALENDAR_CHANGE_ID;
+                    calendarChangeStatus = existChange1.STATUS.Value;
+                }
+            }
+
+            if (isChange)
+            {
+                if (calendarChangeStatus == (int)CalendarChangeType.Change)
+                {
+                    <div class="schedule-element schedule-element-haschange" id="@doctorId" data-calendar="@lstDt[tt].CALENDAR_DATA_ID" data-calendar-change="@calendarChangeId">
+                        <a href="#" id="@calendarDoctorId">@doctorName</a><div style="margin-top:10px;"></div>
+                        <img src="~/Images/Forward_Arrow.png" width="12px" height="12px" />
+                        <a href="#" id="@(col.ToString() + "_" + doctorChangeId)" class="namechange">@doctorChangeName</a>
+                        <span class="element-close fa fa-rotate-left namechange" title="Hủy đổi lịch trực" onclick="cancelCalendarClick(this,@calendarChangeId)" />
+                    </div>
+                }
+                else
+                {
+                    <div class="schedule-element remove-schedule" id="@doctorId" data-calendar="@lstDt[tt].CALENDAR_DATA_ID" data-calendar-change="@calendarChangeId">
+                        <a href="#" id="@calendarDoctorId">@doctorName</a>
+                        <span class="element-close fa fa-rotate-left" title="Hủy xóa" onclick="scheduleCancelDelClick(this)" />
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="schedule-element" id="@doctorId" data-calendar="@lstDt[tt].CALENDAR_DATA_ID" data-calendar-change="@calendarChangeId">
+                    <a href="#" id="@calendarDoctorId">@doctorName</a>
+                    <span class="element-close fa fa-times-circle" title="Xóa bỏ" onclick="scheduleCloseClick(this)" />
+                    @if (objCalendarDuty.CALENDAR_STATUS == (int)CalendarDutyStatus.CancelApproved)
+                    {
+                        <span id="@lstDt[tt].DOCTORS_ID.ToString()" data-date="" data-column="" data-duty="@objCalendarDuty.CALENDAR_DUTY_ID" class="element-change fa fa-pencil-square fa-lg" title="Đổi lịch trực" />
+                    }
+                </div>
+            }
+
+        }
+    }
+
+    //Hiển thị thông tin lịch mới tạo, xóa(trường hợp hủy duyệt)
+    foreach (var ch in lstDtCreate)
+    {
+        if (col == Convert.ToDateTime(ch.DATE_START).Day)
+        {
+            <div class="schedule-element add-schedule" id="@ch.DOCTORS_ID" data-calendar-change="@ch.CALENDAR_CHANGE_ID">
+                <a href="#" id="@(col.ToString() + "_" + ch.DOCTORS_ID.ToString())">@ch.DOCTORS_NAME</a>
+                <span class="element-close fa fa-times-circle" title="Xóa bỏ" onclick="scheduleCloseClick(this)" />
+            </div>
+        }
+    }
+}
+<link type="text/css" href="~/Content/calendarLeader.css" rel="stylesheet" />
+@Html.Hidden("DATE_MONTHX", date.Month)
+@Html.Hidden("DATE_YEARX", date.Year)
+<div id="grid">
+    <table class="tbl" id="selectable">
+        <tr>
+            @for (int i = 0; i < 7; i++)
+            {
+                if (i == 5 || i == 6)
+                {
+                    <th colspan="2">@thu[i] </th>
+                }
+                else
+                {
+                    <th rowspan="2" class="col">@thu[i] </th>
+                }
+            }
+        </tr>
+        <tr>
+            <th class="col">@Resources.Localization.LabelDay</th>
+            <th class="col">@Resources.Localization.LabelNight</th>
+            <th class="col">@Resources.Localization.LabelDay</th>
+            <th class="col">@Resources.Localization.LabelNight</th>
+        </tr>
+        @for (int j = 0; j < tbl.Rows.Count; j++)
+        {
+            DataRow dr = tbl.Rows[j];
+            <tr>
+
+                @for (int k = 0; k < 7; k++)
+                {
+                    columnx = dr[k].ToString();
+                    //var id = k + "" + columnx;
+                    var id = columnx;
+                    if (k == 5 || k == 6)
+                    {
+                        if (String.IsNullOrEmpty(columnx))
+                        {
+                            <td class="item-scheduleOld" id="@id" day="ngay">
+                                <div style="vertical-align: top; float: right;">@columnx</div>
+                            </td>
+                            <td class="item-scheduleOld" id="@id" day="dem">
+                                <div style="vertical-align: top; float: right;">@columnx</div>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="item-schedule sundayCalendar" id="@id" style="vertical-align:top;" day="ngay">
+                                <span class="itemspan">@columnx</span>
+                                @CalendarCell(lstDoctorDay, lstDtChangeOrDelDay, lstDtCreateDay, Convert.ToInt32(columnx), objCalendarDuty, false)
+
+                            </td>
+                            <td class="item-schedule sundayCalendar" id="@id" style="vertical-align:top;" day="dem">
+                                <span class="itemspan">@columnx</span>
+                                @CalendarCell(lstDoctorNight, lstDtChangeOrDelNight, lstDtCreateNight, Convert.ToInt32(columnx), objCalendarDuty, true)
+                            </td>
+                        }
+                    }
+                    else
+                    {
+                        if (String.IsNullOrEmpty(columnx))
+                        {
+                            <td class="item-scheduleOld" id="@id" style="vertical-align:top;">
+                                <div style="vertical-align: top; float: right;">@columnx</div>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="item-schedule" id="@id" style="vertical-align:top;">
+                                <span class="itemspan">@columnx</span>
+                                @CalendarCell(lstDoctorNormal, lstDtChangeOrDel, lstDtCreate, Convert.ToInt32(columnx), objCalendarDuty)
+                            </td>
+                        }
+                    }
+
+                }
+            </tr>
+        }
+
+    </table>
+
+
+</div>
+<div id="popupStaff" style="border: 1px solid #D0DAFD; text-align: center; width: 100%; display: none; background-color: #dbe8fe;">
+</div>
+
+<div class="TextCenter">
+    <input type="hidden" value="0" id="flag_action" data-type="@idCalendarDuty" />
+    <input type="hidden" value="@(objCalendarDuty == null ? "" : objCalendarDuty.CALENDAR_NAME)" id="calendarName" />
+
+    @if (enableView)
+    {
+        <button class="btn btn-primary btn-sm" type="button" onclick="location.href='@Url.Action("CalendarLeader", "CalendarDuty")'">
+            <span class="glyphicon glyphicon-step-backward"></span>
+            @Resources.Localization.Template_list
+        </button>
+    }
+    @if (objCalendarDuty != null)
+    {
+
+
+        if (statusId != 3 && objCalendarDuty.CALENDAR_STATUS != 2 && enableInsert)
+        {
+            <button class="btn btn-primary btn-sm" id="saveCalendar" type="button">
+                <span class="glyphicon glyphicon-floppy-disk"></span>
+                @Localization.ButtonSaveDisplay
+            </button>
+        }
+        if (((statusId < 2) || (statusId > 3)) && (enableSend))
+        {
+            <button type="button" class="btn btn-primary btn-sm" value="@Localization.ButtonSendApproved" onclick="SendCalendar()"><span class="glyphicon glyphicon-arrow-up"></span>@Localization.ButtonSendApproved</button>
+        }
+        if (statusId == 3 && enableCancel)
+        {
+            <button type="button" class="btn btn-primary btn-sm" value="@Localization.ButtonCancelApproved" onclick="CancelCalendar()"><span class="glyphicon glyphicon-arrow-down"></span>@Localization.ButtonCancelApproved</button>
+        }
+        if ((statusId == 2) && (enableAproved))
+        {
+            <button type="button" class="btn btn-primary btn-sm" value="@Localization.ButtonApprovedTemptDisplay" onclick="ApprovedCalendar()"><span class="glyphicon glyphicon-check"></span>@Localization.ButtonApprovedTemptDisplay</button>
+        }
+      
+        if (enableExport)
+        {
+
+            <button class="btn btn-primary btn-sm" id="exportExcel" type="button" onclick="return btnExportExcel();">
+                <span class="glyphicon glyphicon-folder-open"></span>
+                @Localization.ButtonExportExcel
+            </button>
+        }
+        if (isApproved == 1)
+        {
+            <button type="button" class="btn btn-primary btn-sm" value="@Localization.ButtonHistoryCalendar" onclick="return hisCalendar('@idCalendarDuty');">   <span class="glyphicon glyphicon-file"></span> @Localization.ButtonHistoryCalendar</button>
+        }
+    }
+    else
+    {
+          <button class="btn btn-primary btn-sm" id="bntAutoGenerate" type="button">
+            <span class="glyphicon glyphicon-floppy-disk"></span>
+            @Localization.LableAutoGenerate
+        </button>
+    }
+</div>
+
+
+<div class="clear"></div>
+<div id="box_staff" class="box-staff " style="display: none">
+</div>
+<div id="popupAnser"></div>
+<link type="text/css" href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/jquery-ui-1.8.24.js"></script>
+<script type="text/ecmascript" src="~/Scripts/Calendar/calendarLeader.js"></script>
+
+<script type="text/javascript">
+    var lstCalendarChange = @(string.IsNullOrEmpty(strCalendarChange) ? MvcHtmlString.Create("[]") : Html.Raw(strCalendarChange));
+    var listDoctor =  @(string.IsNullOrEmpty(strListDoctor) ? MvcHtmlString.Create("[]") : Html.Raw(strListDoctor));
+    var calendarDutyStatus =  @(statusId.HasValue ? statusId.Value : 0);
+    var calendarDutyId = @idCalendarDuty;
+    var lstCalendarDoctorAdd = @(string.IsNullOrEmpty(lstDtCreate.ToListModel().StringifyJs()) ? MvcHtmlString.Create("[]") : Html.Raw(lstDtCreate.ToListModel().StringifyJs()));
+    var lstCalendarDoctorRemove = @(string.IsNullOrEmpty(lstDtChangeOrDel.Where(t => t.STATUS == 2).ToListModel().StringifyJs()) ? MvcHtmlString.Create("[]") : Html.Raw(lstDtChangeOrDel.Where(t => t.STATUS == 2).ToListModel().StringifyJs()));
+
+    $(function() {
+        if(calendarDutyStatus == 2 || calendarDutyStatus == 3)
+        {
+            $('span.element-close').remove();
+            $('#inforContent').attr("readonly","readonly");
+        }
+    });
+    $("#bntAutoGenerate").click(function () {
+        var contentDuty = $('#inforContent').val();
+        var monthx = $('#DATE_MONTHX').val();
+        var yearx = $('#DATE_YEARX').val();
+        $.ajax({
+            type: "POST",
+            url: "/CalendarDuty/AutoSchedulingLeader",
+            content: "application/json; charset=utf-8",
+            data: ({ iMonth: monthx, iYear: yearx, contentDuty: contentDuty }),
+            success: function (data) {
+                window.notice('Lập lịch trực lãnh đạo tự động thành công', window.notice_success);
+                window.location = "/CalendarDuty/CalendarLeader";
+            },
+            error: function () {
+                window.notice('@Resources.Localization.DataIsNotValid', window.notice_warning);
+            }
+        });
+    });
+    function SendCalendar() {
+        var idCalendarDuty = '@idCalendarDuty';
+        $.ajax({
+            type: "GET",
+            url: '/CalendarDuty/SendApprovedLeader',
+            data: { idCalendarDuty: idCalendarDuty, types: '2' },
+            success: function (response) {
+                RefreshCalendar(idCalendarDuty);
+                window.notice('Gửi duyệt lịch trực thành công', window.notice_success);
+            }
+        })
+
+    }
+    function CancelCalendar() {
+        var idCalendarDuty = '@idCalendarDuty';
+        $.get('/CalendarDuty/ApprovedRequest', { idCalendarDuty: idCalendarDuty, types: '6' }, function (data) {
+            $('#popupAnser').html(data);
+            $('#CalendarDutyRequest').modal({
+                keyboard: true
+            });
+        });
+    }
+    function ApprovedCalendar() {
+        var idCalendarDuty = '@idCalendarDuty';
+        $.ajax({
+            type: "GET",
+            url: '/CalendarDuty/ApprovedCalendarLeader',
+            data: { idCalendarDuty: idCalendarDuty, types: '2' },
+            success: function (response) {
+                //RefreshCalendar(idCalendarDuty);
+                window.notice('Duyệt thành công', window.notice_success);
+                window.location = "/CalendarDuty/CalendarLeader";
+            }
+        })
+    }
+    function RefreshCalendar(idCalendarDuty) {
+        $.get('@Url.Action("LoadCalendarLeader", "CalendarDuty")', function (data) {
+            $('#loadTemplate').html(data);
+        });
+    }
+    function btnExportExcel() {        
+        var strDate = $('.selectMonths').val() + "_" + $('.selectYears').val()  +'@(string.IsNullOrEmpty(idCalendarDuty.ToString()) ? "" : "_"+idCalendarDuty)';
+        var url = '@Url.Action("ExportCalendarLeader", "CalendarDuty")' + '?strDate=' + strDate;
+        location.href = url;
+    }
+</script>

@@ -1,0 +1,315 @@
+﻿@using Resources
+@using BachMaiCR.Utilities.Enums
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.Web.Common
+@using BachMaiCR.DataAccess;
+@model BachMaiCR.Web.Models.TemplateModel
+@{
+     var lstItem = Model.TEMPLATE_COLUM as List<TEMPLATE_COLUM>;   
+      DateTime? createDate = Model.DATE_CREATE;
+      DateTime? approvedDate = Model.DATE_APPROVED;
+      DateTime? dateStart = Model.DATE_START;
+      DateTime? dateEnd = Model.DATE_END;
+      string valueDefault="";
+      int template_Id = Model.TEMPLATES_ID;
+      int? statusID = Model.STATUS;
+      var lstAction = ViewBag.Actions as List<string>;
+      bool enableDelete = lstAction.Contains(WebConst.ACTION_DELETE_TEMPLATE_CODE);
+      bool enableApproved = lstAction.Contains(WebConst.ACTION_APPROVED_TEMPLATE_CODE);
+      lstAction = null;
+      string timeEffect = dateStart.Value.Month + "/" + dateStart.Value.Year + " đến " + dateEnd.Value.Month + "/" + dateEnd.Value.Year;
+      UnitOfWork unit = new UnitOfWork();
+}
+<style>
+   .title{
+   float:left;
+  color:#900000 ;
+  min-height:25px;
+  font-size:12px;
+   
+}
+
+    .tdfirt {
+        text-align: left;
+        width: 150px;
+        font-weight: bold;
+        vertical-align: top;
+        font-size: 12px;
+    }
+    .tdline {
+        text-align: left;
+      
+        font-weight: bold;
+        vertical-align: top;
+        font-size: 12px;
+    }
+
+</style>
+
+<!-- Modal -->
+
+<div class="modal fade" id="viewEntityModel" tabindex="-1000" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+          
+         
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">@Localization.Template_Detail</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">  
+                           
+                           <table style="width:100%;" border="0" id="table_content" >
+                           
+                            <tr>
+
+                                <td   class="tdfirt">
+                                 @Localization.Template_Department   
+                                </td>
+                                <td  colspan="5">
+                                     <div class="title">
+                                         @Html.ValueFor(m => m.DEPARTMENT_NAME)
+                                                                           
+                                     </div>
+                                </td>
+                            </tr>
+                             <tr>
+
+                                <td  class="tdfirt">
+                                      @Localization.Template_Name
+                                </td>
+                                 <td colspan="5">
+                                     <div class="title">
+                                         @Html.ValueFor(m => m.TEMPLATE_NAME)
+
+                                     </div>
+                                 </td>
+                            </tr>
+                             <tr>
+
+                                <td  class="tdfirt">
+                                    @Localization.Template_Abb 
+                                </td>
+                                 <td colspan="5">
+                                     <div class="title">
+                                         @Html.ValueFor(m => m.ABBREVIATION)
+                                     </div>
+                                 </td>
+                            </tr>
+
+                
+                          
+ @if (lstItem.Count == 0)
+ { 
+     <tr><td class="tdfirt"> @Localization.Template_columName</td><td class="title"></td></tr> 
+ }
+ else
+ {
+     for (int i = 0; i < lstItem.Count; i++)
+     {
+         var lstColumnLevel = lstItem[i].COLUM_LEVEL as List<COLUM_LEVEL>;
+         var columnlevelName = "";
+         for (int j = 0; j < lstColumnLevel.Count; j++)
+         {
+             columnlevelName += "," + lstColumnLevel[j].DOCTOR_LEVEL.LEVEL_NAME;
+         }
+         if (columnlevelName.Length > 0)
+         {
+             columnlevelName = columnlevelName.Substring(1, columnlevelName.Length - 1);
+         }
+         var deparmentName = unit.Departments.DeparmentNameById(lstItem[i].LM_DEPARTMENT_ID);
+         if (i == 0)
+         {
+                      <tr><td class="tdfirt"> @Localization.Template_columName</td><td class="title">
+    @lstItem[i].COLUM_NAME
+</td>
+                          <td class="tdline">&nbsp;@Localization.LabelDepartment: </td>
+                          <td class="title">@deparmentName</td>
+                          <td class="tdline">&nbsp;@Localization.LabelLevel: </td>
+
+                          <td class="title">@columnlevelName</td>
+                             
+                               </tr>
+         }
+
+         else
+         {
+                        
+                    
+			 <tr><td></td><td class="title"> 
+                 @lstItem[i].COLUM_NAME
+                        
+			              </td>
+              <td class="tdline">&nbsp;@Localization.LabelDepartment: </td>
+              <td class="title">@deparmentName</td>
+              <td class="tdline">&nbsp;@Localization.LabelLevel: </td>
+
+              <td class="title">@columnlevelName</td>
+                               </tr>
+         }
+     }
+ }
+ 
+                 <tr>
+                     
+                                <td class="tdfirt">
+                                     @Localization.ListUserCreate 
+                                </td>
+                     <td colspan="5">
+                         <div class="title">
+                             @Html.ValueFor(m => m.USER_CREATE_NAME)
+                         </div>
+                     </td>
+                            </tr>
+                 <tr>
+
+                                <td  class="tdfirt">
+                                      @Localization.ListDateCreate 
+                                </td>
+                     <td colspan="5">
+                         <div class="title">
+                             @if (createDate.HasValue)
+                             {
+                                 @createDate.Value.ToString("dd/MM/yyyy hh:mm");
+                             }
+                             else
+                             {
+                                 @valueDefault
+                             }
+
+                         </div>
+                     </td>
+
+                            </tr>
+                 <tr>
+
+                                <td  class="tdfirt">
+                                      @Localization.ListStatus 
+                                </td>
+                     <td colspan="5">
+                         <div class="title">
+                             @BachMaiCR.Web.Models.TemplateModel.GetStatus(Html.ValueFor(m => m.STATUS))
+
+                         </div>
+                     </td>
+                            </tr>
+                 <tr>
+
+                                <td class="tdfirt">
+                                      @Localization.ListDateApproved 
+                                </td>
+                     <td colspan="5">
+                         <div class="title">
+                             @if (approvedDate.HasValue)
+                             {
+                                 @approvedDate.Value.ToString("dd/MM/yyyy hh:mm");
+                             }
+                             else
+                             {
+                                 @valueDefault
+                             }
+
+                         </div>
+                     </td>
+
+                            </tr>
+                               <tr>
+
+                                   <td class="tdfirt">
+                                       @Localization.TimeEffect
+                                   </td>
+                                   <td colspan="5">
+                                       <div class="title">
+                                           @timeEffect
+                                       </div>
+                                   </td>
+                               </tr>
+                   <tr>
+
+                                <td  class="tdfirt">
+                                      @Localization.Template_note 
+                                </td>
+                       <td colspan="5">
+                           <div class="title">
+                               @Html.ValueFor(m => m.DESCRIPTION)
+
+                           </div>
+                       </td>
+                            </tr>
+
+             </table>
+                </div>
+            </div>
+
+          
+           
+
+            <div class="modal-footer">
+                <table style="width:100%;" border="0">
+                    <tr>
+                        <td style="width:10%;"></td>                       
+                        @if (statusID != 2 && enableDelete)
+                        {
+                         <td style="width:105px; float:right;">
+ @using (Html.BeginForm(
+        actionName: "DelTemplate", controllerName: "Template", routeValues: new { }, method: FormMethod.Post,
+        htmlAttributes: new { @id = "frmCancel", @class = "", @role = "form" }))
+ {
+                     @Html.Hidden("template_Id", Html.ValueFor(m => m.TEMPLATES_ID))
+                      
+                     <button type="submit" class="btn btn-primary" data-loading-text="Loading..." id="bntDel" onclick="return confirm('@Localization.ConfirmDelTemplate');" style="width:100px;"><span class='glyphicon glyphicon-trash'></span>@Localization.ButtonDelTemptDisplay</button>  
+                       
+ }
+                        </td>  }
+                        else
+                        {<td style="width:40px; float:right;"></td> }                  
+                         <td style="width:10px;">
+
+                        </td>
+                       
+                        <td style="width:100px;">  
+                            @Html.Hidden("template_Id", Html.ValueFor(m => m.TEMPLATES_ID))
+                            @Html.Hidden("statusID", Html.ValueFor(m => m.STATUS))
+                          
+                            @if (statusID == 1 && enableApproved)
+{
+    <button type="submit" class="btn btn-primary"  id="bntAprroved" onclick="bntAproved(1);" style="width:100px;"><span class="glyphicon glyphicon-check"></span>@Localization.ButtonApprovedTemptDisplay</button>
+}
+else if (statusID == 2 && enableApproved)
+{
+                                <button type="button" class="btn btn-primary"  id="bntCancel" onclick="bntAproved(2);" style="width:100px;"><span class="glyphicon glyphicon-arrow-down"></span>@Localization.ButtonCancelApproved</button>
+                            }
+                            else if (statusID == 3 && enableApproved)
+                            {
+                                <button type="button" class="btn btn-primary"  id="bntRestore" onclick="bntAproved(3);" style="width:100px;"><span class="glyphicon glyphicon-arrow-down"></span>@Localization.ButtonApprovedTemptDisplay</button>
+                            }
+
+                        </td>
+                         <td style="width:10px;">
+
+                        </td>
+                         <td style="float:left;">
+ <button type="button" class="btn btn-primary" data-dismiss="modal" style="width:100px;"><span class="glyphicon glyphicon-off"></span> @Localization.ButtonCloseDisplay</button>
+                        </td>
+                           <td style="width:10%;"></td>
+                    </tr>
+
+                </table>
+                
+           
+                  
+                         
+              
+                
+            </div>
+        </div>
+         
+    </div>
+</div>
+
+
+@{
+    lstItem = null;
+  
+    }

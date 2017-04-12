@@ -1,0 +1,45 @@
+﻿@model BachMaiCR.DBMapping.ModelsExt.InforCalendarDutyX   
+@{
+                                var monthss = ViewBag.months;
+                                var yearss = ViewBag.years;
+                                List<SelectListItem> tmpWeek = new List<SelectListItem>();
+                                List<string> Days = new List<string>();
+                                DateTime datex = Convert.ToDateTime("1/" + monthss + "/" + yearss);
+                                int dayNumber = DateTime.DaysInMonth(yearss, monthss);
+
+                                Days.Add("1-7/" + monthss);
+                                Days.Add("8-14/" + monthss);
+                                Days.Add("15-21/" + monthss);
+                                Days.Add("22-" + dayNumber.ToString() + "/" + monthss);
+                                tmpWeek.Add(new SelectListItem() { Text = Resources.Localization.StatusALL, Value = "-1", Selected = true });
+                                for (int i = 0; i <= 3; i++)
+                                {
+                                    tmpWeek.Add(new SelectListItem() { Text = "Tuần " + (i + 1).ToString() + "(" + Days[i] + ")", Value = i.ToString(), Selected = false });
+
+                                }
+                                var DATE_WEEK = new SelectList(tmpWeek, "Value", "Text", -1);
+                          }
+                            @Resources.Localization.LabelWeek
+                        &nbsp;@Html.DropDownListFor(m => m.DATE_WEEKX, DATE_WEEK, new { @class = "selectWeek1", data_width = "130px" })
+
+<script type="text/javascript">
+    $('.selectWeek1').change(function () {
+        var strDate = $('.selectWeek1').val() + "_" + $('.selectMonths').val() + "_" + $('.selectYears').val();
+        var idTemplate = $('.templates').val();
+        if (idTemplate == 0) {
+            $('#inforContent').val('Lịch trực tháng ' + $('.selectMonths').val() + " năm " + $('.selectYears').val());
+        }
+        else {
+            $('#inforContent').val($('.templates option:selected').text() + " tháng " + $('.selectMonths').val() + " năm " + $('.selectYears').val());
+        }
+        $.ajax({
+            type: "GET",
+            url: '/CalendarDuty/LoadTemplate',
+            data: { strDate: strDate, idTemplate: idTemplate },
+            success: function (response) {
+                $('#loadTemplate').html(response);
+            }
+        });
+    });
+    $('.selectWeek1').selectpicker();
+</script>

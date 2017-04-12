@@ -1,0 +1,74 @@
+﻿@using StackExchange.Profiling
+<![if !IE]>
+<!DOCTYPE html>
+<![endif]>
+<![if IE]>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<![endif]>
+
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Images/Calendar-icon.png" rel="shortcut icon" type="image/x-icon" />
+    @*@Styles.Render("~/Content/css")*@
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/underscore")
+    @Scripts.Render("~/bundles/bootstrapjs")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jmenu")
+
+    @RenderSection("scripts", required: false)
+    @*  @MiniProfiler.RenderIncludes()*@
+</head>
+<body>
+    @Html.AntiForgeryToken()
+    @RenderSection("featured", required: false)
+    <div id="page-container">
+
+        <div id="page-header" class="header">
+            <div class="banner-top">
+                <div class="banner-top">
+                    <img src="~/Images/logo-name.png" alt="Bệnh viện Bạch Mai" />
+                </div>
+            </div>
+            @Html.Partial("~/Views/Shared/_LoginPartial.cshtml")
+        </div>
+        <div class="clear"></div>
+        <div id="page-nav-left">
+            <div class="div-navbar">
+                <nav class="navbar-default navbar-static-side" role="navigation" style="width: 200px">
+                    <div class="sidebar-collapse">
+                        @Html.Partial("~/Views/Shared/_MenuViewPartial.cshtml")
+                    </div>
+                </nav>
+            </div>
+
+        </div>
+        <div id="page-nav-content">
+            @RenderBody()
+        </div>
+    </div>
+    <div class="clear"></div>
+
+    @Html.Partial("~/Views/Shared/_NoticePartial.cshtml")
+</body>
+</html>
+
+
+<script type="text/javascript">
+
+    // JS cho toàn bộ trang
+    $(document).ready(function () {
+
+        // Focus vào trường input đầu tiên
+        setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+        $('#search_form').find('input:text:visible').attr('autocomplete', 'off');
+        $('#search_form').find('input:text:visible').val('');
+        //$('#search_form input:text:visible:first')
+    });
+</script>

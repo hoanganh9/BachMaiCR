@@ -1,0 +1,31 @@
+﻿@using Resources
+@{
+    // var ctgType = 1;
+}
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/bootstrapjs")
+@section Scripts {
+    @Scripts.Render("~/bundles/bootstrapjs")
+}
+
+<div class="content-wrapper">
+    <div class="clear"></div>
+    <div id="nav">
+        <a title="">@Localization.ReportConfig.ToUpper()</a> » @ViewBag.Title.ToUpper()
+    </div>
+     @Html.Partial("~/Views/ReportOfHoliday/_AddReportOfHolidayInfo.cshtml",new BachMaiCR.DBMapping.ModelsExt.DoctorSearch())
+    <div class="page-content">
+
+        <div id="cat_list_render">
+           @{
+               Html.RenderAction("LoadReportOfHoliday", "ReportOfHoliday");
+            }
+        </div>
+
+    </div>
+
+    <div id="add_category_model_container"></div>
+    <div id="view_model_container"></div>
+
+</div>

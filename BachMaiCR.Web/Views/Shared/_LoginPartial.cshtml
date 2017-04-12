@@ -1,0 +1,79 @@
+﻿@using Resources
+@using BachMaiCR.DBMapping.Models
+@using BachMaiCR.DataAccess
+@using BachMaiCR.Utilities
+@using BachMaiCR.Web.Common
+@{
+    //var validAuth = false;
+    var returnUrl = Request.Url == null ? "/" : HttpUtility.UrlDecode(Request.Url.ToString());
+//    if (Request.IsAuthenticated)
+//    {
+//#if DEBUG
+//        validAuth = true;
+//#else
+//        string sessionToken;
+//        if (Session[WebConst.CacheSessionToken] == null)
+//        {
+//            var unitOfWork = new UnitOfWork();
+//            ADMIN_USER u = unitOfWork.Users.GetByUserName(User.Identity.Name);
+//            if (u != null)
+//            {
+//                sessionToken = u.SESSION_TOKEN;
+//                if (!string.IsNullOrWhiteSpace(sessionToken))
+//                {
+//                    Session[WebConst.CacheSessionToken] = sessionToken;
+//                }
+//            }
+//            else
+//            {
+//                sessionToken = string.Empty;
+//            }
+//        }
+//        else
+//        {
+//            sessionToken = Session[WebConst.CacheSessionToken].ToString();
+//        }
+
+//        HttpCookie cookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+//        if (cookie != null)
+//        {
+//            if (Encrypt.Sha1HashWithHex(cookie.Value) == sessionToken)
+//            {
+//                validAuth = true;
+//            }
+
+//        }
+//#endif
+
+//    }
+
+}
+@if (Request.IsAuthenticated)
+{
+    
+    <text>
+    <div class="clear"></div>
+    <div id="top-bar-login" class="top-bar1">
+        <div class="bar-left1">
+            <span>
+                @DateTime.Now.ToString("dddd, dd/MM/yyyy")
+            </span>
+        </div>
+        <div class="bar-right1">
+
+            <span style="text-align: right;">@Localization.Welcome: @Html.ActionLink(User.Identity.Name, "ChangePassword", "Account", routeValues: new { returnUrl }, htmlAttributes: new { @class = "username", title = "Đổi mật khẩu" }) </span>
+            &nbsp;| &nbsp;
+                <span style="float: right;">
+                    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <a href="javascript:document.getElementById('logoutForm').submit()">@Localization.LogOff</a>
+                    }
+                </span>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    </text>
+
+}

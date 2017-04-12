@@ -1,0 +1,266 @@
+﻿@model BachMaiCR.DBMapping.ModelsExt.InforCalendarDutyX
+@using BachMaiCR.DataAccess;
+@using BachMaiCR.DBMapping.Models;
+@using  BachMaiCR.Utilities.Enums;
+@{
+    int yearCurrent = System.DateTime.Now.Year + 2;
+    int yearStart = yearCurrent - 5;
+    List<SelectListItem> tmpYear = new List<SelectListItem>();
+    int idDepartment = ViewBag.idDepartment;
+    for (int i = yearStart; i < yearCurrent; i++)
+    {
+        tmpYear.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+    List<SelectListItem> tmpMonths = new List<SelectListItem>();
+    for (int i = 1; i <= 12; i++)
+    {
+        tmpMonths.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = false });
+
+    }
+  
+
+     
+    List<SelectListItem> tmpTemplates = new List<SelectListItem>();
+    UnitOfWork unit = new UnitOfWork();
+    List<TEMPLATE> templateList = unit.Templates.GetListByDate(idDepartment, DateTime.Now, Convert.ToInt32(TemplateStatus.Aproved));
+    tmpTemplates.Add(new SelectListItem() { Text = Resources.Localization.CalendarDefault, Value = "0", Selected = false });
+    for (int i = 0; i < templateList.Count; i++)
+    {
+        tmpTemplates.Add(new SelectListItem() { Text = templateList[i].TEMPLATE_NAME.ToString(), Value = templateList[i].TEMPLATES_ID.ToString(), Selected = false });
+
+    }
+    var DATE_MONTH = new SelectList(tmpMonths, "Value", "Text", System.DateTime.Now.Month);
+    var DATE_YEAR = new SelectList(tmpYear, "Value", "Text", System.DateTime.Now.Year);
+    var TEMPLATES = new SelectList(tmpTemplates, "Value", "Text", 0);
+    var countTem = templateList.Count;
+    if (countTem > 0)
+    {
+        TEMPLATES = new SelectList(tmpTemplates, "Value", "Text", templateList[0].TEMPLATES_ID);
+    }
+    else{
+        TEMPLATES = new SelectList(tmpTemplates, "Value", "Text",0);
+    }
+    string infoContent = "Lịch trực tháng " + System.DateTime.Now.Month + " năm " + System.DateTime.Now.Year;
+   
+}
+<style>
+    .TextBoxContent
+    {
+        border: 1px solid #c4c4c4;
+        height: 25px;
+        width: 320px;
+        font-size: 12px;
+        padding: 4px 4px 4px 4px;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        -webkit-border-radius: 4px;
+        box-shadow: 0px 0px 8px #d9d9d9;
+        -moz-box-shadow: 0px 0px 8px #d9d9d9;
+        -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+    }
+
+        .TextBoxContent:focus
+        {
+            outline: none;
+            border: 1px solid #7bc1f7;
+            box-shadow: 0px 0px 8px #7bc1f7;
+            -moz-box-shadow: 0px 0px 8px #7bc1f7;
+            -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+        }
+        
+    
+    .selectpicker
+    {
+        font-size: 12px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+   
+   
+    .btn-default
+    {
+        height: 25px;
+        font-size: 12px;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+   
+</style>
+<script src="~/Scripts/bootstrap-select.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="~/Content/bootstrap-select.css">
+
+<script type="text/javascript">
+    $(document).ready(function (e) {
+        var monthx = new Date().getMonth() + 1;
+        var yearx = new Date().getFullYear();
+        var countTemx = @countTem
+        $.ajax({
+            type: "GET",
+            url: '/CalendarDuty/LoadDays',
+            data: { Months: monthx, Years: yearx },
+            success: function (response) {
+                $('#lblWeekId').html(response);
+            }
+        });
+
+        $('.selectMonths').change(function () {
+
+            //load lai ngay thang trong tuan
+
+            $.ajax({
+                type: "GET",
+                url: '/CalendarDuty/LoadDays',
+                data: { Months: $('.selectMonths').val(), Years: $('.selectYears').val() },
+                success: function (response) {
+                    $('#lblWeekId').html(response);
+                }
+            });
+            var strDate = $('.selectWeek1').val() + "_" + $('.selectMonths').val() + "_" + $('.selectYears').val();
+            var idTemplate = $('.templates').val();
+            //Lấy template
+
+            $.ajax({
+                type: "POST",
+                url: '/CalendarDuty/GetTemplateByDate',
+                data: { departmentId: '@idDepartment', iMonth: $('.selectMonths').val(), iYear: $('.selectYears').val(), status: '@Convert.ToInt32(TemplateStatus.Aproved)', templateId: idTemplate },
+                success: function (data) {
+                    var result = '';
+                    for (var i = 0, iL = data.length; i < iL; i++) {
+                        if (data[i].Selected == true) {
+                            result += '<option value="' + data[i].Value + '" selected = "selected"  >' + data[i].Text + '</option>';
+                        } else {
+
+                            result += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                        }
+                    }
+                    $("#templatex").html(result);
+                    $('#templatex').selectpicker('refresh');
+                }
+            });
+            //End template           
+            if (idTemplate == 0) {
+                $('#inforContent').val('Lịch trực tháng ' + $('.selectMonths').val() + " năm " + $('.selectYears').val());
+            }
+            else {
+                $('#inforContent').val($('.templates option:selected').text() + " tháng " + $('.selectMonths').val() + " năm " + $('.selectYears').val());
+            }
+
+            $.ajax({
+                type: "GET",
+                url: '/CalendarDuty/LoadTemplate',
+                data: { strDate: strDate, idTemplate: idTemplate },
+                success: function (response) {
+                    $('#loadTemplate').html(response);
+                }
+            });
+        });
+        $('.selectYears').change(function () {
+
+            $.ajax({
+                type: "GET",
+                url: '/CalendarDuty/LoadDays',
+                data: { Months: $('.selectMonths').val(), Years: $('.selectYears').val() },
+                success: function (response) {
+                    $('#lblWeekId').html(response);
+                }
+            });
+            var strDate = $('.selectWeek1').val() + "_" + $('.selectMonths').val() + "_" + $('.selectYears').val();
+            var idTemplate = $('.templates').val();
+            //Lấy template
+
+            $.ajax({
+                type: "POST",
+                url: '/CalendarDuty/GetTemplateByDate',
+                data: { departmentId: '@idDepartment', iMonth: $('.selectMonths').val(), iYear: $('.selectYears').val(), status: '@Convert.ToInt32(TemplateStatus.Aproved)', templateId: idTemplate },
+                success: function (data) {
+                    var result = '';
+                    for (var i = 0, iL = data.length; i < iL; i++) {
+                        if (data[i].Selected == true) {
+                            result += '<option value="' + data[i].Value + '" selected = "selected"  >' + data[i].Text + '</option>';
+                        } else {
+
+                            result += '<option value="' + data[i].Value + '">' + data[i].Text + '</option>';
+                        }
+                    }
+                    $("#templatex").html(result);
+                    $('#templatex').selectpicker('refresh');
+                }
+            });
+            //End template          
+            if (idTemplate == 0) {
+                $('#inforContent').val('Lịch trực tháng ' + $('.selectMonths').val() + " năm " + $('.selectYears').val());
+            }
+            else {
+                $('#inforContent').val($('.templates option:selected').text() + " tháng " + $('.selectMonths').val() + " năm " + $('.selectYears').val());
+            }
+            $.ajax({
+                type: "GET",
+                url: '/CalendarDuty/LoadTemplate',
+                data: { strDate: strDate, idTemplate: idTemplate },
+                success: function (response) {
+                    $('#loadTemplate').html(response);
+                }
+            });
+        });
+
+
+        $('.templates').change(function () {
+            var strDate = $('.selectWeek1').val() + "_" + $('.selectMonths').val() + "_" + $('.selectYears').val();
+            var idTemplate = $('.templates').val();
+
+            if (idTemplate == 0) {
+                $('#lblWeekId').hide();
+                $('#inforContent').val('Lịch trực tháng ' + $('.selectMonths').val() + " năm " + $('.selectYears').val());
+            }
+            else {
+                $('#lblWeekId').show();
+                $('#inforContent').val($('.templates option:selected').text() + " tháng " + $('.selectMonths').val() + " năm " + $('.selectYears').val());
+            }
+            $.ajax({
+                type: "GET",
+                url: '/CalendarDuty/LoadTemplate',
+                data: { strDate: strDate, idTemplate: idTemplate },
+                success: function (response) {
+                    $('#loadTemplate').html(response);
+                }
+            });
+        });
+        if (countTemx < 0) {
+            $('#lblWeekId').hide();
+        }
+
+        $('.selectWeek1').selectpicker();
+        $('.selectMonths').selectpicker();
+        $('.selectYears').selectpicker();
+        $('.templates').selectpicker();
+    });
+
+</script>
+
+<table border="0" width="100%" class="tbl_Search">
+    <tr>
+        <td style="width: 100%">
+            <table border="0" width="100%">
+                <tr>
+              
+                    <td style="width: 100%; text-align: left">
+                        @Resources.Localization.LabelTemplate	&nbsp;
+                        @Html.DropDownListFor(m => m.TEMPLATESX, TEMPLATES, new { @class = "templates", data_width = "250px",id="templatex" })
+                  @Resources.Localization.LabelContent 	<span style="color: red;">*</span>&nbsp;@Html.ValidationMessage("errinforContent")
+                           @Html.TextBoxFor(m => m.CONTENTSX, new { @class = "TextBoxContent", style = "width:250px;", id = "inforContent", @Value = infoContent, @maxlength = "500" })
+                     
+                        <span id="lblWeekId">
+                        
+                          </span>
+                        @Resources.Localization.LabelMonthSearch &nbsp;
+                     @Html.DropDownListFor(m => m.DATE_MONTHX, DATE_MONTH, new { @class = "selectMonths", data_width = "60px",id="monthx" })
+                              @Resources.Localization.LabelYear   &nbsp; @Html.DropDownListFor(m => m.DATE_YEARX, DATE_YEAR, new { @class = "selectYears", data_width = "70px",id="yearx" })
+                    </td>
+
+                </tr>
+            </table>
+        </td>
+        
+    </tr>
+   
+
+</table>

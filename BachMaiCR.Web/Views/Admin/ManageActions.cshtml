@@ -1,0 +1,60 @@
+﻿@using Resources
+@{
+    ViewBag.Title = Localization.WebPageActionsTitle;
+}
+<div class="content">
+    <div class="clear"></div>
+
+    <table style="width:100%">
+        <tr>
+            <td style="height:40px;">
+                <div id="nav"><a href="/ManageActions" title=""> @Resources.Localization.ManagerAdminTitle.ToUpper()</a> »  @ViewBag.Title.ToUpper() </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+
+                <div id="action-list" style="float: left; width: 99%;">
+                    @{
+                        Html.RenderPartial("_ActionList");
+                    }
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+
+<script type="text/javascript">
+
+    function OnCriteria(pageIndex) {
+
+
+        $.ajax({
+            type: "GET",
+            url: '/admin/manageactions',
+            data: { pageIndex: pageIndex },
+            success: function (response) {
+                var $catlist = $('#action-list');
+                if ($catlist == null || $catlist.length == 0) {
+
+                }
+                else {
+                    $catlist.html(response);
+                }
+            }
+        });
+        setTimeout(function () { $('#search_form').find('input:text:visible:first').focus(); }, 500);
+    }
+
+
+</script>
+
+
+
+<div id="navigate_bottom_panel" class="nav-bottom ">
+</div>
+
+<div id="action-model-container"></div>
+
