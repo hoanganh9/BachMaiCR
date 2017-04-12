@@ -1,0 +1,335 @@
+@font-face {
+	font-family: "Flaticon";
+	src: url("flaticon.eot");
+	src: url("flaticon.eot#iefix") format("embedded-opentype"),
+	url("flaticon.woff") format("woff"),
+	url("flaticon.ttf") format("truetype"),
+	url("flaticon.svg") format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+	font-family: Flaticon;
+font-style: normal;
+}.flaticon-2428:before {
+	content: "\e000";
+}
+.flaticon-add1:before {
+	content: "\e001";
+}
+.flaticon-bar:before {
+	content: "\e002";
+}
+.flaticon-bars2:before {
+	content: "\e003";
+}
+.flaticon-business96:before {
+	content: "\e004";
+}
+.flaticon-businessman1:before {
+	content: "\e005";
+}
+.flaticon-businessman16:before {
+	content: "\e006";
+}
+.flaticon-businessman22:before {
+	content: "\e007";
+}
+.flaticon-businessman32:before {
+	content: "\e008";
+}
+.flaticon-businessman43:before {
+	content: "\e009";
+}
+.flaticon-businessman45:before {
+	content: "\e00a";
+}
+.flaticon-businessman68:before {
+	content: "\e00b";
+}
+.flaticon-businessmen3:before {
+	content: "\e00c";
+}
+.flaticon-businessmen9:before {
+	content: "\e00d";
+}
+.flaticon-calendar101:before {
+	content: "\e00e";
+}
+.flaticon-calendar62:before {
+	content: "\e00f";
+}
+.flaticon-calendar68:before {
+	content: "\e010";
+}
+.flaticon-calendar93:before {
+	content: "\e011";
+}
+.flaticon-career:before {
+	content: "\e012";
+}
+.flaticon-chart2:before {
+	content: "\e013";
+}
+.flaticon-chief2:before {
+	content: "\e014";
+}
+.flaticon-classroom1:before {
+	content: "\e015";
+}
+.flaticon-clipboard28:before {
+	content: "\e016";
+}
+.flaticon-clock42:before {
+	content: "\e017";
+}
+.flaticon-closed42:before {
+	content: "\e018";
+}
+.flaticon-cloud169:before {
+	content: "\e019";
+}
+.flaticon-cloud179:before {
+	content: "\e01a";
+}
+.flaticon-connected12:before {
+	content: "\e01b";
+}
+.flaticon-copy12:before {
+	content: "\e01c";
+}
+.flaticon-correct:before {
+	content: "\e01d";
+}
+.flaticon-couple34:before {
+	content: "\e01e";
+}
+.flaticon-data26:before {
+	content: "\e01f";
+}
+.flaticon-data3:before {
+	content: "\e020";
+}
+.flaticon-data31:before {
+	content: "\e021";
+}
+.flaticon-data33:before {
+	content: "\e022";
+}
+.flaticon-database29:before {
+	content: "\e023";
+}
+.flaticon-databases:before {
+	content: "\e024";
+}
+.flaticon-doctor:before {
+	content: "\e025";
+}
+.flaticon-document118:before {
+	content: "\e026";
+}
+.flaticon-document31:before {
+	content: "\e027";
+}
+.flaticon-document61:before {
+	content: "\e028";
+}
+.flaticon-document92:before {
+	content: "\e029";
+}
+.flaticon-documents4:before {
+	content: "\e02a";
+}
+.flaticon-documents7:before {
+	content: "\e02b";
+}
+.flaticon-documents8:before {
+	content: "\e02c";
+}
+.flaticon-door13:before {
+	content: "\e02d";
+}
+.flaticon-edit1:before {
+	content: "\e02e";
+}
+.flaticon-event1:before {
+	content: "\e02f";
+}
+.flaticon-events1:before {
+	content: "\e030";
+}
+.flaticon-graphs:before {
+	content: "\e031";
+}
+.flaticon-group:before {
+	content: "\e032";
+}
+.flaticon-group39:before {
+	content: "\e033";
+}
+.flaticon-group4:before {
+	content: "\e034";
+}
+.flaticon-group5:before {
+	content: "\e035";
+}
+.flaticon-hospital11:before {
+	content: "\e036";
+}
+.flaticon-hospital9:before {
+	content: "\e037";
+}
+.flaticon-hostpital:before {
+	content: "\e038";
+}
+.flaticon-id2:before {
+	content: "\e039";
+}
+.flaticon-important:before {
+	content: "\e03a";
+}
+.flaticon-increasing10:before {
+	content: "\e03b";
+}
+.flaticon-international5:before {
+	content: "\e03c";
+}
+.flaticon-laptop35:before {
+	content: "\e03d";
+}
+.flaticon-magnifying29:before {
+	content: "\e03e";
+}
+.flaticon-male100:before {
+	content: "\e03f";
+}
+.flaticon-male122:before {
+	content: "\e040";
+}
+.flaticon-male127:before {
+	content: "\e041";
+}
+.flaticon-male58:before {
+	content: "\e042";
+}
+.flaticon-male59:before {
+	content: "\e043";
+}
+.flaticon-md:before {
+	content: "\e044";
+}
+.flaticon-medical14:before {
+	content: "\e045";
+}
+.flaticon-medical43:before {
+	content: "\e046";
+}
+.flaticon-medical50:before {
+	content: "\e047";
+}
+.flaticon-medical51:before {
+	content: "\e048";
+}
+.flaticon-medical55:before {
+	content: "\e049";
+}
+.flaticon-men6:before {
+	content: "\e04a";
+}
+.flaticon-office17:before {
+	content: "\e04b";
+}
+.flaticon-office21:before {
+	content: "\e04c";
+}
+.flaticon-office22:before {
+	content: "\e04d";
+}
+.flaticon-office24:before {
+	content: "\e04e";
+}
+.flaticon-offices:before {
+	content: "\e04f";
+}
+.flaticon-open129:before {
+	content: "\e050";
+}
+.flaticon-paper57:before {
+	content: "\e051";
+}
+.flaticon-pdf12:before {
+	content: "\e052";
+}
+.flaticon-people18:before {
+	content: "\e053";
+}
+.flaticon-people5:before {
+	content: "\e054";
+}
+.flaticon-pie30:before {
+	content: "\e055";
+}
+.flaticon-placeholder2:before {
+	content: "\e056";
+}
+.flaticon-scale13:before {
+	content: "\e057";
+}
+.flaticon-squares7:before {
+	content: "\e058";
+}
+.flaticon-stethoscope2:before {
+	content: "\e059";
+}
+.flaticon-storage18:before {
+	content: "\e05a";
+}
+.flaticon-surgeon1:before {
+	content: "\e05b";
+}
+.flaticon-table33:before {
+	content: "\e05c";
+}
+.flaticon-task:before {
+	content: "\e05d";
+}
+.flaticon-text32:before {
+	content: "\e05e";
+}
+.flaticon-time5:before {
+	content: "\e05f";
+}
+.flaticon-todo:before {
+	content: "\e060";
+}
+.flaticon-user103:before {
+	content: "\e061";
+}
+.flaticon-user84:before {
+	content: "\e062";
+}
+.flaticon-users4:before {
+	content: "\e063";
+}
+.flaticon-verification4:before {
+	content: "\e064";
+}
+.flaticon-verification5:before {
+	content: "\e065";
+}
+.flaticon-verified1:before {
+	content: "\e066";
+}
+.flaticon-weekly4:before {
+	content: "\e067";
+}
+.flaticon-weekly8:before {
+	content: "\e068";
+}
+.flaticon-woman36:before {
+	content: "\e069";
+}
+.flaticon-woman51:before {
+	content: "\e06a";
+}

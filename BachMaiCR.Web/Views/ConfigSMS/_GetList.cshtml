@@ -73,7 +73,7 @@
                     if (!string.IsNullOrEmpty(dateEnd))
                     {
                         TimeSpan day = lstItem[i].DATE_END.Value - DateTime.Now;
-                        if (day.Days < 0 && lstItem[i].ISACTIVED.Equalstrue)
+                        if (day.Days < 0 && lstItem[i].ISACTIVED.Equals(true))
                         {
                             css = "bgList";
                         }
@@ -108,7 +108,7 @@
                         @if (enableActive)
                         {
                             <td style="text-align: center;">
-                                @if (lstItem[i].ISACTIVED.Equalstrue)
+                                @if (lstItem[i].ISACTIVED.Equals(true))
                                 {
                                     <input class='change-active' type='checkbox' checked value='@lstItem[i].CONFIG_SMS_ID' />
                                 }

@@ -93,7 +93,7 @@ namespace BachMaiCR.DBMapping.Models
     {
     }
 
-    protected virtual void OnModelCreating(DbModelBuilder modelBuilder)
+    protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
       modelBuilder.Configurations.Add<BachMaiCR.DBMapping.Models.ADMIN_LOG>(new ADMIN_LOGMap());
       modelBuilder.Configurations.Add<BachMaiCR.DBMapping.Models.ADMIN_MENU>(new ADMIN_MENUMap());

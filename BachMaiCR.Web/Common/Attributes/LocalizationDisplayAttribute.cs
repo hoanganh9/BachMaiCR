@@ -1,9 +1,4 @@
-﻿/*
- * Được tạo bởi hiepth6
- * Nếu bạn thấy class có vấn đề, hoặc có cách viết tốt hơn, xin liên hệ với hiepth6@viettel.com.vn để thông tin cho tác giả
- */
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Resources;
 
 namespace BachMaiCR.Web.Common.Attributes

@@ -56,9 +56,9 @@ namespace BachMaiCR.Web.Models
         /// Email
         /// </summary>
         /// 
-        [EmailAddress]
         [StringLength(60, ErrorMessageResourceName = "MsgMaxLenghtRequired", ErrorMessageResourceType = typeof(Resources.Localization))]
         [LocalizationDisplay("LabelEmail")]
+        [Common.Attributes.EmailAddress]
         public string Email { get; set; }
 
         /// <summary>

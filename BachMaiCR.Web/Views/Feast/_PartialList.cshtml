@@ -71,7 +71,7 @@
                         <td>@lstItem[i].FEAST_TITLE</td>
                         <td>@dateValue</td>
                         <td style="text-align: center;">
-                            @if (lstItem[i].ISACTIVED.Equalstrue)
+                            @if (lstItem[i].ISACTIVED.Equals(true))
                             {
                                 <input class='change-active disabled' type='checkbox' checked value='@lstItem[i].FEAST_ID' />
                             }

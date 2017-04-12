@@ -1,0 +1,53 @@
+﻿.gpcp-department {
+    clear: inherit;
+    position: relative;
+}
+
+    .gpcp-department > .btn {
+        padding-right: 25px;
+        width: 100%;
+    }
+
+
+    .gpcp-department .filter-option {
+        display: inline-block;
+        float: left;
+        overflow: hidden;
+        text-align: left;
+        width: 100%;
+    }
+
+    .gpcp-department.form-control {
+        margin-bottom: 0;
+        padding: 0;
+        border: none;
+    }
+
+
+    .gpcp-department .btn-group .caret {
+        margin-top: -2px;
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        vertical-align: middle;
+    }
+
+
+    .gpcp-department .tree-data-content {
+        height: auto;
+        margin-top: -2px !important;
+        max-height: 230px;
+        max-width: 100%;
+        min-width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        white-space: nowrap;
+    }
+
+    .gpcp-department .dropdown-menu {
+    }
+
+
+    .gpcp-department a {
+        font-size: 12px;
+    }

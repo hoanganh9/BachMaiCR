@@ -1,0 +1,421 @@
+form {
+    margin: 0;
+    padding: 0;
+}
+
+fieldset {
+    margin: 0px;
+    padding: 0px;
+
+    border:1px solid #b5bace;
+    border-collapse:collapse;
+
+    background-position:0px 0px;
+}
+* html fieldset {
+    width:100%;
+    background-position:0px 8px;
+}
+
+
+fieldset.transparent{
+    background:transparent;
+}
+
+fieldset.white {
+    background-image:url( ../Images/fs_bg_white.gif );
+    background-repeat:repeat-x;
+}
+fieldset.white div.innerFS {
+    background-color:#fff;
+}
+
+fieldset.blue {
+    background-image:url( ../Images/fs_bg_blue.gif );
+    background-repeat:repeat-x;
+}
+fieldset.blue div.innerFS {
+    background-color:#dfe8f6;
+}
+
+fieldset div.innerFS {
+    margin: 0;
+    padding: 0;
+    padding:4px;
+}
+* html fieldset div.innerFS {
+    width:100%;
+    clear:both;
+}
+
+legend {
+    margin: 0px;
+    padding: 0px;
+    margin-left:10px;
+
+    background:transparent;
+}
+* html legend {
+    margin-left:4px;
+}
+
+legend span.titleFS {
+    margin: 0px;
+    padding: 0px;
+    margin-left:4px;
+
+    color:#15428b;
+    font-family:Tahoma,helvetica,arial;
+    font-weight:bold;
+    font-size:11px;
+    font-style:normal;
+
+    display:block;
+    float:left;
+}
+
+legend span.iconFS {
+    margin: 0px;
+    padding: 0px;
+    background:url( ../Images/tool-sprites.gif ) no-repeat -15px -60px;
+
+    height:15px;
+    width:15px;
+
+    display:block;
+    float:left;
+
+}
+* html legend span.iconFS {
+    margin:0px;
+    padding:0px;
+    margin-bottom:0px;
+}
+
+.lstTbl, /* n1 */
+.frmTbl {
+    margin: 0px;
+    padding: 0px;
+
+    border:1px solid #99bbe8;
+    border-top:0px;
+    border-collapse:collapse;
+
+    background-color:#dfe8f6;
+}
+/* o1
+.lstTbl {
+    background-color:#dfe8f6;
+}
+*/
+.lstTbl th,
+.frmTbl th {
+   margin: 0px;
+   padding: 0px;
+   padding-left:10px;
+
+   background:url( ../Images/frmTbl_bg4.gif ) repeat-x 0% 0%;
+
+   height:25px;
+   color:#15428b;
+   font-family:Tahoma,helvetica,arial;
+   font-weight:bold;
+   font-size:11px;
+   font-style:normal;
+}
+
+
+
+fieldset th,
+.lstTbl th div,
+.frmTbl th div {
+   font-style:normal;
+}
+
+.lstTbl th {
+   border-left:1px solid #99bbe8;
+   border-right:1px solid #99bbe8;
+}
+
+fieldset td,
+.frmTbl td {
+   margin:0px;
+   padding:2px;
+    font:12px tahoma,arial,sans-serif;
+    font-style:normal;
+    font-variant:normal;
+    font-weight:normal;
+}
+
+.lstTbl td {
+    margin:0px;
+    padding:0px;
+}
+
+.frmTbl td.label
+{
+    margin:0px;
+    padding:2px;
+    font-family:tahoma,arial, sans-serif;
+    font-size:12px;
+    font-style:normal;
+    font-variant:normal;
+    font-weight:normal;
+    color:#04327D;
+}
+
+.frmTbl td.label1
+{
+    margin:0px;
+    padding:2px;
+    font-family:tahoma,arial, sans-serif;
+    font-size:12px;
+    font-style:normal;
+    font-variant:normal;
+    font-weight:normal;
+    color:#04327D;
+}
+
+label.none {
+    margin:0px;
+    padding:0px;
+    background-image:none;
+    color:#333;
+}
+
+label.none:hover {
+    background-image:none;
+    color:#333;
+}
+
+fieldset label,
+fieldset label.normal,
+.frmTbl label,
+.frmTbl label.normal {
+    /*background:url( ../img/frmTbl_label_hover.gif ) no-repeat -5px 50%;*/
+    /*background:url( ../img/frmTbl_label_hover.gif ) no-repeat -3.5px 50%;*/
+    font-family:Tahoma;
+    font-size:11px;
+    color:#15428b;
+}
+
+* fieldset label,
+* fieldset label.normal,
+* .frmTbl label,
+* .frmTbl label.normal {
+    /*background:url( ../img/frmTbl_label_hover.gif ) no-repeat -4px 50%;*/
+}
+
+fieldset label.required,
+.frmTbl label.required
+{
+    background:url( ../Images/frmTbl_label_error.gif ) no-repeat 0px 50%;
+    color:#15428b;
+}
+
+tr.footer td {
+    padding-top:5px;
+    padding-bottom:3px;
+}
+
+textarea,
+select,
+input[type="text"],
+input[type="password"],
+input[type="file"]
+{
+    background:url( ../Images/text-bg.gif ) repeat-x scroll 0% 0%;
+    background-color:#fff;
+
+    font-family: Helvetica,arial,tahoma,sans-serif;
+    font-size:11px;
+    width:100%;
+
+    border:1px solid #b5b8c8;
+    color:#000;
+
+    padding-top:2px;
+}
+
+select,
+input[type="text"],
+input[type="password"],
+input[type="file"]
+{
+    height:22px;
+}
+
+textarea:focus,
+select:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="file"]:focus
+{
+    border:1px solid #7eadd9;
+    color:#000;
+}
+
+textarea[disabled],
+select[disabled],
+input[type="text"][disabled],
+input[type="password"][disabled],
+input[type="file"][disabled],
+
+textarea[readonly],
+select[readonly],
+input[type="text"][readonly],
+input[type="password"][readonly],
+input[type="file"][readonly]
+{
+    background:url( ../Images/input_bg_tal.jpg ) repeat-x scroll top left;
+    background-color:#f3f4f6;
+    border:1px solid #d6dade;
+    color:#999;
+}
+
+
+/****************************************************************************/
+* html textarea,
+* html select
+{
+    border: 1px solid #b5b8c8;
+    background:url( ../Images/text-bg.gif ) repeat-x fixed 0% 0%;
+    background-color:#fff;
+
+    font-family: Arial,Helvetica,sans-serif;
+    font-size:11px;
+    width:100%;
+
+    white-space:normal;
+}
+
+* html select
+{
+    width:100%;
+    height:22px;
+}
+
+    /* [ For stupid IE */
+    .txt {
+
+    }
+
+    * html .txt {
+        border: 1px solid #b5b8c8;
+        background:url( ../Images/text-bg.gif ) repeat-x fixed 0% 0%;
+        background-color:#fff;
+
+        font-family: Arial,Helvetica,sans-serif;
+        font-size:11px;
+        width:100%;
+
+        height:22px;
+        white-space:normal;
+    }
+    /* ] For stupid IE */
+
+/****************************************************************************/
+
+.oneField th,
+.oneField td
+{
+    width:50%;
+}
+
+.twoFields th,
+.twoFields td
+{
+    width:25%;
+}
+
+.threeFields th,
+.threeFields td
+{
+    width:16.6%;
+}
+
+.fourFields th,
+.fourFields td
+{
+    width:12.5%;
+}
+
+/*************************** Vista button *****************************/
+.btnType1 {
+    display:inline;
+    white-space:nowrap;
+}
+
+.btnType1 .l {
+    padding:0px;
+    margin:0px;
+    white-space:nowrap;
+
+    background:url( ../Images/btn1_left.gif ) no-repeat top left;
+    width:3px;
+    height:24px;
+
+    display:inline;
+    border:0px !important;
+}
+
+.btnType1 .m {
+    padding-bottom:1px;
+    margin:0px;
+    padding-left:10px;
+    padding-right:10px;
+    white-space:nowrap;
+    font-size: 11px;
+    background:url( ../Images/btn1_middle.gif ) repeat-x;
+    height:26px;
+    display:inline;
+    border:0px !important;
+}
+
+* html .btnType1 .m {
+    padding-left:3px;
+    padding-right:3px;
+}
+
+.btnType1 .r {
+    padding:0px;
+    margin:0px;
+    white-space:nowrap;
+
+    background:url( ../Images/btn1_right.gif ) no-repeat top right;
+    width:3px;
+    height:24px;
+
+    display:inline;
+    border:0px !important;
+}
+
+/*************************** Form display toggle button *************************/
+div.label,
+div.label {
+    margin:0px;
+    padding:0px;
+
+    float:left;
+    font-style:normal;
+}
+
+div.displayToggle,
+div.displayToggle {
+    margin:0px;
+    padding:0px;
+
+    margin-bottom:1px;
+    margin-right:10px;
+
+    height:15px;
+    width:15px;
+
+    float:right;
+    background:url( ../Images/btn_show-hide-dBox_bg.gif ) no-repeat 0% -30px;
+}
+
+* html div.displayToggle,
+* html div.displayToggle {
+    margin-right:5px;
+}

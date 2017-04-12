@@ -1,0 +1,709 @@
+﻿/* css dành cho thông báo trên trang */
+.clear {
+    clear: both;
+}
+
+.notice {
+    width: 30%;
+    /*Đưa thông bao luôn luôn ở top content*/
+    position: fixed;
+    top: 2px;
+    right: 8px;
+    height: auto;
+    min-height: 40px;
+    text-align: left;
+    cursor: pointer;
+    behavior: url('/Scripts/pie/PIE.htc');
+    z-index: 1100;
+}
+/* kết thúc - css dành cho thông báo trên trang */
+.account-info-region {
+    float: right;
+    display: block;
+    margin: 5px;
+    background: white;
+    padding: 5px;
+}
+/* LAYOUT */
+#page-container {
+    /*width: 100%;*/
+    height: 100%;
+}
+
+#page-header {
+    width: 100%;
+    height: 89px;
+    background: #46A9E0;
+    margin: 0px;
+    padding: 0px;
+    float: left;
+}
+
+#page-header-banner {
+    background: url("/Images/banner-v2.jpg") no-repeat scroll right top #E0E9FA;
+    height: 93px;
+  
+    width: 100%;
+ border-bottom-width: 4px;
+  border-bottom-style: solid;
+  border-bottom-color: #29609f;
+}
+
+#page-container #page-nav-left {
+    /*min-height: 768px;*/
+    background: #3684c9;
+    float: left;
+    overflow: auto;
+    padding: 0px;
+    margin-top: 35px;
+    width: 200px;
+}
+
+ul.left-menu {
+    list-style: none;
+    line-height: 24px;
+    margin: 2%;
+    border-radius: 2px;
+    background: white;
+    float: left;
+    width: 94%;
+    padding: 0px;
+    margin-top: 10px;
+}
+
+    ul.left-menu li.left-menu-item {
+        width: 100%;
+        display: block;
+        clear: both;
+        padding-left: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        word-wrap: normal;
+    }
+
+    ul.left-menu li.left-menu-item-focus {
+        background: #96E0D1;
+    }
+
+        ul.left-menu li.left-menu-item-focus a {
+            color: white !important;
+        }
+
+#page-container #page-nav-content {
+    width: 824px;
+    height: 768px;
+    background: white;
+    float: left;
+    /*overflow: auto;*/
+    overflow-x: hidden;
+    margin-top: 35px;
+    opacity: 0;
+}
+
+.content {
+    margin: 0px;
+    margin-top: 5px;
+    margin-left: 10px;
+    width: auto;
+}
+
+#page-footer {
+    width: 100%;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    background: #E0E0E0;
+    padding: 0px;
+    margin: 0px;
+}
+
+    #page-footer .page-footer-text {
+        padding: 5px;
+        height: 19px;
+        color: grey;
+        font-weight: 500;
+        font-size: 12px;
+        float: right;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+
+#page-paging {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    height: 30px;
+    background: gray;
+}
+
+#page-menu-action {
+    height: 30px;
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    margin-top: -28px;
+}
+    /* KẾT THÚC LAYOUT*/
+
+    /* CSS cho các menu ở top website */
+    #page-menu-action a {
+        height: 30px;
+        text-align: center;
+        width: auto;
+        display: block;
+        padding-top: 5px;
+        font-size: 12px;
+        color: blue;
+        float: left;
+        margin-top: 115px;
+        margin-right: 10px;
+        padding-right: 9px;
+        padding-left: 9px;
+        display: none;
+        font-family: Arial, Verdana, Tahoma, sans-serif;
+    }
+
+        #page-menu-action a:hover {
+            background: rgba(0,0,0,.12);
+            text-decoration: underline;
+        }
+/* KẾT THÚC CSS cho các menu ở top website*/
+
+/* LOGIN FORM*/
+.login-form {
+    margin: 0px auto;
+    height: auto;
+    background-color: #3172AC;
+    border-bottom: 1px solid #FFFFFF;
+    /*border-top: 4px solid #29609F;*/
+    height: 400px;
+}
+
+    .login-form .remember {
+        color: #fff;
+    }
+
+.login-line-bottom {
+    height: 0px;
+    background-color: #FFD033;
+    border-bottom: 1px solid #BFBFBF;
+}
+
+.login-form .login-form-left {
+    text-align: center;
+}
+
+.login-form .login-form-right, .login-form .login-form-left {
+    margin: 0;
+    padding: 0;
+    width: 50%;
+}
+
+.login-form-header {
+    color: #FFFFFF;
+    font-size: 1.3em;
+    font-weight: bold;
+    padding: 5px 0;
+    text-align: left;
+    text-transform: uppercase;
+    font-family: Arial, Verdana, Tahoma, sans-serif;
+}
+
+.login-form-body {
+    margin: 5em auto 0;
+    width: 300px;
+    /*padding: 20px;*/
+    /*-moz-box-sizing: border-box;*/
+    /*box-sizing: border-box;*/
+    /*font-size: 14px;*/
+    /*background-color: #fff;*/
+    /*border: 1px solid #d8dee2;*/
+    /*border-top-color: white;*/
+    /*border-radius: 0 0 4px 4px;*/
+}
+
+    .login-form-body .label-title {
+        font-size: 12px;
+        display: block;
+        width: 100%;
+    }
+
+    .login-form-body .input-text {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .login-form-body .input-checkbox-title {
+        width: auto;
+        display: inline;
+        margin-bottom: 10px;
+    }
+/* KẾT THÚC LOGIN FORM */
+
+.field-validation-error {
+    color: red;
+    /*border-color: red;*/
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+    font-size: 12px;
+    font-family: Arial, Verdana, Tahoma, sans-serif;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+/* KÍCH THƯỚC VÀ LOẠI FONT*/
+.font-11 {
+    font-size: 11px;
+}
+
+.font-12 {
+    font-size: 12px;
+}
+
+.font-13 {
+    font-size: 13px;
+}
+
+.font-14 {
+    font-size: 14px;
+}
+
+.font-10 {
+    font-size: 10px;
+}
+
+.font-italic {
+    font-style: italic;
+}
+
+.font-bold {
+    font-weight: bold;
+}
+/* KẾT THÚC KÍCH THƯỚC VÀ LOẠI FONT*/
+
+
+/* Các khoảng cách cơ bản trên web */
+.width50-p {
+    width: 50%;
+}
+
+.width25-p {
+    width: 25%;
+}
+
+.width100-p {
+    width: 100%;
+}
+
+.width36 {
+    width: 36px;
+}
+
+.width48 {
+    width: 48px;
+}
+
+.width96 {
+    width: 96px;
+}
+
+.width84 {
+    width: 84px;
+}
+.width104 {
+    width: 104px;
+}
+.width120 {
+    width: 120px;
+}
+
+.width200 {
+    width: 200px;
+}
+
+.width400 {
+    width: 400px;
+}
+/* KẾT THÚC các khoảng cách cơ bản trên web*/
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
+}
+
+.margin-left-10 {
+    margin-top: 10px;
+}
+
+.margin-bottom-10 {
+    margin-bottom: 10px;
+}
+
+.margin-top-20 {
+    margin-top: 20px;
+}
+
+.margin-5 {
+    margin: 5px;
+}
+/* ABSOLUTE OR RELATIVE */
+.absolute {
+    position: absolute;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.relative {
+    position: relative;
+}
+
+.bottom-0 {
+    bottom: 0px;
+}
+
+.right-0 {
+    right: 0px;
+}
+
+.transparent-bg {
+    background: transparent !important;
+}
+
+
+.align-center {
+    text-align: center;
+}
+
+.transparent-color {
+    color: transparent !important;
+}
+/* END ABSOLUTE OR RELATIVE */
+
+/* display */
+.display-block {
+    display: block;
+}
+
+.display-inline {
+    display: inline;
+}
+
+.display-none {
+    display: none;
+}
+/* end display */
+
+.step {
+    float: left;
+    width: 100%;
+}
+
+    .step .step-item {
+        float: left;
+        background: #28D1AA;
+        display: block;
+    }
+
+        .step .step-item .step-item-cycle {
+            float: left;
+            height: 30px;
+            width: 30px;
+            border-radius: 50% 50%;
+            background: white;
+            color: #28D1AA;
+            text-align: center;
+            font-size: 150%;
+            margin: 5px;
+        }
+
+        .step .step-item .step-item-focus {
+            background: #FF5146;
+            color: white;
+        }
+
+.chevron-next {
+    float: left;
+    background: #28D1AA;
+    height: 40px !important;
+}
+
+    .chevron-next .arrow {
+        font-size: 485%;
+        color: white;
+        margin-top: -17px;
+        margin-left: 0px;
+    }
+
+.step .step-item .step-item-cycle-detail {
+    float: left;
+    padding: 5px;
+    padding-left: 0px;
+    color: white;
+    font-size: 150%;
+}
+
+.margin-left--35 {
+    margin-left: -35px;
+}
+
+.margin-right-25 {
+    padding-right: 25px;
+}
+
+
+div.nav-top {
+    width: 100%;
+    padding: 0;
+    height: 30px;
+    font-weight: bold;
+    background-color: #4586C0;
+    color: #FFF;
+    border-bottom: 2px solid #385166;
+}
+
+    div.nav-top a {
+        color: #fff;
+    }
+
+    div.nav-top .nav-left {
+        float: left;
+        width: 25%;
+        padding-left: 10px;
+        line-height: 30px;
+    }
+
+    div.nav-top .nav-right {
+        float: right;
+        text-align: right;
+        width: 70%;
+        text-align: right;
+        line-height: 30px;
+        font-style: italic;
+    }
+
+        div.nav-top .nav-right form {
+            float: right;
+            padding: 0 7px;
+        }
+
+            div.nav-top .nav-right form a {
+                color: #D20101;
+            }
+
+
+/* Menu: phuonglt15 */
+
+#maincontent {
+    clear: inherit;
+    border: none;
+    float: right;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0;
+    width: 83%;
+}
+
+.top-bar1 {
+    width: 100%;
+    padding: 0;
+    height: 35px;
+    font-weight: bold;
+    background-color: #4586C0;
+    color: #FFF;
+    border-bottom: 2px solid #385166;
+}
+
+.bar-left1 {
+    float: left;
+    width: 50%;
+    padding-left: 10px;
+    line-height: 30px;
+}
+
+.bar-right1 {
+    float: right;
+    padding-right: 8px;
+    text-align: right;
+    width: 45%;
+    line-height: 30px;
+    font-style: italic;
+}
+
+    .bar-right1 a {
+        color: darkblue !important;
+    }
+
+
+
+li.menu-root {
+    background-color: #4D91D0 !important;
+    font-size: 12px;
+    font-family: Arial, Verdana, Tahoma, sans-serif;
+    width: 200px;
+}
+
+    li.menu-root a {
+        color: #fff !important;
+    }
+
+
+    li.menu-root .fa {
+        color: #fff !important;
+    }
+
+    li.menu-root a:hover {
+        background-color: #F6A259;
+    }
+
+
+.banner-top {
+    background: url("/Images/banner-v2.jpg") right top #e0e9fa no-repeat;
+    height: 89px;
+}
+
+
+/* Global Styles */
+
+/* ------------------------------- */
+
+
+/* Wrappers */
+
+/* ------------------------------- */
+
+
+.navbar-static-side ul li {
+    border-bottom: 1px solid #C7D4E4;
+    border-top: 1px solid #FFFFFF;
+    /* Custom style 26-03-2014 08:54*/
+    background-color: #EBF2FA;
+}
+
+    .navbar-static-side ul li .fa {
+        font-size: 1.3em;
+        color: #095DA8;
+    }
+
+/* Navigation */
+
+/* ------------------------------- */
+
+/* Top Right Navigation Dropdown Styles */
+
+.navbar-top-links li {
+    display: inline-block;
+}
+
+    .navbar-top-links li:last-child {
+        margin-right: 15px;
+    }
+
+    .navbar-top-links li a {
+        padding: 15px;
+        min-height: 50px;
+    }
+
+.navbar-top-links .dropdown-menu li {
+    display: block;
+}
+
+    .navbar-top-links .dropdown-menu li:last-child {
+        margin-right: 0;
+    }
+
+    .navbar-top-links .dropdown-menu li a {
+        padding: 3px 20px;
+        min-height: 0;
+    }
+
+        .navbar-top-links .dropdown-menu li a div {
+            white-space: normal;
+        }
+
+.navbar-top-links .dropdown-messages,
+.navbar-top-links .dropdown-tasks,
+.navbar-top-links .dropdown-alerts {
+    width: 310px;
+    min-width: 0;
+}
+
+.navbar-top-links .dropdown-messages {
+    margin-left: 5px;
+}
+
+.navbar-top-links .dropdown-tasks {
+    margin-left: -59px;
+}
+
+.navbar-top-links .dropdown-alerts {
+    margin-left: -123px;
+}
+
+.navbar-top-links .dropdown-user {
+    right: 0;
+    left: auto;
+}
+
+/* Sidebar Menu Styles */
+
+.sidebar-search {
+    padding: 15px;
+}
+
+.arrow {
+    float: right;
+}
+
+.fa.arrow:before {
+    content: "\f104";
+}
+
+.active > a > .fa.arrow:before {
+    content: "\f107";
+}
+
+.nav-second-level li,
+.nav-third-level li {
+    border-bottom: none !important;
+}
+
+    .nav-second-level li a {
+        padding-left: 37px;
+        background-color: #fff;
+        color: #1F3451 !important;
+    }
+
+        .nav-second-level li a .fa {
+            color: #000 !important;
+            font-size: 0.8em;
+        }
+
+    .nav-third-level li a {
+        padding-left: 52px;
+    }
+
+/*@media(min-width:768px) {*/
+.navbar-static-side {
+    z-index: 1;
+    position: absolute;
+    width: 200px;
+}
+
+.navbar-top-links .dropdown-messages,
+.navbar-top-links .dropdown-tasks,
+.navbar-top-links .dropdown-alerts {
+    margin-left: auto;
+}
+}

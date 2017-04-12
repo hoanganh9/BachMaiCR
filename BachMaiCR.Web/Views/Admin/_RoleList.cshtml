@@ -102,7 +102,7 @@
                         @if (isAdmin || (!listRoleId.Contains(lstItem[i].WEBPAGES_ROLE_ID) && enableActive))
                         {
                             <td style="text-align: center; width: 120px">
-                                @if (lstItem[i].ISACTIVE.Equalstrue)
+                                @if (lstItem[i].ISACTIVE.Equals(true))
                                 {
                                     <input class = 'change-active' type='checkbox'  checked value= '@lstItem[i].WEBPAGES_ROLE_ID'/>
                                 }

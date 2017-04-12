@@ -32,7 +32,7 @@
         $('#select-language').bind('change', function (event) {
             $.cookie('_culture', null, { 'path': '/', expires: -1 });
             $.cookie('_culture', $(this).val(), { 'path': '/', expires: 365 });
-            location.reloadtrue;
+            location.reload(true);
         });
     });
 </script>

@@ -119,7 +119,7 @@
                         @if (isAdmin || (lstItem[i].USERNAME.ToLower() != user && enableActive))
                         {
                             <td style="text-align: center;">
-                                @if (lstItem[i].ISACTIVED.Equalstrue)
+                                @if (lstItem[i].ISACTIVED.Equals(true))
                                 {
                                     <input class='change-active' type='checkbox' checked value='@lstItem[i].ADMIN_USER_ID' />
                                 }

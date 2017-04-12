@@ -1,0 +1,49 @@
+﻿ .tbl td:first-child {
+        text-align: left;
+    }   
+    
+     .tbl {
+        table-layout: fixed;
+    }
+
+        .tbl td, .tbl td div {
+            text-overflow: ellipsis;
+            overflow: hidden;          
+        }
+
+        .tbl td {
+            padding: 2px;
+            line-height: 0px;
+            padding-top: 8px;
+        }
+
+    .schedule-element {
+       min-width: 0px;
+      min-height: 25px;      
+        background-color: #D0DAFD;
+        padding-top: 17px;
+        padding-left: 2px;
+      
+    }
+
+        .schedule-element .element-change {
+            top: 20px;
+        }
+
+    .schedule-element-haschange {
+        background-color: #B6FF00;
+        padding-top: 10px;       
+           }
+   
+    .itemspan {
+        float: none;
+    }
+
+    .add-schedule {
+        background-color: #D5F76E;
+    }
+
+    .remove-schedule a {
+        color: red;
+        text-decoration: line-through;
+    }

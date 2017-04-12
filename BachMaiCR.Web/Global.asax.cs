@@ -1,84 +1,156 @@
-﻿namespace BachMaiCR.Web
+﻿using System;
+using System.Configuration;
+using System.Web;
+using System.Web.Http;
+using System.Web.Mvc;
+using System.Web.Optimization;
+using System.Web.Routing;
+using System.Web.Security;
+using BachMaiCR.Utilities;
+using BachMaiCR.Web.App_Start;
+using BachMaiCR.Web.Controllers;
+using StackExchange.Profiling;
+using System.Web.Script.Serialization;
+using BachMaiCR.Web.Models;
+using AutoMapper;
+
+namespace BachMaiCR.Web
 {
-    using System.Web.Helpers;
-    using System.Web.Mvc;
-    using System.Web.Optimization;
-    using System.Web.Routing;
-    using Boilerplate.Web.Mvc;
-    using BachMaiCR.Web.Services;
-    using NWebsec.Csp;
+    // Note: For instructions on enabling IIS6 or IIS7 classic mode, 
+    // visit http://go.microsoft.com/?LinkId=9394801
 
     public class MvcApplication : System.Web.HttpApplication
     {
         protected void Application_Start()
         {
-            // Ensure that the X-AspNetMvc-Version HTTP header is not 
-            //MvcHandler.DisableMvcResponseHeader = true;
-
-            ConfigureViewEngines();
-            ConfigureAntiForgeryTokens();
-            
+            BundleTable.EnableOptimizations = false;
+//#if DEBUG
+//            BundleTable.EnableOptimizations = false;
+//#else
+//            BundleTable.EnableOptimizations = true;
+//#endif
             AreaRegistration.RegisterAllAreas();
+
+            WebApiConfig.Register(GlobalConfiguration.Configuration);
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            // (new BachMaiCRConfig()).Initialization();
+            //AutoMapperStartup.Initialize();
+            Mapper.Initialize(c => c.AddProfile<MappingProfile>());
+
+        }
+        protected void Application_BeginRequest()
+        {
+            // Sử dụng để redirect sang https nếu có cầu hình
+            if (!Request.IsLocal)
+            {
+                //Request.IsSecureConnection
+                if ((ConfigurationManager.AppSettings["requireSsl"] ?? "false").ToLower() == "true" && !Request.IsSecureConnection)
+                {
+                    string securePort = ConfigurationManager.AppSettings["sslPort"];
+                    var path = "https://" + Request.Url.Host + (securePort == "443" || securePort == "" ? "" : string.Format(":{0}", securePort)) + Request.Url.PathAndQuery;
+                    Response.Status = "301 Moved Permanently";
+                    Response.AddHeader("Location", path);
+                    //Response.Redirect(path);
+                }
+            }
+            //if (Request.IsLocal)
+            //{
+            //    MiniProfiler.Start();
+            //} //or any number of other checks, up to you 
+        }
+
+        protected void Application_AcquireRequestState()
+        {
+        }
+
+        protected void Application_PreRequestHandlerExecute()
+        {
+        }
+
+        protected void Application_EndRequest()
+        {
+            MiniProfiler.Stop(); //stop as early as you can, even earlier with MvcMiniProfiler.MiniProfiler.Stop(discardResults: true);
         }
 
         /// <summary>
-        /// Handles the Content Security Policy (CSP) violation errors. For more information see FilterConfig.
+        /// Chú ý phải sử dụng <customErrors mode="Off"/> trong webconfig
+        /// Hàm này sử dụng để redirect sang 1 trang khác khi ứng dụng gặp lỗi
+        /// Hiện đang để ở trạng thái DEBUG để tiện cho việc phát triển
+        /// Khi ứng dụng được build ở dạng release, đoạn code tự có tác dụng
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="CspViolationReportEventArgs"/> instance containing the event data.</param>
-        protected void NWebsecHttpHeaderSecurityModule_CspViolationReported(object sender, CspViolationReportEventArgs e)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void Application_Error(object sender, EventArgs e)
         {
-            // Log the Content Security Policy (CSP) violation.
-            CspViolationReport violationReport = e.ViolationReport;
-            CspReportDetails reportDetails = violationReport.Details;
-            string violationReportString = string.Format(
-                "UserAgent:<{0}>\r\nBlockedUri:<{1}>\r\nColumnNumber:<{2}>\r\nDocumentUri:<{3}>\r\nEffectiveDirective:<{4}>\r\nLineNumber:<{5}>\r\nOriginalPolicy:<{6}>\r\nReferrer:<{7}>\r\nScriptSample:<{8}>\r\nSourceFile:<{9}>\r\nStatusCode:<{10}>\r\nViolatedDirective:<{11}>",
-                violationReport.UserAgent,
-                reportDetails.BlockedUri,
-                reportDetails.ColumnNumber,
-                reportDetails.DocumentUri,
-                reportDetails.EffectiveDirective,
-                reportDetails.LineNumber,
-                reportDetails.OriginalPolicy,
-                reportDetails.Referrer,
-                reportDetails.ScriptSample,
-                reportDetails.SourceFile,
-                reportDetails.StatusCode,
-                reportDetails.ViolatedDirective);
-            CspViolationException exception = new CspViolationException(violationReportString);
-            DependencyResolver.Current.GetService<ILoggingService>().Log(exception);
-        }
-        
-        /// <summary>
-        /// Configures the view engines. By default, Asp.Net MVC includes the Web Forms (WebFormsViewEngine) and 
-        /// Razor (RazorViewEngine) view engines that supports both C# (.cshtml) and VB (.vbhtml). You can remove view 
-        /// engines you are not using here for better performance and include a custom Razor view engine that only 
-        /// supports C#.
-        /// </summary>
-        private static void ConfigureViewEngines()
-        {
-            ViewEngines.Engines.Clear();
-            ViewEngines.Engines.Add(new CSharpRazorViewEngine());
+#if DEBUG
+
+#else
+            var ex = Server.GetLastError().GetBaseException();
+            Server.ClearError();
+            var routeData = new RouteData();
+            routeData.Values.Add("controller", "Error");
+            routeData.Values.Add("action", "ShowErrorPage");
+            if (ex.GetType() == typeof(HttpException))
+            {
+                var httpException = (HttpException)ex;
+                var code = httpException.GetHttpCode();
+                routeData.Values.Add("status", code);
+            }
+            else
+            {
+                routeData.Values.Add("status", 500);
+            }
+            routeData.Values.Add("error", ex);
+
+            IController errorController = new ErrorController();
+            errorController.Execute(new RequestContext(new HttpContextWrapper(Context), routeData));
+#endif
+
         }
 
-        /// <summary>
-        /// Configures the anti-forgery tokens. See 
-        /// http://www.asp.net/mvc/overview/security/xsrfcsrf-prevention-in-aspnet-mvc-and-web-pages
-        /// </summary>
-        private static void ConfigureAntiForgeryTokens()
+        protected void Application_EndRequest(object sender, EventArgs e)
         {
-            // Rename the Anti-Forgery cookie from "__RequestVerificationToken" to "f". This adds a little security 
-            // through obscurity and also saves sending a few characters over the wire. Sadly there is no way to change 
-            // the form input name which is hard coded in the @Html.AntiForgeryToken helper and the 
-            // ValidationAntiforgeryTokenAttribute to  __RequestVerificationToken.
-            // <input name="__RequestVerificationToken" type="hidden" value="..." />
-            AntiForgeryConfig.CookieName = "f";
+#if DEBUG
 
-            // If you have enabled SSL. Uncomment this line to ensure that the Anti-Forgery 
-            // cookie requires SSL to be sent across the wire. 
-            // AntiForgeryConfig.RequireSsl = true;
+#else
+            if (Context.Response.StatusCode == 401)
+            {
+                throw new HttpException(401, "You are not authorised");
+            }
+#endif
+
+        }
+
+
+        protected void Application_PostAuthenticateRequest(Object sender, EventArgs e)
+        {
+            HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
+
+            if (authCookie != null)
+            {
+                // Hàm lấy thông người dùng đã lưu trong  FormsAuthentication
+                // Phục cho việc lấy thông người dùng đăng nhập tại Control Base
+                // Hungcd1
+
+                var authTicket = FormsAuthentication.Decrypt(authCookie.Value);
+                var serializer = new JavaScriptSerializer();
+                var serializeModel = serializer.Deserialize<AppUserPrincipalSerializeModel>(authTicket.UserData);
+                if (serializeModel != null)
+                {
+                    var newUser = new AppUser(authTicket.Name);
+                    if (newUser != null)
+                    {
+                        newUser.UserId = serializeModel.UserId;
+                        newUser.UserLogin = serializeModel.UserLogin;
+                        newUser.UserName = serializeModel.UserName;
+                        HttpContext.Current.User = newUser;
+                    }
+                }
+            }
         }
     }
+
+
 }

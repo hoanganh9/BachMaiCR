@@ -62,7 +62,7 @@ namespace BachMaiCR.Web.Models
             ErrorMessageResourceType = typeof (Resources.Localization))]
         [DataType(DataType.Password)]
         [LocalizationDisplay("AdminUser_Label_Confirm_password")]
-        [Compare("PASSWORD", ErrorMessage = "Mật khẩu và Mật khẩu nhập lại không khớp nhau.")]
+        [System.ComponentModel.DataAnnotations.Compare("PASSWORD", ErrorMessage = "Mật khẩu và Mật khẩu nhập lại không khớp nhau.")]
         public string ConfirmPassword { get; set; }
 
 
@@ -132,7 +132,7 @@ namespace BachMaiCR.Web.Models
 
         [DataType(DataType.Password)]
         [LocalizationDisplay("Xác nhận mật khẩu")]
-        [Compare("NewPassword", ErrorMessage="Mật khẩu xác nhận không đúng")]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage="Mật khẩu xác nhận không đúng")]
         public string ConfirmPassword { get; set; }
 
         public UserResetPasswordModel()

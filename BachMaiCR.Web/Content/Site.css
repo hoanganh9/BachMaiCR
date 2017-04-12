@@ -1,14 +1,1037 @@
-﻿body {
-  padding-top: 50px;
-  padding-bottom: 20px;
+﻿.content-wrapper {
+    width: 99%;
+    /*background-color:red;*/
 }
-/* Set padding to keep content from hitting the edges. */
-.body-content {
-  padding-left: 15px;
-  padding-right: 15px;
+
+.page-nav-top {
+    height: 40px;
+    /*background-color: #EEEEEE;*/
 }
-/* Allow only vertical resizing of textareas. */
-textarea {
-  resize: vertical;
+
+    /*.page-nav-top .page-nav-title {
+        float: left;
+        width: 50%;
+        line-height: 40px;
+        color: #000;
+        font-weight: bold;
+        font-size: 1.2em;
+    }*/
+
+    .page-nav-top .page-nav-search {
+        float: right;
+        /*width: 30%;*/
+    }
+
+        .page-nav-top .page-nav-search input[type="text"] {
+            border: 1px solid #CCCCCC;
+            margin: 3px 0;
+            width: 220px;
+        }
+
+.padding-all {
+    padding: 1em;
 }
-/*# sourceMappingURL=Site.css.map */
+
+.padding-left-0 {
+    padding-left: 0;
+}
+
+.padding-bottom-0 {
+    padding-bottom: 0;
+}
+
+.padding-right-0 {
+    padding-right: 0;
+}
+
+.padding-right {
+    padding-right: 1em !important;
+}
+
+.padding-left {
+    padding-left: 1em !important;
+}
+
+.padding-top {
+    padding-top: 1em !important;
+}
+
+.padding-bottom {
+    padding-bottom: 1em !important;
+}
+
+
+.margin-right {
+    margin-right: 1em !important;
+}
+
+.margin-left {
+    padding-left: 1em !important;
+}
+
+.margin-top {
+    padding-top: 1em !important;
+}
+
+.margin-bottom {
+    padding-bottom: 1em !important;
+}
+
+.margin-top-0 {
+    margin-top: 0;
+}
+
+.margin-control-row {
+    /*margin: 0 0 5px 0;*/
+}
+
+
+.min-width {
+    min-width: 80px;
+}
+
+.input-lable-control {
+    line-height: 27px;
+    text-align: left;
+    font-weight: normal;
+    font-size: 12px;
+    white-space: nowrap;
+    display: table-cell;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.color-error {
+    color: red;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+}
+
+
+
+#navigate_bottom_panel.nav-bottom {
+    /*margin: 0 !important;*/
+}
+
+    #navigate_bottom_panel.nav-bottom .pagination {
+        margin: 0 !important;
+    }
+
+
+.nav-pagination-bottom {
+    /*background-color: teal;*/
+}
+
+
+.nav-pagination-content {
+    color: #939393;
+}
+/*Dungpt28 */
+
+body {
+    font-size: 13px;
+    font-family: 'Arial','Verdana','Times New Roman';
+}
+
+.tbl {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+    .tbl th {
+        background: #DBE8FE;
+        color: #0B55C4;
+        text-align: center;
+    }
+
+    .tbl tr.ood {
+        background: #F0F8F8;
+    }
+
+    .tbl td, .tbl th {
+        border: 1px solid #DDDDDD;
+        padding: 5px;
+        height: 25px;
+        /*text-align: center;*/
+    }
+
+        .tbl td:first-child {
+            text-align: center;
+        }
+
+    .tbl th {
+        padding-bottom: 4px;
+        border-bottom: 1px solid #008DC2;
+    }
+    /*border: 1px solid #FFF;}*/
+    .tbl tr:hover, tr:focus {
+        background: #E5F8FF;
+    }
+
+    .tbl input[type="checkbox"] {
+        border: 1px solid #90927d;
+    }
+
+
+    .tbl .disabled {
+        color: #000;
+        box-shadow: none;
+        /*cursor: not-allowed;*/
+        opacity: 0.5;
+        /*pointer-events: none;*/
+    }
+
+.Table-title {
+    font-family: Arial, Verdana, Tahoma, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.labels {
+    display: inline-block;
+    font-weight: normal;
+    margin-bottom: 5px;
+    font-family: Arial, Verdana, Tahoma, sans-serif;
+    font-size: 12px;
+}
+
+.page-nav-search-box {
+    width: 100%;
+    /*height: 250px;*/
+}
+
+.tbl_Search {
+    font-family: Arial, Verdana, Tahoma, sans-serif;
+    font-size: 12px;
+    margin: 5px 5px 5px 5px;
+}
+
+    .tbl_Search .Align_right {
+        text-align: right;
+        margin-right: 1em;
+        height: 32px;
+    }
+
+    .tbl_Search .Align_Left {
+        text-align: left;
+        margin-left: 1em;
+    }
+
+.btn-default {
+    /*height: 27px;*/
+    /*font-size: 12px;*/
+    /*font-family: Arial, Verdana, Tahoma, sans-serif;*/
+}
+
+.TextBoxContent {
+    border: 1px solid #c4c4c4;
+    height: 25px;
+    width: 320px;
+    font-size: 12px;
+    padding: 4px 4px 4px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 0px 0px 8px #d9d9d9;
+    -moz-box-shadow: 0px 0px 8px #d9d9d9;
+    -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+    margin: 2px 2px 2px 2px;
+}
+
+    .TextBoxContent:focus {
+        outline: none;
+        border: 1px solid #7bc1f7;
+        box-shadow: 0px 0px 8px #7bc1f7;
+        -moz-box-shadow: 0px 0px 8px #7bc1f7;
+        -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+    }
+
+#footer {
+    background: url("/Images/bg-box-btn.png") top left repeat-x;
+    padding: 5%;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+    #footer p:first-child {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+/*Định dạng style của control*/
+.span2 {
+    border: 1px solid #c4c4c4;
+    height: 25px;
+    width: 100%;
+    font-size: 13px;
+    padding: 4px 4px 4px 4px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 0px 0px 8px #d9d9d9;
+    -moz-box-shadow: 0px 0px 8px #d9d9d9;
+    -webkit-box-shadow: 0px 0px 8px #d9d9d9;
+}
+
+    .span2:focus {
+        outline: none;
+        border: 1px solid #7bc1f7;
+        box-shadow: 0px 0px 8px #7bc1f7;
+        -moz-box-shadow: 0px 0px 8px #7bc1f7;
+        -webkit-box-shadow: 0px 0px 8px #7bc1f7;
+    }
+
+.clickable {
+    cursor: pointer;
+    background: #ffff99;
+}
+
+.ColumnWidth80px {
+    width: 80px;
+}
+
+.ColumnWidth100px {
+    width: 100px;
+}
+
+.ColumnWidth200px {
+    width: 200px;
+    line-height: 30px;
+}
+
+.TextCenter {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.item-schedule {
+    width: 200px;
+    line-height: 30px;
+    vertical-align:top;
+}
+.itemtel {
+   
+    line-height: 40px;
+    vertical-align:top;
+}
+#selectable .ui-selecting {
+    background: #38a9f1;
+}
+
+#selectable .ui-selected {
+    background: #38a9f1;
+    color: white;
+}
+
+#selectable {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+    #selectable li {
+        margin: 3px;
+        padding: 0.4em;
+      
+        height: 0px;
+    }
+
+.schedule-element {
+    margin: 2px 0;
+    padding: 0px 0px 0px 0px;
+    position: relative;
+    color:blue;
+    min-width: 150px;
+    max-width: 200px;
+    padding-top:10px;
+    height:40px;
+    margin-left:2px;
+   
+}
+
+    .schedule-element .element-close {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .schedule-element .element-change {
+        position: absolute;
+        top: 25px;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+
+    }
+
+    .schedule-element:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+        .schedule-element:hover span .fa {
+            text-decoration: none !important;
+        }
+
+
+        
+.schedule-elementDelete {
+    margin: 2px 0;
+    padding: 0px 0px 0px 0px;
+    position: relative;
+    color:blue;
+    min-width: 150px;
+    max-width: 200px;
+    height:40px;
+    margin-left:2px;
+    padding-top:10px;
+}
+
+    .schedule-elementDelete .element-close {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        color: #444;
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .schedule-elementDelete .element-change {
+        position: absolute;
+        top: 25px;
+        right: 2px;
+        color: #444;
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .schedule-elementDelete:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+        .schedule-elementDelete:hover span .fa {
+            text-decoration: none !important;
+        }
+
+
+.schedule-element-NewX {
+    margin: 2px 0;
+    padding: 0px 0px 0px 0px;
+    position: relative;
+    color:blue;
+    min-width: 150px;
+    max-width: 200px;
+    padding-top:10px;
+    height:40px;
+    margin-left:2px;
+   
+}
+
+    .schedule-element-NewX .element-close {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .schedule-element-NewX .element-change {
+        position: absolute;
+        top: 25px;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+
+    }
+
+    .schedule-element-NewX:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+        .schedule-element-NewX:hover span .fa {
+            text-decoration: none !important;
+        }
+
+
+.schedule-elementView{
+    margin: 2px 0;
+    padding: 0px 0px 0px 0px;
+    position: relative;
+    color:blue;
+    min-width: 150px;
+    max-width: 200px;
+    padding-top:10px;
+    height:40px;
+    margin-left:2px;
+   
+}
+
+    .schedule-elementView .element-close {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .schedule-elementView .element-change {
+        position: absolute;
+        top: 25px;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+
+    }
+
+    .schedule-elementView:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+        .schedule-elementView:hover span .fa {
+            text-decoration: none !important;
+        }
+
+   
+.schedule-elementChangeOne{
+    margin: 2px 0;
+    padding: 0px 0px 0px 0px;
+    position: relative;
+    color:blue;
+    min-width: 150px;
+    max-width: 200px;
+    padding-top:10px;
+    height:40px;
+    margin-left:2px;
+   
+}
+
+    .schedule-elementChangeOne .element-close {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .schedule-elementChangeOne .element-change {
+        position: absolute;
+        top: 25px;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+
+    }
+
+    .schedule-elementChangeOne:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+        .schedule-elementChangeOne:hover span .fa {
+            text-decoration: none !important;
+        }
+  
+.schedule-elementChangeTwo{
+    margin: 2px 0;
+    padding: 0px 0px 0px 0px;
+    position: relative;
+    color:blue;
+    min-width: 150px;
+    max-width: 200px;
+    padding-top:10px;
+    height:40px;
+    margin-left:2px;
+   
+}
+
+    .schedule-elementChangeTwo .element-close {
+        position: absolute;
+        top: 0;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .schedule-elementChangeTwo .element-change {
+        position: absolute;
+        top: 25px;
+        right: 2px;
+        color: #444;
+       
+        display: none;
+        z-index: 100;
+        cursor: pointer;
+        text-decoration: none;
+
+    }
+
+    .schedule-elementChangeTwo:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+        .schedule-elementChangeTwo:hover span .fa {
+            text-decoration: none !important;
+        }
+#table_list_staff td:nth-child(2) {
+    text-align: center;
+}
+
+#table_list_staff {
+    border: 0 none !important;
+}
+
+    #table_list_staff tr td:nth-child(3) {
+        text-align: left !important;
+    }
+
+
+.table-view {
+    margin: 0 auto;
+    background-color: #FFF;
+    color: #2C2E30;
+    font-weight: 100;
+    border: 0px solid #1346A2 !important;
+    width: 100%;
+    height: 180px;
+    font-size: 12px;
+}
+
+    .table-view tr:nth-child(2n+1) {
+        background-color: #F8F9FE;
+    }
+
+    .table-view tr:hover td {
+        background-color: #F1EBF3; /*cursor: pointer;*/
+    }
+
+    .table-view tr th {
+        text-align: center;
+        font-size: 1.1em;
+        background-color: #D0DAFD;
+        color: #1346A2;
+        padding: 6px 0;
+        border: none;
+        font-size: 12px;
+    }
+
+    .table-view tr td {
+        padding: 1px;
+        border-top: 1px dotted #D0DAFD;
+        text-align: center;
+    }
+
+    .table-view tr td {
+        color: #444;
+        font-size: 12px;
+    }
+
+        .table-view tr td:first-child {
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .table-view tr td a {
+            text-align: left;
+            cursor: pointer;
+        }
+
+            .table-view tr td a span {
+                color: #444;
+                font-size: 12px;
+            }
+
+        .table-view tr td div {
+            color: #444;
+            font-size: 12px;
+        }
+
+
+.box-staff {
+    background-color: #DEDEFF;
+    border: 1px solid #D0DAFD;
+    border-radius: 4px;
+    height: 75px;
+    width: 120px;
+}
+
+    .box-staff .imgx {
+        margin: 5px;
+        padding: 5px;
+        border: 0px solid #D0DAFD;
+        height: auto;
+        width: auto;
+        float: left;
+        text-align: center;
+        width: 100px;
+    }
+
+.box-staff-info {
+    line-height: 20px;
+}
+
+    .box-staff-info #staff_name {
+        font-weight: bold;
+        padding: 5px 0;
+    }
+
+.box-staff .fa, .avarar {
+    width: 96px;
+    max-height: 96px;
+    clear: left;
+    float: left;
+    text-align: center;
+    padding: 3px;
+}
+
+.box-staff .fa {
+    font-size: 96px;
+    color: darkblue;
+}
+
+#box_staff {
+    cursor: pointer;
+}
+
+.ui-widget-header {
+    border: 0px solid #aaaaaa /*{borderColorHeader}*/;
+    background: #f8c355 /*{bgColorHeader}*/
+    50% /*{bgHeaderXPos}*/
+    50% /*{bgHeaderYPos}*/
+    repeat-x /*{bgHeaderRepeat}*/;
+    color: black /*{fcHeader}*/;
+    font-weight: bold;
+    height:25px;
+    cursor:pointer;
+   
+   
+}
+
+.btn-default {
+    height: 25px;
+    font-size: 12px;
+    font-family: Arial, Verdana, Tahoma, sans-serif;
+}
+
+.selectpicker {
+    font-size: 12px;
+    font-family: Arial, Verdana, Tahoma, sans-serif;
+}
+
+#cat_list_render {
+    margin-left: -5px;
+}
+
+.sundayCalendar {
+    background-color:  #f3f7c9;
+}
+
+.scrollz {
+    width: 100%; /* Optional */
+    /* border-collapse: collapse; */
+    border-spacing: 0;
+    border: 0px solid black;
+   
+}
+    /*style Table Calendar*/
+    .scrollz tbody,
+    .scrollz thead {
+        display: block;
+    }
+
+    .scrollz thead {
+        background: #DBE8FE;
+        color: #0B55C4;
+    }
+
+        .scrollz thead tr th {
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+           
+            /*text-align: left;*/
+        }
+
+    .scrollz tbody {
+        /*height: 380px;*/
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+
+    .scrollz tbody {
+        border-top: 0px solid black;
+    }
+
+    .scrollz tr.ood {
+        background: #F0F8F8;
+    }
+
+  
+    .scrollz tbody td, thead th {
+        border: 1px solid #DDDDDD;
+        padding: 2px;
+        height: 25px;
+
+    }
+
+    .scrollz tr:hover, tr:focus {
+        background: #E5F8FF;
+    }
+
+    .scrollz tbody td:last-child, thead th:last-child {
+        border-right: 1px solid #DDDDDD;
+    }
+    .BgYear
+    {
+        background-color:#f4f5b7;
+       
+    }
+    .BgYearTD
+    {
+       font-weight:100;
+        cursor:pointer;
+    }
+    .BgYearTDNone
+    {
+        font-weight:100;
+      
+    }
+/*End*/
+
+
+/*Phuonglt15: 28/04/2014*/
+.searchLight {
+    background-color: #ffff66;
+}
+
+#nav {
+    padding-top: 4px;
+    padding-right: 0px;
+    padding-bottom: 4px;
+    padding-left: 18px;
+    border-bottom-width: 1px;
+    border-bottom-style: dotted;
+    border-bottom-color: #cccccc;
+    background-color: transparent;
+    background-image: url("/Images/icon-home.jpg");
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-position: 0px 4px;
+    background-clip: border-box;
+    background-origin: padding-box;
+    background-size: auto auto;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #428bca;
+}
+ .td_1
+    {
+        text-align: right;
+        width: 15%;
+    }
+.page-content {
+    margin-right: 10px;
+}
+/*phuonglt15:06/05/2014*/
+.holiday {
+    background-color: #e5eecc;
+}
+
+.item-scheduleOld {
+    width: 200px;
+    line-height: 70px;
+    background-color: whitesmoke;
+}
+.item-current
+{
+    background-color: #ffe45c;
+
+}
+.item-font {
+    font-weight: bold;
+}
+
+  .itemspan {
+        float: right;
+        font-weight: bold;
+        position: relative;
+      
+        vertical-align: super;
+    }
+  .item-align
+  {
+      vertical-align:top;
+  }
+.warningcalendar {
+    background-color: #dcd190;
+}
+
+
+  #search_form{
+      margin:0 auto;
+      width:75%;
+      /*min-width:500px;*/
+  }
+
+
+  #search_form .input-group-addon:first-child
+  {
+      border:none;
+      background:transparent;
+  }
+
+  #search_form input[type=text]
+  {
+      border-radius:4px;
+  }
+  #search_form .align-center
+  {
+      margin-top:7px;
+  }
+  /*phuonglt: 25.05*/ 
+  .del-calendar
+  {background: #D0DAFD; text-decoration: line-through; color: #ff0000; max-width: 100px; padding-left: 3px; height: 40px;}
+    .del-calendarH
+  {background: #D0DAFD; text-decoration: line-through; color: #ff0000;  padding-left: 3px; height:30px;}
+  .aDel
+  {
+      color:red;
+      text-decoration:line-through;
+      
+  }
+  .change-calendar
+  {
+      background: #b6ff00; padding-left: 1px; height: 40px; font-size:12px; 
+  }
+    .current-calendar
+  {
+        background: #D0DAFD; text-decoration:none; padding-left: 3px; height: 40px;
+
+    }
+      .current-calendarH
+  {
+        background: #D0DAFD; text-decoration:none; padding-left: 3px; height: 30px;
+
+    }
+    .add-calendar
+    {
+        background:#d5f76e; padding-left:3px;
+
+    }
+     .marginp {
+        margin-left: -5px;
+        
+    }
+     
+.scrollzx {
+    width: 100%; /* Optional */
+    /* border-collapse: collapse; */
+    border-spacing: 0;
+    border: 0px solid black;
+   
+}
+    /*style Table Calendar*/
+    .scrollzx tbody,
+    .scrollzx thead {
+        display: block;
+    }
+
+    .scrollzx thead {
+        background: #DBE8FE;
+        color: #0B55C4;
+    }
+
+        .scrollzx thead tr th {
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+           
+            /*text-align: left;*/
+        }
+
+    .scrollzx tbody {
+        /*height: 380px;*/
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+
+    .scrollzx tbody {
+        border-top: 0px solid black;
+    }
+
+    .scrollzx tr.ood {
+        background: #F0F8F8;
+    }
+
+  
+    .scrollzx tbody td, thead th {
+        border: 1px solid #DDDDDD;
+        padding: 2px;
+        height: 25px;
+
+    }
+
+    .scrollzx tr:hover, tr:focus {
+        background: #E5F8FF;
+    }
+
+    .scrollzx tbody td:last-child, thead th:last-child {
+        border-right: 1px solid #DDDDDD;
+    }
+
+      .viewdoctors {
+     
+        font-size: 12px;
+        font-family: 'Arial','Verdana','Times New Roman';
+    }
+          .bgList {
+     
+       background-color:yellow;
+    }
+          .detailDoctorName{
+              color:#0B55C4;       
+
+          }

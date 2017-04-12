@@ -56,7 +56,7 @@
                 @if (user.ToLower() == WebConst.DefaultAdminAccount.ToLower() || enableActive)
                 {
                     <td style="text-align: center; width: 10%">
-                        @if (lstItem[i].IS_ACTIVE.Equalstrue)
+                        @if (lstItem[i].IS_ACTIVE.Equals(true))
                         {
                         <input class = 'change-active' type='checkbox'  checked value= '@lstItem[i].WEBPAGES_ACTION_ID'/>
                         }

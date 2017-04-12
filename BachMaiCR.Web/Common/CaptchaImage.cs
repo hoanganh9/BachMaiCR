@@ -50,7 +50,7 @@ namespace BachMaiCR.Web.Common
         public void Dispose()
         {
             GC.SuppressFinalize(this);
-            this.Disposetrue;
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)

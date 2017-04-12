@@ -1,0 +1,10 @@
+﻿App_Start
+	+ Tạo user admin
+	+ Tự động đọc dll để insert hết quyền vào db
+	+ Thêm toàn bộ quyền cho admin
+	+ Admin được phép phân toàn bộ quyền cho user
+	+ User được phép chia sẻ quyền của mình người khác
+	+ Hiển thị danh sách chức năng theo cây
+	+ Dựng menu theo từng user
+	+ Mọi chức năng ko đc phân quyền
+	+ Menu 2 cấp
