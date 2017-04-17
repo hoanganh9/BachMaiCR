@@ -34,9 +34,9 @@ namespace BachMaiCR.DataAccess
 
     public T GetById(int id)
     {
-      return ((IEnumerable<T>) this.DbSet.SqlQuery(string.Format("SELECT * FROM {0} WHERE {1} = @Id", (object) this.DbContext.GetTableName<T>(), (object) this.DbContext.GetTableKeyName<T>()), new object[1]
+      return ((IEnumerable<T>) this.DbSet.SqlQuery(string.Format("SELECT * FROM {0} WHERE {1} = @Id", this.DbContext.GetTableName<T>(), this.DbContext.GetTableKeyName<T>()), new object[1]
       {
-        (object) new SqlParameter("Id", (object) id)
+        new SqlParameter("Id", id)
       })).FirstOrDefault<T>();
     }
 

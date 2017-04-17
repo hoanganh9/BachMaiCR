@@ -41,7 +41,7 @@ namespace BachMaiCR.Utilities.Cache
 
     public bool IsStored(string key)
     {
-      return this.Cache.Contains(key, (string) null);
+      return this.Cache.Contains(key, null);
     }
 
     public void RemoveByTerm(string term)
@@ -49,19 +49,19 @@ namespace BachMaiCR.Utilities.Cache
       foreach (KeyValuePair<string, object> keyValuePair in (IEnumerable<KeyValuePair<string, object>>) this.Cache)
       {
         if (keyValuePair.Key.Contains(term))
-          this.Cache.Remove(keyValuePair.Key, (string) null);
+          this.Cache.Remove(keyValuePair.Key, null);
       }
     }
 
     public void Remove(string key)
     {
-      this.Cache.Remove(key, (string) null);
+      this.Cache.Remove(key, null);
     }
 
     public void Clear()
     {
       foreach (KeyValuePair<string, object> keyValuePair in (IEnumerable<KeyValuePair<string, object>>) this.Cache)
-        this.Cache.Remove(keyValuePair.Key, (string) null);
+        this.Cache.Remove(keyValuePair.Key, null);
     }
   }
 }

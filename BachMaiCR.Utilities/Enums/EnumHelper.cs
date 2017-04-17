@@ -10,7 +10,7 @@ namespace BachMaiCR.Utilities.Enums
   {
     public static List<T> GetValues()
     {
-      return ((IEnumerable<FieldInfo>) typeof (T).GetFields(BindingFlags.Static | BindingFlags.Public)).Select<FieldInfo, T>((Func<FieldInfo, T>) (t => (T) t.GetValue((object) null))).ToList<T>();
+      return ((IEnumerable<FieldInfo>) typeof (T).GetFields(BindingFlags.Static | BindingFlags.Public)).Select<FieldInfo, T>((Func<FieldInfo, T>) (t => (T) t.GetValue(null))).ToList<T>();
     }
 
     public static List<KeyTextItem> ConvertToKeyValueList()
@@ -65,7 +65,7 @@ namespace BachMaiCR.Utilities.Enums
 
     public static string GetStringName(int val)
     {
-      string name = Enum.GetName(typeof (T), (object) val);
+      string name = Enum.GetName(typeof (T), val);
       return new StringEnum(typeof (T)).GetStringValue(name.ToString()) ?? name.ToString();
     }
   }

@@ -48,7 +48,7 @@ namespace BachMaiCR.Web.Controllers
             {
               WEBPAGES_ROLES byId = this.unitOfWork.Roles.GetById(role.WEBPAGES_ROLES_ID);
               if (role.ROLES_NAME != byId.ROLE_NAME && this.unitOfWork.Roles.IsExistRoleName(role.ROLES_NAME.Trim()) && this.Request.IsAjaxRequest())
-                return (ActionResult) this.Json(JsonResponse.Json500((object) ("Quyền <strong>" + this.Server.HtmlEncode(role.ROLES_NAME) + "</strong> đã tồn tại")));
+                return this.Json(JsonResponse.Json500(("Quyền <strong>" + this.Server.HtmlEncode(role.ROLES_NAME) + "</strong> đã tồn tại")));
               byId.ROLE_NAME = role.ROLES_NAME.Trim();
               byId.DESCRIPTION = role.DESCRIPTION == null ? "" : role.DESCRIPTION.Trim();
               byId.ABBREVIATION = role.ABBREVIATION == null ? "" : role.ABBREVIATION.Trim();
@@ -58,12 +58,12 @@ namespace BachMaiCR.Web.Controllers
               this.unitOfWork.Roles.Update(byId);
               this.WriteLog(enLogType.NomalLog, enActionType.Update, " Cập nhật nhóm quyền [" + byId.ROLE_NAME + "]", "N/A", "N/A", byId.WEBPAGES_ROLE_ID, "", "");
               if (this.Request.IsAjaxRequest())
-                return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhập thành công"));
+                return this.Json(JsonResponse.Json200("Cập nhập thành công"));
             }
             else
             {
               if (this.unitOfWork.Roles.IsExistRoleName(role.ROLES_NAME.Trim()) && this.Request.IsAjaxRequest())
-                return (ActionResult) this.Json(JsonResponse.Json500((object) ("Quyền <strong>" + this.Server.HtmlEncode(role.ROLES_NAME) + "</strong> đã tồn tại")));
+                return this.Json(JsonResponse.Json500(("Quyền <strong>" + this.Server.HtmlEncode(role.ROLES_NAME) + "</strong> đã tồn tại")));
               WEBPAGES_ROLES entity = new WEBPAGES_ROLES()
               {
                 ISACTIVE = new bool?(role.ISACTIVE),
@@ -78,16 +78,16 @@ namespace BachMaiCR.Web.Controllers
               this.WriteLog(enLogType.NomalLog, enActionType.Insert, " Thêm mới nhóm quyền [" + entity.ROLE_NAME + "]", "N/A", "N/A", entity.WEBPAGES_ROLE_ID, "", "");
             }
             if (this.Request.IsAjaxRequest())
-              return (ActionResult) this.Json(JsonResponse.Json200((object) "Tạo thành công"));
-            return (ActionResult) this.RedirectToAction("ManageRoles", "Admin");
+              return this.Json(JsonResponse.Json200("Tạo thành công"));
+            return this.RedirectToAction("ManageRoles", "Admin");
           }
           if (this.Request.IsAjaxRequest())
-            return (ActionResult) this.Json(JsonResponse.Json500((object) "Kiểm tra lại thông tin trên form"));
-          return (ActionResult) null;
+            return this.Json(JsonResponse.Json500("Kiểm tra lại thông tin trên form"));
+          return null;
         }
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.Json(JsonResponse.Json500((object) "Phiên đăng nhập đã hết, hãy đăn nhập lại !"));
-        return (ActionResult) null;
+          return this.Json(JsonResponse.Json500("Phiên đăng nhập đã hết, hãy đăn nhập lại !"));
+        return null;
       }
       catch (Exception ex)
       {
@@ -100,7 +100,7 @@ namespace BachMaiCR.Web.Controllers
     [HttpGet]
     public ActionResult AddRole(int? id)
     {
-      RoleModel roleModel = (RoleModel) null;
+      RoleModel roleModel = null;
       List<LM_DEPARTMENT> lmDepartmentList1 = new List<LM_DEPARTMENT>();
       if (id.HasValue)
       {
@@ -141,9 +141,9 @@ namespace BachMaiCR.Web.Controllers
       }
 ViewBag.RootDepartment = lmDepartmentList1;
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("~/Views/Admin/_AddRole.cshtml", (object) roleModel);
+        return this.PartialView("~/Views/Admin/_AddRole.cshtml", roleModel);
       this.RedirectToAction("ManageRoles", "Admin");
-      return (ActionResult) null;
+      return null;
     }
 
     [ActionDescription(ActionCode = "WebpageRoles_AddUser", ActionName = "Thêm người dùng", GroupCode = "ROLES_GROUP_CODE", GroupName = "Quản lý nhóm quyền", IsMenu = false)]
@@ -152,7 +152,7 @@ ViewBag.RootDepartment = lmDepartmentList1;
     [ValidateInput(false)]
     public ActionResult AddUser(int id, string key, int deparmentId = 0)
     {
-      WEBPAGES_ROLES webpagesRoles = (WEBPAGES_ROLES) null;
+      WEBPAGES_ROLES webpagesRoles = null;
       if (id > 0)
         webpagesRoles = this.unitOfWork.Roles.GetById(id);
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
@@ -224,9 +224,9 @@ ViewBag.Role = webpagesRoles;
       List<LM_DEPARTMENT> deptCurrent = this.GetDeptCurrent();
 ViewBag.RootDepartment = deptCurrent;
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("~/Views/Admin/_AddUserToRole.cshtml");
+        return this.PartialView("~/Views/Admin/_AddUserToRole.cshtml");
       this.RedirectToAction("ManageRoles", "Admin");
-      return (ActionResult) null;
+      return null;
     }
 
     [ValidateInput(false)]
@@ -235,7 +235,7 @@ ViewBag.RootDepartment = deptCurrent;
     [HttpGet]
     public ActionResult SearchUser(int id, string key, int deparmentId = 0)
     {
-      WEBPAGES_ROLES webpagesRoles = (WEBPAGES_ROLES) null;
+      WEBPAGES_ROLES webpagesRoles = null;
       if (id > 0)
         webpagesRoles = this.unitOfWork.Roles.GetById(id);
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
@@ -305,9 +305,9 @@ label_6:
 ViewBag.ListUser = list;
 ViewBag.Role = webpagesRoles;
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("~/Views/Admin/_SearchUserToRole.cshtml");
+        return this.PartialView("~/Views/Admin/_SearchUserToRole.cshtml");
       this.RedirectToAction("ManageRoles", "Admin");
-      return (ActionResult) null;
+      return null;
     }
 
     [CustomAuthorize]
@@ -322,15 +322,15 @@ ViewBag.Role = webpagesRoles;
         if (byId != null)
         {
           if (byId.ADMIN_USER.Any<ADMIN_USER>() || byId.WEBPAGES_ACTIONS.Any<WEBPAGES_ACTIONS>())
-            return (ActionResult) this.Json(JsonResponse.Json500((object) "Có ràng buộc bản ghi, không thể xóa được"));
+            return this.Json(JsonResponse.Json500("Có ràng buộc bản ghi, không thể xóa được"));
           this.unitOfWork.Roles.Delete(byId);
           this.WriteLog(enLogType.NomalLog, enActionType.Delete, " Xóa nhóm quyền [" + byId.ROLE_NAME + "]. Người xóa [" + this.User.Identity.Name + "]", "N/A", "N/A", byId.WEBPAGES_ROLE_ID, "ROLES_GROUP_CODE", "Quản lý nhóm quyền");
         }
-        return (ActionResult) this.Json(JsonResponse.Json200((object) "Xóa thành công"));
+        return this.Json(JsonResponse.Json200("Xóa thành công"));
       }
       catch (Exception ex)
       {
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Xóa không thành công"));
+        return this.Json(JsonResponse.Json500("Xóa không thành công"));
       }
     }
 
@@ -341,14 +341,14 @@ ViewBag.Role = webpagesRoles;
     {
       WEBPAGES_ROLES byId = this.unitOfWork.Roles.GetById(roleId);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json404((object) "Not found"));
+        return this.Json(JsonResponse.Json404("Not found"));
       WEBPAGES_ROLES webpagesRoles = byId;
       bool? nullable1 = active;
       bool? nullable2 = new bool?(!nullable1.HasValue || nullable1.GetValueOrDefault());
       webpagesRoles.ISACTIVE = nullable2;
       this.unitOfWork.Roles.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "Active/Deactive nhóm quyền [" + byId.ROLE_NAME + "]", "N/A", "N/A", byId.WEBPAGES_ROLE_ID, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhập thành công"));
+      return this.Json(JsonResponse.Json200("Cập nhập thành công"));
     }
 
     [ActionDescription(ActionCode = "WebpageRoles_UpdateRoleWithActions", ActionName = "Cập nhật quyền cho nhóm quyền", GroupCode = "ROLES_GROUP_CODE", GroupName = "Quản lý nhóm quyền", IsMenu = false)]
@@ -358,8 +358,8 @@ ViewBag.Role = webpagesRoles;
     {
       WEBPAGES_ROLES byId1 = this.unitOfWork.Roles.GetById(roleId);
       if (byId1 == null)
-        return (ActionResult) this.Json(JsonResponse.Json404((object) "Not found"));
-      ITransaction transaction = (ITransaction) null;
+        return this.Json(JsonResponse.Json404("Not found"));
+      ITransaction transaction = null;
       try
       {
         transaction = this.unitOfWork.BeginTransaction();
@@ -380,7 +380,7 @@ ViewBag.Role = webpagesRoles;
         }
         this.WriteLog(enLogType.NomalLog, enActionType.Permission, "Cập nhật quyền cho nhóm quyền [" + byId1.ROLE_NAME + "]", "N/A", "N/A", byId1.WEBPAGES_ROLE_ID, "", "");
         transaction.Commit();
-        return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhập thành công"));
+        return this.Json(JsonResponse.Json200("Cập nhập thành công"));
       }
       catch (Exception ex)
       {
@@ -409,14 +409,14 @@ ViewBag.Role = webpagesRoles;
       else
         num = 0;
       if (num == 0)
-        return (ActionResult) this.Json(JsonResponse.Json404((object) "Role not found"), JsonRequestBehavior.AllowGet);
+        return this.Json(JsonResponse.Json404("Role not found"), JsonRequestBehavior.AllowGet);
       WEBPAGES_ROLES byId = this.unitOfWork.Roles.GetById(roleId.Value);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json404((object) "Role not found"), JsonRequestBehavior.AllowGet);
+        return this.Json(JsonResponse.Json404("Role not found"), JsonRequestBehavior.AllowGet);
       List<int> intList = new List<int>();
       if (byId.WEBPAGES_ACTIONS != null)
         intList = byId.WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((Func<WEBPAGES_ACTIONS, int>) (o => o.WEBPAGES_ACTION_ID)).ToList<int>();
-      return (ActionResult) this.Json(JsonResponse.Json200((object) intList), JsonRequestBehavior.AllowGet);
+      return this.Json(JsonResponse.Json200(intList), JsonRequestBehavior.AllowGet);
     }
 
     public void GetDepartment(int parentDepartment, List<int> returnDepartments)
@@ -435,8 +435,8 @@ ViewBag.Role = webpagesRoles;
     public ActionResult SaveConfigUser(int roleId, List<int> userIds, bool isAdd)
     {
       if (userIds == null || !userIds.Any<int>())
-        return (ActionResult) this.Json(JsonResponse.Json404((object) "Không tìm thấy người dùng cần phân quyền"));
-      ITransaction transaction = (ITransaction) null;
+        return this.Json(JsonResponse.Json404("Không tìm thấy người dùng cần phân quyền"));
+      ITransaction transaction = null;
       try
       {
         foreach (int userId in userIds)
@@ -444,11 +444,11 @@ ViewBag.Role = webpagesRoles;
           ADMIN_USER byId1 = this.unitOfWork.Users.GetById(userId);
           ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
           if (byUserName == null)
-            return (ActionResult) this.Json(JsonResponse.Json404((object) "Không tìm thấy người phân quyền"));
+            return this.Json(JsonResponse.Json404("Không tìm thấy người phân quyền"));
           if (byId1 == null)
-            return (ActionResult) this.Json(JsonResponse.Json404((object) "Không tìm thấy người dùng cần phân quyền"));
+            return this.Json(JsonResponse.Json404("Không tìm thấy người dùng cần phân quyền"));
           if (byUserName.USERNAME != "admin" && byUserName.WEBPAGES_ROLES == null)
-            return (ActionResult) this.Json(JsonResponse.Json400((object) "Không được phép phân những chức năng đã chọn"));
+            return this.Json(JsonResponse.Json400("Không được phép phân những chức năng đã chọn"));
           if (byUserName.USERNAME != "admin")
           {
             int? nullable1 = byUserName.LM_DEPARTMENT_ID;
@@ -496,7 +496,7 @@ ViewBag.Role = webpagesRoles;
               }
               while (nullable3.HasValue && num < 100);
               if (!flag)
-                return (ActionResult) this.Json(JsonResponse.Json400((object) ("Người dùng này thuộc phòng ban, bạn không được phép phân quyền " + byId1.USERNAME)));
+                return this.Json(JsonResponse.Json400(("Người dùng này thuộc phòng ban, bạn không được phép phân quyền " + byId1.USERNAME)));
             }
           }
         }
@@ -547,7 +547,7 @@ ViewBag.Role = webpagesRoles;
           }
         }
         transaction.Commit();
-        return (ActionResult) this.Json(JsonResponse.Json200((object) "Phân quyền cho người dùng thành công"));
+        return this.Json(JsonResponse.Json200("Phân quyền cho người dùng thành công"));
       }
       catch (Exception ex)
       {

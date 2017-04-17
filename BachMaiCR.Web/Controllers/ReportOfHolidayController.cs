@@ -58,7 +58,7 @@ ViewBag.ListPosition = listItemBase;
       })).ToList<SelectListItem>();
       list.Insert(0, selectListItem);
 ViewBag.ListFeast = list;
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [ActionDescription(ActionCode = "REPORTOFHOLIDAY_EXPORT", ActionName = "Xuất Excel", GroupCode = "REPORTOFHOLIDAY", GroupName = "Thống kê cán bộ trực theo ngày nghỉ lễ")]
@@ -175,7 +175,7 @@ ViewBag.Pagination = pagination;
         }
         asByteArray = excelPackage.GetAsByteArray();
       }
-      return (ActionResult) new DownloadResult(asByteArray, "ReportOfHoliday.xlsx");
+      return new DownloadResult(asByteArray, "ReportOfHoliday.xlsx");
     }
   }
 }

@@ -39,7 +39,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult Index()
     {
 ViewBag.Title = "Danh sách cán bộ nghỉ";
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [ActionDescription(ActionCode = "CONFIG_HOLIDAYS_VIEW", ActionName = "Xem danh sách cán bộ nghỉ", GroupCode = "CONFIG_HOLIDAYS", GroupName = "Danh sách cán bộ nghỉ")]
@@ -189,7 +189,7 @@ ViewBag.RootDepartment = lmDepartmentList;
 ViewBag.ListHoliday = listItemBase;
         this.OnList(0);
 ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_HOLIDAYS_UPDATE");
-        return (ActionResult) this.PartialView("_Search", (object) configHolidaySearch);
+        return this.PartialView("_Search", configHolidaySearch);
       }
       catch (Exception ex)
       {
@@ -202,12 +202,12 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_HOLIDAYS_UPDATE");
     public ActionResult OnInsert(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
 ViewBag.ListEducation = this.unitOfWork.Categories.GetListItemBase(5);
         this.OnList(1);
-        return (ActionResult) this.PartialView("_Insert", (object) new ConfigHoliday());
+        return this.PartialView("_Insert", new ConfigHoliday());
       }
       catch (Exception ex)
       {
@@ -221,7 +221,7 @@ ViewBag.ListEducation = this.unitOfWork.Categories.GetListItemBase(5);
     public ActionResult OnUpdate(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -232,7 +232,7 @@ ViewBag.ListEducation = this.unitOfWork.Categories.GetListItemBase(5);
         ConfigHoliday configHoliday = new ConfigHoliday(byId);
 ViewBag.ListEducation = this.unitOfWork.Categories.GetListItemBase(5);
         this.OnList(1);
-        return (ActionResult) this.PartialView("_Insert", (object) configHoliday);
+        return this.PartialView("_Insert", configHoliday);
       }
       catch (Exception ex)
       {
@@ -246,7 +246,7 @@ ViewBag.ListEducation = this.unitOfWork.Categories.GetListItemBase(5);
     public ActionResult OnDelete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -274,7 +274,7 @@ ViewBag.ListEducation = this.unitOfWork.Categories.GetListItemBase(5);
     public ActionResult SubmitChange(ConfigHoliday entity)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         CONFIG_HOLIDAYS configHoliday = entity.GetConfigHoliday();

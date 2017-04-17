@@ -275,7 +275,7 @@ namespace BachMaiCR.DataAccess
       if (transaction == null)
         return;
       transaction.Dispose();
-      transaction = (ITransaction) null;
+      transaction = null;
     }
 
     public void Save()
@@ -293,7 +293,7 @@ namespace BachMaiCR.DataAccess
     public void Dispose()
     {
       this.Dispose(true);
-      GC.SuppressFinalize((object) this);
+      GC.SuppressFinalize(this);
     }
   }
 }

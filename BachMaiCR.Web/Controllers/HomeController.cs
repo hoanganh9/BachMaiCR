@@ -29,10 +29,10 @@ namespace BachMaiCR.Web.Controllers
       if (string.IsNullOrEmpty(this.User.Identity.Name))
       {
         LoginModel loginModel = new LoginModel();
-        return (ActionResult) this.RedirectToAction("Login", "Account");
+        return this.RedirectToAction("Login", "Account");
       }
 ViewBag.Message = "";
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     public string GetUrlActve()
@@ -43,13 +43,13 @@ ViewBag.Message = "";
     public ActionResult About()
     {
 ViewBag.Message = "Your app description page.";
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     public ActionResult Contact()
     {
 ViewBag.Message = "Your contact page.";
-      return (ActionResult) this.View();
+      return this.View();
     }
   }
 }

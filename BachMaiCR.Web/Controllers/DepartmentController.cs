@@ -37,7 +37,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult Index()
     {
 ViewBag.Title = "Quản lý phòng ban";
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [ActionDescription(ActionCode = "DEPARTMENT_VIEW", ActionName = "Xem phòng ban", GroupCode = "DEPARTMENT", GroupName = "Quản lý phòng ban", IsMenu = false)]
@@ -75,13 +75,13 @@ ViewBag.ActionDelete = this.CheckPermistion("DEPARTMENT_DELETE");
     public ActionResult OnInsert(int parentId = 0)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       Department department = new Department();
       department.Parent = new int?(parentId);
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", "N/A", "N/A", 0, "", "");
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("_Insert", (object) department);
-      return (ActionResult) null;
+        return this.PartialView("_Insert", department);
+      return null;
     }
 
     [ActionDescription(ActionCode = "DEPARTMENT_SAVE", ActionName = "Cập nhật thông tin", GroupCode = "DEPARTMENT", GroupName = "Quản lý phòng ban")]
@@ -89,7 +89,7 @@ ViewBag.ActionDelete = this.CheckPermistion("DEPARTMENT_DELETE");
     public ActionResult OnUpdate(int id = 0)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -97,7 +97,7 @@ ViewBag.ActionDelete = this.CheckPermistion("DEPARTMENT_DELETE");
         LM_DEPARTMENT byId = this.unitOfWork.Departments.GetById(id);
         if (byId == null)
           throw new Exception(Localization.MsgItemNotExist);
-        return (ActionResult) this.PartialView("_Insert", (object) new Department(byId));
+        return this.PartialView("_Insert", new Department(byId));
       }
       catch (Exception ex)
       {
@@ -111,7 +111,7 @@ ViewBag.ActionDelete = this.CheckPermistion("DEPARTMENT_DELETE");
     public ActionResult OnDelete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -166,7 +166,7 @@ ViewBag.ActionDelete = this.CheckPermistion("DEPARTMENT_DELETE");
             int id = nullable1.Value;
             LM_DEPARTMENT byId = departments.GetById(id);
             if (byId == null)
-              return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không hợp lệ!"));
+              return this.Json(JsonResponse.Json500("Thông tin không hợp lệ!"));
             str1 = byId.DEPARTMENT_PATH;
             LM_DEPARTMENT lmDepartment = categoryModel;
             nullable1 = byId.LEVELS;

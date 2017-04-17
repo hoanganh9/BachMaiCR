@@ -62,8 +62,8 @@ namespace BachMaiCR.Web.Controllers
     protected ActionResult IsAjaxRequest()
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index", "Home");
-      return (ActionResult) null;
+        return this.RedirectToAction("Index", "Home");
+      return null;
     }
 
     public bool WriteLog(enLogType typeLog, enActionType action, string content = "N/A", string description = "N/A", string errorCode = "N/A", int objId = 0, string menuCode = "", string menuName = "")
@@ -192,10 +192,10 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult ReturnValue(string msg, bool success = true, string actionRedirect = "Index")
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction(actionRedirect);
+        return this.RedirectToAction(actionRedirect);
       if (success)
-        return (ActionResult) this.Json(JsonResponse.Json200((object) msg));
-      return (ActionResult) this.Json(JsonResponse.Json500((object) msg));
+        return this.Json(JsonResponse.Json200(msg));
+      return this.Json(JsonResponse.Json500(msg));
     }
 
     public List<string> GetActionCodesByUserName()

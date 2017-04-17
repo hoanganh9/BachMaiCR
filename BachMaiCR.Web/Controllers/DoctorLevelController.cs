@@ -39,7 +39,7 @@ namespace BachMaiCR.Web.Controllers
 ViewBag.Title = "Danh mục vị trí cán bộ";
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("DOCTORLEVEL_SAVE");
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [ActionDescription(ActionCode = "DOCTORLEVEL_SAVE", ActionName = "Cập nhật thông tin", GroupCode = "DOCTORLEVEL", GroupName = "Danh mục vị trí cán bộ")]
@@ -47,13 +47,13 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("DOCTORLEVEL_SAVE");
     public ActionResult OnInsert(int type)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         DoctorLevel doctorLevel = new DoctorLevel();
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.PartialView("_AddDoctorLevel", (object) doctorLevel);
-        return (ActionResult) null;
+          return this.PartialView("_AddDoctorLevel", doctorLevel);
+        return null;
       }
       catch (Exception ex)
       {
@@ -67,7 +67,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("DOCTORLEVEL_SAVE");
     public ActionResult OnUpdate(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -77,7 +77,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("DOCTORLEVEL_SAVE");
           throw new Exception(Localization.MsgItemNotExist);
         DoctorLevel doctorLevel = new DoctorLevel(byId);
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", "N/A", "N/A", id, "", "");
-        return (ActionResult) this.PartialView("_AddDoctorLevel", (object) doctorLevel);
+        return this.PartialView("_AddDoctorLevel", doctorLevel);
       }
       catch (Exception ex)
       {
@@ -91,7 +91,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("DOCTORLEVEL_SAVE");
     public ActionResult OnDelete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -118,12 +118,12 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("DOCTORLEVEL_SAVE");
     public ActionResult SubmitChange(DoctorLevel entity)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         DOCTOR_LEVEL categoryModel = entity.GetCategoryModel();
         if (this.unitOfWork.DoctorLevels.ExistCode(categoryModel))
-          throw new Exception(string.Format("Mã kí hiệu đã tồn tại, hãy chọn mã kí hiệu khác", (object) entity.Code));
+          throw new Exception(string.Format("Mã kí hiệu đã tồn tại, hãy chọn mã kí hiệu khác", entity.Code));
         entity.IsDel = new bool?(false);
         if (entity.Id.Equals(0))
         {

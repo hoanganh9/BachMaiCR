@@ -37,14 +37,14 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult OnInsert(int type)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         Category category = new Category();
         category.Type = new int?(type);
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.PartialView("~/Views/Category/AddCategory.cshtml", (object) category);
-        return (ActionResult) null;
+          return this.PartialView("~/Views/Category/AddCategory.cshtml", category);
+        return null;
       }
       catch (Exception ex)
       {
@@ -58,7 +58,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult OnUpdate(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -66,7 +66,7 @@ namespace BachMaiCR.Web.Controllers
         LM_CATEGORY byId = this.unitOfWork.Categories.GetById(id);
         if (byId == null)
           throw new Exception(Localization.MsgItemNotExist);
-        return (ActionResult) this.PartialView("~/Views/Category/AddCategory.cshtml", (object) new Category(byId));
+        return this.PartialView("~/Views/Category/AddCategory.cshtml", new Category(byId));
       }
       catch (Exception ex)
       {
@@ -80,7 +80,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult OnDelete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -145,7 +145,7 @@ namespace BachMaiCR.Web.Controllers
 ViewBag.Type = enCategoryType.Province;
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
-      return (ActionResult) this.View("Index");
+      return this.View("Index");
     }
 
     [CustomAuthorize]
@@ -155,7 +155,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
 ViewBag.Type = enCategoryType.Position;
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
-      return (ActionResult) this.View("Index");
+      return this.View("Index");
     }
 
     [CustomAuthorize]
@@ -165,7 +165,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
 ViewBag.Type = enCategoryType.EducationIndex;
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
-      return (ActionResult) this.View("Index");
+      return this.View("Index");
     }
 
     [CustomAuthorize]
@@ -175,7 +175,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
 ViewBag.Type = enCategoryType.TypeOfHolidays;
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
-      return (ActionResult) this.View("Index");
+      return this.View("Index");
     }
 
     [ValidateInput(false)]

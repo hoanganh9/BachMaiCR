@@ -36,7 +36,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult Login(string returnUrl)
     {
         if (this.Request.IsAuthenticated)
-            return (ActionResult) this.RedirectToAction("Index", "Home");
+            return this.RedirectToAction("Index", "Home");
         ViewBag.ReturnUrl = returnUrl;
         return View();
     }
@@ -45,8 +45,8 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult ForgotPassword()
     {
       if (this.Request.IsAuthenticated)
-        return (ActionResult) this.RedirectToAction("Index", "Home");
-      return (ActionResult) this.View();
+        return this.RedirectToAction("Index", "Home");
+      return this.View();
     }
 
     [HttpPost]
@@ -59,7 +59,7 @@ namespace BachMaiCR.Web.Controllers
         ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(model.UserName.Trim());
         int result = 0;
         if (this.Session["loginfail"] == null)
-          this.Session["loginfail"] = (object) 1;
+          this.Session["loginfail"] = 1;
         else if (!string.IsNullOrEmpty(this.Session["loginfail"].ToString()))
           int.TryParse(this.Session["loginfail"].ToString(), out result);
         string str = "";
@@ -83,7 +83,7 @@ namespace BachMaiCR.Web.Controllers
               cookie1.Expires = DateTime.Now.AddDays(-1.0);
               this.Response.Cookies.Add(cookie1);
             }
-            string userData = new JavaScriptSerializer().Serialize((object) new AppUserPrincipalSerializeModel()
+            string userData = new JavaScriptSerializer().Serialize(new AppUserPrincipalSerializeModel()
             {
               UserId = byUserName.ADMIN_USER_ID,
               UserName = byUserName.FULLNAME,
@@ -108,7 +108,7 @@ namespace BachMaiCR.Web.Controllers
               cookie1.Expires = DateTime.Now.AddDays(-1.0);
               this.Response.Cookies.Add(cookie1);
             }
-            string userData = new JavaScriptSerializer().Serialize((object) new AppUserPrincipalSerializeModel()
+            string userData = new JavaScriptSerializer().Serialize(new AppUserPrincipalSerializeModel()
             {
               UserId = byUserName.ADMIN_USER_ID,
               UserName = byUserName.FULLNAME,
@@ -147,21 +147,21 @@ namespace BachMaiCR.Web.Controllers
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
       if (byUserName != null)
       {
-        byUserName.SESSION_TOKEN = (string) null;
+        byUserName.SESSION_TOKEN = null;
         this.unitOfWork.Users.Update(byUserName);
       }
       this.Session.Abandon();
       FormsAuthentication.SignOut();
-      return (ActionResult) this.RedirectToAction("Login", "Account");
+      return this.RedirectToAction("Login", "Account");
     }
 
     public ActionResult ChangePassword(string returnUrl)
     {
       if (!this.Request.IsAuthenticated)
-        return (ActionResult) this.RedirectToAction("Login");
+        return this.RedirectToAction("Login");
       
         ViewBag.ReturnUrl = returnUrl;
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [ValidateAntiForgeryToken]
@@ -201,7 +201,7 @@ namespace BachMaiCR.Web.Controllers
             this.ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
         }
       }
-      return (ActionResult) this.View((object) model);
+      return this.View(model);
     }
 
     [HttpGet]
@@ -209,28 +209,28 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult CaptchaImage()
     {
       string randomCode = new CaptchaImage().GenerateRandomCode();
-      this.Session["Captcha"] = (object) randomCode;
+      this.Session["Captcha"] = randomCode;
       FileContentResult fileContentResult;
       using (MemoryStream memoryStream = new MemoryStream())
       {
         new CaptchaImage(randomCode, 300, 45).Image.Save((Stream) memoryStream, ImageFormat.Jpeg);
         fileContentResult = this.File(memoryStream.GetBuffer(), "image/jpeg");
       }
-      return (ActionResult) fileContentResult;
+      return fileContentResult;
     }
 
     [HttpGet]
     [AllowAnonymous]
     public ActionResult TestCaptcha()
     {
-      return (ActionResult) this.Json(JsonResponse.Json200((object) Localization.MsgDelSuccess), JsonRequestBehavior.AllowGet);
+      return this.Json(JsonResponse.Json200(Localization.MsgDelSuccess), JsonRequestBehavior.AllowGet);
     }
 
     private ActionResult RedirectToLocal(string returnUrl)
     {
       if (this.Url.IsLocalUrl(returnUrl))
-        return (ActionResult) this.Redirect(returnUrl);
-      return (ActionResult) this.RedirectToAction("Index", "Home");
+        return this.Redirect(returnUrl);
+      return this.RedirectToAction("Index", "Home");
     }
 
     public enum ManageMessageId

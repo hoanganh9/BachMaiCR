@@ -41,8 +41,8 @@ namespace BachMaiCR.Web.Controllers
     [ActionDescription(ActionCode = "Users_AddUser", ActionName = "Cập nhật người dùng", GroupCode = "USERS_GROUP_CODE", GroupName = "Quản lý người dùng", IsMenu = false)]
     public ActionResult AddUser(int? userId)
     {
-      UserModel userModel = (UserModel) null;
-      ADMIN_USER u = (ADMIN_USER) null;
+      UserModel userModel = null;
+      ADMIN_USER u = null;
       int num1;
       if (userId.HasValue)
       {
@@ -169,9 +169,9 @@ ViewBag.ListDoctor = selectListItemList1;
 ViewBag.ListUrlMenu = list;
       selectListItemList2 = (List<SelectListItem>) null;
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("~/Views/Admin/_AddUser.cshtml", (object) userModel);
+        return this.PartialView("~/Views/Admin/_AddUser.cshtml", userModel);
       this.RedirectToAction("ManageUsers", "Admin");
-      return (ActionResult) null;
+      return null;
     }
 
     [CustomAuthorize]
@@ -191,10 +191,10 @@ ViewBag.ListUrlMenu = list;
           if (byId != null)
           {
             if (!this.CheckPermission(byId))
-              return (ActionResult) this.Json(JsonResponse.Json400((object) "Bạn không có quyền với người dùng này !"));
-            byId.FULLNAME = model.FULLNAME == null ? (string) null : model.FULLNAME.Trim();
-            byId.PHONE = model.PHONE == null ? (string) null : model.PHONE.Trim();
-            byId.MAIL = model.MAIL == null ? (string) null : model.MAIL.Trim();
+              return this.Json(JsonResponse.Json400("Bạn không có quyền với người dùng này !"));
+            byId.FULLNAME = model.FULLNAME == null ? null : model.FULLNAME.Trim();
+            byId.PHONE = model.PHONE == null ? null : model.PHONE.Trim();
+            byId.MAIL = model.MAIL == null ? null : model.MAIL.Trim();
             byId.DOCTORS_ID = new int?(model.DOCTORS_ID);
             byId.USERCODE = model.USERCODE;
             byId.LM_DEPARTMENT_ID = new int?(model.LM_DEPARTMENT_ID);
@@ -202,32 +202,32 @@ ViewBag.ListUrlMenu = list;
             this.unitOfWork.Users.Update(byId);
             this.WriteLog(enLogType.NomalLog, enActionType.Update, "Cập nhật người dùng [" + byId.USERNAME + "]", "N/A", "N/A", 0, "", "");
             if (this.Request.IsAjaxRequest())
-              return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhật người dùng thành công !"));
+              return this.Json(JsonResponse.Json200("Cập nhật người dùng thành công !"));
             Notice.Show("Cập nhật người dùng thành công !", NoticeType.Success);
           }
         }
         else
         {
           if (this.Request.IsAjaxRequest())
-            return (ActionResult) this.Json(JsonResponse.Json500((object) "Không tìm thấy thông tin người dùng !"));
+            return this.Json(JsonResponse.Json500("Không tìm thấy thông tin người dùng !"));
           Notice.Show("Không tìm thấy thông tin người dùng", NoticeType.Error);
-          return (ActionResult) this.View("AddUser", (object) model);
+          return this.View("AddUser", model);
         }
       }
       else if (this.ModelState.IsValid)
       {
         if (this.unitOfWork.Users.CheckUserExit(model.USERNAME.Trim()) && this.Request.IsAjaxRequest())
-          return (ActionResult) this.Json(JsonResponse.Json500((object) ("Tên người dùng <strong>" + model.USERNAME + "</strong> đã tồn tại, hãy nhập tên khác !")));
-        ITransaction transaction = (ITransaction) null;
+          return this.Json(JsonResponse.Json500(("Tên người dùng <strong>" + model.USERNAME + "</strong> đã tồn tại, hãy nhập tên khác !")));
+        ITransaction transaction = null;
         string str1 = Encrypt.RandomString(3);
         string str2 = Encrypt.Sha1HashWithHex(model.PASSWORD + str1);
         ADMIN_USER entity = new ADMIN_USER()
         {
           USERNAME = Regex.Replace(model.USERNAME.Trim(), "<(.|\\n)*?>", string.Empty),
           CREATE_DATE = new DateTime?(DateTime.Now),
-          FULLNAME = model.FULLNAME == null ? (string) null : model.FULLNAME.Trim(),
-          MAIL = model.MAIL == null ? (string) null : model.MAIL.Trim(),
-          PHONE = model.PHONE == null ? (string) null : model.PHONE.Trim(),
+          FULLNAME = model.FULLNAME == null ? null : model.FULLNAME.Trim(),
+          MAIL = model.MAIL == null ? null : model.MAIL.Trim(),
+          PHONE = model.PHONE == null ? null : model.PHONE.Trim(),
           ACTIVE_URL = model.ACTIVE_URL,
           ISDELETE = new bool?(false),
           PASSWORD = str2,
@@ -256,22 +256,22 @@ ViewBag.ListUrlMenu = list;
             transaction.Dispose();
         }
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.Json(JsonResponse.Json200((object) "Thêm mới người dùng thành công !"));
+          return this.Json(JsonResponse.Json200("Thêm mới người dùng thành công !"));
         Notice.Show("Thêm mới người dùng thành công !", NoticeType.Success);
       }
       else
       {
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.Json(JsonResponse.Json500((object) "Lỗi dữ liệu!"));
+          return this.Json(JsonResponse.Json500("Lỗi dữ liệu!"));
         Notice.Show("Invalid form", NoticeType.Error);
-        return (ActionResult) this.View("AddUser", (object) model);
+        return this.View("AddUser", model);
       }
       if (!result)
-        return (ActionResult) this.RedirectToAction("AddUser");
+        return this.RedirectToAction("AddUser");
       string str = this.Request.Cookies["manageusers"] == null ? "" : this.Request.Cookies["manageusers"].Value;
       if (string.IsNullOrWhiteSpace(str))
-        return (ActionResult) this.RedirectToAction("ManageUsers", "Admin");
-      return (ActionResult) this.Redirect(HttpUtility.UrlDecode(str));
+        return this.RedirectToAction("ManageUsers", "Admin");
+      return this.Redirect(HttpUtility.UrlDecode(str));
     }
 
     [CustomAuthorize]
@@ -279,16 +279,16 @@ ViewBag.ListUrlMenu = list;
     [HttpGet]
     public ActionResult ResetPass(int userId)
     {
-      UserResetPasswordModel resetPasswordModel = (UserResetPasswordModel) null;
+      UserResetPasswordModel resetPasswordModel = null;
       ADMIN_USER byId = this.unitOfWork.Users.GetById(userId);
       if (!this.CheckPermission(byId))
-        return (ActionResult) this.Json(JsonResponse.Json400((object) "Bạn không có quyền với người dùng này !"));
+        return this.Json(JsonResponse.Json400("Bạn không có quyền với người dùng này !"));
       if (byId != null)
         resetPasswordModel = new UserResetPasswordModel(byId);
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("~/Views/Admin/_ResetPassword.cshtml", (object) resetPasswordModel);
+        return this.PartialView("~/Views/Admin/_ResetPassword.cshtml", resetPasswordModel);
       this.RedirectToAction("ManageUsers", "Admin");
-      return (ActionResult) null;
+      return null;
     }
 
     [ActionDescription(ActionCode = "Users_ResetPass", ActionName = "Reset mật khẩu người dùng", GroupCode = "USERS_GROUP_CODE", GroupName = "Quản lý người dùng", IsMenu = false)]
@@ -300,10 +300,10 @@ ViewBag.ListUrlMenu = list;
     {
       int adminUserId = model.ADMIN_USER_ID;
       if (model.ADMIN_USER_ID <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json400((object) "Người dùng không tồn tại "));
+        return this.Json(JsonResponse.Json400("Người dùng không tồn tại "));
       ADMIN_USER byId1 = this.unitOfWork.Users.GetById(model.ADMIN_USER_ID);
       if (!this.CheckPermission(byId1))
-        return (ActionResult) this.Json(JsonResponse.Json400((object) "Bạn không có quyền với người dùng này !"));
+        return this.Json(JsonResponse.Json400("Bạn không có quyền với người dùng này !"));
       if (model.ADMIN_USER_ID > 0)
       {
         if (this.ModelState.IsValid && model.NewPassword == model.ConfirmPassword)
@@ -311,7 +311,7 @@ ViewBag.ListUrlMenu = list;
           ADMIN_USER byId2 = this.unitOfWork.Users.GetById(model.ADMIN_USER_ID);
           if (byId2 != null)
           {
-            ITransaction transaction = (ITransaction) null;
+            ITransaction transaction = null;
             string str1 = Encrypt.RandomString(3);
             string str2 = Encrypt.Sha1HashWithHex(model.NewPassword + str1);
             byId2.PASSWORD = str2;
@@ -336,14 +336,14 @@ ViewBag.ListUrlMenu = list;
           }
         }
         else if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.Json(JsonResponse.Json500((object) "Mật khẩu chưa đủ mạnh hoặc chưa điền đủ thông tin !"));
+          return this.Json(JsonResponse.Json500("Mật khẩu chưa đủ mạnh hoặc chưa điền đủ thông tin !"));
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.Json(JsonResponse.Json200((object) "Cấp lại mật khẩu thành công !"));
-        return (ActionResult) null;
+          return this.Json(JsonResponse.Json200("Cấp lại mật khẩu thành công !"));
+        return null;
       }
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.Json(JsonResponse.Json200((object) "Cấp lại mật khẩu thành công !"));
-      return (ActionResult) null;
+        return this.Json(JsonResponse.Json200("Cấp lại mật khẩu thành công !"));
+      return null;
     }
 
     [HttpPost]
@@ -353,10 +353,10 @@ ViewBag.ListUrlMenu = list;
     public ActionResult Delete(int userId)
     {
       if (userId <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json400((object) "Người dùng không tồn tại "));
+        return this.Json(JsonResponse.Json400("Người dùng không tồn tại "));
       ADMIN_USER byId = this.unitOfWork.Users.GetById(userId);
       if (!this.CheckPermission(byId))
-        return (ActionResult) this.Json(JsonResponse.Json400((object) "Bạn không có quyền với người dùng này !"));
+        return this.Json(JsonResponse.Json400("Bạn không có quyền với người dùng này !"));
       if (byId != null)
       {
         if (byId.CALENDAR_DUTY.Where<CALENDAR_DUTY>((Func<CALENDAR_DUTY, bool>) (o =>
@@ -364,24 +364,24 @@ ViewBag.ListUrlMenu = list;
           bool? isdelete = o.ISDELETE;
           return isdelete.GetValueOrDefault() && isdelete.HasValue;
         })).Any<CALENDAR_DUTY>())
-          return (ActionResult) this.Json(JsonResponse.Json400((object) "Người dùng đang tồn tại liên kết với chức năng lịch "));
+          return this.Json(JsonResponse.Json400("Người dùng đang tồn tại liên kết với chức năng lịch "));
         if (byId.TEMPLATES.Where<TEMPLATE>((Func<TEMPLATE, bool>) (o =>
         {
           bool? isdelete = o.ISDELETE;
           return isdelete.GetValueOrDefault() && isdelete.HasValue;
         })).Any<TEMPLATE>())
-          return (ActionResult) this.Json(JsonResponse.Json400((object) "Người dùng đang tồn tại liên kết với chức năng biểu mẫu"));
+          return this.Json(JsonResponse.Json400("Người dùng đang tồn tại liên kết với chức năng biểu mẫu"));
       }
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json200((object) "Xóa người dùng thành công !"));
+        return this.Json(JsonResponse.Json200("Xóa người dùng thành công !"));
       if (byId.USERNAME == "admin" || byId.USERNAME == this.User.Identity.Name)
-        return (ActionResult) this.Json(JsonResponse.Json400((object) ("Không thể thay đổi thông tin của tài khoản " + byId.USERNAME)));
+        return this.Json(JsonResponse.Json400(("Không thể thay đổi thông tin của tài khoản " + byId.USERNAME)));
       if (byId.USERS_ACTIONS != null && byId.USERS_ACTIONS.Any<USERS_ACTIONS>() || byId.WEBPAGES_ROLES != null && byId.WEBPAGES_ROLES.Any<WEBPAGES_ROLES>())
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Người dùng đã được phân quyền. Hãy bỏ hết quyền trước khi xóa !"));
+        return this.Json(JsonResponse.Json500("Người dùng đã được phân quyền. Hãy bỏ hết quyền trước khi xóa !"));
       byId.ISDELETE = true;
       this.unitOfWork.Users.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.Delete, "Xóa người dùng [" + byId.USERNAME + "]", "N/A", "N/A", userId, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) "Xóa user thành công !"));
+      return this.Json(JsonResponse.Json200("Xóa user thành công !"));
     }
 
     [ValidateJsonAntiForgeryToken]
@@ -391,16 +391,16 @@ ViewBag.ListUrlMenu = list;
     public ActionResult ActiveChage(int userId, bool active)
     {
       if (userId <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json400((object) "Người dùng không tồn tại "));
+        return this.Json(JsonResponse.Json400("Người dùng không tồn tại "));
       ADMIN_USER byId = this.unitOfWork.Users.GetById(userId);
       if (!this.CheckPermission(byId))
-        return (ActionResult) this.Json(JsonResponse.Json400((object) "Bạn không có quyền với người dùng này !"));
+        return this.Json(JsonResponse.Json400("Bạn không có quyền với người dùng này !"));
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhật thành công !"));
+        return this.Json(JsonResponse.Json200("Cập nhật thành công !"));
       byId.ISACTIVED = new bool?(active);
       this.unitOfWork.Users.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "Active/Deactive người dùng [" + byId.USERNAME + "]", "N/A", "N/A", userId, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhật thành công !"));
+      return this.Json(JsonResponse.Json200("Cập nhật thành công !"));
     }
 
     [ValidateJsonAntiForgeryToken]
@@ -419,8 +419,8 @@ ViewBag.ListUrlMenu = list;
       if (num != 0 || this.unitOfWork.Users.GetById(id.Value) == null)
         ;
       if (this.unitOfWork.Users.GetByUserName(Regex.Replace(userName, "<(.|\\n)*?>", string.Empty)) != null)
-        return this.Json((object) Localization.UserModelUserNameExist);
-      return this.Json((object) true, JsonRequestBehavior.AllowGet);
+        return this.Json(Localization.UserModelUserNameExist);
+      return this.Json(true, JsonRequestBehavior.AllowGet);
     }
 
     [ActionDescription(ActionCode = "Users_SaveConfigUser", ActionName = "Phân quyền truy cập cho người dùng", GroupCode = "USERS_GROUP_CODE", GroupName = "Quản lý người dùng", IsMenu = false)]
@@ -437,14 +437,14 @@ ViewBag.ListUrlMenu = list;
       else
         num1 = 0;
       if (num1 == 0)
-        return (ActionResult) this.RedirectToAction("manageusers", "admin");
+        return this.RedirectToAction("manageusers", "admin");
       ADMIN_USER byId = this.unitOfWork.Users.GetById(userId.Value);
       if (byId == null)
-        return (ActionResult) this.RedirectToAction("manageusers", "admin");
+        return this.RedirectToAction("manageusers", "admin");
       if (byId.USERNAME == "admin")
       {
         Notice.Show("Không thể thực hiện phân quyền cho tài khoản: " + byId.USERNAME, NoticeType.Warning);
-        return (ActionResult) this.RedirectToAction("manageusers", "admin");
+        return this.RedirectToAction("manageusers", "admin");
       }
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
       List<WEBPAGES_ROLES> source = byId.WEBPAGES_ROLES != null ? byId.WEBPAGES_ROLES.ToList<WEBPAGES_ROLES>() : new List<WEBPAGES_ROLES>();
@@ -538,8 +538,8 @@ ViewBag.Roles = list3;
 ViewBag.User = byId;
       }
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("_ConfigUser");
-      return (ActionResult) null;
+        return this.PartialView("_ConfigUser");
+      return null;
     }
 
     [HttpPost]
@@ -561,21 +561,21 @@ ViewBag.User = byId;
       else
         num = 0;
       if (num == 0)
-        return (ActionResult) this.Json(JsonResponse.Json404((object) "Không tìm thấy người dùng cần phân quyền"));
-      ITransaction transaction = (ITransaction) null;
+        return this.Json(JsonResponse.Json404("Không tìm thấy người dùng cần phân quyền"));
+      ITransaction transaction = null;
       try
       {
         transaction = this.unitOfWork.BeginTransaction();
         ADMIN_USER user = this.unitOfWork.Users.GetById(userId.Value);
         ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
         if (byUserName == null)
-          return (ActionResult) this.Json(JsonResponse.Json404((object) "Không tìm thấy người phân quyền"));
+          return this.Json(JsonResponse.Json404("Không tìm thấy người phân quyền"));
         if (user == null)
-          return (ActionResult) this.Json(JsonResponse.Json404((object) "Không tìm thấy người dùng cần phân quyền"));
+          return this.Json(JsonResponse.Json404("Không tìm thấy người dùng cần phân quyền"));
         if (byUserName.USERNAME != "admin" && !ListHelper.ContainsAllItems<int>(this.unitOfWork.Actions.GetActiveActionsByUser(byUserName).Select<WEBPAGES_ACTIONS, int>((Func<WEBPAGES_ACTIONS, int>) (o => o.WEBPAGES_ACTION_ID)).ToList<int>(), actionIds))
-          return (ActionResult) this.Json(JsonResponse.Json400((object) "Không được phép phân những chức năng đã chọn"));
+          return this.Json(JsonResponse.Json400("Không được phép phân những chức năng đã chọn"));
         if (!this.CheckPermission(user))
-          return (ActionResult) this.Json(JsonResponse.Json400((object) "Bạn không có quyền với người dùng này !"));
+          return this.Json(JsonResponse.Json400("Bạn không có quyền với người dùng này !"));
         if (user.WEBPAGES_ROLES != null)
         {
           foreach (WEBPAGES_ROLES webpagesRoles in user.WEBPAGES_ROLES.ToList<WEBPAGES_ROLES>())
@@ -662,7 +662,7 @@ ViewBag.User = byId;
         }
         this.WriteLog(enLogType.NomalLog, enActionType.Permission, "Phân quyền cho người dùng [" + user.FULLNAME + "] - [" + user.USERNAME + "]", "N/A", "N/A", 0, "", "");
         transaction.Commit();
-        return (ActionResult) this.Json(JsonResponse.Json200((object) "Phân quyền cho người dùng thành công"));
+        return this.Json(JsonResponse.Json200("Phân quyền cho người dùng thành công"));
       }
       catch (Exception ex)
       {
@@ -699,7 +699,7 @@ ViewBag.User = byId;
         Value = "0"
       };
       list.Insert(0, selectListItem);
-      return (ActionResult) this.Json((object) list, JsonRequestBehavior.AllowGet);
+      return this.Json(list, JsonRequestBehavior.AllowGet);
     }
 
     [HttpGet]
@@ -713,7 +713,7 @@ ViewBag.User = byId;
         email = byId.EMAIL,
         phone = byId.PHONE
       };
-      return (ActionResult) this.Json((object) data, JsonRequestBehavior.AllowGet);
+      return this.Json(data, JsonRequestBehavior.AllowGet);
     }
 
     [ActionDescription(ActionCode = "Users_AddUser", ActionName = "Cập nhật người dùng", GroupCode = "USERS_GROUP_CODE", GroupName = "Quản lý người dùng", IsMenu = false)]
@@ -743,8 +743,8 @@ ViewBag.RootDepartment = this.unitOfWork.Departments.GetChildDepartment(0);
         }
       }
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("~/Views/Admin/_TreeDepartment.cshtml");
-      return (ActionResult) null;
+        return this.PartialView("~/Views/Admin/_TreeDepartment.cshtml");
+      return null;
     }
 
     public bool CheckPermission(ADMIN_USER user)

@@ -37,7 +37,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult Index()
     {
 ViewBag.Title = "Báo cáo hàng ngày";
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [CustomAuthorize]
@@ -73,7 +73,7 @@ ViewBag.UserId = adminUserId;
       catch (Exception ex)
       {
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", "N/A", ex.Message, 0, "", "");
-        return (PartialViewResult) null;
+        return null;
       }
     }
 
@@ -83,7 +83,7 @@ ViewBag.UserId = adminUserId;
     {
       try
       {
-        return (ActionResult) this.PartialView("_Search", (object) new ItemSearch());
+        return this.PartialView("_Search", new ItemSearch());
       }
       catch (Exception ex)
       {
@@ -97,7 +97,7 @@ ViewBag.UserId = adminUserId;
     public ActionResult OnInsert(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         ReportOfDay reportOfDay = new ReportOfDay();
@@ -108,7 +108,7 @@ ViewBag.UserId = adminUserId;
         reportOfDay.Name = "Báo cáo nhân lực " + departmentName + " ngày " + DateTime.Now.ToString("dd-MM-yyyy");
 ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "Thêm mới báo cáo hàng ngày", Localization.MsgActionSuccess, "N/A", 0, "", "");
-        return (ActionResult) this.PartialView("_Insert", (object) reportOfDay);
+        return this.PartialView("_Insert", reportOfDay);
       }
       catch (Exception ex)
       {
@@ -122,7 +122,7 @@ ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
     public ActionResult OnUpdate(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -133,7 +133,7 @@ ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
         ReportOfDay reportOfDay = new ReportOfDay(byId);
 ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "Sửa báo cáo hàng ngày", Localization.MsgActionSuccess, "N/A", 0, "", "");
-        return (ActionResult) this.PartialView("_Insert", (object) reportOfDay);
+        return this.PartialView("_Insert", reportOfDay);
       }
       catch (Exception ex)
       {
@@ -147,7 +147,7 @@ ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
     public ActionResult OnDetail(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -158,7 +158,7 @@ ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
         ReportOfDay reportOfDay = new ReportOfDay(byId);
 ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
         this.WriteLog(enLogType.NomalLog, enActionType.View, "Xem báo cáo chi tiết hàng ngày", Localization.MsgActionSuccess, "N/A", id, "", "");
-        return (ActionResult) this.PartialView("_Detail", (object) reportOfDay);
+        return this.PartialView("_Detail", reportOfDay);
       }
       catch (Exception ex)
       {
@@ -173,7 +173,7 @@ ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
     public ActionResult OnSent(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -201,7 +201,7 @@ ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
     public ActionResult OnDelete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -232,7 +232,7 @@ ViewBag.ListDoctors = this.unitOfWork.Doctors.GetListItemBase();
     public ActionResult SubmitChange(ReportOfDay entity)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         string mutilNameDoctors = this.unitOfWork.Doctors.GetMutilNameDoctors(entity.UserRecipientId);

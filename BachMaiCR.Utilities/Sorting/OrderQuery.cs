@@ -44,10 +44,10 @@ namespace BachMaiCR.Utilities
       {
         parameterExpression
       });
-      return (IOrderedQueryable<T>) ((IEnumerable<MethodInfo>) typeof (Queryable).GetMethods()).Single<MethodInfo>((Func<MethodInfo, bool>) (method => method.Name == methodName && method.IsGenericMethodDefinition && method.GetGenericArguments().Length == 2 && method.GetParameters().Length == 2)).MakeGenericMethod(typeof (T), type).Invoke((object) null, new object[2]
+      return (IOrderedQueryable<T>) ((IEnumerable<MethodInfo>) typeof (Queryable).GetMethods()).Single<MethodInfo>((Func<MethodInfo, bool>) (method => method.Name == methodName && method.IsGenericMethodDefinition && method.GetGenericArguments().Length == 2 && method.GetParameters().Length == 2)).MakeGenericMethod(typeof (T), type).Invoke(null, new object[2]
       {
-        (object) source,
-        (object) lambdaExpression
+        source,
+        lambdaExpression
       });
     }
   }

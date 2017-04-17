@@ -35,7 +35,7 @@ namespace BachMaiCR.Web.Controllers
     [HttpGet]
     public ActionResult Index()
     {
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [ActionDescription(ActionCode = "Admin_ManageActions", ActionName = "Xem danh sách chức năng", GroupCode = "ACTIONS_GROUP_CODE", GroupName = "Quản lý chức năng", IsMenu = true)]
@@ -65,8 +65,8 @@ namespace BachMaiCR.Web.Controllers
             ViewBag.User = this.User.Identity.Name;
 
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("_ActionList", (object) all);
-      return (ActionResult) this.View();
+        return this.PartialView("_ActionList", all);
+      return this.View();
     }
 
     [HttpGet]
@@ -74,7 +74,7 @@ namespace BachMaiCR.Web.Controllers
     [ActionDescription(ActionCode = "Admin_GenerateWebPageActions", ActionName = "Cập nhật năng vào CSDL", GroupCode = "ACTIONS_GROUP_CODE", GroupName = "Quản lý chức năng")]
     public ActionResult GenerateWebPageActions()
     {
-      ITransaction transaction = (ITransaction) null;
+      ITransaction transaction = null;
       try
       {
         transaction = this.unitOfWork.BeginTransaction();
@@ -92,7 +92,7 @@ namespace BachMaiCR.Web.Controllers
         if (transaction != null)
           transaction.Dispose();
       }
-      return (ActionResult) this.RedirectToAction("ManageActions");
+      return this.RedirectToAction("ManageActions");
     }
 
     [ActionDescription(ActionCode = "Admin_ManageRoles", ActionName = "Xem danh sách nhóm quyền", GroupCode = "ROLES_GROUP_CODE", GroupName = "Quản lý nhóm quyền", IsMenu = true)]
@@ -182,8 +182,8 @@ ViewBag.User = byUserName;
 ViewBag.Pagination = pagination;
 ViewBag.RootDepartment = this.GetDeptCurrent();
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("_RoleList");
-      return (ActionResult) this.View();
+        return this.PartialView("_RoleList");
+      return this.View();
     }
 
     [ValidateInput(false)]
@@ -276,8 +276,8 @@ ViewBag.RootDepartment = this.GetDeptCurrent();
             ViewBag.RootDepartment = this.GetDeptCurrent();
             
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("_UserList");
-      return (ActionResult) this.View();
+        return this.PartialView("_UserList");
+      return this.View();
     }
 
     public void GetDepartment(int parentDepartment, List<int> returnDepartments)

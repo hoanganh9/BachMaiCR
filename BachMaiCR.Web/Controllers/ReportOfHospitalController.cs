@@ -40,7 +40,7 @@ namespace BachMaiCR.Web.Controllers
     {
 ViewBag.Title = "Thống kê số ca trực toàn viện";
       this.WriteLog(enLogType.NomalLog, enActionType.View, "Truy cập chức năng Thống kê số ca trực toàn viện", "Truy cập thành công!", "N/A", 0, "", "");
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [CustomAuthorize]
@@ -49,7 +49,7 @@ ViewBag.Title = "Thống kê số ca trực toàn viện";
     public PartialViewResult LoadReportOfHospital(string strDate)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       StringBuilder stringBuilder1 = new StringBuilder("<thead>");
       List<SelectListItem> listItemBase = this.unitOfWork.Categories.GetListItemBase(3);
       List<DEPARTMENTLIST> departmentByLevel = this.unitOfWork.Departments.GetAllDepartmentByLevel(1);
@@ -204,7 +204,7 @@ ViewBag.tbodyStr = stringBuilder2.Replace("\"", "'").ToString() + "</tbody>";
         }
         asByteArray = excelPackage.GetAsByteArray();
       }
-      return (ActionResult) new DownloadResult(asByteArray, "ReportOfHospital.xlsx");
+      return new DownloadResult(asByteArray, "ReportOfHospital.xlsx");
     }
 
     private List<DoctorCalendarLeader> GetDoctorCalendarHospitalBySearch(string strDate)

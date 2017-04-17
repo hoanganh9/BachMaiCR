@@ -37,7 +37,7 @@ namespace BachMaiCR.Web.Controllers
     {
       int? nullable = this.RootDepartment();
 ViewBag.RootDepartment = nullable;
-      return (ActionResult) this.View(this.sViewPath + "_Add.cshtml", (object) new ConfigParametter());
+      return this.View(this.sViewPath + "_Add.cshtml", new ConfigParametter());
     }
 
     [ActionDescription(ActionCode = "Template_View", ActionName = "Xem biểu mẫu", GroupCode = "Template", GroupName = "Cấu hình biểu mẫu")]
@@ -48,11 +48,11 @@ ViewBag.RootDepartment = nullable;
       DateTime dateTime = BachMaiCR.Web.Utils.Utils.GetDateTime();
       List<CONFIG_PARAMETES> all = this.unitOfWork.ConfigParameter.GetAll(new int?(deparmentId), dateTime.Year, 2);
       if (all == null || all.Count <= 0)
-        return (ActionResult) this.Json((object) new ConfigParametter(), JsonRequestBehavior.AllowGet);
+        return this.Json(new ConfigParametter(), JsonRequestBehavior.AllowGet);
       CONFIG_PARAMETES byId = this.unitOfWork.ConfigParameter.GetById(all[0].CONFIG_PARAMETES_ID);
       if (byId == null)
         throw new Exception(Localization.MsgItemNotExist);
-      return (ActionResult) this.Json((object) new ConfigParametter(byId), JsonRequestBehavior.AllowGet);
+      return this.Json(new ConfigParametter(byId), JsonRequestBehavior.AllowGet);
     }
 
     private int? RootDepartment()

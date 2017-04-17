@@ -27,7 +27,7 @@ namespace BachMaiCR.DataAccess.Repository
       string str = "";
       List<CALENDAR_GROUP> list = source.ToList<CALENDAR_GROUP>();
       for (int index = 0; index < list.Count; ++index)
-        str = str + "," + (object) list[index].LM_DEPARTMENT_ID;
+        str = str + "," + list[index].LM_DEPARTMENT_ID;
       return str;
     }
 

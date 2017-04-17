@@ -44,7 +44,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult Index()
     {
 ViewBag.Title = "Danh mục cán bộ";
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [ActionDescription(ActionCode = "DOCTOR_VIEW", ActionName = "Xem hồ sơ cán bộ", GroupCode = "DOCTOR", GroupName = "Danh mục cán bộ")]
@@ -91,7 +91,7 @@ ViewBag.Actions = actionCodesByUserName;
     public ActionResult OnDetail(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -100,7 +100,7 @@ ViewBag.Actions = actionCodesByUserName;
         if (byId == null)
           throw new Exception(Localization.MsgItemNotExist);
         byId.DOCTOR_IMAGE = BachMaiCR.Web.Utils.Utils.GetPathUserImage(byId.DOCTOR_IMAGE);
-        return (ActionResult) this.PartialView("_Detail", (object) byId);
+        return this.PartialView("_Detail", byId);
       }
       catch (Exception ex)
       {
@@ -140,7 +140,7 @@ ViewBag.ActionExport = this.CheckPermistion("DOCTOR_EXPORT");
 ViewBag.ActionImport = this.CheckPermistion("DOCTOR_IMPORT");
         List<LM_DEPARTMENT> deptCurrent = this.GetDeptCurrent();
 ViewBag.RootDepartment = deptCurrent;
-        return (ActionResult) this.PartialView("_Search", (object) doctorSearch);
+        return this.PartialView("_Search", doctorSearch);
       }
       catch (Exception ex)
       {
@@ -153,7 +153,7 @@ ViewBag.RootDepartment = deptCurrent;
     public ActionResult OnInsert(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         this.IsAjaxRequest();
@@ -163,7 +163,7 @@ ViewBag.ListEducation = this.unitOfWork.Categories.GetListItemBase(4);
 ViewBag.ListDepartment = this.unitOfWork.Departments.GetListItemBase();
 ViewBag.ListProvince = this.unitOfWork.Categories.GetListItemBase(1);
 ViewBag.ListPosition = this.unitOfWork.Categories.GetListItemBase(3);
-        return (ActionResult) this.PartialView("_Insert", (object) new Doctor()
+        return this.PartialView("_Insert", new Doctor()
         {
           AvatarUrl = BachMaiCR.Web.Utils.Utils.GetPathUserImage("doctor_avatar_default.png")
         });
@@ -180,7 +180,7 @@ ViewBag.ListPosition = this.unitOfWork.Categories.GetListItemBase(3);
     public ActionResult OnUpdate(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -199,7 +199,7 @@ ViewBag.ListPosition = this.unitOfWork.Categories.GetListItemBase(3);
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", "N/A", "N/A", id, "", "");
 ViewBag.LM_DEPARTMENT_NAMEs = this.unitOfWork.Departments.GetListDepartment(byId.LM_DEPARTMENT_IDs);
 ViewBag.LM_DEPARTMENT_IDs = byId.LM_DEPARTMENT_IDs;
-        return (ActionResult) this.PartialView("_Insert", (object) doctor);
+        return this.PartialView("_Insert", doctor);
       }
       catch (Exception ex)
       {
@@ -213,7 +213,7 @@ ViewBag.LM_DEPARTMENT_IDs = byId.LM_DEPARTMENT_IDs;
     public ActionResult OnDelete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -243,7 +243,7 @@ ViewBag.LM_DEPARTMENT_IDs = byId.LM_DEPARTMENT_IDs;
     public ActionResult SubmitChange(Doctor entity)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         bool flag = false;
@@ -342,7 +342,7 @@ ViewBag.LM_DEPARTMENT_IDs = byId.LM_DEPARTMENT_IDs;
         this.Response.BinaryWrite(numArray);
         this.Response.Flush();
         this.Response.Close();
-        return (ActionResult) new DownloadResult(numArray, fileName);
+        return new DownloadResult(numArray, fileName);
       }
       catch (Exception ex)
       {
@@ -367,7 +367,7 @@ ViewBag.LM_DEPARTMENT_IDs = byId.LM_DEPARTMENT_IDs;
           searchEntity.PathDepat = lmDepartment == null ? "" : lmDepartment.DEPARTMENT_PATH;
         }
         List<DOCTOR> all = this.unitOfWork.Doctors.GetAll(searchEntity);
-        excelWorksheet.Cells["A2"].Value = string.IsNullOrEmpty(searchEntity.PathDepat) ? (object) "" : (object) lmDepartment.DEPARTMENT_NAME.ToUpper();
+        excelWorksheet.Cells["A2"].Value = string.IsNullOrEmpty(searchEntity.PathDepat) ? "" : lmDepartment.DEPARTMENT_NAME.ToUpper();
         int num1 = 1;
         int num2 = 6;
         foreach (DOCTOR doctor in all)
@@ -383,7 +383,7 @@ ViewBag.LM_DEPARTMENT_IDs = byId.LM_DEPARTMENT_IDs;
           num3 = num1 + num2;
           string str5 = num3.ToString();
           string str6 = str4 + str5;
-          cells2[str6].Value = doctor.BIRTHDAY.HasValue ? (object) doctor.BIRTHDAY.Value.ToString("dd/MM/yyyy") : (object) "N/A";
+          cells2[str6].Value = doctor.BIRTHDAY.HasValue ? doctor.BIRTHDAY.Value.ToString("dd/MM/yyyy") : "N/A";
           string str7 = "D";
           num3 = num1 + num2;
           string str8 = num3.ToString();
@@ -424,7 +424,7 @@ label_11:
           num3 = num1 + num2;
           string str19 = num3.ToString();
           string str20 = str18 + str19;
-                    excelWorksheet.Cells[str20].Value = string.IsNullOrEmpty(str17) ? (object) "N/A" : (object) str17;
+                    excelWorksheet.Cells[str20].Value = string.IsNullOrEmpty(str17) ? "N/A" : str17;
           
           string str21 = "H";
           num3 = num1 + num2;
@@ -445,7 +445,7 @@ label_11:
           num3 = num1 + num2;
           string str31 = num3.ToString();
           string str32 = str30 + str31;
-                    excelWorksheet.Cells[str32].Value = string.IsNullOrEmpty(doctor.LM_DEPARTMENT_NAMEs) ? (object) string.Empty : (object) doctor.LM_DEPARTMENT_NAMEs;
+                    excelWorksheet.Cells[str32].Value = string.IsNullOrEmpty(doctor.LM_DEPARTMENT_NAMEs) ? string.Empty : doctor.LM_DEPARTMENT_NAMEs;
           
           string str33 = "A";
           num3 = num1 + num2;
@@ -484,7 +484,7 @@ label_11:
     [HttpPost]
     public ActionResult AjaxUpload()
     {
-      return (ActionResult) this.Json(JsonResponse.Json200((object) Localization.MsgDelSuccess));
+      return this.Json(JsonResponse.Json200(Localization.MsgDelSuccess));
     }
 
     [ValidateJsonAntiForgeryToken]
@@ -494,15 +494,15 @@ label_11:
     public ActionResult ActiveChage(int doctorId, bool active)
     {
       if (doctorId <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json400((object) "Cán bộ không tồn tại "));
+        return this.Json(JsonResponse.Json400("Cán bộ không tồn tại "));
       DOCTOR byId = this.unitOfWork.Doctors.GetById(doctorId);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhật thành công !"));
+        return this.Json(JsonResponse.Json200("Cập nhật thành công !"));
       byId.ISACTIVED = new bool?(active);
       this.unitOfWork.Doctors.Update(byId);
       this.unitOfWork.Users.UpdateUserByDoctorId(doctorId, active);
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "Active/Deactive cán bộ [" + byId.DOCTOR_NAME + "]", "N/A", "N/A", doctorId, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhật thành công !"));
+      return this.Json(JsonResponse.Json200("Cập nhật thành công !"));
     }
   }
 }

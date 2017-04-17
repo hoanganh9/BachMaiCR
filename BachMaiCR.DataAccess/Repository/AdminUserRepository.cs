@@ -1,4 +1,5 @@
-﻿
+﻿
+
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -105,7 +106,7 @@ namespace BachMaiCR.DataAccess.Repository
     public ADMIN_USER GetByUserName(string userName)
     {
       if (userName == null)
-        return (ADMIN_USER) null;
+        return null;
       return this.DbSet.AsNoTracking().FirstOrDefault<ADMIN_USER>((o => o.USERNAME == userName));
     }
 

@@ -20,13 +20,13 @@ namespace BachMaiCR.Utilities.Enums
     public StringEnum(Type enumType)
     {
       if (!enumType.IsEnum)
-        throw new ArgumentException(string.Format("Supplied type must be an Enum.  Type was {0}", (object) enumType.ToString()));
+        throw new ArgumentException(string.Format("Supplied type must be an Enum.  Type was {0}", enumType.ToString()));
       this._enumType = enumType;
     }
 
     public string GetStringValue(string valueName)
     {
-      string str = (string) null;
+      string str = null;
       try
       {
         str = StringEnum.GetStringValue((Enum) Enum.Parse(this._enumType, valueName, false));
@@ -57,7 +57,7 @@ namespace BachMaiCR.Utilities.Enums
       {
         StringValueAttribute[] customAttributes = field.GetCustomAttributes(typeof (StringValueAttribute), false) as StringValueAttribute[];
         if (customAttributes != null && customAttributes.Length > 0)
-          dictionary.Add(Enum.ToObject(underlyingType, (object) field.Name).ToString(), customAttributes[0].Value);
+          dictionary.Add(Enum.ToObject(underlyingType, field.Name).ToString(), customAttributes[0].Value);
       }
       return dictionary;
     }
@@ -88,10 +88,10 @@ namespace BachMaiCR.Utilities.Enums
 
     public static object Parse(Type type, string stringValue, bool ignoreCase)
     {
-      object obj = (object) null;
-      string strA = (string) null;
+      object obj = null;
+      string strA = null;
       if (!type.IsEnum)
-        throw new ArgumentException(string.Format("Supplied type must be an Enum.  Type was {0}", (object) type.ToString()));
+        throw new ArgumentException(string.Format("Supplied type must be an Enum.  Type was {0}", type.ToString()));
       foreach (FieldInfo field in type.GetFields())
       {
         StringValueAttribute[] customAttributes = field.GetCustomAttributes(typeof (StringValueAttribute), false) as StringValueAttribute[];

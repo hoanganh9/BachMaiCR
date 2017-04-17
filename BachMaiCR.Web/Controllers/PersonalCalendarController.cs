@@ -33,7 +33,7 @@ namespace BachMaiCR.Web.Controllers
     [ActionDescription(ActionCode = "PersonalCalendar_View", ActionName = "Xem lịch cá nhân", GroupCode = "PersonalCalendar", GroupName = "Lịch cá nhân", IsMenu = false)]
     public ActionResult Index()
     {
-      return (ActionResult) this.View(this.sViewPath + "PersonalCalendar.cshtml");
+      return this.View(this.sViewPath + "PersonalCalendar.cshtml");
     }
 
     [CustomAuthorize]
@@ -47,10 +47,10 @@ namespace BachMaiCR.Web.Controllers
     public JsonResult GetEvents(string imonth, string iyear)
     {
       string name = this.User.Identity.Name;
-      DateTime dateTime1 = BachMaiCR.Web.Utils.Utils.ToDateTime((object) ("15/" + imonth + "/" + iyear), "dd/mm/yyyy");
+      DateTime dateTime1 = BachMaiCR.Web.Utils.Utils.ToDateTime(("15/" + imonth + "/" + iyear), "dd/mm/yyyy");
       List<SqlParameter> sqlParameterList = new List<SqlParameter>();
-      sqlParameterList.Add(new SqlParameter("@USERNAME", (object) name));
-      sqlParameterList.Add(new SqlParameter("@DATE_START", (object) dateTime1));
+      sqlParameterList.Add(new SqlParameter("@USERNAME", name));
+      sqlParameterList.Add(new SqlParameter("@DATE_START", dateTime1));
       BACHMAICRContext context = new BACHMAICRContext();
       List<CALENDAR> list = ((IEnumerable<CALENDAR>) context.Database.SqlQuery<CALENDAR>("exec sp_getEvents @USERNAME, @DATE_START ", (object[]) sqlParameterList.ToArray())).ToList<CALENDAR>();
       List<SqlParameter> paramlist = (List<SqlParameter>) null;
@@ -116,16 +116,16 @@ namespace BachMaiCR.Web.Controllers
           calendarDtoList.Add(calendarDto);
         }
       }
-      return this.Json((object) calendarDtoList, JsonRequestBehavior.AllowGet);
+      return this.Json(calendarDtoList, JsonRequestBehavior.AllowGet);
     }
 
     private string getDoctorName(int calendarDutyId, string userName, DateTime dateStart, int hour, List<SqlParameter> paramlist, BACHMAICRContext context)
     {
       paramlist = new List<SqlParameter>();
-      paramlist.Add(new SqlParameter("@CALENDAR_DUTY_ID", (object) calendarDutyId));
-      paramlist.Add(new SqlParameter("@USERNAME", (object) userName));
-      paramlist.Add(new SqlParameter("@DATE_START", (object) dateStart));
-      paramlist.Add(new SqlParameter("@HOUR", (object) hour));
+      paramlist.Add(new SqlParameter("@CALENDAR_DUTY_ID", calendarDutyId));
+      paramlist.Add(new SqlParameter("@USERNAME", userName));
+      paramlist.Add(new SqlParameter("@DATE_START", dateStart));
+      paramlist.Add(new SqlParameter("@HOUR", hour));
       List<DOCTOR_NAME_LIST> list = ((IEnumerable<DOCTOR_NAME_LIST>) context.Database.SqlQuery<DOCTOR_NAME_LIST>("exec sp_getDoctorName @CALENDAR_DUTY_ID, @USERNAME, @DATE_START, @HOUR", (object[]) paramlist.ToArray())).ToList<DOCTOR_NAME_LIST>();
       string str = "";
       if (list != null && list.Count > 0)

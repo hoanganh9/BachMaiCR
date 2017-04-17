@@ -66,7 +66,7 @@ namespace BachMaiCR.Utilities
       if (string.IsNullOrWhiteSpace(fileExtension))
         return string.Empty;
       if (!fileExtension.StartsWith("."))
-        fileExtension = string.Format(".{0}", (object) fileExtension);
+        fileExtension = string.Format(".{0}", fileExtension);
       fileExtension = fileExtension.ToLower();
       if (MimeType.mime.ContainsKey(fileExtension))
         return MimeType.mime[fileExtension];

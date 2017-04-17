@@ -12,7 +12,7 @@ namespace BachMaiCR.Web.Controllers
   {
     public ActionResult ShowErrorPage(int? status)
     {
-      return (ActionResult) this.View((object) status);
+      return this.View(status);
     }
 
     protected override void Dispose(bool disposing)

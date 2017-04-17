@@ -14,7 +14,7 @@ namespace BachMaiCR.Utilities.Cache
       if (cacheProvider.IsStored(key))
         return cacheProvider.Get<T>(key);
       T obj = acquire();
-      cacheProvider.Set(key, (object) obj, cacheTime);
+      cacheProvider.Set(key, obj, cacheTime);
       return obj;
     }
   }

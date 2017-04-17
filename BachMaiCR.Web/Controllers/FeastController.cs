@@ -38,7 +38,7 @@ namespace BachMaiCR.Web.Controllers
     {
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("FEAST_SAVE");
-      return (ActionResult) this.View("Index");
+      return this.View("Index");
         
     }
 
@@ -47,13 +47,13 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("FEAST_SAVE");
     public ActionResult OnInsert()
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         Feast feast = new Feast();
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.PartialView("~/Views/Feast/Add.cshtml", (object) feast);
-        return (ActionResult) null;
+          return this.PartialView("~/Views/Feast/Add.cshtml", feast);
+        return null;
       }
       catch (Exception ex)
       {
@@ -67,7 +67,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("FEAST_SAVE");
     public ActionResult OnUpdate(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -75,7 +75,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("FEAST_SAVE");
         FEAST byId = this.unitOfWork.Feasts.GetById(id);
         if (byId == null)
           throw new Exception(Localization.MsgItemNotExist);
-        return (ActionResult) this.PartialView("~/Views/Feast/Add.cshtml", (object) new Feast(byId));
+        return this.PartialView("~/Views/Feast/Add.cshtml", new Feast(byId));
       }
       catch (Exception ex)
       {
@@ -89,7 +89,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("FEAST_SAVE");
     public ActionResult OnDelete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -179,10 +179,10 @@ ViewBag.ActionDelete = this.CheckPermistion("FEAST_DELETE");
       FEAST byId = this.unitOfWork.Feasts.GetById(feastId);
       var data = new
       {
-        dateBegin = string.Format("{0:dd/MM/yyyy}", (object) byId.DATE_BEGIN),
-        dateEnd = string.Format("{0:dd/MM/yyyy}", (object) byId.DATE_END)
+        dateBegin = string.Format("{0:dd/MM/yyyy}", byId.DATE_BEGIN),
+        dateEnd = string.Format("{0:dd/MM/yyyy}", byId.DATE_END)
       };
-      return (ActionResult) this.Json((object) data, JsonRequestBehavior.AllowGet);
+      return this.Json(data, JsonRequestBehavior.AllowGet);
     }
   }
 }

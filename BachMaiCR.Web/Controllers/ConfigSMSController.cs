@@ -37,7 +37,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult Index()
     {
 ViewBag.Title = "Cấu hình gửi SMS";
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [CustomAuthorize]
@@ -81,7 +81,7 @@ ViewBag.Actions = actionCodesByUserName;
         };
         ConfigSMSSearch configSmsSearch = new ConfigSMSSearch();
 ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_SMS_UPDATE");
-        return (ActionResult) this.PartialView("_Search", (object) configSmsSearch);
+        return this.PartialView("_Search", configSmsSearch);
       }
       catch (Exception ex)
       {
@@ -94,10 +94,10 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_SMS_UPDATE");
     public ActionResult OnInsert(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
-        return (ActionResult) this.PartialView("_Insert", (object) new ConfigSMS());
+        return this.PartialView("_Insert", new ConfigSMS());
       }
       catch (Exception ex)
       {
@@ -111,7 +111,7 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_SMS_UPDATE");
     public ActionResult OnUpdate(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -119,7 +119,7 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_SMS_UPDATE");
         CONFIG_SMS byId = this.unitOfWork.ConfigSMS.GetById(id);
         if (byId == null)
           throw new Exception(Localization.MsgItemNotExist);
-        return (ActionResult) this.PartialView("_Insert", (object) new ConfigSMS(byId));
+        return this.PartialView("_Insert", new ConfigSMS(byId));
       }
       catch (Exception ex)
       {
@@ -133,7 +133,7 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_SMS_UPDATE");
     public ActionResult OnDelete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -161,7 +161,7 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_SMS_UPDATE");
     public ActionResult SubmitChange(ConfigSMS entity)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         CONFIG_SMS configSms1 = entity.GetConfigSMS();
@@ -228,14 +228,14 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_SMS_UPDATE");
     public ActionResult ActiveChage(int configSMSId, bool active)
     {
       if (configSMSId <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json400((object) "Cấu hình không tồn tại "));
+        return this.Json(JsonResponse.Json400("Cấu hình không tồn tại "));
       CONFIG_SMS byId = this.unitOfWork.ConfigSMS.GetById(configSMSId);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhật thành công !"));
+        return this.Json(JsonResponse.Json200("Cập nhật thành công !"));
       byId.ISACTIVED = active;
       this.unitOfWork.ConfigSMS.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "Active/Deactive cấu hình gửi SMS [" + byId.CONFIG_SMS_NAME + "]", "N/A", "N/A", configSMSId, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhật thành công !"));
+      return this.Json(JsonResponse.Json200("Cập nhật thành công !"));
     }
 
     [HttpGet]
@@ -244,7 +244,7 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_SMS_UPDATE");
     public ActionResult GetTemplate(int departmentId)
     {
       List<SelectListItem> selectListItemList = new List<SelectListItem>();
-      List<TEMPLATE> listByDate = this.unitOfWork.Templates.GetListByDate(departmentId, DateTime.Now, Convert.ToInt32((object) TemplateStatus.Aproved));
+      List<TEMPLATE> listByDate = this.unitOfWork.Templates.GetListByDate(departmentId, DateTime.Now, Convert.ToInt32(TemplateStatus.Aproved));
       selectListItemList.Add(new SelectListItem()
       {
         Text = Localization.CalendarDefault,
@@ -267,7 +267,7 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_SMS_UPDATE");
         Value = ""
       };
       selectListItemList.Insert(0, selectListItem);
-      return (ActionResult) this.Json((object) selectListItemList, JsonRequestBehavior.AllowGet);
+      return this.Json(selectListItemList, JsonRequestBehavior.AllowGet);
     }
   }
 }

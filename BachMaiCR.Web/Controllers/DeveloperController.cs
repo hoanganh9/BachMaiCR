@@ -12,7 +12,7 @@ namespace BachMaiCR.Web.Controllers
   {
     public ActionResult Index()
     {
-      return (ActionResult) this.View();
+      return this.View();
     }
   }
 }

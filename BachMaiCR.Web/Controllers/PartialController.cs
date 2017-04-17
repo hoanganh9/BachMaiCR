@@ -70,7 +70,7 @@ ViewBag.UserMenuModel = list;
                 ViewBag.RoleId = roleId;
             ViewBag.RoleName = byId.ROLE_NAME;
       }
-      return (ActionResult) this.PartialView("_WebpageActionTreeViewPartial");
+      return this.PartialView("_WebpageActionTreeViewPartial");
     }
 
     [CustomAuthorize]
@@ -104,7 +104,7 @@ ViewBag.UserMenuModel = list;
         }
       }
 ViewBag.CurrentUserMenu = userMenuModelList;
-      return (ActionResult) this.PartialView("_MenuViewPartial");
+      return this.PartialView("_MenuViewPartial");
     }
   }
 }

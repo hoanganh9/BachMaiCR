@@ -143,7 +143,7 @@ namespace BachMaiCR.DataAccess.Repository
     public PagedList<CALENDAR_DUTY> GetAll(SearchCalendarDuty calendarSearch, int page, int size, string sort, string sortDir, int types, string idDepartment, out int totalRow)
     {
       totalRow = 0;
-      IQueryable<CALENDAR_DUTY> source = this.DbSet.AsNoTracking().Where((obj => (calendarSearch.DATE_CREATE == new DateTime?() || obj.DATE_CREATE.Value.Year == calendarSearch.DATE_CREATE.Value.Year && obj.DATE_CREATE.Value.Month == calendarSearch.DATE_CREATE.Value.Month && obj.DATE_CREATE.Value.Day == calendarSearch.DATE_CREATE.Value.Day) && (calendarSearch.DATE_APPROVED == new DateTime?() || obj.DATE_APPROVED.Value.Year == calendarSearch.DATE_APPROVED.Value.Year && obj.DATE_APPROVED.Value.Month == calendarSearch.DATE_APPROVED.Value.Month && obj.DATE_APPROVED.Value.Day == calendarSearch.DATE_APPROVED.Value.Day) && (calendarSearch.ADMIN_USER_CREATE == (object) null || calendarSearch.ADMIN_USER_CREATE == "" || obj.ADMIN_USER.FULLNAME.Contains(calendarSearch.ADMIN_USER_CREATE)) && (calendarSearch.ADMIN_USER_APPROVED == (object) null || calendarSearch.ADMIN_USER_APPROVED == "" || obj.ADMIN_USER1.FULLNAME.Contains(calendarSearch.ADMIN_USER_APPROVED)) && (calendarSearch.CALENDAR_STATUS == 0 || obj.CALENDAR_STATUS == (int?) calendarSearch.CALENDAR_STATUS) && (calendarSearch.DATE_MONTH == 0 || obj.CALENDAR_MONTH == (int?) calendarSearch.DATE_MONTH) && (calendarSearch.DATE_YEAR == 0 || obj.CALENDAR_YEAR == (int?) calendarSearch.DATE_YEAR) && (calendarSearch.DEPARTMENTS == (object) null || calendarSearch.DEPARTMENTS == "" || obj.LM_DEPARTMENT.DEPARTMENT_NAME.Contains(calendarSearch.DEPARTMENTS)) && (types == 1 || types == 2 || types == 4 || obj.LM_DEPARTMENT_PARTS.Contains("," + idDepartment.ToString() + ",")) && obj.ISDELETE == false && obj.DUTY_TYPE == (int?) types));
+      IQueryable<CALENDAR_DUTY> source = this.DbSet.AsNoTracking().Where((obj => (calendarSearch.DATE_CREATE == new DateTime?() || obj.DATE_CREATE.Value.Year == calendarSearch.DATE_CREATE.Value.Year && obj.DATE_CREATE.Value.Month == calendarSearch.DATE_CREATE.Value.Month && obj.DATE_CREATE.Value.Day == calendarSearch.DATE_CREATE.Value.Day) && (calendarSearch.DATE_APPROVED == new DateTime?() || obj.DATE_APPROVED.Value.Year == calendarSearch.DATE_APPROVED.Value.Year && obj.DATE_APPROVED.Value.Month == calendarSearch.DATE_APPROVED.Value.Month && obj.DATE_APPROVED.Value.Day == calendarSearch.DATE_APPROVED.Value.Day) && (calendarSearch.ADMIN_USER_CREATE == null || calendarSearch.ADMIN_USER_CREATE == "" || obj.ADMIN_USER.FULLNAME.Contains(calendarSearch.ADMIN_USER_CREATE)) && (calendarSearch.ADMIN_USER_APPROVED == null || calendarSearch.ADMIN_USER_APPROVED == "" || obj.ADMIN_USER1.FULLNAME.Contains(calendarSearch.ADMIN_USER_APPROVED)) && (calendarSearch.CALENDAR_STATUS == 0 || obj.CALENDAR_STATUS == (int?) calendarSearch.CALENDAR_STATUS) && (calendarSearch.DATE_MONTH == 0 || obj.CALENDAR_MONTH == (int?) calendarSearch.DATE_MONTH) && (calendarSearch.DATE_YEAR == 0 || obj.CALENDAR_YEAR == (int?) calendarSearch.DATE_YEAR) && (calendarSearch.DEPARTMENTS == null || calendarSearch.DEPARTMENTS == "" || obj.LM_DEPARTMENT.DEPARTMENT_NAME.Contains(calendarSearch.DEPARTMENTS)) && (types == 1 || types == 2 || types == 4 || obj.LM_DEPARTMENT_PARTS.Contains("," + idDepartment.ToString() + ",")) && obj.ISDELETE == false && obj.DUTY_TYPE == (int?) types));
       totalRow = source.Count<CALENDAR_DUTY>();
       return source.OrderByDescending<CALENDAR_DUTY>(sort).Paginate<CALENDAR_DUTY>(page, size, totalRow);
     }
@@ -182,7 +182,7 @@ namespace BachMaiCR.DataAccess.Repository
               DATE_BEGIN = list[index].DATE_BEGIN,
               DATE_END = list[index].DATE_END
             });
-            feastsearch1 = (FEASTSEARCH) null;
+            feastsearch1 = null;
           }
         }
         else
@@ -195,7 +195,7 @@ namespace BachMaiCR.DataAccess.Repository
               DATE_BEGIN = list[index].DATE_BEGIN,
               DATE_END = list[index].DATE_END
             });
-            feastsearch1 = (FEASTSEARCH) null;
+            feastsearch1 = null;
           }
         }
         Expression<Func<DoctorCalendarLeader, bool>> expression = null;

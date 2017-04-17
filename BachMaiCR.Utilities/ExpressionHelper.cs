@@ -31,7 +31,7 @@ namespace BachMaiCR.Utilities
     {
       if (spec == null)
         throw new ArgumentNullException("spec");
-      if ((object) target == null)
+      if (target == null)
         throw new ArgumentNullException("target");
       return spec.Compile()(target);
     }

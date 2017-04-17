@@ -34,9 +34,9 @@ namespace BachMaiCR.Web.Controllers
     {
       WebPageActionEditModel pageActionEditModel = new WebPageActionEditModel(this.unitOfWork.Actions.GetById(id));
       if (this.Request.IsAjaxRequest())
-        return (ActionResult) this.PartialView("~/Views/Admin/_AddAction.cshtml", (object) pageActionEditModel);
+        return this.PartialView("~/Views/Admin/_AddAction.cshtml", pageActionEditModel);
       this.RedirectToAction("ManageActions", "Admin");
-      return (ActionResult) null;
+      return null;
     }
 
     [HttpPost]
@@ -65,12 +65,12 @@ namespace BachMaiCR.Web.Controllers
             }
           }
           if (this.Request.IsAjaxRequest())
-            return (ActionResult) this.Json(JsonResponse.Json200((object) "Cập nhập thành công"));
-          return (ActionResult) null;
+            return this.Json(JsonResponse.Json200("Cập nhập thành công"));
+          return null;
         }
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.Json(JsonResponse.Json500((object) "Phải nhập đủ thông tin"));
-        return (ActionResult) null;
+          return this.Json(JsonResponse.Json500("Phải nhập đủ thông tin"));
+        return null;
       }
       catch (Exception ex)
       {
@@ -86,11 +86,11 @@ namespace BachMaiCR.Web.Controllers
     {
       WEBPAGES_ACTIONS byId = this.unitOfWork.Actions.GetById(id);
       if (byId == null)
-        return this.Json(JsonResponse.Json404((object) "Action not found"));
+        return this.Json(JsonResponse.Json404("Action not found"));
       byId.IS_ACTIVE = new bool?(active);
       this.unitOfWork.Actions.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", "N/A", "N/A", byId.WEBPAGES_ACTION_ID, "", "");
-      return this.Json(JsonResponse.Json200((object) "Cập nhật thành công"));
+      return this.Json(JsonResponse.Json200("Cập nhật thành công"));
     }
 
     [HttpGet]
@@ -98,7 +98,7 @@ namespace BachMaiCR.Web.Controllers
     {
       List<WEBPAGES_ACTIONS> list = this.unitOfWork.Actions.GetAll().ToList<WEBPAGES_ACTIONS>();
       List<int> selectedActionIds = this.unitOfWork.Roles.GetById(roleId).WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((Func<WEBPAGES_ACTIONS, int>) (o => o.WEBPAGES_ACTION_ID)).ToList<int>();
-      return (ActionResult) this.Json(JsonResponse.Json200((object) list.Select<WEBPAGES_ACTIONS, KeyTextItem>((Func<WEBPAGES_ACTIONS, KeyTextItem>) (o => new KeyTextItem()
+      return this.Json(JsonResponse.Json200(list.Select<WEBPAGES_ACTIONS, KeyTextItem>((Func<WEBPAGES_ACTIONS, KeyTextItem>) (o => new KeyTextItem()
       {
         Text = o.DESCRIPTION,
         Id = o.WEBPAGES_ACTION_ID.ToString(),

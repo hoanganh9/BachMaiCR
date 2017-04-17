@@ -46,7 +46,7 @@ namespace BachMaiCR.Web.Controllers
       List<string> actionCodesByUserName = this.GetActionCodesByUserName();
 ViewBag.Actions = actionCodesByUserName;
 ViewBag.RootDepartment = this.RootDepartment();
-      return (ActionResult) this.View(this.sViewPath + "Index.cshtml");
+      return this.View(this.sViewPath + "Index.cshtml");
     }
 
     [CustomAuthorize]
@@ -54,8 +54,8 @@ ViewBag.RootDepartment = this.RootDepartment();
     public ActionResult AddTemPlate()
     {
 ViewBag.RootDepartment = this.RootDepartment();
-      this.ViewData["DuLieuMoi"] = (object) "1";
-      return (ActionResult) this.View(this.sViewPath + "_Add.cshtml");
+      this.ViewData["DuLieuMoi"] = "1";
+      return this.View(this.sViewPath + "_Add.cshtml");
     }
 
     private int? RootDepartment()
@@ -68,8 +68,8 @@ ViewBag.RootDepartment = this.RootDepartment();
     public PartialViewResult Edit(string id)
     {
 ViewBag.RootDepartment = this.RootDepartment();
-      this.ViewData["DuLieuMoi"] = (object) "0";
-      this.ViewData["TEMPLATES_ID"] = (object) id;
+      this.ViewData["DuLieuMoi"] = "0";
+      this.ViewData["TEMPLATES_ID"] = id;
       TEMPLATE byId = this.unitOfWork.Templates.GetById(Convert.ToInt32(id));
 ViewBag.templateItem = byId;
       return this.PartialView(this.sViewPath + "_Add.cshtml");
@@ -123,7 +123,7 @@ ViewBag.templateItem = byId;
           nameValueCollection.Add("err_Abb", Localization.Template_err_Abb);
         if (!string.IsNullOrEmpty(str5) && str5 != "" && str5.Length > 50)
           nameValueCollection.Add("err_Abb", Localization.Template_err_Abb_maxLengh);
-        if (!string.IsNullOrEmpty(s1) && !string.IsNullOrEmpty(s2) && BachMaiCR.Web.Utils.Utils.ToDateTime((object) s1, "dd/mm/yyyy") > BachMaiCR.Web.Utils.Utils.ToDateTime((object) str14, "dd/mm/yyyy"))
+        if (!string.IsNullOrEmpty(s1) && !string.IsNullOrEmpty(s2) && BachMaiCR.Web.Utils.Utils.ToDateTime(s1, "dd/mm/yyyy") > BachMaiCR.Web.Utils.Utils.ToDateTime(str14, "dd/mm/yyyy"))
           nameValueCollection.Add("err_fromDate", Localization.Template_err_fromDate2);
         if (!string.IsNullOrEmpty(str6) && str6.Trim().Length > 500)
           nameValueCollection.Add("err_Note", Localization.Template_err_Contents_maxLengh);
@@ -140,7 +140,7 @@ ViewBag.toYear = str9;
 ViewBag.fromMonth = str13;
 ViewBag.fromYear = str10;
 ViewBag.RootDepartment = this.RootDepartment();
-          return (ActionResult) this.View(this.sViewPath + "_Add.cshtml");
+          return this.View(this.sViewPath + "_Add.cshtml");
         }
         List<SqlParameter> sqlParameterList1 = new List<SqlParameter>();
         if (str1 == "1")
@@ -148,18 +148,18 @@ ViewBag.RootDepartment = this.RootDepartment();
           SqlParameter sqlParameter = new SqlParameter("@TEMPLATES_ID", SqlDbType.Int);
           sqlParameter.Direction = ParameterDirection.Output;
           sqlParameterList1.Add(sqlParameter);
-          sqlParameterList1.Add(new SqlParameter("@USER_CREATE", (object) name));
-          sqlParameterList1.Add(new SqlParameter("@USER_CREATE_ID", (object) userId));
-          sqlParameterList1.Add(new SqlParameter("@STATUS", (object) CalendarDutyStatus.Created.GetHashCode()));
+          sqlParameterList1.Add(new SqlParameter("@USER_CREATE", name));
+          sqlParameterList1.Add(new SqlParameter("@USER_CREATE_ID", userId));
+          sqlParameterList1.Add(new SqlParameter("@STATUS", CalendarDutyStatus.Created.GetHashCode()));
         }
         else
-          sqlParameterList1.Add(new SqlParameter("@TEMPLATES_ID", (object) Convert.ToInt32(str2.Trim())));
-        sqlParameterList1.Add(new SqlParameter("@TEMPLATE_NAME", (object) str3.Trim()));
-        sqlParameterList1.Add(new SqlParameter("@ABBREVIATION", (object) str5.Trim()));
-        sqlParameterList1.Add(new SqlParameter("@DATE_START", (object) DateTime.Parse(s1)));
-        sqlParameterList1.Add(new SqlParameter("@DATE_END", (object) DateTime.Parse(s2)));
-        sqlParameterList1.Add(new SqlParameter("@DESCRIPTION", (object) str6.Trim()));
-        sqlParameterList1.Add(new SqlParameter("@LM_DEPARTMENT_ID", (object) str4));
+          sqlParameterList1.Add(new SqlParameter("@TEMPLATES_ID", Convert.ToInt32(str2.Trim())));
+        sqlParameterList1.Add(new SqlParameter("@TEMPLATE_NAME", str3.Trim()));
+        sqlParameterList1.Add(new SqlParameter("@ABBREVIATION", str5.Trim()));
+        sqlParameterList1.Add(new SqlParameter("@DATE_START", DateTime.Parse(s1)));
+        sqlParameterList1.Add(new SqlParameter("@DATE_END", DateTime.Parse(s2)));
+        sqlParameterList1.Add(new SqlParameter("@DESCRIPTION", str6.Trim()));
+        sqlParameterList1.Add(new SqlParameter("@LM_DEPARTMENT_ID", str4));
         BACHMAICRContext bachmaicrContext = new BACHMAICRContext();
         int num1 = 0;
         num1 = !(str1 == "1") ? bachmaicrContext.Database.ExecuteSqlCommand("exec sp_template_update @TEMPLATE_NAME, @ABBREVIATION, @DATE_START, @DATE_END, @DESCRIPTION, @LM_DEPARTMENT_ID, @TEMPLATES_ID", (object[]) sqlParameterList1.ToArray()) : bachmaicrContext.Database.ExecuteSqlCommand("exec sp_template_insert @TEMPLATE_NAME, @ABBREVIATION, @DATE_START, @DATE_END, @STATUS, @USER_CREATE, @USER_CREATE_ID, @DESCRIPTION, @LM_DEPARTMENT_ID, @TEMPLATES_ID", (object[]) sqlParameterList1.ToArray());
@@ -168,27 +168,27 @@ ViewBag.RootDepartment = this.RootDepartment();
         int num2 = 0;
         for (int index = 1; index <= int32_3; ++index)
         {
-          int int32_4 = Convert.ToInt32(this.Request.Form["cboDeparment_" + (object) index]);
-          string str15 = this.Request.Form["field_" + (object) index];
-          string str16 = this.Request.Form["fieldselect_" + (object) index];
+          int int32_4 = Convert.ToInt32(this.Request.Form["cboDeparment_" + index]);
+          string str15 = this.Request.Form["field_" + index];
+          string str16 = this.Request.Form["fieldselect_" + index];
           if (!string.IsNullOrEmpty(str16))
           {
-            str11 = str11 + "," + (object) int32_4;
-            string str17 = "," + str4 + "," + (object) int32_4;
+            str11 = str11 + "," + int32_4;
+            string str17 = "," + str4 + "," + int32_4;
             if (index == int32_3)
               num2 = 1;
             num1 = bachmaicrContext.Database.ExecuteSqlCommand("exec sp_template_column_insert @COLUM_NAME, @COLUM_ORDER, @LM_DEPARTMENT_ID, @USERNAME, @DOCTOR_LEVEL, @STATUS_DATA, @TEMPLATES, @LM_DEPARTMENT_PATH, @CHECK, @LM_DEPARTMENT_PATH_CHILD", (object[]) new List<SqlParameter>()
             {
-              new SqlParameter("@COLUM_NAME", (object) str15.Trim()),
-              new SqlParameter("@COLUM_ORDER", (object) index),
-              new SqlParameter("@LM_DEPARTMENT_ID", (object) int32_4),
-              new SqlParameter("@USERNAME", (object) name),
-              new SqlParameter("@DOCTOR_LEVEL", (object) str16.Trim()),
-              new SqlParameter("@STATUS_DATA", (object) str1),
-              new SqlParameter("@TEMPLATES", (object) Convert.ToInt32(str2)),
-              new SqlParameter("@LM_DEPARTMENT_PATH", (object) str11.Trim()),
-              new SqlParameter("@CHECK", (object) num2),
-              new SqlParameter("@LM_DEPARTMENT_PATH_CHILD", (object) str17)
+              new SqlParameter("@COLUM_NAME", str15.Trim()),
+              new SqlParameter("@COLUM_ORDER", index),
+              new SqlParameter("@LM_DEPARTMENT_ID", int32_4),
+              new SqlParameter("@USERNAME", name),
+              new SqlParameter("@DOCTOR_LEVEL", str16.Trim()),
+              new SqlParameter("@STATUS_DATA", str1),
+              new SqlParameter("@TEMPLATES", Convert.ToInt32(str2)),
+              new SqlParameter("@LM_DEPARTMENT_PATH", str11.Trim()),
+              new SqlParameter("@CHECK", num2),
+              new SqlParameter("@LM_DEPARTMENT_PATH_CHILD", str17)
             }.ToArray());
             sqlParameterList2 = (List<SqlParameter>) null;
           }
@@ -197,7 +197,7 @@ ViewBag.RootDepartment = this.RootDepartment();
         {
           Notice.Show(Localization.MsgAddSuccess, NoticeType.Success);
           this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", Localization.MsgAddSuccess, "N/A", 0, "", "");
-          return (ActionResult) this.RedirectToAction("AddTemPlate", "Template");
+          return this.RedirectToAction("AddTemPlate", "Template");
         }
         Notice.Show(Localization.MsgEditSuccess, NoticeType.Success);
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", Localization.MsgEditSuccess, "N/A", Convert.ToInt32(str2.Trim()), "", "");
@@ -208,7 +208,7 @@ ViewBag.RootDepartment = this.RootDepartment();
         if (str1 == "1")
         {
           this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", "N/A", ex.Message, 0, "", "");
-          return (ActionResult) this.RedirectToAction("AddTemPlate", "Template");
+          return this.RedirectToAction("AddTemPlate", "Template");
         }
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", "N/A", ex.Message, 0, "", "");
         return this.ReturnValue(ex.Message, false, "Index");
@@ -289,7 +289,7 @@ ViewBag.usernameAppoved = calendarSearch.ADMIN_USER_APPROVED.Trim();
 ViewBag.status = calendarSearch.STATUS;
       List<string> actionCodesByUserName = this.GetActionCodesByUserName();
 ViewBag.Actions = actionCodesByUserName;
-      return this.PartialView("_List", (object) all);
+      return this.PartialView("_List", all);
     }
 
     [CustomAuthorize]
@@ -361,7 +361,7 @@ ViewBag.status = calendarSearch.STATUS;
       List<string> actionCodesByUserName = this.GetActionCodesByUserName();
 ViewBag.Actions = actionCodesByUserName;
 ViewBag.RootDepartment = this.RootDepartment();
-      return this.PartialView("_List", (object) all);
+      return this.PartialView("_List", all);
     }
 
     [ActionDescription(ActionCode = "Template_Deleted", ActionName = "Xóa biểu mẫu", GroupCode = "Template", GroupName = "Cấu hình biểu mẫu")]
@@ -372,14 +372,14 @@ ViewBag.RootDepartment = this.RootDepartment();
       try
       {
         if (!this.Request.IsAjaxRequest())
-          return (ActionResult) this.RedirectToAction("Index");
+          return this.RedirectToAction("Index");
         if (id <= 0)
-          return (ActionResult) this.Json(JsonResponse.Json500((object) "Thao tác không hợp lệ!"));
+          return this.Json(JsonResponse.Json500("Thao tác không hợp lệ!"));
         if (this.unitOfWork.CalendarDuty.ExistTemplateId(id))
           throw new Exception("Biểu mẫu đã tồn tại trong bảng lịch trực Khoa/Viện/Trung tâm");
         TEMPLATE byId = this.unitOfWork.Templates.GetById(id);
         if (byId == null)
-          return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+          return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
         int? status = byId.STATUS;
         if ((status.GetValueOrDefault() != 2 ? 0 : (status.HasValue ? 1 : 0)) != 0)
           throw new Exception("Biểu mẫu đã được phê duyệt không cho phép xóa!");
@@ -387,8 +387,8 @@ ViewBag.RootDepartment = this.RootDepartment();
         this.unitOfWork.Templates.Update(byId);
         this.WriteLog(enLogType.NomalLog, enActionType.Delete, "N/A", Localization.MsgDelSuccess, "N/A", id, "", "");
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.Json(JsonResponse.Json200((object) Localization.MsgDelSuccess));
-        return (ActionResult) null;
+          return this.Json(JsonResponse.Json200(Localization.MsgDelSuccess));
+        return null;
       }
       catch (Exception ex)
       {
@@ -403,16 +403,16 @@ ViewBag.RootDepartment = this.RootDepartment();
     public ActionResult Detail(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       if (id <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) Localization.MsgItemNotExist));
+        return this.Json(JsonResponse.Json500(Localization.MsgItemNotExist));
       TEMPLATE byId = this.unitOfWork.Templates.GetById(id);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) Localization.MsgItemNotExist));
+        return this.Json(JsonResponse.Json500(Localization.MsgItemNotExist));
       TemplateModel templateModel = new TemplateModel(byId);
       List<string> actionCodesByUserName = this.GetActionCodesByUserName();
 ViewBag.Actions = actionCodesByUserName;
-      return (ActionResult) this.PartialView("_Detail", (object) templateModel);
+      return this.PartialView("_Detail", templateModel);
     }
 
     [ActionDescription(ActionCode = "Template_Approved", ActionName = "Phê duyệt biểu mẫu", GroupCode = "Template", GroupName = "Cấu hình biểu mẫu")]
@@ -432,7 +432,7 @@ ViewBag.Actions = actionCodesByUserName;
         int int32_2 = Convert.ToInt32(statusValueID);
         TEMPLATE byId = this.unitOfWork.Templates.GetById(int32_1);
         if (byId == null)
-          return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+          return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
         if (int32_2 == hashCode3)
         {
           byId.STATUS = new int?(hashCode1);
@@ -452,7 +452,7 @@ ViewBag.Actions = actionCodesByUserName;
         byId.TEMPLATES_ID = int32_1;
         this.unitOfWork.Templates.Update(byId);
         if (this.Request.IsAjaxRequest())
-          return (ActionResult) this.Json(JsonResponse.Json200((object) Localization.MsgDelSuccess));
+          return this.Json(JsonResponse.Json200(Localization.MsgDelSuccess));
         if (int32_2 == hashCode3)
         {
           this.WriteLog(enLogType.NomalLog, enActionType.Approve, "N/A", Localization.MsgstatusApproved + "[" + byId.TEMPLATE_NAME + "]", "N/A", int32_1, "", "");
@@ -489,7 +489,7 @@ ViewBag.Actions = actionCodesByUserName;
           throw new Exception("Biểu mẫu đã tồn tại trong bảng lịch trực Khoa/Viện/Trung tâm");
         TEMPLATE byId = this.unitOfWork.Templates.GetById(int32);
         if (byId == null)
-          return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+          return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
         int? status = byId.STATUS;
         if ((status.GetValueOrDefault() != 2 ? 0 : (status.HasValue ? 1 : 0)) != 0)
           throw new Exception("Biểu mẫu đã được phê duyệt không cho phép xóa!");
@@ -497,7 +497,7 @@ ViewBag.Actions = actionCodesByUserName;
         byId.TEMPLATES_ID = int32;
         this.unitOfWork.Templates.Update(byId);
         this.WriteLog(enLogType.NomalLog, enActionType.Delete, "N/A", Localization.MsgDelSuccess, "N/A", int32, "", "");
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       }
       catch (Exception ex)
       {
@@ -513,9 +513,9 @@ ViewBag.Actions = actionCodesByUserName;
       if (departmentAll != null && departmentAll.Count > 0)
       {
         for (int index = 0; index < departmentAll.Count; ++index)
-          str = str + "<option value=" + (object) departmentAll[index].LM_DEPARTMENT_ID + ">" + HttpUtility.JavaScriptStringEncode(departmentAll[index].DEPARTMENT_NAME) + "</option>";
+          str = str + "<option value=" + departmentAll[index].LM_DEPARTMENT_ID + ">" + HttpUtility.JavaScriptStringEncode(departmentAll[index].DEPARTMENT_NAME) + "</option>";
       }
-      return this.Json((object) str, JsonRequestBehavior.AllowGet);
+      return this.Json(str, JsonRequestBehavior.AllowGet);
     }
   }
 }

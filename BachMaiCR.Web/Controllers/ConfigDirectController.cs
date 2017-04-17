@@ -39,7 +39,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult Index()
     {
 ViewBag.Title = "Danh sách cán bộ đi trực";
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [CustomAuthorize]
@@ -204,7 +204,7 @@ ViewBag.RootDepartment = lmDepartmentList;
 ViewBag.ListHoliday = this.GetFeast(0);
         this.OnList(0);
 ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_DIRECT_UPDATE");
-        return (ActionResult) this.PartialView("_Search", (object) configHolidaySearch);
+        return this.PartialView("_Search", configHolidaySearch);
       }
       catch (Exception ex)
       {
@@ -217,12 +217,12 @@ ViewBag.ActionUpdate = this.CheckPermistion("CONFIG_DIRECT_UPDATE");
     public ActionResult OnInsert(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
 ViewBag.ListEducation = this.GetFeast(1);
         this.OnList(1);
-        return (ActionResult) this.PartialView("_Insert", (object) new ConfigDirect());
+        return this.PartialView("_Insert", new ConfigDirect());
       }
       catch (Exception ex)
       {
@@ -236,7 +236,7 @@ ViewBag.ListEducation = this.GetFeast(1);
     public ActionResult OnUpdate(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -247,7 +247,7 @@ ViewBag.ListEducation = this.GetFeast(1);
         ConfigDirect configDirect = new ConfigDirect(byId);
 ViewBag.ListEducation = this.GetFeast(1);
         this.OnList(1);
-        return (ActionResult) this.PartialView("_Insert", (object) configDirect);
+        return this.PartialView("_Insert", configDirect);
       }
       catch (Exception ex)
       {
@@ -261,7 +261,7 @@ ViewBag.ListEducation = this.GetFeast(1);
     public ActionResult OnDelete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -289,7 +289,7 @@ ViewBag.ListEducation = this.GetFeast(1);
     public ActionResult SubmitChange(ConfigDirect entity)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         CONFIG_DIRECT configDirect = entity.GetConfigDirect();

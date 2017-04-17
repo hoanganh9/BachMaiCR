@@ -236,7 +236,7 @@ namespace BachMaiCR.DataAccess.Repository
         if (departmentId > 0)
         {
           ((IQueryable<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).Where((o => o.LM_DEPARTMENT_ID == departmentId)).FirstOrDefault<LM_DEPARTMENT>();
-          return this.DbSet.AsNoTracking().Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.LM_DEPARTMENT_IDs.Contains("," + (object) departmentId + ","))).OrderBy((t => t.ABBREVIATION)).ToList<DOCTOR>();
+          return this.DbSet.AsNoTracking().Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.LM_DEPARTMENT_IDs.Contains("," + departmentId + ","))).OrderBy((t => t.ABBREVIATION)).ToList<DOCTOR>();
         }
         return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy((t => t.ABBREVIATION)).ToList<DOCTOR>();
       }
@@ -361,7 +361,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public bool ExistReferenceDepartment(int deprtID)
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.LM_DEPARTMENT_IDs.Contains("," + (object) deprtID + ",") && (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)))).Count<DOCTOR>() > 0;
+      return this.DbSet.AsNoTracking().Where((obj => obj.LM_DEPARTMENT_IDs.Contains("," + deprtID + ",") && (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)))).Count<DOCTOR>() > 0;
     }
 
     public bool ExistIdentity(string identity)

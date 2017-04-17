@@ -100,13 +100,13 @@ namespace BachMaiCR.DataAccess.Repository
     public CALENDAR_CHANGE isExistCalendarDuty(CALENDAR_CHANGE objCalendarChange, int status)
     {
       List<CALENDAR_CHANGE> list = this.DbSet.AsNoTracking().Where((obj => obj.CALENDAR_DUTY_ID == objCalendarChange.CALENDAR_DUTY_ID && obj.TEMPLATE_COLUMN_ID == objCalendarChange.TEMPLATE_COLUMN_ID && obj.DATE_START == objCalendarChange.DATE_START && obj.DOCTORS_ID == objCalendarChange.DOCTORS_ID && obj.DOCTORS_CHANGE_ID != objCalendarChange.DOCTORS_CHANGE_ID && obj.STATUS == (int?) status && (obj.STATUS_APPROVED == (int?) 1 || obj.STATUS_APPROVED == (int?) 2))).ToList<CALENDAR_CHANGE>();
-      return list.Count<CALENDAR_CHANGE>() <= 0 ? (CALENDAR_CHANGE) null : list[0];
+      return list.Count<CALENDAR_CHANGE>() <= 0 ? null : list[0];
     }
 
     public CALENDAR_CHANGE isExistCalendarDutyDefault(CALENDAR_CHANGE objCalendarChange, int status)
     {
       List<CALENDAR_CHANGE> list = this.DbSet.AsNoTracking().Where((obj => obj.CALENDAR_DUTY_ID == objCalendarChange.CALENDAR_DUTY_ID && obj.DATE_START == objCalendarChange.DATE_START && obj.DOCTORS_ID == objCalendarChange.DOCTORS_ID && obj.DOCTORS_CHANGE_ID != objCalendarChange.DOCTORS_CHANGE_ID && obj.STATUS == (int?) status && (obj.STATUS_APPROVED == (int?) 1 || obj.STATUS_APPROVED == (int?) 2))).ToList<CALENDAR_CHANGE>();
-      return list.Count<CALENDAR_CHANGE>() <= 0 ? (CALENDAR_CHANGE) null : list[0];
+      return list.Count<CALENDAR_CHANGE>() <= 0 ? null : list[0];
     }
 
     public int DeleteCalendarByID(int idCalendarDuty = 0)

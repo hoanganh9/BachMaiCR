@@ -9,7 +9,7 @@ namespace BachMaiCR.Web
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery")
                 .Include(
-                        "~/Scripts/jquery-1.8.3.js",
+                        "~/Scripts/jquery-3.1.1.min.js",
                         "~/Scripts/setup.project.js",
                         "~/Scripts/setup.project.confirmation.js",
                         "~/Scripts/jquery.cookie.js",

@@ -73,7 +73,7 @@ namespace BachMaiCR.Web.Controllers
         Selected = false
       };
       list.Insert(0, selectListItem);
-      return (ActionResult) this.Json((object) list, JsonRequestBehavior.AllowGet);
+      return this.Json(list, JsonRequestBehavior.AllowGet);
     }
 
     [ActionDescription(ActionCode = "CalendarDuty_Index", ActionName = "Danh sách lịch trực", GroupCode = "CalendarDuty", GroupName = "Lịch trực Khoa/Viện/TT", IsMenu = false)]
@@ -81,17 +81,17 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult HistoryCalendarDuty(int idCalendarDuty)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       if (idCalendarDuty <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) Localization.MsgItemNotExist));
+        return this.Json(JsonResponse.Json500(Localization.MsgItemNotExist));
       List<CALENDAR_CHANGE> calendarChangeList = this.unitOfWork.CalendarChanges.ListCalendarChange(idCalendarDuty);
       if (calendarChangeList == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) Localization.MsgItemNotExist));
+        return this.Json(JsonResponse.Json500(Localization.MsgItemNotExist));
             ViewBag.calendarChange = calendarChangeList;
       
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(idCalendarDuty);
             ViewBag.objCalendarDuty = byId;
-      return (ActionResult) this.PartialView("_HistoryCalendar");
+      return this.PartialView("_HistoryCalendar");
     }
 
     [ActionDescription(ActionCode = "CalendarDuty_Index", ActionName = "Danh sách lịch trực", GroupCode = "CalendarDuty", GroupName = "Lịch trực Khoa/Viện/TT", IsMenu = false)]
@@ -100,7 +100,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult DeleteDoctorInCalendar(int calendarDutyId, int doctorId, DateTime date)
     {
       this.unitOfWork.CalendarDoctors.DeleteByDoctorId(calendarDutyId, doctorId, date);
-      return (ActionResult) this.Json((object) null, JsonRequestBehavior.AllowGet);
+      return this.Json(null, JsonRequestBehavior.AllowGet);
     }
 
     [CustomAuthorize]
@@ -116,7 +116,7 @@ namespace BachMaiCR.Web.Controllers
             ViewBag.ActionPermission = list;
 
             ViewBag.RootDepartment = this.RootDepartment();
-        return (ActionResult) this.View();
+        return this.View();
     }
 
     private int? RootDepartment()
@@ -195,8 +195,8 @@ namespace BachMaiCR.Web.Controllers
         DateTime? nullable1 = new DateTime?();
         if (int.TryParse(strArray1[0], out result1) && int.TryParse(strArray1[1], out result2) && int.TryParse(strArray1[2], out result3))
         {
-          if (this.unitOfWork.CalendarDuty.CheckCalendarDuty(result1, result2, result3, Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID)) != 0)
-            return (ActionResult) this.Json((object) Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+          if (this.unitOfWork.CalendarDuty.CheckCalendarDuty(result1, result2, result3, Convert.ToInt32(byUserName.LM_DEPARTMENT_ID)) != 0)
+            return this.Json(Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
           TEMPLATE byId = this.unitOfWork.Templates.GetById(result3);
           CALENDAR_DUTY entity1 = new CALENDAR_DUTY();
           entity1.CALENDAR_NAME = contentDuty;
@@ -245,10 +245,10 @@ namespace BachMaiCR.Web.Controllers
             }
           }
           this.WriteLog(enLogType.NomalLog, enActionType.Insert, "Thêm mới thông tin lịch trực đơn vị", "N/A", "N/A", 0, "", "");
-          return (ActionResult) this.Json((object) Localization.AddCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+          return this.Json(Localization.AddCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
         }
       }
-      return (ActionResult) null;
+      return null;
     }
 
     [CustomAuthorize]
@@ -257,9 +257,9 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult ChangeCalendarDuty(string idCalendarDuty, string idColumn, string idDoctorChange, string dateDoctorChange, string idDoctorIsChange, string DatesIsChange, int idWeek = -1, int idColumeIsChange = 0, int isExist = 0)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) null;
+        return null;
       if (idCalendarDuty == null || idColumn == null || (idDoctorChange == null || dateDoctorChange == null) || idDoctorIsChange == null || DatesIsChange == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Đổi lịch không thành công!"), JsonRequestBehavior.AllowGet);
+        return this.Json(JsonResponse.Json500("Đổi lịch không thành công!"), JsonRequestBehavior.AllowGet);
       List<DOCTOR> list = this.unitOfWork.Doctors.GetAll().ToList<DOCTOR>();
       int result1 = 0;
       int result2 = 0;
@@ -269,7 +269,7 @@ namespace BachMaiCR.Web.Controllers
       DateTime? nullable2 = new DateTime?();
       CalendarChangeModel calendarChangeModel = new CalendarChangeModel();
       if (!int.TryParse(idCalendarDuty, out result1) || !int.TryParse(idColumn, out result2) || !int.TryParse(idDoctorChange, out idDoctorChangeX) || !int.TryParse(idDoctorIsChange, out idDoctorIsChangeX))
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Đổi lịch không thành công!"), JsonRequestBehavior.AllowGet);
+        return this.Json(JsonResponse.Json500("Đổi lịch không thành công!"), JsonRequestBehavior.AllowGet);
       CALENDAR_CHANGE entity1 = new CALENDAR_CHANGE();
       DateTime? nullable3;
       try
@@ -375,7 +375,7 @@ namespace BachMaiCR.Web.Controllers
         calendarChangeModel.COLUMN_CHANGE_ID = new int?(idColumeIsChange);
         calendarChangeModel.TEMPLATE_COLUMN_ID = new int?(result2);
       }
-      return (ActionResult) this.Json((object) calendarChangeModel, JsonRequestBehavior.AllowGet);
+      return this.Json(calendarChangeModel, JsonRequestBehavior.AllowGet);
     }
 
     [HttpPost]
@@ -385,13 +385,13 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult EditValuesCalendarDuty(string strValues, string strNew, string strDelete, string strChangeOne, string strChangeTwo, string idCalendarDuty, string listColumnX, int idWeek = -1, int types = 0, int isExist = 0, string inforContent = "")
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) null;
+        return null;
       List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
         ViewBag.ActionPermission = list1;
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
       int result1 = 0;
       if (!int.TryParse(idCalendarDuty, out result1))
-        return (ActionResult) null;
+        return null;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result1);
       if (inforContent.Trim() != byId.CALENDAR_NAME)
       {
@@ -413,7 +413,7 @@ namespace BachMaiCR.Web.Controllers
         num1 = 1;
       if (num1 == 0)
       {
-        DateTime dateTime1 = Convert.ToDateTime("1/" + (object) result2 + "/" + (object) result3);
+        DateTime dateTime1 = Convert.ToDateTime("1/" + result2 + "/" + result3);
         if (idWeek == -1)
         {
           DateTime dateTime2 = dateTime1.AddDays((double) (-dateTime1.Day + 1));
@@ -468,7 +468,7 @@ namespace BachMaiCR.Web.Controllers
         List<string> list3 = ((IEnumerable<string>) strDelete.Split('-')).ToList<string>();
         List<string> list4 = ((IEnumerable<string>) strChangeOne.Split('-')).ToList<string>();
         List<string> list5 = ((IEnumerable<string>) strChangeTwo.Split('-')).ToList<string>();
-        this.unitOfWork.CalendarChanges.DeleteCalendarByIDAndDay(result1, Convert.ToInt32((object) byId.CALENDAR_MONTH));
+        this.unitOfWork.CalendarChanges.DeleteCalendarByIDAndDay(result1, Convert.ToInt32(byId.CALENDAR_MONTH));
         List<DOCTOR> list6 = this.unitOfWork.Doctors.GetAll().ToList<DOCTOR>();
         foreach (string str in list3)
         {
@@ -648,17 +648,17 @@ namespace BachMaiCR.Web.Controllers
                 ViewBag.times = timeCalendarDutyList;
        
         if (isExist == 1)
-          return (ActionResult) this.PartialView("_IsExistCalendar");
-        return (ActionResult) this.PartialView("_EditCalendarDuty");
+          return this.PartialView("_IsExistCalendar");
+        return this.PartialView("_EditCalendarDuty");
       }
       nullable1 = byId.CALENDAR_STATUS;
       if ((nullable1.GetValueOrDefault() != 1 ? 0 : (nullable1.HasValue ? 1 : 0)) == 0)
-        return (ActionResult) null;
+        return null;
       int result6 = 0;
       int result7 = 0;
       DateTime? nullable6 = new DateTime?();
       if (byId == null)
-        return (ActionResult) this.Json((object) Localization.UpdateCalendarIsNotPermission.ToString(), JsonRequestBehavior.AllowGet);
+        return this.Json(Localization.UpdateCalendarIsNotPermission.ToString(), JsonRequestBehavior.AllowGet);
       string[] strArray3 = listColumnX.Split('_');
       int result8 = 0;
       foreach (object obj2 in strArray3)
@@ -722,8 +722,8 @@ namespace BachMaiCR.Web.Controllers
         ViewBag.idWeek = idWeek;
         ViewBag.times = timeCalendarDutyList;
       if (isExist == 0)
-        return (ActionResult) this.PartialView("_EditCalendarDuty");
-      return (ActionResult) this.PartialView("_IsExistCalendar");
+        return this.PartialView("_EditCalendarDuty");
+      return this.PartialView("_IsExistCalendar");
     }
 
     [HttpGet]
@@ -742,14 +742,14 @@ namespace BachMaiCR.Web.Controllers
           return this.PartialView("_ListDateChange");
         }
       }
-      return (PartialViewResult) null;
+      return null;
     }
 
     [HttpGet]
     public PartialViewResult ListDoctors(string arrayid, string arrayView, string idColumn, string idTemplate)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       string[] strArray1 = arrayid.Split('_');
       string[] strArray2 = arrayView.Split('_');
             ViewBag.arrayid = strArray1;
@@ -769,23 +769,23 @@ namespace BachMaiCR.Web.Controllers
             ViewBag.DateX = date;
       
       TEMPLATE_COLUM templateColum = new TEMPLATE_COLUM();
-      List<DOCTOR> allByDepartmentId = this.unitOfWork.Doctors.GetAllByDepartmentId(Convert.ToInt32((object) this.unitOfWork.TemplatesColumn.GetById(result1).LM_DEPARTMENT_ID));
+      List<DOCTOR> allByDepartmentId = this.unitOfWork.Doctors.GetAllByDepartmentId(Convert.ToInt32(this.unitOfWork.TemplatesColumn.GetById(result1).LM_DEPARTMENT_ID));
       List<DoctorColumn> byTemplateColumn = this.unitOfWork.Doctors.GetAllByTemplateColumn(result1);
             ViewBag.allDoctor = byTemplateColumn;
       int result2 = 0;
       int.TryParse(idTemplate, out result2);
       List<DoctorInCalendar> allDoctor = this.unitOfWork.Doctors.GetAllDoctor(date, result2);
             ViewBag.allDoctorCalendar = allDoctor;
-      return this.PartialView("_ListDoctors", (object) allByDepartmentId);
+      return this.PartialView("_ListDoctors", allByDepartmentId);
     }
 
     [HttpGet]
     public PartialViewResult ListDoctorsChanges(string DoctorName, int idDoctorChange, int idColumn, int idCalendarDuty, string dateDoctorChange, int idWeek = -1, int isExist = 0, string arrayDoctorIsExit = "")
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       TEMPLATE_COLUM templateColum = new TEMPLATE_COLUM();
-      List<DOCTOR> allByDepartmentId = this.unitOfWork.Doctors.GetAllByDepartmentId(Convert.ToInt32((object) this.unitOfWork.TemplatesColumn.GetById(idColumn).LM_DEPARTMENT_ID));
+      List<DOCTOR> allByDepartmentId = this.unitOfWork.Doctors.GetAllByDepartmentId(Convert.ToInt32(this.unitOfWork.TemplatesColumn.GetById(idColumn).LM_DEPARTMENT_ID));
       ViewBag.idDoctorChange=idDoctorChange;
             ViewBag.idCalendarDuty= idCalendarDuty;
       List<DoctorColumn> byTemplateColumn = this.unitOfWork.Doctors.GetAllByTemplateColumn(idColumn);
@@ -796,7 +796,7 @@ namespace BachMaiCR.Web.Controllers
             ViewBag.isExist= isExist;
             ViewBag.arrayid= arrayDoctorIsExit;
             ViewBag.DoctorName = DoctorName;
-      return this.PartialView("_ListDoctorsChange", (object) allByDepartmentId);
+      return this.PartialView("_ListDoctorsChange", allByDepartmentId);
     }
 
     [HttpGet]
@@ -811,7 +811,7 @@ namespace BachMaiCR.Web.Controllers
       {
         id = 0;
       }
-      return this.PartialView("ViewDoctor", (object) this.unitOfWork.Doctors.GetById(id));
+      return this.PartialView("ViewDoctor", this.unitOfWork.Doctors.GetById(id));
     }
 
     [ActionDescription(ActionCode = "CalendarDuty_Index", ActionName = "Danh sách lịch trực", GroupCode = "CalendarDuty", GroupName = "Lịch trực Khoa/Viện/TT", IsMenu = false)]
@@ -857,7 +857,7 @@ namespace BachMaiCR.Web.Controllers
             ViewBag.feast= calendarSearch.FEAST;
             ViewBag.departmentName= calendarSearch.DEPARTMENTS;
             ViewBag.types= types;
-      return this.PartialView("_CalendarList", (object) all);
+      return this.PartialView("_CalendarList", all);
     }
 
     [ValidateJsonAntiForgeryToken]
@@ -924,7 +924,7 @@ ViewBag.objCalendarDuty = calendarByDeparment;
           calendarDutyList = (List<CALENDAR_DUTY>) null;
           return this.PartialView("_AddCalendarDefault");
         }
-        CALENDAR_DUTY calendarDuty = (CALENDAR_DUTY) null;
+        CALENDAR_DUTY calendarDuty = null;
         if (calendarByDeparment != null && calendarByDeparment.Count > 0)
           calendarDuty = calendarByDeparment[0];
         ViewBag.objCalendarDuty = calendarDuty;
@@ -946,7 +946,7 @@ ViewBag.idDepartment = byUserName.LM_DEPARTMENT_ID;
         string[] strArray = strDate.Split('_');
         if (int.TryParse(strArray[0].ToString(), out result4) && int.TryParse(strArray[1].ToString(), out result5) && int.TryParse(strArray[2].ToString(), out result6))
         {
-          int num1 = this.unitOfWork.CalendarDuty.CheckCalendarDuty(result5, result6, result1, Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID));
+          int num1 = this.unitOfWork.CalendarDuty.CheckCalendarDuty(result5, result6, result1, Convert.ToInt32(byUserName.LM_DEPARTMENT_ID));
           if (num1 != 0)
           {
             CALENDAR_DUTY calendarDuty = new CALENDAR_DUTY();
@@ -957,7 +957,7 @@ ViewBag.objCalendarDuty = byId;
             random = new Random();
             if (int.TryParse(byId.CALENDAR_MONTH.ToString(), out result5) && int.TryParse(byId.CALENDAR_YEAR.ToString(), out result6))
             {
-              DateTime dateTime1 = Convert.ToDateTime("1/" + (object) result5 + "/" + (object) result6);
+              DateTime dateTime1 = Convert.ToDateTime("1/" + result5 + "/" + result6);
               if (result4 == -1)
               {
                 DateTime dateTime2 = dateTime1.AddDays((double) (-dateTime1.Day + 1));
@@ -1004,7 +1004,7 @@ ViewBag.types = 3;
 ViewBag.idCalendarDuty = num1;
             return this.PartialView("_IsExistCalendar");
           }
-          DateTime dateTime4 = Convert.ToDateTime("1/" + (object) result5 + "/" + (object) result6);
+          DateTime dateTime4 = Convert.ToDateTime("1/" + result5 + "/" + result6);
           if (result4 == -1)
           {
             DateTime dateTime1 = dateTime4.AddDays((double) (-dateTime4.Day + 1));
@@ -1047,7 +1047,7 @@ ViewBag.idCalendarDuty = num1;
       }
       else
       {
-        DateTime dateTime1 = Convert.ToDateTime("1/" + (object) DateTime.Now.Month + "/" + (object) DateTime.Now.Year);
+        DateTime dateTime1 = Convert.ToDateTime("1/" + DateTime.Now.Month + "/" + DateTime.Now.Year);
         DateTime dateTime2 = dateTime1.AddDays((double) (-dateTime1.Day + 1));
         DateTime dateTime3 = dateTime1.AddMonths(1).AddDays((double) -dateTime1.Day);
         for (int index = 0; index < dateTime3.Day; ++index)
@@ -1075,14 +1075,14 @@ ViewBag.idDepartment = byUserName.LM_DEPARTMENT_ID;
 ViewBag.ActionPermission = list;
 ViewBag.months = DateTime.Now.Month;
 ViewBag.years = DateTime.Now.Year;
-      return (ActionResult) this.View("_AddCalendarDuty");
+      return this.View("_AddCalendarDuty");
     }
 
     public ActionResult LoadDays(int Months, int Years)
     {
 ViewBag.months = Months;
 ViewBag.years = Years;
-      return (ActionResult) this.PartialView("_ListWeeks");
+      return this.PartialView("_ListWeeks");
     }
 
     [AcceptVerbs(HttpVerbs.Post)]
@@ -1091,10 +1091,10 @@ ViewBag.years = Years;
       List<SelectListItem> selectListItemList = new List<SelectListItem>();
       List<string> stringList = new List<string>();
       int num = DateTime.DaysInMonth(Years, Months);
-      stringList.Add("1-7/" + (object) Months);
-      stringList.Add("8-14/" + (object) Months);
-      stringList.Add("15-21/" + (object) Months);
-      stringList.Add("22-" + num.ToString() + "/" + (object) Months);
+      stringList.Add("1-7/" + Months);
+      stringList.Add("8-14/" + Months);
+      stringList.Add("15-21/" + Months);
+      stringList.Add("22-" + num.ToString() + "/" + Months);
       for (int index = 0; index <= 3; ++index)
         selectListItemList.Add(new SelectListItem()
         {
@@ -1102,7 +1102,7 @@ ViewBag.years = Years;
           Value = index.ToString(),
           Selected = index == currentWeek
         });
-      return (ActionResult) this.Json((object) selectListItemList, JsonRequestBehavior.AllowGet);
+      return this.Json(selectListItemList, JsonRequestBehavior.AllowGet);
     }
 
     [ValidateJsonAntiForgeryToken]
@@ -1112,7 +1112,7 @@ ViewBag.years = Years;
     public PartialViewResult ViewCalendarDuty(string idCalendarDuty, int idWeek = -1, int types = 0, int isExist = 0)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list;
       Random random;
@@ -1141,7 +1141,7 @@ ViewBag.ActionPermission = list;
           num1 = 1;
         if (num1 == 0)
         {
-          DateTime dateTime1 = Convert.ToDateTime("1/" + (object) result2 + "/" + (object) result3);
+          DateTime dateTime1 = Convert.ToDateTime("1/" + result2 + "/" + result3);
           if (idWeek == -1)
           {
             DateTime dateTime2 = dateTime1.AddDays((double) (-dateTime1.Day + 1));
@@ -1215,7 +1215,7 @@ ViewBag.objCalendarDuty = calendarDuty1;
         num5 = 1;
       if (num5 == 0)
       {
-        DateTime dateTime1 = Convert.ToDateTime("1/" + (object) result5 + "/" + (object) result6);
+        DateTime dateTime1 = Convert.ToDateTime("1/" + result5 + "/" + result6);
         if (idWeek == -1)
         {
           DateTime dateTime2 = dateTime1.AddDays((double) (-dateTime1.Day + 1));
@@ -1275,16 +1275,16 @@ ViewBag.types = types;
     public ActionResult Delete(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index", "Home");
+        return this.RedirectToAction("Index", "Home");
       if (id <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thao tác không hợp lệ!"));
+        return this.Json(JsonResponse.Json500("Thao tác không hợp lệ!"));
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(id);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.ISDELETE = true;
       this.unitOfWork.CalendarDuty.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "Xóa thông tin lịch trực đơn vị", "N/A", "N/A", 0, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) Localization.MsgDelSuccess));
+      return this.Json(JsonResponse.Json200(Localization.MsgDelSuccess));
     }
 
     [CustomAuthorize]
@@ -1294,14 +1294,14 @@ ViewBag.types = types;
     public ActionResult SendApproved(string idCalendarDuty, string types)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index", "Home");
+        return this.RedirectToAction("Index", "Home");
       int result1 = 0;
       int result2 = 0;
       if (!int.TryParse(idCalendarDuty, out result1) || !int.TryParse(types, out result2))
-        return (ActionResult) null;
+        return null;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result1);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.CALENDAR_STATUS = new int?(2);
       byId.USER_CREATE_ID = new int?(this.UserX.ADMIN_USER_ID);
       byId.DATE_CREATE = new DateTime?(DateTime.Now);
@@ -1310,22 +1310,22 @@ ViewBag.types = types;
 ViewBag.objCalendarDuty = byId;
       this.WriteLog(enLogType.NomalLog, enActionType.SendApproved, "Gửi duyệt lịch trực đơn vị " + byId.CALENDAR_NAME, "N/A", "N/A", 0, "", "");
       int result3 = 0;
-      CALENDAR_DUTY calendarDuty1 = this.unitOfWork.CalendarDuty.CheckCalendarHospital(Convert.ToInt32((object) byId.CALENDAR_MONTH), Convert.ToInt32((object) byId.CALENDAR_YEAR), 4);
+      CALENDAR_DUTY calendarDuty1 = this.unitOfWork.CalendarDuty.CheckCalendarHospital(Convert.ToInt32(byId.CALENDAR_MONTH), Convert.ToInt32(byId.CALENDAR_YEAR), 4);
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
       if (calendarDuty1 == null)
       {
         CALENDAR_DUTY entity = new CALENDAR_DUTY();
-        entity.CALENDAR_NAME = "Lịch trực toàn bệnh viện tháng " + (object) byId.CALENDAR_MONTH + " năm " + (object) byId.CALENDAR_YEAR;
+        entity.CALENDAR_NAME = "Lịch trực toàn bệnh viện tháng " + byId.CALENDAR_MONTH + " năm " + byId.CALENDAR_YEAR;
         entity.CALENDAR_MONTH = byId.CALENDAR_MONTH;
         entity.CALENDAR_YEAR = byId.CALENDAR_YEAR;
         entity.CALENDAR_STATUS = new int?(1);
-        entity.LM_DEPARTMENT_ID = Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID);
+        entity.LM_DEPARTMENT_ID = Convert.ToInt32(byUserName.LM_DEPARTMENT_ID);
         entity.DUTY_TYPE = new int?(4);
         entity.ISDELETE = new bool?(false);
         entity.USER_CREATE_ID = new int?();
-        entity.LM_DEPARTMENT_PARTS = (string) null;
+        entity.LM_DEPARTMENT_PARTS = null;
         this.unitOfWork.CalendarDuty.Add(entity);
-        foreach (CALENDAR_DUTY calendarDuty2 in this.unitOfWork.CalendarDuty.GetByApproved(Convert.ToInt32((object) byId.CALENDAR_MONTH), Convert.ToInt32((object) byId.CALENDAR_YEAR), 3, 0))
+        foreach (CALENDAR_DUTY calendarDuty2 in this.unitOfWork.CalendarDuty.GetByApproved(Convert.ToInt32(byId.CALENDAR_MONTH), Convert.ToInt32(byId.CALENDAR_YEAR), 3, 0))
           this.unitOfWork.CalendarGroups.Add(new CALENDAR_GROUP()
           {
             CALENDAR_ID = entity.CALENDAR_DUTY_ID,
@@ -1337,14 +1337,14 @@ ViewBag.objCalendarDuty = byId;
             CALENDAR_STATUS = new int?(0)
           });
       }
-      else if (this.unitOfWork.CalendarGroups.CheckIsExist(calendarDuty1.CALENDAR_DUTY_ID, result1, Convert.ToInt32((object) byId.CALENDAR_MONTH), Convert.ToInt32((object) byId.CALENDAR_YEAR)) == null)
+      else if (this.unitOfWork.CalendarGroups.CheckIsExist(calendarDuty1.CALENDAR_DUTY_ID, result1, Convert.ToInt32(byId.CALENDAR_MONTH), Convert.ToInt32(byId.CALENDAR_YEAR)) == null)
         this.unitOfWork.CalendarGroups.Add(new CALENDAR_GROUP()
         {
           CALENDAR_ID = calendarDuty1.CALENDAR_DUTY_ID,
           CALENDAR_PARENT_ID = result1,
           CALENDAR_MONTH = calendarDuty1.CALENDAR_MONTH,
           CALENDAR_YEAR = calendarDuty1.CALENDAR_YEAR,
-          LM_DEPARTMENT_ID = new int?(Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID)),
+          LM_DEPARTMENT_ID = new int?(Convert.ToInt32(byUserName.LM_DEPARTMENT_ID)),
           CALENDAR_TYPE = new int?(result2),
           CALENDAR_STATUS = new int?(0)
         });
@@ -1355,11 +1355,11 @@ ViewBag.objCalendarDuty = byId;
         List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list;
         if (result3 == 1)
-          return (ActionResult) this.PartialView("_ListButtons");
+          return this.PartialView("_ListButtons");
         if (result3 == 2)
-          return (ActionResult) this.PartialView("_ListButtonView");
+          return this.PartialView("_ListButtonView");
       }
-      return (ActionResult) null;
+      return null;
     }
 
     [HttpGet]
@@ -1369,7 +1369,7 @@ ViewBag.ActionPermission = list;
     public ActionResult ApprovedCalendarDuty(string idCalendarDuty, string types)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index", "Home");
+        return this.RedirectToAction("Index", "Home");
       int result1 = 0;
       DoctorLevelView doctorLevelView = new DoctorLevelView();
       DoctorData doctorData1 = new DoctorData();
@@ -1379,12 +1379,12 @@ ViewBag.ActionPermission = list;
       {
         CALENDAR_DUTY byId1 = this.unitOfWork.CalendarDuty.GetById(result1);
         if (byId1 == null)
-          return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+          return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
         if (byId1.ISAPPROVED == 1)
         {
           foreach (CALENDAR_CHANGE entity1 in this.unitOfWork.CalendarChanges.GetListByIdCalendar(result1, 2))
           {
-            DoctorLevelView doctorLevelByIdDoctor = this.unitOfWork.DoctorLevels.GetDoctorLevelByIdDoctor(Convert.ToInt32((object) entity1.DOCTORS_ID));
+            DoctorLevelView doctorLevelByIdDoctor = this.unitOfWork.DoctorLevels.GetDoctorLevelByIdDoctor(Convert.ToInt32(entity1.DOCTORS_ID));
             bool flag = this.unitOfWork.CalendarGroups.CheckIsCalendarApproved(result1);
             int hashCode1 = CalendarChangeApproved.Approved.GetHashCode();
             int? nullable;
@@ -1393,7 +1393,7 @@ ViewBag.ActionPermission = list;
               nullable = doctorLevelByIdDoctor.LEVEL_NUMBER;
               if ((nullable.GetValueOrDefault() <= 2 ? 0 : (nullable.HasValue ? 1 : 0)) != 0)
               {
-                DoctorData doctorData2 = this.unitOfWork.DoctorDatas.CheckDoctorData(Convert.ToInt32((object) entity1.CALENDAR_DUTY_ID), Convert.ToInt32((object) entity1.DOCTORS_ID), Convert.ToInt32((object) entity1.TEMPLATE_COLUMN_ID), Convert.ToDateTime((object) entity1.DATE_START));
+                DoctorData doctorData2 = this.unitOfWork.DoctorDatas.CheckDoctorData(Convert.ToInt32(entity1.CALENDAR_DUTY_ID), Convert.ToInt32(entity1.DOCTORS_ID), Convert.ToInt32(entity1.TEMPLATE_COLUMN_ID), Convert.ToDateTime(entity1.DATE_START));
                 if (doctorData2 != null)
                 {
                   nullable = entity1.STATUS;
@@ -1401,7 +1401,7 @@ ViewBag.ActionPermission = list;
                   if ((nullable.GetValueOrDefault() != hashCode2 ? 0 : (nullable.HasValue ? 1 : 0)) != 0)
                   {
                     CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(doctorData2.CALENDAR_DOCTOR_ID);
-                    byId2.DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID);
+                    byId2.DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_CHANGE_ID);
                     this.unitOfWork.CalendarDoctors.Update(byId2);
                     entity1.STATUS_APPROVED = new int?(hashCode1);
                     this.unitOfWork.CalendarChanges.Update(entity1);
@@ -1435,9 +1435,9 @@ ViewBag.ActionPermission = list;
                       this.unitOfWork.CalendarDatas.Add(entity2);
                       this.unitOfWork.CalendarDoctors.Add(new CALENDAR_DOCTOR()
                       {
-                        DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_ID),
+                        DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_ID),
                         CALENDAR_DUTY_ID = new int?(result1),
-                        COLUMN_LEVEL_ID = new int?(Convert.ToInt32((object) entity1.TEMPLATE_COLUMN_ID)),
+                        COLUMN_LEVEL_ID = new int?(Convert.ToInt32(entity1.TEMPLATE_COLUMN_ID)),
                         CALENDAR_DATA_ID = entity2.CALENDAR_DATA_ID
                       });
                       entity1.STATUS_APPROVED = new int?(hashCode1);
@@ -1450,7 +1450,7 @@ ViewBag.ActionPermission = list;
             }
             else
             {
-              DoctorData doctorData2 = this.unitOfWork.DoctorDatas.CheckDoctorData(Convert.ToInt32((object) entity1.CALENDAR_DUTY_ID), Convert.ToInt32((object) entity1.DOCTORS_ID), Convert.ToInt32((object) entity1.TEMPLATE_COLUMN_ID), Convert.ToDateTime((object) entity1.DATE_START));
+              DoctorData doctorData2 = this.unitOfWork.DoctorDatas.CheckDoctorData(Convert.ToInt32(entity1.CALENDAR_DUTY_ID), Convert.ToInt32(entity1.DOCTORS_ID), Convert.ToInt32(entity1.TEMPLATE_COLUMN_ID), Convert.ToDateTime(entity1.DATE_START));
               if (doctorData2 != null)
               {
                 nullable = entity1.STATUS;
@@ -1458,7 +1458,7 @@ ViewBag.ActionPermission = list;
                 if ((nullable.GetValueOrDefault() != hashCode2 ? 0 : (nullable.HasValue ? 1 : 0)) != 0)
                 {
                   CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(doctorData2.CALENDAR_DOCTOR_ID);
-                  byId2.DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID);
+                  byId2.DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_CHANGE_ID);
                   this.unitOfWork.CalendarDoctors.Update(byId2);
                   entity1.STATUS_APPROVED = new int?(hashCode1);
                   this.unitOfWork.CalendarChanges.Update(entity1);
@@ -1489,9 +1489,9 @@ ViewBag.ActionPermission = list;
                   this.unitOfWork.CalendarDatas.Add(entity2);
                   this.unitOfWork.CalendarDoctors.Add(new CALENDAR_DOCTOR()
                   {
-                    DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_ID),
+                    DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_ID),
                     CALENDAR_DUTY_ID = new int?(result1),
-                    COLUMN_LEVEL_ID = new int?(Convert.ToInt32((object) entity1.TEMPLATE_COLUMN_ID)),
+                    COLUMN_LEVEL_ID = new int?(Convert.ToInt32(entity1.TEMPLATE_COLUMN_ID)),
                     CALENDAR_DATA_ID = entity2.CALENDAR_DATA_ID
                   });
                   entity1.STATUS_APPROVED = new int?(hashCode1);
@@ -1514,9 +1514,9 @@ ViewBag.objCalendarDuty = byId1;
             List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list;
             if (result2 == 1)
-              return (ActionResult) this.PartialView("_ListButtons");
+              return this.PartialView("_ListButtons");
             if (result2 == 2)
-              return (ActionResult) this.PartialView("_ListButtonView");
+              return this.PartialView("_ListButtonView");
           }
         }
         else
@@ -1534,13 +1534,13 @@ ViewBag.objCalendarDuty = byId1;
             List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list;
             if (result2 == 1)
-              return (ActionResult) this.PartialView("_ListButtons");
+              return this.PartialView("_ListButtons");
             if (result2 == 2)
-              return (ActionResult) this.PartialView("_ListButtonView");
+              return this.PartialView("_ListButtonView");
           }
         }
       }
-      return (ActionResult) null;
+      return null;
     }
 
     [HttpGet]
@@ -1550,7 +1550,7 @@ ViewBag.ActionPermission = list;
       IEnumerable<string> source = all.Any<ADMIN_USER>() ? all.Where<ADMIN_USER>((Func<ADMIN_USER, bool>) (n => n.FULLNAME.ToLower().Contains(term.ToLower()))).Select<ADMIN_USER, string>((Func<ADMIN_USER, string>) (t => t.FULLNAME)) : (IEnumerable<string>) new List<string>();
       return new JsonResult()
       {
-        Data = (object) source.ToArray<string>(),
+        Data = source.ToArray<string>(),
         JsonRequestBehavior = JsonRequestBehavior.AllowGet
       };
     }
@@ -1562,7 +1562,7 @@ ViewBag.ActionPermission = list;
       IEnumerable<string> strings = all.Any<ADMIN_USER>() ? all.Where<ADMIN_USER>((Func<ADMIN_USER, bool>) (n => n.FULLNAME.ToLower().Contains(termApproved.ToLower()))).Select<ADMIN_USER, string>((Func<ADMIN_USER, string>) (t => t.FULLNAME)) : (IEnumerable<string>) new List<string>();
       return new JsonResult()
       {
-        Data = (object) strings,
+        Data = strings,
         JsonRequestBehavior = JsonRequestBehavior.AllowGet
       };
     }
@@ -1574,7 +1574,7 @@ ViewBag.ActionPermission = list;
       IEnumerable<string> strings = list.Any<LM_DEPARTMENT>() ? list.Where<LM_DEPARTMENT>((Func<LM_DEPARTMENT, bool>) (n => n.DEPARTMENT_NAME.ToLower().Contains(termDepartment.ToLower()))).Select<LM_DEPARTMENT, string>((Func<LM_DEPARTMENT, string>) (t => t.DEPARTMENT_NAME)) : (IEnumerable<string>) new List<string>();
       return new JsonResult()
       {
-        Data = (object) strings,
+        Data = strings,
         JsonRequestBehavior = JsonRequestBehavior.AllowGet
       };
     }
@@ -1585,7 +1585,7 @@ ViewBag.ActionPermission = list;
 ViewBag.idCalendarDuty = idCalendarDuty;
       int result1 = 0;
       if (!int.TryParse(idCalendarDuty, out result1))
-        return (ActionResult) null;
+        return null;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result1);
       CalendarDutyModel calendarDutyModel = new CalendarDutyModel();
       calendarDutyModel.CALENDAR_DUTY_ID = byId.CALENDAR_DUTY_ID;
@@ -1595,10 +1595,10 @@ ViewBag.idCalendarDuty = idCalendarDuty;
       int result3 = 0;
       int.TryParse(userCreate, out result3);
       if (!int.TryParse(types, out result2))
-        return (ActionResult) null;
+        return null;
       calendarDutyModel.DUTY_TYPE = new int?(result2);
       calendarDutyModel.USER_CREATE_ID = new int?(result3);
-      return (ActionResult) this.PartialView("_ApprovedRequest", (object) calendarDutyModel);
+      return this.PartialView("_ApprovedRequest", calendarDutyModel);
     }
 
     [ValidateJsonAntiForgeryToken]
@@ -1609,7 +1609,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
     {
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(objCalendarDuty.CALENDAR_DUTY_ID);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.CALENDAR_STATUS = new int?(4);
       byId.COMMENTS = objCalendarDuty.COMMENTS;
       this.unitOfWork.CalendarDuty.Update(byId);
@@ -1619,17 +1619,17 @@ ViewBag.objCalendarDuty = byId;
 ViewBag.ActionPermission = list;
       int? nullable = objCalendarDuty.DUTY_TYPE;
       if ((nullable.GetValueOrDefault() != 1 ? 0 : (nullable.HasValue ? 1 : 0)) != 0)
-        return (ActionResult) this.PartialView("_ListButtons");
+        return this.PartialView("_ListButtons");
       nullable = objCalendarDuty.DUTY_TYPE;
       if ((nullable.GetValueOrDefault() != 2 ? 0 : (nullable.HasValue ? 1 : 0)) != 0)
-        return (ActionResult) this.PartialView("_ListButtonView");
+        return this.PartialView("_ListButtonView");
       nullable = objCalendarDuty.DUTY_TYPE;
       if ((nullable.GetValueOrDefault() != 3 ? 0 : (nullable.HasValue ? 1 : 0)) == 0)
-        return (ActionResult) null;
+        return null;
       nullable = objCalendarDuty.USER_CREATE_ID;
       if ((nullable.GetValueOrDefault() != 1 ? 0 : (nullable.HasValue ? 1 : 0)) != 0)
-        return (ActionResult) this.PartialView("_ListButtons");
-      return (ActionResult) this.PartialView("_ListButtonView");
+        return this.PartialView("_ListButtons");
+      return this.PartialView("_ListButtonView");
     }
 
     [CustomAuthorize]
@@ -1638,9 +1638,9 @@ ViewBag.ActionPermission = list;
     public ActionResult DetailCalendar(int deparmentId, int monthx, int yearx)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       if (deparmentId <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) Localization.MsgItemNotExist));
+        return this.Json(JsonResponse.Json500(Localization.MsgItemNotExist));
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list;
       List<DoctorCalendarLeader> doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
@@ -1652,7 +1652,7 @@ ViewBag.doctors = calendarByDeparment;
 ViewBag.title = str;
 ViewBag.times = dateTime;
       doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
-      return (ActionResult) this.PartialView("_DetailCalendar");
+      return this.PartialView("_DetailCalendar");
     }
 
     [ActionDescription(ActionCode = "CalendarDutyHospital_List", ActionName = "Xem lịch trực", GroupCode = "CalendarDutyHospital", GroupName = "Lịch trực toàn Bệnh viện")]
@@ -1661,7 +1661,7 @@ ViewBag.times = dateTime;
     public ActionResult DetailLeader(int monthx, int yearx)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list;
       List<DoctorCalendarLeader> doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
@@ -1673,7 +1673,7 @@ ViewBag.doctors = calendarDirector;
 ViewBag.title = str;
 ViewBag.times = dateTime;
       doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
-      return (ActionResult) this.PartialView("_DetailCalendar");
+      return this.PartialView("_DetailCalendar");
     }
 
     [ActionDescription(ActionCode = "CalendarDutyHospital_List", ActionName = "Xem lịch trực", GroupCode = "CalendarDutyHospital", GroupName = "Lịch trực toàn Bệnh viện")]
@@ -1682,7 +1682,7 @@ ViewBag.times = dateTime;
     public ActionResult DetailCalendarPersonal(int doctorId, int monthx, int yearx)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list;
       List<DoctorCalendarLeader> doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
@@ -1694,14 +1694,14 @@ ViewBag.doctors = doctorCalendarPesonal;
 ViewBag.title = str;
 ViewBag.times = dateTime;
       doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
-      return (ActionResult) this.PartialView("_DetailCalendar");
+      return this.PartialView("_DetailCalendar");
     }
 
     [HttpGet]
     public PartialViewResult ApprovedCalendarHospital(string idCalendardutyX, string idDoctorX, string idDoctorChangeX, string idColumnX, string typeActionX, string idDateX, string idItem)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       DOCTOR doctor1;
       DOCTOR doctor2;
       if (idColumnX == "" || idColumnX == null)
@@ -1731,7 +1731,7 @@ ViewBag.times = dateTime;
               if (infor != null)
               {
                 doctor2 = new DOCTOR();
-                DOCTOR byId2 = this.unitOfWork.Doctors.GetById(Convert.ToInt32((object) infor.DOCTORS_CHANGE_ID));
+                DOCTOR byId2 = this.unitOfWork.Doctors.GetById(Convert.ToInt32(infor.DOCTORS_CHANGE_ID));
 ViewBag.educationName = byId1.EDUCATION_NAMEs;
 ViewBag.doctorName = byId1.DOCTOR_NAME;
 ViewBag.idCalendarduty = result1;
@@ -1748,7 +1748,7 @@ ViewBag.Content = str2;
               objCalendarChange.DOCTORS_CHANGE_ID = new int?(result2);
               CALENDAR_CHANGE inforDoctorChange = this.unitOfWork.CalendarChanges.GetInforDoctorChange(objCalendarChange, 1);
               doctor2 = new DOCTOR();
-              DOCTOR byId3 = this.unitOfWork.Doctors.GetById(Convert.ToInt32((object) inforDoctorChange.DOCTORS_ID));
+              DOCTOR byId3 = this.unitOfWork.Doctors.GetById(Convert.ToInt32(inforDoctorChange.DOCTORS_ID));
 ViewBag.educationName = byId1.EDUCATION_NAMEs;
 ViewBag.doctorName = byId1.DOCTOR_NAME;
 ViewBag.idCalendarduty = result1;
@@ -1769,7 +1769,7 @@ ViewBag.Content = str3;
               objCalendarChange.DOCTORS_ID = new int?(result2);
               objCalendarChange.DATE_START = nullable;
               if (this.unitOfWork.CalendarChanges.GetInfor(objCalendarChange, result4) == null)
-                return (PartialViewResult) null;
+                return null;
 ViewBag.educationName = byId1.EDUCATION_NAMEs;
 ViewBag.doctorName = byId1.DOCTOR_NAME;
 ViewBag.idCalendarduty = result1;
@@ -1788,7 +1788,7 @@ ViewBag.Content = byId1.EDUCATION_NAMEs + " " + byId1.DOCTOR_NAME + "  đã hủ
               objCalendarChange.DOCTORS_ID = new int?(result2);
               objCalendarChange.DATE_START = nullable;
               if (this.unitOfWork.CalendarChanges.GetInfor(objCalendarChange, result4) == null)
-                return (PartialViewResult) null;
+                return null;
 ViewBag.idCalendarduty = result1;
 ViewBag.idDoctor = result2;
 ViewBag.idColumn = null;
@@ -1825,9 +1825,9 @@ ViewBag.idItem = idItem;
             objCalendarChange.DATE_START = nullable;
             CALENDAR_CHANGE infor = this.unitOfWork.CalendarChanges.GetInfor(objCalendarChange, 1);
             if (infor == null)
-              return (PartialViewResult) null;
+              return null;
             doctor2 = new DOCTOR();
-            DOCTOR byId2 = this.unitOfWork.Doctors.GetById(Convert.ToInt32((object) infor.DOCTORS_CHANGE_ID));
+            DOCTOR byId2 = this.unitOfWork.Doctors.GetById(Convert.ToInt32(infor.DOCTORS_CHANGE_ID));
 ViewBag.educationName = byId1.EDUCATION_NAMEs;
 ViewBag.doctorName = byId1.DOCTOR_NAME;
 ViewBag.idCalendarduty = result1;
@@ -1848,7 +1848,7 @@ ViewBag.Content = str2;
             objCalendarChange.DOCTORS_ID = new int?(result2);
             objCalendarChange.DATE_START = nullable;
             if (this.unitOfWork.CalendarChanges.GetInfor(objCalendarChange, result5) == null)
-              return (PartialViewResult) null;
+              return null;
 ViewBag.educationName = byId1.EDUCATION_NAMEs;
 ViewBag.doctorName = byId1.DOCTOR_NAME;
 ViewBag.idCalendarduty = result1;
@@ -1867,7 +1867,7 @@ ViewBag.Content = byId1.EDUCATION_NAMEs + " " + byId1.DOCTOR_NAME + "  đã hủ
             objCalendarChange.DOCTORS_ID = new int?(result2);
             objCalendarChange.DATE_START = nullable;
             if (this.unitOfWork.CalendarChanges.GetInfor(objCalendarChange, result5) == null)
-              return (PartialViewResult) null;
+              return null;
 ViewBag.idCalendarduty = result1;
 ViewBag.idDoctor = result2;
 ViewBag.idColumn = result4;
@@ -1891,7 +1891,7 @@ ViewBag.types = 4;
       List<string> actionCodesByUserName = this.GetActionCodesByUserName();
 ViewBag.ActionPermission = actionCodesByUserName;
       this.WriteLog(enLogType.NomalLog, enActionType.View, "Xem trực đơn vị toàn bệnh viện", "N/A", "N/A", 0, "", "");
-      return (ActionResult) this.View("~/Views/CalendarDuty/Index.cshtml");
+      return this.View("~/Views/CalendarDuty/Index.cshtml");
     }
 
     [ActionDescription(ActionCode = "CalendarDutyHospital_List", ActionName = "Xem lịch trực", GroupCode = "CalendarDutyHospital", GroupName = "Lịch trực toàn Bệnh viện")]
@@ -1911,15 +1911,15 @@ ViewBag.ActionPermission = actionCodesByUserName;
         if (calendarDuty1 == null)
         {
           ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
-          entity.CALENDAR_NAME = "Lịch trực toàn bệnh viện tháng " + (object) month + " năm " + (object) year;
+          entity.CALENDAR_NAME = "Lịch trực toàn bệnh viện tháng " + month + " năm " + year;
           entity.CALENDAR_MONTH = new int?(month);
           entity.CALENDAR_YEAR = new int?(year);
           entity.CALENDAR_STATUS = new int?(1);
-          entity.LM_DEPARTMENT_ID = Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID);
+          entity.LM_DEPARTMENT_ID = Convert.ToInt32(byUserName.LM_DEPARTMENT_ID);
           entity.DUTY_TYPE = new int?(4);
           entity.ISDELETE = new bool?(false);
           entity.USER_CREATE_ID = new int?();
-          entity.LM_DEPARTMENT_PARTS = (string) null;
+          entity.LM_DEPARTMENT_PARTS = null;
           this.unitOfWork.CalendarDuty.Add(entity);
           foreach (CALENDAR_DUTY calendarDuty2 in this.unitOfWork.CalendarDuty.GetByApproved(month, year, 3, 0))
             this.unitOfWork.CalendarGroups.Add(new CALENDAR_GROUP()
@@ -1942,7 +1942,7 @@ ViewBag.ActionPermission = actionCodesByUserName;
             num1 = 1;
           if (num1 == 0)
           {
-            DateTime dateTime2 = Convert.ToDateTime("1/" + (object) result1 + "/" + (object) result2);
+            DateTime dateTime2 = Convert.ToDateTime("1/" + result1 + "/" + result2);
             if (idWeek == -1)
             {
               DateTime dateTime3 = dateTime2.AddDays((double) (-dateTime2.Day + 1));
@@ -1985,7 +1985,7 @@ ViewBag.ActionPermission = actionCodesByUserName;
 ViewBag.objCalendarDuty = entity;
 ViewBag.idWeek = idWeek;
 ViewBag.times = timeCalendarDutyList;
-          return (ActionResult) this.View("_ViewCalendarHospital");
+          return this.View("_ViewCalendarHospital");
         }
         dateTime1 = DateTime.Now;
         int result3 = dateTime1.Month;
@@ -2003,7 +2003,7 @@ ViewBag.times = timeCalendarDutyList;
           num5 = 1;
         if (num5 == 0)
         {
-          DateTime dateTime2 = Convert.ToDateTime("1/" + (object) result3 + "/" + (object) result4);
+          DateTime dateTime2 = Convert.ToDateTime("1/" + result3 + "/" + result4);
           if (idWeek == -1)
           {
             DateTime dateTime3 = dateTime2.AddDays((double) (-dateTime2.Day + 1));
@@ -2049,7 +2049,7 @@ ViewBag.times = timeCalendarDutyList;
 ViewBag.objCalendarDuty = calendarDuty1;
 ViewBag.idWeek = idWeek;
 ViewBag.times = timeCalendarDutyList1;
-        return (ActionResult) this.View("_ViewCalendarHospital");
+        return this.View("_ViewCalendarHospital");
       }
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(idCalendarDuty);
       List<TimeCalendarDuty> timeCalendarDutyList2 = new List<TimeCalendarDuty>();
@@ -2066,7 +2066,7 @@ ViewBag.times = timeCalendarDutyList1;
         num6 = 1;
       if (num6 == 0)
       {
-        DateTime dateTime1 = Convert.ToDateTime("1/" + (object) result5 + "/" + (object) result6);
+        DateTime dateTime1 = Convert.ToDateTime("1/" + result5 + "/" + result6);
         if (idWeek == -1)
         {
           DateTime dateTime2 = dateTime1.AddDays((double) (-dateTime1.Day + 1));
@@ -2109,7 +2109,7 @@ ViewBag.times = timeCalendarDutyList1;
 ViewBag.objCalendarDuty = byId;
 ViewBag.idWeek = idWeek;
 ViewBag.times = timeCalendarDutyList2;
-      return (ActionResult) this.PartialView("_ViewCalendarHospital");
+      return this.PartialView("_ViewCalendarHospital");
     }
 
     [CustomAuthorize]
@@ -2118,7 +2118,7 @@ ViewBag.times = timeCalendarDutyList2;
     public PartialViewResult LoadCalendarHospital(int idweek = 0, int nextMonth = 0, int nextYear = 0, int idCalendarDuty = 0)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       int result1 = 0;
       List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list1;
@@ -2130,7 +2130,7 @@ ViewBag.ActionPermission = list1;
         BachMaiCR.Web.Utils.Utils.GetDateTime();
         List<DoctorHospital> doctorHospitalList = (List<DoctorHospital>) null;
         List<TimeCalendarDuty> timeCalendarDutyList = new List<TimeCalendarDuty>();
-        DateTime dateTime1 = Convert.ToDateTime("1/" + (object) result3 + "/" + (object) result4);
+        DateTime dateTime1 = Convert.ToDateTime("1/" + result3 + "/" + result4);
         if (result2 == -1)
         {
           DateTime dateTime2 = dateTime1.AddDays((double) (-dateTime1.Day + 1));
@@ -2235,20 +2235,20 @@ ViewBag.calendarDepartment = calendarGroupList;
             if (idColumn != 0)
             {
               CALENDAR_DOCTOR byId1 = this.unitOfWork.CalendarDoctors.GetById(doctorData.CALENDAR_DOCTOR_ID);
-              byId1.DOCTORS_ID = Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID);
+              byId1.DOCTORS_ID = Convert.ToInt32(entity.DOCTORS_CHANGE_ID);
               this.unitOfWork.CalendarDoctors.Update(byId1);
               entity.STATUS_APPROVED = new int?(3);
               entity.USER_NOT_APPROVED = new int?(byUserName.ADMIN_USER_ID);
               this.unitOfWork.CalendarChanges.Update(entity);
-              CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(idCalendarduty, Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID), idColumn, Convert.ToDateTime((object) entity.DATE_CHANGE_START)).CALENDAR_DOCTOR_ID));
-              byId2.DOCTORS_ID = Convert.ToInt32((object) entity.DOCTORS_ID);
+              CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(idCalendarduty, Convert.ToInt32(entity.DOCTORS_CHANGE_ID), idColumn, Convert.ToDateTime(entity.DATE_CHANGE_START)).CALENDAR_DOCTOR_ID));
+              byId2.DOCTORS_ID = Convert.ToInt32(entity.DOCTORS_ID);
               this.unitOfWork.CalendarDoctors.Update(byId2);
               CALENDAR_CHANGE inforCh = this.unitOfWork.CalendarChanges.GetInforCh(new CALENDAR_CHANGE()
               {
                 CALENDAR_DUTY_ID = new int?(idCalendarduty),
                 TEMPLATE_COLUMN_ID = entity.TEMPLATE_COLUMN_ID,
                 CALENDAR_DELETE = new int?(entity.CALENDAR_CHANGE_ID),
-                DOCTORS_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID)),
+                DOCTORS_ID = new int?(Convert.ToInt32(entity.DOCTORS_CHANGE_ID)),
                 DATE_START = entity.DATE_CHANGE_START
               }, typeAction);
               inforCh.STATUS_APPROVED = new int?(3);
@@ -2317,7 +2317,7 @@ ViewBag.calendarDepartment = calendarGroupList;
                 Types = "0",
                 DoctorName = byId1.DOCTOR.DOCTOR_NAME
               });
-              sendSms6x00_1 = (SendSms6x00) null;
+              sendSms6x00_1 = null;
               listSms.Add(new SendSms6x00()
               {
                 Phone = entity.DOCTOR.PHONE,
@@ -2325,16 +2325,16 @@ ViewBag.calendarDepartment = calendarGroupList;
                 Types = "0",
                 DoctorName = entity.DOCTOR.DOCTOR_NAME
               });
-              sendSms6x00_1 = (SendSms6x00) null;
+              sendSms6x00_1 = null;
               this.sendSMS(listSms);
             }
             else if (num1 == 0)
             {
               CALENDAR_CHANGE objCalendarChange2 = new CALENDAR_CHANGE();
               objCalendarChange2.CALENDAR_DUTY_ID = new int?(idCalendarduty);
-              objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_ID));
+              objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32(entity.DOCTORS_ID));
               objCalendarChange2.DATE_START = entity.DATE_START;
-              objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID));
+              objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32(entity.DOCTORS_CHANGE_ID));
               objCalendarChange2.DATE_CHANGE_START = entity.DATE_CHANGE_START;
               CALENDAR_CHANGE inforHospital = this.unitOfWork.CalendarChanges.GetInforHospital(objCalendarChange2, typeAction);
               if (inforHospital != null)
@@ -2344,10 +2344,10 @@ ViewBag.calendarDepartment = calendarGroupList;
                 this.unitOfWork.CalendarChanges.Update(inforHospital);
                 this.unitOfWork.CalendarChanges.Save();
                 CALENDAR_DOCTOR byId1 = this.unitOfWork.CalendarDoctors.GetById(doctorData.CALENDAR_DOCTOR_ID);
-                byId1.DOCTORS_ID = Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID);
+                byId1.DOCTORS_ID = Convert.ToInt32(entity.DOCTORS_CHANGE_ID);
                 this.unitOfWork.CalendarDoctors.Update(byId1);
-                CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(idCalendarduty, Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID), idColumn, Convert.ToDateTime((object) entity.DATE_CHANGE_START)).CALENDAR_DOCTOR_ID));
-                byId2.DOCTORS_ID = Convert.ToInt32((object) entity.DOCTORS_ID);
+                CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(idCalendarduty, Convert.ToInt32(entity.DOCTORS_CHANGE_ID), idColumn, Convert.ToDateTime(entity.DATE_CHANGE_START)).CALENDAR_DOCTOR_ID));
+                byId2.DOCTORS_ID = Convert.ToInt32(entity.DOCTORS_ID);
                 this.unitOfWork.CalendarDoctors.Update(byId2);
                 string[] strArray1 = new string[18]
                 {
@@ -2416,7 +2416,7 @@ ViewBag.calendarDepartment = calendarGroupList;
                   Types = "0",
                   DoctorName = objCalendarChange2.DOCTOR.DOCTOR_NAME
                 });
-                sendSms6x00_1 = (SendSms6x00) null;
+                sendSms6x00_1 = null;
                 listSms.Add(new SendSms6x00()
                 {
                   Phone = entity.DOCTOR.PHONE,
@@ -2424,7 +2424,7 @@ ViewBag.calendarDepartment = calendarGroupList;
                   Types = "0",
                   DoctorName = entity.DOCTOR.DOCTOR_NAME
                 });
-                sendSms6x00_1 = (SendSms6x00) null;
+                sendSms6x00_1 = null;
                 this.sendSMS(listSms);
               }
             }
@@ -2432,9 +2432,9 @@ ViewBag.calendarDepartment = calendarGroupList;
             {
               CALENDAR_CHANGE objCalendarChange2 = new CALENDAR_CHANGE();
               objCalendarChange2.CALENDAR_DUTY_ID = new int?(idCalendarduty);
-              objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_ID));
+              objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32(entity.DOCTORS_ID));
               objCalendarChange2.DATE_START = entity.DATE_START;
-              objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID));
+              objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32(entity.DOCTORS_CHANGE_ID));
               objCalendarChange2.DATE_CHANGE_START = entity.DATE_CHANGE_START;
               CALENDAR_CHANGE inforHospital = this.unitOfWork.CalendarChanges.GetInforHospital(objCalendarChange2, typeAction);
               if (inforHospital != null)
@@ -2444,10 +2444,10 @@ ViewBag.calendarDepartment = calendarGroupList;
                 this.unitOfWork.CalendarChanges.Update(inforHospital);
                 this.unitOfWork.CalendarChanges.Save();
                 CALENDAR_DOCTOR byId1 = this.unitOfWork.CalendarDoctors.GetById(doctorData.CALENDAR_DOCTOR_ID);
-                byId1.DOCTORS_ID = Convert.ToInt32((object) entity.DOCTORS_ID);
+                byId1.DOCTORS_ID = Convert.ToInt32(entity.DOCTORS_ID);
                 this.unitOfWork.CalendarDoctors.Update(byId1);
-                CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(idCalendarduty, Convert.ToInt32((object) entity.DOCTORS_ID), idColumn, Convert.ToDateTime((object) entity.DATE_START)).CALENDAR_DOCTOR_ID));
-                byId2.DOCTORS_ID = Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID);
+                CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(idCalendarduty, Convert.ToInt32(entity.DOCTORS_ID), idColumn, Convert.ToDateTime(entity.DATE_START)).CALENDAR_DOCTOR_ID));
+                byId2.DOCTORS_ID = Convert.ToInt32(entity.DOCTORS_CHANGE_ID);
                 this.unitOfWork.CalendarDoctors.Update(byId2);
               }
               string[] strArray1 = new string[18]
@@ -2510,7 +2510,7 @@ ViewBag.calendarDepartment = calendarGroupList;
                 Types = "0",
                 DoctorName = objCalendarChange2.DOCTOR.DOCTOR_NAME
               });
-              sendSms6x00_1 = (SendSms6x00) null;
+              sendSms6x00_1 = null;
               listSms.Add(new SendSms6x00()
               {
                 Phone = entity.DOCTOR.PHONE,
@@ -2518,14 +2518,14 @@ ViewBag.calendarDepartment = calendarGroupList;
                 Types = "0",
                 DoctorName = entity.DOCTOR.DOCTOR_NAME
               });
-              sendSms6x00_1 = (SendSms6x00) null;
+              sendSms6x00_1 = null;
               this.sendSMS(listSms);
             }
           }
           if (typeAction == 4)
           {
             CALENDAR_DOCTOR byId = this.unitOfWork.CalendarDoctors.GetById(doctorData.CALENDAR_DOCTOR_ID);
-            byId.DOCTORS_ID = Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID);
+            byId.DOCTORS_ID = Convert.ToInt32(entity.DOCTORS_CHANGE_ID);
             this.unitOfWork.CalendarDoctors.Update(byId);
             entity.STATUS_APPROVED = new int?(3);
             entity.USER_NOT_APPROVED = new int?(byUserName.ADMIN_USER_ID);
@@ -2599,7 +2599,7 @@ ViewBag.calendarDepartment = calendarGroupList;
               Types = "0",
               DoctorName = byId.DOCTOR.DOCTOR_NAME
             });
-            sendSms6x00_1 = (SendSms6x00) null;
+            sendSms6x00_1 = null;
             listSms.Add(new SendSms6x00()
             {
               Phone = entity.DOCTOR.PHONE,
@@ -2607,7 +2607,7 @@ ViewBag.calendarDepartment = calendarGroupList;
               Types = "0",
               DoctorName = entity.DOCTOR.DOCTOR_NAME
             });
-            sendSms6x00_1 = (SendSms6x00) null;
+            sendSms6x00_1 = null;
             this.sendSMS(listSms);
           }
           if (typeAction == 2)
@@ -2673,7 +2673,7 @@ ViewBag.calendarDepartment = calendarGroupList;
             sendSms6x00_2.Types = "0";
             sendSms6x00_2.DoctorName = byId1.DOCTOR.DOCTOR_NAME;
             listSms.Add(sendSms6x00_2);
-            sendSms6x00_1 = (SendSms6x00) null;
+            sendSms6x00_1 = null;
             this.sendSMS(listSms);
             this.unitOfWork.CalendarDoctors.Delete(byId1);
             this.unitOfWork.CalendarDatas.Delete(byId2);
@@ -2758,11 +2758,11 @@ ViewBag.calendarDepartment = calendarGroupList;
         sendSms6x00_2.Types = "0";
         sendSms6x00_2.DoctorName = byId.DOCTOR_NAME;
         listSms.Add(sendSms6x00_2);
-        sendSms6x00_1 = (SendSms6x00) null;
+        sendSms6x00_1 = null;
         this.sendSMS(listSms);
       }
       this.WriteLog(enLogType.NomalLog, enActionType.Approve, "Phê duyệt đổi lịch", "N/A", "N/A", 0, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) "Xác nhận lịch trực thành công!"));
+      return this.Json(JsonResponse.Json200("Xác nhận lịch trực thành công!"));
     }
 
     [CustomAuthorize]
@@ -2808,7 +2808,7 @@ ViewBag.calendarDepartment = calendarGroupList;
             {
               CALENDAR_DUTY_ID = new int?(idCalendarduty),
               TEMPLATE_COLUMN_ID = new int?(idColumn),
-              DOCTORS_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID)),
+              DOCTORS_ID = new int?(Convert.ToInt32(entity.DOCTORS_CHANGE_ID)),
               DATE_START = entity.DATE_CHANGE_START
             }, typeAction);
             infor.STATUS_APPROVED = new int?(4);
@@ -2819,9 +2819,9 @@ ViewBag.calendarDepartment = calendarGroupList;
           {
             CALENDAR_CHANGE objCalendarChange2 = new CALENDAR_CHANGE();
             objCalendarChange2.CALENDAR_DUTY_ID = new int?(idCalendarduty);
-            objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_ID));
+            objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32(entity.DOCTORS_ID));
             objCalendarChange2.DATE_START = entity.DATE_START;
-            objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID));
+            objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32(entity.DOCTORS_CHANGE_ID));
             objCalendarChange2.DATE_CHANGE_START = entity.DATE_CHANGE_START;
             CALENDAR_CHANGE inforHospital1 = this.unitOfWork.CalendarChanges.GetInforHospital(objCalendarChange2, typeAction);
             if (inforHospital1 != null)
@@ -2834,9 +2834,9 @@ ViewBag.calendarDepartment = calendarGroupList;
             else
             {
               objCalendarChange2.CALENDAR_DUTY_ID = new int?(idCalendarduty);
-              objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_CHANGE_ID));
+              objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32(entity.DOCTORS_CHANGE_ID));
               objCalendarChange2.DATE_START = entity.DATE_CHANGE_START;
-              objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32((object) entity.DOCTORS_ID));
+              objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32(entity.DOCTORS_ID));
               objCalendarChange2.DATE_CHANGE_START = entity.DATE_START;
               CALENDAR_CHANGE inforHospital2 = this.unitOfWork.CalendarChanges.GetInforHospital(objCalendarChange2, typeAction);
               inforHospital2.STATUS_APPROVED = new int?(4);
@@ -2854,7 +2854,7 @@ ViewBag.calendarDepartment = calendarGroupList;
         }
       }
       this.WriteLog(enLogType.NomalLog, enActionType.ApproveCancel, "Hủy duyệt đổi lịch", "N/A", "N/A", 0, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) "Hủy lịch trực thành công!"));
+      return this.Json(JsonResponse.Json200("Hủy lịch trực thành công!"));
     }
 
     [HttpPost]
@@ -2864,7 +2864,7 @@ ViewBag.calendarDepartment = calendarGroupList;
     public ActionResult ApprovedCalendarDutyHospital(string idCalendarDuty, string types, List<CALENDAR_GROUP> lstApproved)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index", "Home");
+        return this.RedirectToAction("Index", "Home");
       int result = 0;
       if (lstApproved != null)
       {
@@ -2873,7 +2873,7 @@ ViewBag.calendarDepartment = calendarGroupList;
         {
           CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result);
           if (byId == null)
-            return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+            return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
           byId.CALENDAR_STATUS = new int?(3);
           byId.USER_CREATE_ID = new int?(this.UserX.ADMIN_USER_ID);
           byId.DATE_CREATE = new DateTime?(DateTime.Now);
@@ -2907,7 +2907,7 @@ ViewBag.calendarDepartment = calendarGroupList;
             doctorHospitalList1 = (List<DoctorHospital>) null;
             str1 = "";
             List<DoctorHospital> doctorHospitalList2 = new List<DoctorHospital>();
-            List<DoctorHospital> doctorHospitalLeader = this.unitOfWork.CalendarDuty.GetDoctorHospitalLeader(Convert.ToInt32((object) entity.CALENDAR_MONTH), Convert.ToInt32((object) entity.CALENDAR_YEAR));
+            List<DoctorHospital> doctorHospitalLeader = this.unitOfWork.CalendarDuty.GetDoctorHospitalLeader(Convert.ToInt32(entity.CALENDAR_MONTH), Convert.ToInt32(entity.CALENDAR_YEAR));
             listIdDoctor = doctorHospitalLeader.Select<DoctorHospital, int>((Func<DoctorHospital, int>) (x => x.DOCTORS_ID)).Distinct<int>().ToList<int>();
             for (int j = 0; j < listIdDoctor.Count; ++j)
             {
@@ -2917,8 +2917,8 @@ ViewBag.calendarDepartment = calendarGroupList;
               {
                 object[] objArray1 = new object[5]
                 {
-                  (object) str2,
-                  (object) "-",
+                  str2,
+                  "-",
                   null,
                   null,
                   null
@@ -2927,13 +2927,13 @@ ViewBag.calendarDepartment = calendarGroupList;
                 int index1 = 2;
                 DateTime? dateStart = doctorHospital.DATE_START;
 var day = dateStart.Value.Day;
-                objArray2[index1] = (object) day;
-                objArray1[3] = (object) "/";
+                objArray2[index1] = day;
+                objArray1[3] = "/";
                 object[] objArray3 = objArray1;
                 int index2 = 4;
                 dateStart = doctorHospital.DATE_START;
 var month = dateStart.Value.Month;
-                objArray3[index2] = (object) month;
+                objArray3[index2] = month;
                 str2 = string.Concat(objArray1);
               }
               listSms.Add(new SendSms6x00()
@@ -2943,7 +2943,7 @@ var month = dateStart.Value.Month;
                 Types = "0",
                 DoctorName = list[0].DOCTOR_NAME
               });
-              sendSms6x00 = (SendSms6x00) null;
+              sendSms6x00 = null;
             }
           }
         }
@@ -2977,8 +2977,8 @@ var month = dateStart.Value.Month;
                 List<int> listIdDoctor = (List<int>) null;
                 doctorHospitalList1 = (List<DoctorHospital>) null;
                 str1 = "";
-                LM_DEPARTMENT byId = this.unitOfWork.Departments.GetById(Convert.ToInt32((object) entity.LM_DEPARTMENT_ID));
-                List<DoctorHospital> hospitalByDepartment = this.unitOfWork.CalendarDuty.GetDoctorHospitalByDepartment(Convert.ToInt32((object) entity.CALENDAR_MONTH), Convert.ToInt32((object) entity.CALENDAR_YEAR), Convert.ToInt32((object) entity.LM_DEPARTMENT_ID));
+                LM_DEPARTMENT byId = this.unitOfWork.Departments.GetById(Convert.ToInt32(entity.LM_DEPARTMENT_ID));
+                List<DoctorHospital> hospitalByDepartment = this.unitOfWork.CalendarDuty.GetDoctorHospitalByDepartment(Convert.ToInt32(entity.CALENDAR_MONTH), Convert.ToInt32(entity.CALENDAR_YEAR), Convert.ToInt32(entity.LM_DEPARTMENT_ID));
                 listIdDoctor = hospitalByDepartment.Select<DoctorHospital, int>((Func<DoctorHospital, int>) (x => x.DOCTORS_ID)).Distinct<int>().ToList<int>();
                 for (int j = 0; j < listIdDoctor.Count; ++j)
                 {
@@ -2988,8 +2988,8 @@ var month = dateStart.Value.Month;
                   {
                     object[] objArray1 = new object[5]
                     {
-                      (object) str2,
-                      (object) "-",
+                      str2,
+                      "-",
                       null,
                       null,
                       null
@@ -2998,13 +2998,13 @@ var month = dateStart.Value.Month;
                     int index1 = 2;
                     DateTime? dateStart = doctorHospital.DATE_START;
 var day = dateStart.Value.Day;
-                    objArray2[index1] = (object) day;
-                    objArray1[3] = (object) "/";
+                    objArray2[index1] = day;
+                    objArray1[3] = "/";
                     object[] objArray3 = objArray1;
                     int index2 = 4;
                     dateStart = doctorHospital.DATE_START;
 var month = dateStart.Value.Month;
-                    objArray3[index2] = (object) month;
+                    objArray3[index2] = month;
                     str2 = string.Concat(objArray1);
                   }
                   listSms.Add(new SendSms6x00()
@@ -3014,12 +3014,12 @@ var month = dateStart.Value.Month;
                     Types = "0",
                     DoctorName = list2[0].DOCTOR_NAME
                   });
-                  sendSms6x00 = (SendSms6x00) null;
+                  sendSms6x00 = null;
                 }
                 listSms.Add(new SendSms6x00()
                 {
                   Phone = byId.DEPARTMENT_PHONE,
-                  Contents = "Phòng KHTH đã duyệt lịch trực " + byId.DEPARTMENT_CODE + " tháng " + (object) entity.CALENDAR_MONTH + "/" + (object) entity.CALENDAR_YEAR,
+                  Contents = "Phòng KHTH đã duyệt lịch trực " + byId.DEPARTMENT_CODE + " tháng " + entity.CALENDAR_MONTH + "/" + entity.CALENDAR_YEAR,
                   Types = "1",
                   DoctorName = byId.DEPARTMENT_CODE
                 });
@@ -3029,7 +3029,7 @@ var month = dateStart.Value.Month;
         }
         this.sendSMS(listSms);
       }
-      return (ActionResult) null;
+      return null;
     }
 
     [ValidateJsonAntiForgeryToken]
@@ -3039,7 +3039,7 @@ var month = dateStart.Value.Month;
     public ActionResult ApprovedDoctors(List<DoctorApproved> lstDoctorApproved)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index", "Home");
+        return this.RedirectToAction("Index", "Home");
       List<SendSms6x00> listSms = new List<SendSms6x00>();
       DateTime now = DateTime.Now;
       if (lstDoctorApproved != null)
@@ -3123,7 +3123,7 @@ var month = dateStart.Value.Month;
               sendSms6x00_2.Types = "0";
               sendSms6x00_2.DoctorName = byId1.DOCTOR.DOCTOR_NAME;
               listSms.Add(sendSms6x00_2);
-              sendSms6x00_1 = (SendSms6x00) null;
+              sendSms6x00_1 = null;
               this.unitOfWork.CalendarDoctors.Delete(byId1);
               this.unitOfWork.CalendarDatas.Delete(byId2);
             }
@@ -3131,7 +3131,7 @@ var month = dateStart.Value.Month;
             {
               CALENDAR_CHANGE infor = this.unitOfWork.CalendarChanges.GetInfor(objCalendarChange, 1);
               CALENDAR_DOCTOR byId = this.unitOfWork.CalendarDoctors.GetById(doctorData.CALENDAR_DOCTOR_ID);
-              byId.DOCTORS_ID = Convert.ToInt32((object) infor.DOCTORS_CHANGE_ID);
+              byId.DOCTORS_ID = Convert.ToInt32(infor.DOCTORS_CHANGE_ID);
               this.unitOfWork.CalendarDoctors.Update(byId);
               infor.STATUS_APPROVED = new int?(3);
               infor.USER_NOT_APPROVED = new int?(byUserName.ADMIN_USER_ID);
@@ -3192,7 +3192,7 @@ var month = dateStart.Value.Month;
                 Types = "0",
                 DoctorName = byId.DOCTOR.DOCTOR_NAME
               });
-              sendSms6x00_1 = (SendSms6x00) null;
+              sendSms6x00_1 = null;
               listSms.Add(new SendSms6x00()
               {
                 Phone = infor.DOCTOR.PHONE,
@@ -3200,7 +3200,7 @@ var month = dateStart.Value.Month;
                 Types = "0",
                 DoctorName = infor.DOCTOR.DOCTOR_NAME
               });
-              sendSms6x00_1 = (SendSms6x00) null;
+              sendSms6x00_1 = null;
             }
             int num2 = 0;
             if (doctorApproved.typeAction == 22)
@@ -3219,16 +3219,16 @@ var month = dateStart.Value.Month;
                 if (doctorApproved.idColumn != 0)
                 {
                   CALENDAR_DOCTOR byId1 = this.unitOfWork.CalendarDoctors.GetById(doctorData.CALENDAR_DOCTOR_ID);
-                  byId1.DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID);
+                  byId1.DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_CHANGE_ID);
                   this.unitOfWork.CalendarDoctors.Update(byId1);
                   entity1.STATUS_APPROVED = new int?(3);
                   entity1.USER_NOT_APPROVED = new int?(byUserName.ADMIN_USER_ID);
                   this.unitOfWork.CalendarChanges.Update(entity1);
-                  CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(doctorApproved.idCalendarduty, Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID), Convert.ToInt32((object) entity1.COLUMN_CHANGE_ID), Convert.ToDateTime((object) entity1.DATE_CHANGE_START)).CALENDAR_DOCTOR_ID));
-                  byId2.DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_ID);
+                  CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(doctorApproved.idCalendarduty, Convert.ToInt32(entity1.DOCTORS_CHANGE_ID), Convert.ToInt32(entity1.COLUMN_CHANGE_ID), Convert.ToDateTime(entity1.DATE_CHANGE_START)).CALENDAR_DOCTOR_ID));
+                  byId2.DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_ID);
                   this.unitOfWork.CalendarDoctors.Update(byId2);
                   this.unitOfWork.CalendarChanges.Save();
-                  CALENDAR_CHANGE entity2 = this.unitOfWork.CalendarChanges.GetChangeByIdDuty(entity1.CALENDAR_CHANGE_ID) ?? this.unitOfWork.CalendarChanges.GetById(Convert.ToInt32((object) entity1.CALENDAR_DELETE));
+                  CALENDAR_CHANGE entity2 = this.unitOfWork.CalendarChanges.GetChangeByIdDuty(entity1.CALENDAR_CHANGE_ID) ?? this.unitOfWork.CalendarChanges.GetById(Convert.ToInt32(entity1.CALENDAR_DELETE));
                   entity2.STATUS_APPROVED = new int?(3);
                   entity2.USER_NOT_APPROVED = new int?(byUserName.ADMIN_USER_ID);
                   this.unitOfWork.CalendarChanges.Update(entity2);
@@ -3289,7 +3289,7 @@ var month = dateStart.Value.Month;
                     Types = "0",
                     DoctorName = byId1.DOCTOR.DOCTOR_NAME
                   });
-                  sendSms6x00_1 = (SendSms6x00) null;
+                  sendSms6x00_1 = null;
                   listSms.Add(new SendSms6x00()
                   {
                     Phone = entity1.DOCTOR.PHONE,
@@ -3297,16 +3297,16 @@ var month = dateStart.Value.Month;
                     Types = "0",
                     DoctorName = entity1.DOCTOR.DOCTOR_NAME
                   });
-                  sendSms6x00_1 = (SendSms6x00) null;
+                  sendSms6x00_1 = null;
                 }
                 else if (num2 == 0)
                 {
                   CALENDAR_CHANGE inforHospital = this.unitOfWork.CalendarChanges.GetInforHospital(new CALENDAR_CHANGE()
                   {
                     CALENDAR_DUTY_ID = new int?(doctorApproved.idCalendarduty),
-                    DOCTORS_ID = new int?(Convert.ToInt32((object) entity1.DOCTORS_ID)),
+                    DOCTORS_ID = new int?(Convert.ToInt32(entity1.DOCTORS_ID)),
                     DATE_START = entity1.DATE_START,
-                    DOCTORS_CHANGE_ID = new int?(Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID)),
+                    DOCTORS_CHANGE_ID = new int?(Convert.ToInt32(entity1.DOCTORS_CHANGE_ID)),
                     DATE_CHANGE_START = entity1.DATE_CHANGE_START
                   }, 1);
                   if (inforHospital != null)
@@ -3316,10 +3316,10 @@ var month = dateStart.Value.Month;
                     this.unitOfWork.CalendarChanges.Update(inforHospital);
                     this.unitOfWork.CalendarChanges.Save();
                     CALENDAR_DOCTOR byId1 = this.unitOfWork.CalendarDoctors.GetById(doctorData.CALENDAR_DOCTOR_ID);
-                    byId1.DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID);
+                    byId1.DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_CHANGE_ID);
                     this.unitOfWork.CalendarDoctors.Update(byId1);
-                    CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(doctorApproved.idCalendarduty, Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID), doctorApproved.idColumn, Convert.ToDateTime((object) entity1.DATE_CHANGE_START)).CALENDAR_DOCTOR_ID));
-                    byId2.DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_ID);
+                    CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(doctorApproved.idCalendarduty, Convert.ToInt32(entity1.DOCTORS_CHANGE_ID), doctorApproved.idColumn, Convert.ToDateTime(entity1.DATE_CHANGE_START)).CALENDAR_DOCTOR_ID));
+                    byId2.DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_ID);
                     this.unitOfWork.CalendarDoctors.Update(byId2);
                     string[] strArray1 = new string[17];
                     strArray1[0] = entity1.DOCTOR.EDUCATION_NAMEs;
@@ -3377,7 +3377,7 @@ var month = dateStart.Value.Month;
                       Types = "0",
                       DoctorName = entity1.DOCTOR.DOCTOR_NAME
                     });
-                    sendSms6x00_1 = (SendSms6x00) null;
+                    sendSms6x00_1 = null;
                     listSms.Add(new SendSms6x00()
                     {
                       Phone = byId1.DOCTOR.PHONE,
@@ -3385,7 +3385,7 @@ var month = dateStart.Value.Month;
                       Types = "0",
                       DoctorName = byId1.DOCTOR.DOCTOR_NAME
                     });
-                    sendSms6x00_1 = (SendSms6x00) null;
+                    sendSms6x00_1 = null;
                   }
                 }
                 else
@@ -3393,9 +3393,9 @@ var month = dateStart.Value.Month;
                   CALENDAR_CHANGE inforHospital = this.unitOfWork.CalendarChanges.GetInforHospital(new CALENDAR_CHANGE()
                   {
                     CALENDAR_DUTY_ID = new int?(doctorApproved.idCalendarduty),
-                    DOCTORS_ID = new int?(Convert.ToInt32((object) entity1.DOCTORS_ID)),
+                    DOCTORS_ID = new int?(Convert.ToInt32(entity1.DOCTORS_ID)),
                     DATE_START = entity1.DATE_START,
-                    DOCTORS_CHANGE_ID = new int?(Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID)),
+                    DOCTORS_CHANGE_ID = new int?(Convert.ToInt32(entity1.DOCTORS_CHANGE_ID)),
                     DATE_CHANGE_START = entity1.DATE_CHANGE_START
                   }, 1);
                   CALENDAR_DOCTOR entity2 = new CALENDAR_DOCTOR();
@@ -3406,10 +3406,10 @@ var month = dateStart.Value.Month;
                     this.unitOfWork.CalendarChanges.Update(inforHospital);
                     this.unitOfWork.CalendarChanges.Save();
                     CALENDAR_DOCTOR byId = this.unitOfWork.CalendarDoctors.GetById(doctorData.CALENDAR_DOCTOR_ID);
-                    byId.DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_ID);
+                    byId.DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_ID);
                     this.unitOfWork.CalendarDoctors.Update(byId);
-                    entity2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(doctorApproved.idCalendarduty, Convert.ToInt32((object) entity1.DOCTORS_ID), doctorApproved.idColumn, Convert.ToDateTime((object) entity1.DATE_START)).CALENDAR_DOCTOR_ID));
-                    entity2.DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID);
+                    entity2 = this.unitOfWork.CalendarDoctors.GetById(Convert.ToInt32(this.unitOfWork.DoctorDatas.CheckDoctorData(doctorApproved.idCalendarduty, Convert.ToInt32(entity1.DOCTORS_ID), doctorApproved.idColumn, Convert.ToDateTime(entity1.DATE_START)).CALENDAR_DOCTOR_ID));
+                    entity2.DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_CHANGE_ID);
                     this.unitOfWork.CalendarDoctors.Update(entity2);
                   }
                   string[] strArray1 = new string[17];
@@ -3468,7 +3468,7 @@ var month = dateStart.Value.Month;
                     Types = "0",
                     DoctorName = entity2.DOCTOR.DOCTOR_NAME
                   });
-                  sendSms6x00_1 = (SendSms6x00) null;
+                  sendSms6x00_1 = null;
                   listSms.Add(new SendSms6x00()
                   {
                     Phone = inforHospital.DOCTOR.PHONE,
@@ -3476,7 +3476,7 @@ var month = dateStart.Value.Month;
                     Types = "0",
                     DoctorName = inforHospital.DOCTOR.DOCTOR_NAME
                   });
-                  sendSms6x00_1 = (SendSms6x00) null;
+                  sendSms6x00_1 = null;
                 }
               }
             }
@@ -3552,12 +3552,12 @@ var month = dateStart.Value.Month;
             sendSms6x00_2.Types = "0";
             sendSms6x00_2.DoctorName = byId.DOCTOR_NAME;
             listSms.Add(sendSms6x00_2);
-            sendSms6x00_1 = (SendSms6x00) null;
+            sendSms6x00_1 = null;
           }
         }
         this.sendSMS(listSms);
       }
-      return (ActionResult) null;
+      return null;
     }
 
     [CustomAuthorize]
@@ -3567,7 +3567,7 @@ var month = dateStart.Value.Month;
     public ActionResult NoApprovedDoctors(List<DoctorApproved> lstDoctorApproved)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index", "Home");
+        return this.RedirectToAction("Index", "Home");
       List<SendSms6x00> sendSms6x00List = new List<SendSms6x00>();
       DateTime now = DateTime.Now;
       CALENDAR_CHANGE calendarChange = new CALENDAR_CHANGE();
@@ -3623,7 +3623,7 @@ var month = dateStart.Value.Month;
               {
                 CALENDAR_DUTY_ID = new int?(doctorApproved.idCalendarduty),
                 TEMPLATE_COLUMN_ID = infor1.COLUMN_CHANGE_ID,
-                DOCTORS_ID = new int?(Convert.ToInt32((object) infor1.DOCTORS_CHANGE_ID)),
+                DOCTORS_ID = new int?(Convert.ToInt32(infor1.DOCTORS_CHANGE_ID)),
                 DATE_START = infor1.DATE_CHANGE_START
               }, 1);
               infor2.STATUS_APPROVED = new int?(4);
@@ -3635,9 +3635,9 @@ var month = dateStart.Value.Month;
               CALENDAR_CHANGE infor = this.unitOfWork.CalendarChanges.GetInfor(objCalendarChange1, 1);
               CALENDAR_CHANGE objCalendarChange2 = new CALENDAR_CHANGE();
               objCalendarChange2.CALENDAR_DUTY_ID = new int?(doctorApproved.idCalendarduty);
-              objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32((object) infor.DOCTORS_ID));
+              objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32(infor.DOCTORS_ID));
               objCalendarChange2.DATE_START = infor.DATE_START;
-              objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32((object) infor.DOCTORS_CHANGE_ID));
+              objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32(infor.DOCTORS_CHANGE_ID));
               objCalendarChange2.DATE_CHANGE_START = infor.DATE_CHANGE_START;
               CALENDAR_CHANGE inforHospital1 = this.unitOfWork.CalendarChanges.GetInforHospital(objCalendarChange2, 1);
               if (inforHospital1 != null)
@@ -3650,9 +3650,9 @@ var month = dateStart.Value.Month;
               else
               {
                 objCalendarChange2.CALENDAR_DUTY_ID = new int?(doctorApproved.idCalendarduty);
-                objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32((object) infor.DOCTORS_CHANGE_ID));
+                objCalendarChange2.DOCTORS_ID = new int?(Convert.ToInt32(infor.DOCTORS_CHANGE_ID));
                 objCalendarChange2.DATE_START = infor.DATE_CHANGE_START;
-                objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32((object) infor.DOCTORS_ID));
+                objCalendarChange2.DOCTORS_CHANGE_ID = new int?(Convert.ToInt32(infor.DOCTORS_ID));
                 objCalendarChange2.DATE_CHANGE_START = infor.DATE_START;
                 CALENDAR_CHANGE inforHospital2 = this.unitOfWork.CalendarChanges.GetInforHospital(objCalendarChange2, 1);
                 inforHospital2.STATUS_APPROVED = new int?(4);
@@ -3664,7 +3664,7 @@ var month = dateStart.Value.Month;
           }
         }
       }
-      return (ActionResult) null;
+      return null;
     }
 
     [CustomAuthorize]
@@ -3682,13 +3682,13 @@ var month = dateStart.Value.Month;
         new SendSms6x00()
         {
           Phone = byId.DEPARTMENT_PHONE,
-          Contents = "Phòng KHTH yêu cầu đơn vị " + byId.DEPARTMENT_CODE + " gửi lịch trực tháng " + (object) now.Month + "/" + (object) now.Year + " đúng thời gian quy định",
+          Contents = "Phòng KHTH yêu cầu đơn vị " + byId.DEPARTMENT_CODE + " gửi lịch trực tháng " + now.Month + "/" + now.Year + " đúng thời gian quy định",
           Types = "1",
           DoctorName = byId.DEPARTMENT_CODE
         }
       });
       this.WriteLog(enLogType.NomalLog, enActionType.SendSMS, "Gửi nhắc lịch trực đơn vị ", byId.DEPARTMENT_NAME, "N/A", 0, "", "");
-      return (ActionResult) this.Json((object) "Gửi nhắc lịch thành công", JsonRequestBehavior.AllowGet);
+      return this.Json("Gửi nhắc lịch thành công", JsonRequestBehavior.AllowGet);
     }
 
     [ActionDescription(ActionCode = "CalendarDutyHospital_View", ActionName = "Tổng hợp lịch trực", GroupCode = "CalendarDutyHospital", GroupName = "Lịch trực toàn Bệnh viện")]
@@ -3703,13 +3703,13 @@ var month = dateStart.Value.Month;
         new SendSms6x00()
         {
           Phone = ConfigurationManager.AppSettings["smsPhone"],
-          Contents = "Phòng KHTH yêu cầu gửi lịch trực lãnh đạo tháng " + (object) now.Month + "/" + (object) now.Year + " đúng thời gian quy định",
+          Contents = "Phòng KHTH yêu cầu gửi lịch trực lãnh đạo tháng " + now.Month + "/" + now.Year + " đúng thời gian quy định",
           Types = "1",
           DoctorName = "Lịch lãnh đạo"
         }
       });
       this.WriteLog(enLogType.NomalLog, enActionType.SendSMS, "Gửi nhắc lịch lãnh đạo ", "N/A", "N/A", 0, "", "");
-      return (ActionResult) this.Json((object) "Gửi nhắc lịch thành công", JsonRequestBehavior.AllowGet);
+      return this.Json("Gửi nhắc lịch thành công", JsonRequestBehavior.AllowGet);
     }
 
     [ActionDescription(ActionCode = "CalendarDutyHospital_List", ActionName = "Xem lịch trực", GroupCode = "CalendarDutyHospital", GroupName = "Lịch trực toàn Bệnh viện")]
@@ -3733,7 +3733,7 @@ var month = dateStart.Value.Month;
       if (fileInfo.Exists.Equals(false))
         throw new Exception("Export");
       List<TimeCalendarDuty> times = new List<TimeCalendarDuty>();
-      DateTime dateTime1 = Convert.ToDateTime("1/" + (object) result1 + "/" + (object) result2);
+      DateTime dateTime1 = Convert.ToDateTime("1/" + result1 + "/" + result2);
       DateTime dateTime2;
       if (result3 == -1)
       {
@@ -3781,23 +3781,23 @@ var month = dateStart.Value.Month;
         ExcelWorksheet excelWorksheet = excelPackage.Workbook.Worksheets[1];
         ExcelRange excelRange1 = excelWorksheet.Cells["C1"];
         object[] objArray1 = new object[10];
-        objArray1[0] = (object) "BẢNG TRỰC TOÀN BỆNH VIỆN TỪ ";
+        objArray1[0] = "BẢNG TRỰC TOÀN BỆNH VIỆN TỪ ";
         object[] objArray2 = objArray1;
         int index1 = 1;
         dateTime2 = times[0].DATES;
         objArray2[index1] = dateTime2.Day;
-        objArray1[2] = (object) "-";
-        objArray1[3] = (object) result1.ToString();
-        objArray1[4] = (object) " ĐẾN ";
+        objArray1[2] = "-";
+        objArray1[3] = result1.ToString();
+        objArray1[4] = " ĐẾN ";
         object[] objArray3 = objArray1;
         int index2 = 5;
         dateTime2 = times[times.Count - 1].DATES;
         string str1 = dateTime2.Day.ToString();
-        objArray3[index2] = (object) str1;
-        objArray1[6] = (object) "-";
-        objArray1[7] = (object) result1.ToString();
-        objArray1[8] = (object) "-";
-        objArray1[9] = (object) result2.ToString();
+        objArray3[index2] = str1;
+        objArray1[6] = "-";
+        objArray1[7] = result1.ToString();
+        objArray1[8] = "-";
+        objArray1[9] = result2.ToString();
         string str2 = string.Concat(objArray1);
         excelRange1.Value = str2;
         for (int index3 = 0; index3 < times.Count; ++index3)
@@ -3823,7 +3823,7 @@ var month = dateStart.Value.Month;
         List<CALENDAR_GROUP> byDateIsApproved = this.unitOfWork.CalendarGroups.GetAllByDateIsApproved(result1, result2);
         int num1 = 0;
         List<DoctorHospital> doctorHospitalList = new List<DoctorHospital>();
-        List<DoctorHospital> list1 = this.unitOfWork.CalendarDuty.GetDoctorHospital(result1, result2).Where<DoctorHospital>((Func<DoctorHospital, bool>) (x => Convert.ToInt32((object) x.LEVEL_NUMBER) < 3)).OrderBy<DoctorHospital, string>((Func<DoctorHospital, string>) (x => x.DOCTOR_NAME)).ToList<DoctorHospital>();
+        List<DoctorHospital> list1 = this.unitOfWork.CalendarDuty.GetDoctorHospital(result1, result2).Where<DoctorHospital>((Func<DoctorHospital, bool>) (x => Convert.ToInt32(x.LEVEL_NUMBER) < 3)).OrderBy<DoctorHospital, string>((Func<DoctorHospital, string>) (x => x.DOCTOR_NAME)).ToList<DoctorHospital>();
         if (byDateIsApproved.Where<CALENDAR_GROUP>((Func<CALENDAR_GROUP, bool>) (x =>
         {
           int? calendarType = x.CALENDAR_TYPE;
@@ -4074,24 +4074,24 @@ label_4:
           excelWorksheet.Cells[4 + num3, 6, 4 + num3, 8].Merge = true;
           ExcelRange excelRange2 = excelWorksheet.Cells[4 + num3, 6];
           object[] objArray4 = new object[6];
-          objArray4[0] = (object) " Ngày ";
+          objArray4[0] = " Ngày ";
           object[] objArray5 = objArray4;
           int index3 = 1;
           dateTime2 = DateTime.Now;
           var day2 = dateTime2.Day;
-          objArray5[index3] = (object) day2;
-          objArray4[2] = (object) " tháng ";
+          objArray5[index3] = day2;
+          objArray4[2] = " tháng ";
           object[] objArray6 = objArray4;
           int index4 = 3;
           dateTime2 = DateTime.Now;
 var month = dateTime2.Month;
-          objArray6[index4] = (object) month;
-          objArray4[4] = (object) " năm ";
+          objArray6[index4] = month;
+          objArray4[4] = " năm ";
           object[] objArray7 = objArray4;
           int index5 = 5;
           dateTime2 = DateTime.Now;
 var year = dateTime2.Year;
-          objArray7[index5] = (object) year;
+          objArray7[index5] = year;
           string str3 = string.Concat(objArray4);
           excelRange2.Value = str3;
           excelWorksheet.Cells[4 + num3, 6, 4 + num3, 8].Style.Font.Bold = true;
@@ -4116,8 +4116,8 @@ var year = dateTime2.Year;
         }
         asByteArray = excelPackage.GetAsByteArray();
       }
-      this.WriteLog(enLogType.NomalLog, enActionType.ExportExcel, "Xuất Excel lịch trực toàn bệnh viện tháng " + (object) result1 + " năm " + (object) result2, "N/A", "N/A", 0, "", "");
-      return (ActionResult) new DownloadResult(asByteArray, "ReportOfAllHospital.xlsx");
+      this.WriteLog(enLogType.NomalLog, enActionType.ExportExcel, "Xuất Excel lịch trực toàn bệnh viện tháng " + result1 + " năm " + result2, "N/A", "N/A", 0, "", "");
+      return new DownloadResult(asByteArray, "ReportOfAllHospital.xlsx");
     }
 
     [ActionDescription(ActionCode = "CalendarDutyHospital_List", ActionName = "Xem lịch trực", GroupCode = "CalendarDutyHospital", GroupName = "Lịch trực toàn Bệnh viện")]
@@ -4134,15 +4134,15 @@ var year = dateTime2.Year;
       if (calendarDuty1 == null)
       {
         ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
-        entity.CALENDAR_NAME = "Lịch trực toàn bệnh viện tháng " + (object) month + " năm " + (object) year;
+        entity.CALENDAR_NAME = "Lịch trực toàn bệnh viện tháng " + month + " năm " + year;
         entity.CALENDAR_MONTH = new int?(month);
         entity.CALENDAR_YEAR = new int?(year);
         entity.CALENDAR_STATUS = new int?(1);
-        entity.LM_DEPARTMENT_ID = Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID);
+        entity.LM_DEPARTMENT_ID = Convert.ToInt32(byUserName.LM_DEPARTMENT_ID);
         entity.DUTY_TYPE = new int?(4);
         entity.ISDELETE = new bool?(false);
         entity.USER_CREATE_ID = new int?();
-        entity.LM_DEPARTMENT_PARTS = (string) null;
+        entity.LM_DEPARTMENT_PARTS = null;
         this.unitOfWork.CalendarDuty.Add(entity);
         foreach (CALENDAR_DUTY calendarDuty2 in this.unitOfWork.CalendarDuty.GetByApproved(month, year, 3, 0))
           this.unitOfWork.CalendarGroups.Add(new CALENDAR_GROUP()
@@ -4156,7 +4156,7 @@ var year = dateTime2.Year;
         List<TimeCalendarDuty> timeCalendarDutyList = new List<TimeCalendarDuty>();
         if (int.TryParse(entity.CALENDAR_MONTH.ToString(), out result1) && int.TryParse(entity.CALENDAR_YEAR.ToString(), out result2))
         {
-          DateTime dateTime1 = Convert.ToDateTime("1/" + (object) result1 + "/" + (object) result2);
+          DateTime dateTime1 = Convert.ToDateTime("1/" + result1 + "/" + result2);
           if (idWeek == -1)
           {
             DateTime dateTime2 = dateTime1.AddDays((double) (-dateTime1.Day + 1));
@@ -4199,8 +4199,8 @@ var year = dateTime2.Year;
 ViewBag.objCalendarDuty = entity;
 ViewBag.idWeek = idWeek;
 ViewBag.times = timeCalendarDutyList;
-        this.WriteLog(enLogType.NomalLog, enActionType.View, "Xem lịch trực toàn bệnh viện tháng " + (object) month + " năm " + (object) year, "N/A", "N/A", 0, "", "");
-        return (ActionResult) this.View("_ViewCalendarHospitalDetail");
+        this.WriteLog(enLogType.NomalLog, enActionType.View, "Xem lịch trực toàn bệnh viện tháng " + month + " năm " + year, "N/A", "N/A", 0, "", "");
+        return this.View("_ViewCalendarHospitalDetail");
       }
       int result3 = DateTime.Now.Month;
       int result4 = DateTime.Now.Year;
@@ -4216,7 +4216,7 @@ ViewBag.times = timeCalendarDutyList;
         num4 = 1;
       if (num4 == 0)
       {
-        DateTime dateTime1 = Convert.ToDateTime("1/" + (object) result3 + "/" + (object) result4);
+        DateTime dateTime1 = Convert.ToDateTime("1/" + result3 + "/" + result4);
         if (idWeek == -1)
         {
           DateTime dateTime2 = dateTime1.AddDays((double) (-dateTime1.Day + 1));
@@ -4259,15 +4259,15 @@ ViewBag.times = timeCalendarDutyList;
 ViewBag.objCalendarDuty = calendarDuty1;
 ViewBag.idWeek = idWeek;
 ViewBag.times = timeCalendarDutyList1;
-      this.WriteLog(enLogType.NomalLog, enActionType.View, "Xem lịch trực toàn bệnh viện tháng " + (object) result3 + " năm " + (object) result4, "N/A", "N/A", 0, "", "");
-      return (ActionResult) this.View("_ViewCalendarHospitalDetail");
+      this.WriteLog(enLogType.NomalLog, enActionType.View, "Xem lịch trực toàn bệnh viện tháng " + result3 + " năm " + result4, "N/A", "N/A", 0, "", "");
+      return this.View("_ViewCalendarHospitalDetail");
     }
 
     [HttpGet]
     public PartialViewResult ListDoctorsDefault(string arrayid, string changeId, string dateX)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       string[] strArray = arrayid.Split('_');
 ViewBag.arrayid = strArray;
 ViewBag.changeId = changeId;
@@ -4301,7 +4301,7 @@ ViewBag.DateX = date;
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
       int result1 = 0;
       int result2 = 0;
-      int int32 = Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID);
+      int int32 = Convert.ToInt32(byUserName.LM_DEPARTMENT_ID);
       if (int.TryParse(strArray[0], out result1) && int.TryParse(strArray[1], out result2))
       {
         int hashCode = DutyType.Deparment.GetHashCode();
@@ -4320,21 +4320,21 @@ ViewBag.DateX = date;
           entity.USER_CREATE_ID = new int?(byUserName.ADMIN_USER_ID);
           entity.DATE_CREATE = new DateTime?(BachMaiCR.Web.Utils.Utils.GetDateTime());
           this.unitOfWork.CalendarDuty.Add(entity);
-          CALENDAR_DATA objCalendarData = (CALENDAR_DATA) null;
-          CALENDAR_DOCTOR objCalendarDoctor = (CALENDAR_DOCTOR) null;
+          CALENDAR_DATA objCalendarData = null;
+          CALENDAR_DOCTOR objCalendarDoctor = null;
           int calendarDutyId = entity.CALENDAR_DUTY_ID;
           this.SaveDataCalendarDefault(strValues, objCalendarData, objCalendarDoctor, calendarDutyId);
-          return (ActionResult) this.Json((object) Localization.AddCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+          return this.Json(Localization.AddCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
         }
         int calendarDutyId1 = this.unitOfWork.CalendarDuty.GetCalendarDutyId(result1, result2, hashCode, int32, 1);
         this.unitOfWork.CalendarDoctors.DeleteCalendarDoctorById(calendarDutyId1);
         this.unitOfWork.CalendarDatas.DeleteCalendarDataById(calendarDutyId1);
-        CALENDAR_DATA objCalendarData1 = (CALENDAR_DATA) null;
-        CALENDAR_DOCTOR objCalendarDoctor1 = (CALENDAR_DOCTOR) null;
+        CALENDAR_DATA objCalendarData1 = null;
+        CALENDAR_DOCTOR objCalendarDoctor1 = null;
         this.SaveDataCalendarDefault(strValues, objCalendarData1, objCalendarDoctor1, calendarDutyId1);
-        return (ActionResult) this.Json((object) Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+        return this.Json(Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
       }
-      return (ActionResult) null;
+      return null;
     }
 
     [ActionDescription(ActionCode = "CalendarDuty_Index", ActionName = "Danh sách lịch trực", GroupCode = "CalendarDuty", GroupName = "Lịch trực Khoa/Viện/TT", IsMenu = false)]
@@ -4344,7 +4344,7 @@ ViewBag.DateX = date;
     public PartialViewResult ViewCalendarDefault(string idCalendarDuty, int types = 0, int typeEdit = 1)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list;
       int result1 = 0;
@@ -4385,7 +4385,7 @@ ViewBag.typeEdit = typeEdit;
     public ActionResult EditValuesCalendarDefault(string strAdd, string strDeleted, string strChanged, string strValues, string idCalendarDuty)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) null;
+        return null;
       List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list1;
       int result = 0;
@@ -4393,7 +4393,7 @@ ViewBag.ActionPermission = list1;
       int hashCode2 = CalendarChangeType.Change.GetHashCode();
       int hashCode3 = CalendarChangeType.Deleted.GetHashCode();
       if (!int.TryParse(idCalendarDuty, out result))
-        return (ActionResult) null;
+        return null;
       if (this.unitOfWork.CalendarDuty.GetById(result).ISAPPROVED == 1)
       {
         List<string> stringList1 = new List<string>();
@@ -4424,7 +4424,7 @@ ViewBag.ActionPermission = list1;
             DateTime? nullable2;
             try
             {
-              nullable2 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime((object) strArray2[0].ToString(), "dd/MM/yyyy"));
+              nullable2 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime(strArray2[0].ToString(), "dd/MM/yyyy"));
             }
             catch
             {
@@ -4461,7 +4461,7 @@ ViewBag.ActionPermission = list1;
             DateTime? nullable2;
             try
             {
-              nullable2 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime((object) strArray2[0].ToString(), "dd/MM/yyyy"));
+              nullable2 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime(strArray2[0].ToString(), "dd/MM/yyyy"));
             }
             catch
             {
@@ -4498,7 +4498,7 @@ ViewBag.ActionPermission = list1;
             DateTime? nullable2;
             try
             {
-              nullable2 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime((object) strArray2[0].ToString(), "dd/MM/yyyy"));
+              nullable2 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime(strArray2[0].ToString(), "dd/MM/yyyy"));
             }
             catch
             {
@@ -4512,7 +4512,7 @@ ViewBag.ActionPermission = list1;
             {
               try
               {
-                nullable3 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime((object) (str4 + "/" + (object) nullable2.Value.Month + "/" + (object) nullable2.Value.Year), "dd/MM/yyyy"));
+                nullable3 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime((str4 + "/" + nullable2.Value.Month + "/" + nullable2.Value.Year), "dd/MM/yyyy"));
               }
               catch
               {
@@ -4542,7 +4542,7 @@ ViewBag.ActionPermission = list1;
           }
         }
         this.WriteLog(enLogType.NomalLog, enActionType.Insert, "Đổi lịch trực đơn vị ", "N/A", "N/A", Convert.ToInt32(idCalendarDuty), "", "");
-        return (ActionResult) this.RedirectToAction("ViewCalendarDefault", "CalendarDuty", (object) new
+        return this.RedirectToAction("ViewCalendarDefault", "CalendarDuty", new
         {
           idCalendarDuty = idCalendarDuty,
           types = 1,
@@ -4552,7 +4552,7 @@ ViewBag.ActionPermission = list1;
       DateTime dateTime = BachMaiCR.Web.Utils.Utils.GetDateTime();
       int month = dateTime.Month;
       int year = dateTime.Year;
-      CALENDAR_DUTY calendarDuty = (CALENDAR_DUTY) null;
+      CALENDAR_DUTY calendarDuty = null;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result);
       int? calendarMonth = byId.CALENDAR_MONTH;
       int? calendarYear = byId.CALENDAR_YEAR;
@@ -4560,14 +4560,14 @@ ViewBag.ActionPermission = list1;
         month = calendarMonth.Value;
       if (calendarYear.HasValue)
         year = calendarYear.Value;
-      calendarDuty = (CALENDAR_DUTY) null;
+      calendarDuty = null;
       this.unitOfWork.CalendarDoctors.DeleteCalendarDoctorById(result);
       this.unitOfWork.CalendarDatas.DeleteCalendarDataById(result);
-      CALENDAR_DATA objCalendarData = (CALENDAR_DATA) null;
-      CALENDAR_DOCTOR objCalendarDoctor = (CALENDAR_DOCTOR) null;
+      CALENDAR_DATA objCalendarData = null;
+      CALENDAR_DOCTOR objCalendarDoctor = null;
       this.SaveDataCalendarDefault(strValues, objCalendarData, objCalendarDoctor, result);
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "Sửa lịch trực đơn vị ", "N/A", "N/A", result, "", "");
-      return (ActionResult) this.RedirectToAction("ViewCalendarDefault", "CalendarDuty", (object) new
+      return this.RedirectToAction("ViewCalendarDefault", "CalendarDuty", new
       {
         idCalendarDuty = idCalendarDuty,
         types = 1,
@@ -4593,7 +4593,7 @@ ViewBag.ActionPermission = list1;
             DateTime? nullable2;
             try
             {
-              nullable2 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime((object) strArray2[0], "dd/MM/yyyy"));
+              nullable2 = new DateTime?(BachMaiCR.Web.Utils.Utils.ToDateTime(strArray2[0], "dd/MM/yyyy"));
             }
             catch
             {
@@ -4610,8 +4610,8 @@ ViewBag.ActionPermission = list1;
             objCalendarDoctor.DOCTORS_ID = result;
             objCalendarDoctor.CALENDAR_DUTY_ID = new int?(calendarDutyId);
             this.unitOfWork.CalendarDoctors.Add(objCalendarDoctor);
-            objCalendarData = (CALENDAR_DATA) null;
-            objCalendarDoctor = (CALENDAR_DOCTOR) null;
+            objCalendarData = null;
+            objCalendarDoctor = null;
           }
         }
       }
@@ -4621,7 +4621,7 @@ ViewBag.ActionPermission = list1;
     public PartialViewResult ListDoctorsChangesDefault(int idDoctorChange, int idCalendarDuty, string dateDoctorChange, string arrayid, string changeId)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       List<DoctorList> departmentUsername = this.unitOfWork.Doctors.GetAllByDepartmentUsername(this.User.Identity.Name);
 ViewBag.allDoctor = departmentUsername;
 ViewBag.idDoctorChange = idDoctorChange;
@@ -4648,7 +4648,7 @@ ViewBag.Type = "1";
           return this.PartialView("_ListDateChange");
         }
       }
-      return (PartialViewResult) null;
+      return null;
     }
 
     [ActionDescription(ActionCode = "CalendarDuty_Edit", ActionName = "Sửa thông tin lịch trực", GroupCode = "CalendarDuty", GroupName = "Lịch trực Khoa/Viện/TT", IsMenu = false)]
@@ -4656,11 +4656,11 @@ ViewBag.Type = "1";
     public ActionResult ChangeCalendarDutyDefault(string idCalendarDuty, string idDoctorChange, string dateDoctorChange, string idDoctorIsChange, string DatesIsChange)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) null;
+        return null;
       List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
 ViewBag.ActionPermission = list1;
       if (idCalendarDuty == null || idDoctorChange == null || (dateDoctorChange == null || idDoctorIsChange == null) || DatesIsChange == null)
-        return (ActionResult) null;
+        return null;
       List<DOCTOR> list2 = this.unitOfWork.Doctors.GetAll().ToList<DOCTOR>();
       int result = 0;
       int idDoctorChangeX = 0;
@@ -4669,7 +4669,7 @@ ViewBag.ActionPermission = list1;
       DateTime? nullable2 = new DateTime?();
       CalendarChangeModel calendarChangeModel = new CalendarChangeModel();
       if (!int.TryParse(idCalendarDuty, out result) || !int.TryParse(idDoctorChange, out idDoctorChangeX) || !int.TryParse(idDoctorIsChange, out idDoctorIsChangeX))
-        return (ActionResult) null;
+        return null;
       CALENDAR_CHANGE calendarChange = new CALENDAR_CHANGE();
       DateTime? nullable3;
       try
@@ -4709,7 +4709,7 @@ ViewBag.ActionPermission = list1;
         calendarChangeModel.CALENDAR_DUTY_ID = new int?(Convert.ToInt32(idCalendarDuty));
       }
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "Đổi lịch trực đơn vị ", "N/A", "N/A", 0, "", "");
-      return (ActionResult) this.Json((object) calendarChangeModel, JsonRequestBehavior.AllowGet);
+      return this.Json(calendarChangeModel, JsonRequestBehavior.AllowGet);
     }
 
     [CustomAuthorize]
@@ -4747,7 +4747,7 @@ ViewBag.ActionPermission = list1;
         ExcelWorksheet excelWorksheet = excelPackage.Workbook.Worksheets[1];
         FReport freport = new FReport();
         excelWorksheet.Cells["C2"].Value =  ("Tháng " + iMonth.ToString() + " năm " + iYear.ToString()).ToUpper();
-        int num1 = BachMaiCR.Web.Utils.Utils.FirstDate(BachMaiCR.Web.Utils.Utils.ToDateTime((object) (iMonth.ToString() + "/1/" + iYear.ToString()), "dd/mm/yyyy"));
+        int num1 = BachMaiCR.Web.Utils.Utils.FirstDate(BachMaiCR.Web.Utils.Utils.ToDateTime((iMonth.ToString() + "/1/" + iYear.ToString()), "dd/mm/yyyy"));
         string[] strArray = new string[7]
         {
           "Thứ 2",
@@ -4794,7 +4794,7 @@ ViewBag.ActionPermission = list1;
         }
         asByteArray = excelPackage.GetAsByteArray();
       }
-      return (ActionResult) new DownloadResult(asByteArray, "ReportOfCalendarDefault.xlsx");
+      return new DownloadResult(asByteArray, "ReportOfCalendarDefault.xlsx");
     }
 
     [CustomAuthorize]
@@ -4868,7 +4868,7 @@ ViewBag.ActionPermission = list1;
         excelWorksheet.Cells[5 + num4, 3].Style.Font.Bold = true;
         asByteArray = excelPackage.GetAsByteArray();
       }
-      return (ActionResult) new DownloadResult(asByteArray, "ReportOfCalendarDuty.xlsx");
+      return new DownloadResult(asByteArray, "ReportOfCalendarDuty.xlsx");
     }
 
     [CustomAuthorize]
@@ -4877,7 +4877,7 @@ ViewBag.ActionPermission = list1;
     public PartialViewResult LoadCalendarLeader(string strDate)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       DateTime dateTime = BachMaiCR.Web.Utils.Utils.GetDateTime();
       int result1 = dateTime.Month;
       int result2 = dateTime.Year;
@@ -4907,7 +4907,7 @@ ViewBag.Actions = actionCodesByUserName;
     {
       List<string> actionCodesByUserName = this.GetActionCodesByUserName();
 ViewBag.Actions = actionCodesByUserName;
-      return (ActionResult) this.View("_AddCalendarLeader");
+      return this.View("_AddCalendarLeader");
     }
 
     [CustomAuthorize]
@@ -4918,7 +4918,7 @@ ViewBag.Actions = actionCodesByUserName;
 ViewBag.types = hashCode;
       List<string> actionCodesByUserName = this.GetActionCodesByUserName();
 ViewBag.ActionPermission = actionCodesByUserName;
-      return (ActionResult) this.View("~/Views/CalendarDuty/Index.cshtml");
+      return this.View("~/Views/CalendarDuty/Index.cshtml");
     }
 
     [HttpGet]
@@ -4932,7 +4932,7 @@ ViewBag.ActionPermission = actionCodesByUserName;
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
       int result1 = 0;
       int result2 = 0;
-      int int32 = Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID);
+      int int32 = Convert.ToInt32(byUserName.LM_DEPARTMENT_ID);
       if (int.TryParse(strArray[0], out result1) && int.TryParse(strArray[1], out result2))
       {
         int hashCode = DutyType.Leader.GetHashCode();
@@ -4949,23 +4949,23 @@ ViewBag.ActionPermission = actionCodesByUserName;
           entity2.ISDELETE = new bool?(false);
           entity2.USER_CREATE_ID = new int?(byUserName.ADMIN_USER_ID);
           this.unitOfWork.CalendarDuty.Add(entity2);
-          CALENDAR_DATA objCalendarData = (CALENDAR_DATA) null;
-          CALENDAR_DOCTOR objCalendarDoctor = (CALENDAR_DOCTOR) null;
+          CALENDAR_DATA objCalendarData = null;
+          CALENDAR_DOCTOR objCalendarDoctor = null;
           int calendarDutyId = entity2.CALENDAR_DUTY_ID;
           this.SaveDataCalendar(strValues, objCalendarData, objCalendarDoctor, calendarDutyId, result1, result2);
-          return (ActionResult) this.Json((object) Localization.AddCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+          return this.Json(Localization.AddCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
         }
         int calendarDutyId1 = entity1.CALENDAR_DUTY_ID;
         entity1.CALENDAR_NAME = calendarName;
         this.unitOfWork.CalendarDuty.Update(entity1);
         this.unitOfWork.CalendarDoctors.DeleteCalendarDoctorById(calendarDutyId1);
         this.unitOfWork.CalendarDatas.DeleteCalendarDataById(calendarDutyId1);
-        CALENDAR_DATA objCalendarData1 = (CALENDAR_DATA) null;
-        CALENDAR_DOCTOR objCalendarDoctor1 = (CALENDAR_DOCTOR) null;
+        CALENDAR_DATA objCalendarData1 = null;
+        CALENDAR_DOCTOR objCalendarDoctor1 = null;
         this.SaveDataCalendar(strValues, objCalendarData1, objCalendarDoctor1, calendarDutyId1, result1, result2);
-        return (ActionResult) this.Json((object) Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+        return this.Json(Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
       }
-      return (ActionResult) null;
+      return null;
     }
 
     [HttpPost]
@@ -4981,8 +4981,8 @@ ViewBag.ActionPermission = actionCodesByUserName;
       int.TryParse(strArray[0], out result1);
       int.TryParse(strArray[1], out result2);
       int.TryParse(strArray[2], out result3);
-      CALENDAR_DATA objCalendarData = (CALENDAR_DATA) null;
-      CALENDAR_DOCTOR objCalendarDoctor = (CALENDAR_DOCTOR) null;
+      CALENDAR_DATA objCalendarData = null;
+      CALENDAR_DOCTOR objCalendarDoctor = null;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result3);
       if (byId == null)
         throw new Exception("UpdateCalendarLeader");
@@ -5010,7 +5010,7 @@ ViewBag.ActionPermission = actionCodesByUserName;
         this.unitOfWork.CalendarDatas.DeleteCalendarDataById(result3);
         this.SaveDataCalendar(strValues, objCalendarData, objCalendarDoctor, result3, result1, result2);
       }
-      return (ActionResult) this.Json((object) Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+      return this.Json(Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
     }
 
     private void SaveDataCalendar(string strValues, CALENDAR_DATA objCalendarData, CALENDAR_DOCTOR objCalendarDoctor, int calendarDutyId, int monthx, int yearx)
@@ -5054,8 +5054,8 @@ ViewBag.ActionPermission = actionCodesByUserName;
             objCalendarDoctor.DOCTORS_ID = result2;
             objCalendarDoctor.CALENDAR_DUTY_ID = new int?(calendarDutyId);
             this.unitOfWork.CalendarDoctors.Add(objCalendarDoctor);
-            objCalendarData = (CALENDAR_DATA) null;
-            objCalendarDoctor = (CALENDAR_DOCTOR) null;
+            objCalendarData = null;
+            objCalendarDoctor = null;
           }
         }
       }
@@ -5092,7 +5092,7 @@ ViewBag.times = dateTime;
     public PartialViewResult LoadListCalendarLeader(string strDate)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       DateTime dateTime = BachMaiCR.Web.Utils.Utils.GetDateTime();
       int result1 = dateTime.Month;
       int result2 = dateTime.Year;
@@ -5151,13 +5151,13 @@ ViewBag.times = dateTime;
         CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result);
         nullable1 = byId.CALENDAR_MONTH;
         nullable2 = byId.CALENDAR_YEAR;
-        calendarDuty = (CALENDAR_DUTY) null;
+        calendarDuty = null;
       }
 ViewBag.lstCalendarChange = this.unitOfWork.CalendarChanges.GetListChangeCalendar(result);
 ViewBag.month = nullable1;
 ViewBag.year = nullable2;
 ViewBag.idCalendarDuty = "";
-      return (ActionResult) this.View("_ViewListCalendarLeader");
+      return this.View("_ViewListCalendarLeader");
     }
 
     [ActionDescription(ActionCode = "CalendarDutyLeader_View", ActionName = "Xem lịch lãnh đạo", GroupCode = "CalendarDutyLeader", GroupName = "Lịch lãnh đạo")]
@@ -5167,7 +5167,7 @@ ViewBag.idCalendarDuty = "";
     public PartialViewResult PartialViewListCalendarLeader(string idCalendarDuty)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       DateTime dateTime = BachMaiCR.Web.Utils.Utils.GetDateTime();
       int? nullable1 = new int?(dateTime.Month);
       int? nullable2 = new int?(dateTime.Year);
@@ -5178,7 +5178,7 @@ ViewBag.idCalendarDuty = "";
         CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result);
         nullable1 = byId.CALENDAR_MONTH;
         nullable2 = byId.CALENDAR_YEAR;
-        calendarDuty = (CALENDAR_DUTY) null;
+        calendarDuty = null;
       }
 ViewBag.month = nullable1;
 ViewBag.year = nullable2;
@@ -5193,7 +5193,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
     public PartialViewResult EditCalendarLeader(string idCalendarDuty)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       int result1 = 0;
       List<DoctorCalendarLeader> doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
       CALENDAR_DUTY calendarDuty = new CALENDAR_DUTY();
@@ -5256,7 +5256,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
         excelWorksheet.Cells["C2"].Value =  ("Tháng " + (result1 == 0 ? "" : result1.ToString()) + " năm " + (result2 == 0 ? "" : result2.ToString()));
         excelWorksheet.Cells["C2"].Style.Font.Italic = true;
         excelWorksheet.Cells["C2"].Style.Font.Bold = true;
-        int num1 = BachMaiCR.Web.Utils.Utils.FirstDate(BachMaiCR.Web.Utils.Utils.ToDateTime((object) (result1.ToString() + "/1/" + result2.ToString()), "dd/mm/yyyy"));
+        int num1 = BachMaiCR.Web.Utils.Utils.FirstDate(BachMaiCR.Web.Utils.Utils.ToDateTime((result1.ToString() + "/1/" + result2.ToString()), "dd/mm/yyyy"));
         string[] strArray = new string[9]
         {
           "Thứ 2",
@@ -5314,7 +5314,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
           }
         }
         excelWorksheet.Cells["D14:F14"].Merge = true;
-        excelWorksheet.Cells["D14"].Value =  ("Hà nội, ngày " + (object) DateTime.Now.Day + " tháng " + (object) DateTime.Now.Month + " năm " + (object) DateTime.Now.Year);
+        excelWorksheet.Cells["D14"].Value =  ("Hà nội, ngày " + DateTime.Now.Day + " tháng " + DateTime.Now.Month + " năm " + DateTime.Now.Year);
         excelWorksheet.Cells["D14"].Style.Font.Italic = true;
         excelWorksheet.Cells["D14"].Style.Font.Bold = true;
         excelWorksheet.Cells["D14:F14"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
@@ -5339,7 +5339,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
         }
         asByteArray = excelPackage.GetAsByteArray();
       }
-      return (ActionResult) new DownloadResult(asByteArray, "LichTT_LD_Thang" + result1.ToString() + "_nam" + result2.ToString() + ".xlsx");
+      return new DownloadResult(asByteArray, "LichTT_LD_Thang" + result1.ToString() + "_nam" + result2.ToString() + ".xlsx");
     }
 
     private void ShowDoctorInDay(int iYear, int iMonth, int dayOfWeek, int day, List<DoctorCalendarLeader> itemData, List<CALENDAR_CHANGE> itemDataChange, List<ItemBase> deptItems, ExcelRange cell)
@@ -5387,7 +5387,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
                 excelRichText.Color = Color.Green;
               }
             }
-            ExportReport.ApplyStyle(cell, (string) null, null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 2), new ExcelVerticalAlignment?((ExcelVerticalAlignment) 0), null, null, null);
+            ExportReport.ApplyStyle(cell, null, null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 2), new ExcelVerticalAlignment?((ExcelVerticalAlignment) 0), null, null, null);
           }
           else
             ExportReport.ApplyStyle(cell, str2, null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 2), new ExcelVerticalAlignment?((ExcelVerticalAlignment) 0), new bool?(false), null, null);
@@ -5406,16 +5406,16 @@ ViewBag.idCalendarDuty = idCalendarDuty;
     public ActionResult DeleteCalendarLeader(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index", "Home");
+        return this.RedirectToAction("Index", "Home");
       if (id <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thao tác không hợp lệ!"));
+        return this.Json(JsonResponse.Json500("Thao tác không hợp lệ!"));
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(id);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.ISDELETE = true;
       this.unitOfWork.CalendarDuty.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.Delete, "Xóa thông tin lịch lãnh đạo thành công", "N/A", "N/A", id, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) Localization.MsgDelSuccess));
+      return this.Json(JsonResponse.Json200(Localization.MsgDelSuccess));
     }
 
     [ActionDescription(ActionCode = "CalendarDutyLeader_Send", ActionName = "Gửi duyệt lịch lãnh đạo", GroupCode = "CalendarDutyLeader", GroupName = "Lịch lãnh đạo", IsMenu = false)]
@@ -5425,13 +5425,13 @@ ViewBag.idCalendarDuty = idCalendarDuty;
     public ActionResult SendApprovedLeader(string idCalendarDuty, string types)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       int result = 0;
       if (!int.TryParse(idCalendarDuty, out result))
-        return (ActionResult) null;
+        return null;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.CALENDAR_STATUS = new int?(2);
       byId.USER_CREATE_ID = new int?(this.UserX.ADMIN_USER_ID);
       byId.DATE_CREATE = new DateTime?(DateTime.Now);
@@ -5440,7 +5440,7 @@ ViewBag.objCalendarDuty = byId;
       this.WriteLog(enLogType.NomalLog, enActionType.SendApproved, "Gửi duyệt lịch trực lãnh đạo thành công", "N/A", "N/A", result, "", "");
       if (byId.ISAPPROVED == 1)
         this.unitOfWork.CalendarChanges.UpdateStatus(result, 2);
-      return (ActionResult) null;
+      return null;
     }
 
     [ActionDescription(ActionCode = "CalendarDutyLeader_CancelApproved", ActionName = "Hủy duyệt lịch lãnh đạo", GroupCode = "CalendarDutyLeader", GroupName = "Lịch lãnh đạo", IsMenu = false)]
@@ -5451,7 +5451,7 @@ ViewBag.objCalendarDuty = byId;
       int calendarDutyId = objCalendarDuty.CALENDAR_DUTY_ID;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(calendarDutyId);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.CALENDAR_STATUS = new int?(4);
       byId.COMMENTS = objCalendarDuty.COMMENTS;
       byId.USER_APPROVED_ID = new int?();
@@ -5459,7 +5459,7 @@ ViewBag.objCalendarDuty = byId;
       this.unitOfWork.CalendarDuty.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.ApproveCancel, "Hủy duyệt lịch trực lãnh đạo thành công ", objCalendarDuty.COMMENTS, "N/A", calendarDutyId, "", "");
 ViewBag.objCalendarDuty = byId;
-      return (ActionResult) null;
+      return null;
     }
 
     [HttpGet]
@@ -5469,32 +5469,32 @@ ViewBag.objCalendarDuty = byId;
     public ActionResult ApprovedCalendarLeader(string idCalendarDuty, string types)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       int result = 0;
       if (!int.TryParse(idCalendarDuty, out result))
-        return (ActionResult) null;
+        return null;
       CALENDAR_DUTY byId1 = this.unitOfWork.CalendarDuty.GetById(result);
       if (byId1 == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId1.CALENDAR_STATUS = new int?(3);
       byId1.ISAPPROVED = 1;
       byId1.USER_APPROVED_ID = new int?(this.UserX.ADMIN_USER_ID);
       byId1.DATE_APPROVED = new DateTime?(DateTime.Now);
       this.unitOfWork.CalendarDuty.Update(byId1);
-      CALENDAR_DUTY calendarDuty = this.unitOfWork.CalendarDuty.CheckCalendarHospital(Convert.ToInt32((object) byId1.CALENDAR_MONTH), Convert.ToInt32((object) byId1.CALENDAR_YEAR), 4);
+      CALENDAR_DUTY calendarDuty = this.unitOfWork.CalendarDuty.CheckCalendarHospital(Convert.ToInt32(byId1.CALENDAR_MONTH), Convert.ToInt32(byId1.CALENDAR_YEAR), 4);
       if (calendarDuty == null)
         this.unitOfWork.CalendarDuty.Add(new CALENDAR_DUTY()
         {
-          CALENDAR_NAME = "Lịch trực toàn bệnh viện tháng " + (object) byId1.CALENDAR_MONTH + " năm " + (object) byId1.CALENDAR_YEAR,
+          CALENDAR_NAME = "Lịch trực toàn bệnh viện tháng " + byId1.CALENDAR_MONTH + " năm " + byId1.CALENDAR_YEAR,
           CALENDAR_MONTH = byId1.CALENDAR_MONTH,
           CALENDAR_YEAR = byId1.CALENDAR_YEAR,
           CALENDAR_STATUS = new int?(CalendarDutyStatus.Created.GetHashCode()),
           DUTY_TYPE = new int?(DutyType.Hospital.GetHashCode()),
           ISDELETE = new bool?(false),
           USER_CREATE_ID = new int?(),
-          LM_DEPARTMENT_PARTS = (string) null
+          LM_DEPARTMENT_PARTS = null
         });
-      if (this.unitOfWork.CalendarGroups.CheckIsExist(calendarDuty.CALENDAR_DUTY_ID, result, Convert.ToInt32((object) byId1.CALENDAR_MONTH), Convert.ToInt32((object) byId1.CALENDAR_YEAR)) == null)
+      if (this.unitOfWork.CalendarGroups.CheckIsExist(calendarDuty.CALENDAR_DUTY_ID, result, Convert.ToInt32(byId1.CALENDAR_MONTH), Convert.ToInt32(byId1.CALENDAR_YEAR)) == null)
         this.unitOfWork.CalendarGroups.Add(new CALENDAR_GROUP()
         {
           CALENDAR_ID = calendarDuty.CALENDAR_DUTY_ID,
@@ -5516,7 +5516,7 @@ ViewBag.objCalendarDuty = byId;
           CALENDAR_DATA calendarData = new CALENDAR_DATA();
           foreach (CALENDAR_CHANGE entity1 in listByIdCalendar)
           {
-            DoctorData doctorData2 = this.unitOfWork.DoctorDatas.CheckDoctorData(Convert.ToInt32((object) entity1.CALENDAR_DUTY_ID), Convert.ToInt32((object) entity1.DOCTORS_ID), Convert.ToInt32((object) entity1.TEMPLATE_COLUMN_ID), Convert.ToDateTime((object) entity1.DATE_START));
+            DoctorData doctorData2 = this.unitOfWork.DoctorDatas.CheckDoctorData(Convert.ToInt32(entity1.CALENDAR_DUTY_ID), Convert.ToInt32(entity1.DOCTORS_ID), Convert.ToInt32(entity1.TEMPLATE_COLUMN_ID), Convert.ToDateTime(entity1.DATE_START));
             int? status;
             if (doctorData2 != null)
             {
@@ -5525,7 +5525,7 @@ ViewBag.objCalendarDuty = byId;
               if ((status.GetValueOrDefault() != hashCode2 ? 0 : (status.HasValue ? 1 : 0)) != 0)
               {
                 CALENDAR_DOCTOR byId2 = this.unitOfWork.CalendarDoctors.GetById(doctorData2.CALENDAR_DOCTOR_ID);
-                byId2.DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_CHANGE_ID);
+                byId2.DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_CHANGE_ID);
                 this.unitOfWork.CalendarDoctors.Update(byId2);
                 entity1.STATUS_APPROVED = new int?(hashCode1);
                 this.unitOfWork.CalendarChanges.Update(entity1);
@@ -5556,9 +5556,9 @@ ViewBag.objCalendarDuty = byId;
                 this.unitOfWork.CalendarDatas.Add(entity2);
                 this.unitOfWork.CalendarDoctors.Add(new CALENDAR_DOCTOR()
                 {
-                  DOCTORS_ID = Convert.ToInt32((object) entity1.DOCTORS_ID),
+                  DOCTORS_ID = Convert.ToInt32(entity1.DOCTORS_ID),
                   CALENDAR_DUTY_ID = new int?(result),
-                  COLUMN_LEVEL_ID = new int?(Convert.ToInt32((object) entity1.TEMPLATE_COLUMN_ID)),
+                  COLUMN_LEVEL_ID = new int?(Convert.ToInt32(entity1.TEMPLATE_COLUMN_ID)),
                   CALENDAR_DATA_ID = entity2.CALENDAR_DATA_ID
                 });
                 entity1.STATUS_APPROVED = new int?(hashCode1);
@@ -5567,14 +5567,14 @@ ViewBag.objCalendarDuty = byId;
               }
             }
           }
-          doctorData1 = (DoctorData) null;
-          calendarDoctor = (CALENDAR_DOCTOR) null;
-          calendarData = (CALENDAR_DATA) null;
+          doctorData1 = null;
+          calendarDoctor = null;
+          calendarData = null;
         }
       }
 ViewBag.objCalendarDuty = byId1;
       this.WriteLog(enLogType.NomalLog, enActionType.Approve, "Phê duyệt lịch lãnh đạo thành công", "N/A", "N/A", result, "", "");
-      return (ActionResult) null;
+      return null;
     }
 
     [ActionDescription(ActionCode = "CalendarDutyDirectors_Insert", ActionName = "Lập bảng thường trú Ban giám đốc", GroupCode = "CalendarDutyDirectors", GroupName = "Lịch thường trú Ban giám đốc")]
@@ -5583,7 +5583,7 @@ ViewBag.objCalendarDuty = byId1;
     public PartialViewResult LoadCalendarDirectors(string strDate)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       DateTime dateTime = BachMaiCR.Web.Utils.Utils.GetDateTime();
       int result1 = dateTime.Month;
       int result2 = dateTime.Year;
@@ -5611,7 +5611,7 @@ ViewBag.Actions = actionCodesByUserName;
     {
       List<string> actionCodesByUserName = this.GetActionCodesByUserName();
 ViewBag.Actions = actionCodesByUserName;
-      return (ActionResult) this.View("_AddCalendarDirectors");
+      return this.View("_AddCalendarDirectors");
     }
 
     [CustomAuthorize]
@@ -5621,7 +5621,7 @@ ViewBag.Actions = actionCodesByUserName;
     public PartialViewResult EditCalendarDirectors(string idCalendarDuty)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       int result1 = 0;
       List<DoctorCalendarLeader> doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
       CALENDAR_DUTY calendarDuty = new CALENDAR_DUTY();
@@ -5668,12 +5668,12 @@ ViewBag.Actions = actionCodesByUserName;
         CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result);
         nullable1 = byId.CALENDAR_MONTH;
         nullable2 = byId.CALENDAR_YEAR;
-        calendarDuty = (CALENDAR_DUTY) null;
+        calendarDuty = null;
       }
 ViewBag.month = nullable1;
 ViewBag.year = nullable2;
 ViewBag.idCalendarDuty = "";
-      return (ActionResult) this.View("_ViewListCalendarDirectors");
+      return this.View("_ViewListCalendarDirectors");
     }
 
     [CustomAuthorize]
@@ -5683,7 +5683,7 @@ ViewBag.idCalendarDuty = "";
     public PartialViewResult PartialViewListCalendarDirectors(string idCalendarDuty)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       DateTime dateTime = BachMaiCR.Web.Utils.Utils.GetDateTime();
       int? nullable1 = new int?(dateTime.Month);
       int? nullable2 = new int?(dateTime.Year);
@@ -5694,7 +5694,7 @@ ViewBag.idCalendarDuty = "";
         CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result);
         nullable1 = byId.CALENDAR_MONTH;
         nullable2 = byId.CALENDAR_YEAR;
-        calendarDuty = (CALENDAR_DUTY) null;
+        calendarDuty = null;
       }
 ViewBag.month = nullable1;
 ViewBag.year = nullable2;
@@ -5708,7 +5708,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
     public PartialViewResult LoadListCalendarDirectors(string strDate)
     {
       if (!this.Request.IsAjaxRequest())
-        return (PartialViewResult) null;
+        return null;
       DateTime dateTime = BachMaiCR.Web.Utils.Utils.GetDateTime();
       int result1 = dateTime.Month;
       int result2 = dateTime.Year;
@@ -5749,7 +5749,7 @@ ViewBag.Actions = actionCodesByUserName;
 ViewBag.types = hashCode;
       List<string> actionCodesByUserName = this.GetActionCodesByUserName();
 ViewBag.ActionPermission = actionCodesByUserName;
-      return (ActionResult) this.View("~/Views/CalendarDuty/Index.cshtml");
+      return this.View("~/Views/CalendarDuty/Index.cshtml");
     }
 
     [CustomAuthorize]
@@ -5765,29 +5765,29 @@ ViewBag.ActionPermission = actionCodesByUserName;
       int result1 = 0;
       int result2 = 0;
       if (!int.TryParse(strArray[0], out result1) || !int.TryParse(strArray[1], out result2))
-        return (ActionResult) null;
+        return null;
       int hashCode = DutyType.Directors.GetHashCode();
       CALENDAR_DUTY calendarDuty;
-      if (!this.unitOfWork.CalendarDuty.checkCalendar(result1, result2, hashCode, Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID), 0))
+      if (!this.unitOfWork.CalendarDuty.checkCalendar(result1, result2, hashCode, Convert.ToInt32(byUserName.LM_DEPARTMENT_ID), 0))
       {
         CALENDAR_DUTY entity = new CALENDAR_DUTY();
         entity.CALENDAR_NAME = calendarContent.Trim();
         entity.CALENDAR_MONTH = new int?(result1);
         entity.CALENDAR_YEAR = new int?(result2);
         entity.CALENDAR_STATUS = new int?(1);
-        entity.LM_DEPARTMENT_ID = Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID);
+        entity.LM_DEPARTMENT_ID = Convert.ToInt32(byUserName.LM_DEPARTMENT_ID);
         entity.DUTY_TYPE = new int?(2);
         entity.ISDELETE = new bool?(false);
         entity.USER_CREATE_ID = new int?(byUserName.ADMIN_USER_ID);
         entity.DATE_CREATE = new DateTime?(BachMaiCR.Web.Utils.Utils.GetDateTime());
         this.unitOfWork.CalendarDuty.Add(entity);
-        CALENDAR_DATA objCalendarData = (CALENDAR_DATA) null;
-        CALENDAR_DOCTOR objCalendarDoctor = (CALENDAR_DOCTOR) null;
+        CALENDAR_DATA objCalendarData = null;
+        CALENDAR_DOCTOR objCalendarDoctor = null;
         int calendarDutyId = entity.CALENDAR_DUTY_ID;
         this.SaveData(strValues, objCalendarData, objCalendarDoctor, calendarDutyId, result1, result2);
-        calendarDuty = (CALENDAR_DUTY) null;
+        calendarDuty = null;
         this.WriteLog(enLogType.NomalLog, enActionType.Insert, "Thêm mới lịch trực thường trú Ban giám đốc thành công", "N/A", "N/A", calendarDutyId, "", "");
-        return (ActionResult) this.Json((object) Localization.AddCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+        return this.Json(Localization.AddCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
       }
       int num = 0;
       List<CALENDAR_DUTY> calendarDutyList = (List<CALENDAR_DUTY>) null;
@@ -5800,12 +5800,12 @@ ViewBag.ActionPermission = actionCodesByUserName;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(num);
       byId.CALENDAR_NAME = calendarContent.Trim();
       this.unitOfWork.CalendarDuty.Update(byId);
-      calendarDuty = (CALENDAR_DUTY) null;
-      CALENDAR_DATA objCalendarData1 = (CALENDAR_DATA) null;
-      CALENDAR_DOCTOR objCalendarDoctor1 = (CALENDAR_DOCTOR) null;
+      calendarDuty = null;
+      CALENDAR_DATA objCalendarData1 = null;
+      CALENDAR_DOCTOR objCalendarDoctor1 = null;
       this.SaveData(strValues, objCalendarData1, objCalendarDoctor1, num, result1, result2);
       this.WriteLog(enLogType.NomalLog, enActionType.Update, "Cập nhật lịch trực thường trú Ban giám đốc thành công", "N/A", "N/A", num, "", "");
-      return (ActionResult) this.Json((object) Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+      return this.Json(Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
     }
 
     [ActionDescription(ActionCode = "CalendarDutyDirectors_Edit", ActionName = "Sửa bảng thường trú Ban giám đốc", GroupCode = "CalendarDutyDirectors", GroupName = "Lịch thường trú Ban giám đốc")]
@@ -5823,8 +5823,8 @@ ViewBag.ActionPermission = actionCodesByUserName;
         int.TryParse(strArray[0], out result1);
         int.TryParse(strArray[1], out result2);
         int.TryParse(strArray[2], out result3);
-        CALENDAR_DATA objCalendarData = (CALENDAR_DATA) null;
-        CALENDAR_DOCTOR objCalendarDoctor = (CALENDAR_DOCTOR) null;
+        CALENDAR_DATA objCalendarData = null;
+        CALENDAR_DOCTOR objCalendarDoctor = null;
         this.unitOfWork.CalendarDoctors.DeleteCalendarDoctorById(result3);
         this.unitOfWork.CalendarDatas.DeleteCalendarDataById(result3);
         CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result3);
@@ -5832,12 +5832,12 @@ ViewBag.ActionPermission = actionCodesByUserName;
         this.unitOfWork.CalendarDuty.Update(byId);
         this.SaveData(strValues, objCalendarData, objCalendarDoctor, result3, result1, result2);
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "Cập nhật lịch trực thường trú Ban giám đốc thành công", "N/A", "N/A", result3, "", "");
-        return (ActionResult) this.Json((object) Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
+        return this.Json(Localization.UpdateCalendarSuccess.ToString(), JsonRequestBehavior.AllowGet);
       }
       catch (Exception ex)
       {
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", "N/A", ex.Message, 0, "", "");
-        return (ActionResult) null;
+        return null;
       }
     }
 
@@ -5880,7 +5880,7 @@ ViewBag.ActionPermission = actionCodesByUserName;
           {
             nullable4 = new DateTime?();
           }
-          string str4 = result1.ToString() + "/" + (object) monthx + "/" + (object) yearx + " -  " + (object) result2 + "/" + (object) monthx + "/" + (object) yearx;
+          string str4 = result1.ToString() + "/" + monthx + "/" + yearx + " -  " + result2 + "/" + monthx + "/" + yearx;
           if (result1 == 1)
             str2 = "Tuần 1";
           else if (result1 == 8)
@@ -5903,8 +5903,8 @@ ViewBag.ActionPermission = actionCodesByUserName;
           objCalendarDoctor.DOCTORS_ID = result3;
           objCalendarDoctor.CALENDAR_DUTY_ID = new int?(calendarDutyId);
           this.unitOfWork.CalendarDoctors.Add(objCalendarDoctor);
-          objCalendarData = (CALENDAR_DATA) null;
-          objCalendarDoctor = (CALENDAR_DOCTOR) null;
+          objCalendarData = null;
+          objCalendarDoctor = null;
         }
       }
     }
@@ -5916,11 +5916,11 @@ ViewBag.ActionPermission = actionCodesByUserName;
 ViewBag.arrayid = string.Join(",", strArray);
 ViewBag.groupId = groupId;
 ViewBag.isChange = isChange;
-      List<DOCTOR> allDoctorByGroup = HttpContext.Cache["lstDoctorLeader" + (object) groupId] as List<DOCTOR>;
+      List<DOCTOR> allDoctorByGroup = HttpContext.Cache["lstDoctorLeader" + groupId] as List<DOCTOR>;
       if (allDoctorByGroup == null || allDoctorByGroup.Count == 0)
       {
         allDoctorByGroup = this.unitOfWork.Doctors.GetAllDoctorByGroup(groupId);
-        HttpContext.Cache.Insert("lstDoctorLeader" + (object) groupId, (object) allDoctorByGroup, (CacheDependency) null, DateTime.MaxValue, TimeSpan.FromMinutes(20.0));
+        HttpContext.Cache.Insert("lstDoctorLeader" + groupId, allDoctorByGroup, null, DateTime.MaxValue, TimeSpan.FromMinutes(20.0));
       }
       if (allDoctorByGroup.Any<DOCTOR>() && idCalendarDuty > 0)
       {
@@ -5959,7 +5959,7 @@ ViewBag.DateX = date;
         List<DoctorInCalendar> allDoctorNotLeader = this.unitOfWork.Doctors.GetAllDoctorNotLeader(date, 1);
 ViewBag.allDoctorCalendar = allDoctorNotLeader;
       }
-      return this.PartialView("_ListDirectors", (object) allDoctorByGroup);
+      return this.PartialView("_ListDirectors", allDoctorByGroup);
     }
 
     [CustomAuthorize]
@@ -5969,10 +5969,10 @@ ViewBag.allDoctorCalendar = allDoctorNotLeader;
     public ActionResult ChangeCalendarLeader(DoctorCalendarLeader dcRequestChange, DoctorCalendarLeader doctorCalendarChange, int idDoctorChange)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       if (dcRequestChange == null)
-        return (ActionResult) this.RedirectToAction("Index");
-      ITransaction transaction = (ITransaction) null;
+        return this.RedirectToAction("Index");
+      ITransaction transaction = null;
       try
       {
         transaction = this.unitOfWork.BeginTransaction();
@@ -5993,7 +5993,7 @@ ViewBag.allDoctorCalendar = allDoctorNotLeader;
           this.unitOfWork.CalendarChanges.Add(calendarChange);
         this.WriteLog(enLogType.NomalLog, enActionType.Insert, "Đổi lịch trực lãnh đạo", "N/A", "N/A", 0, "", "");
         transaction.Commit();
-        return (ActionResult) this.Json((object) new
+        return this.Json(new
         {
           doctorCalendarRequestChange = dcRequestChange,
           doctorCalendarAcceptChange = doctorCalendarChange,
@@ -6019,21 +6019,21 @@ ViewBag.allDoctorCalendar = allDoctorNotLeader;
     public ActionResult CancelChangeCalendarLeader(int calendarChangeId)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       if (calendarChangeId == 0)
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       CALENDAR_CHANGE byId = this.unitOfWork.CalendarChanges.GetById(calendarChangeId);
       if (byId == null)
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         byId.STATUS_APPROVED = new int?(4);
         this.unitOfWork.CalendarChanges.Update(byId);
-        return (ActionResult) this.Json((object) "Hủy đổi lịch thành công", JsonRequestBehavior.AllowGet);
+        return this.Json("Hủy đổi lịch thành công", JsonRequestBehavior.AllowGet);
       }
       catch
       {
-        return (ActionResult) this.Json((object) "Hủy đổi lịch lỗi", JsonRequestBehavior.AllowGet);
+        return this.Json("Hủy đổi lịch lỗi", JsonRequestBehavior.AllowGet);
       }
     }
 
@@ -6044,16 +6044,16 @@ ViewBag.allDoctorCalendar = allDoctorNotLeader;
     public ActionResult DeleteDirectors(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index", "Home");
+        return this.RedirectToAction("Index", "Home");
       if (id <= 0)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thao tác không hợp lệ!"));
+        return this.Json(JsonResponse.Json500("Thao tác không hợp lệ!"));
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(id);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.ISDELETE = true;
       this.unitOfWork.CalendarDuty.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.Delete, "Xóa thông tin lịch thường trú ban giám đốc thành công", "N/A", "N/A", id, "", "");
-      return (ActionResult) this.Json(JsonResponse.Json200((object) Localization.MsgDelSuccess));
+      return this.Json(JsonResponse.Json200(Localization.MsgDelSuccess));
     }
 
     [ActionDescription(ActionCode = "CalendarDutyDirectors_Send", ActionName = "Gửi duyệt bảng thường trú Ban giám đốc", GroupCode = "CalendarDutyDirectors", GroupName = "Lịch thường trú Ban giám đốc", IsMenu = false)]
@@ -6062,20 +6062,20 @@ ViewBag.allDoctorCalendar = allDoctorNotLeader;
     public ActionResult SendApprovedDirectors(string idCalendarDuty, string types)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       int result = 0;
       if (!int.TryParse(idCalendarDuty, out result))
-        return (ActionResult) null;
+        return null;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.CALENDAR_STATUS = new int?(2);
       byId.USER_CREATE_ID = new int?(this.UserX.ADMIN_USER_ID);
       byId.DATE_CREATE = new DateTime?(DateTime.Now);
       this.unitOfWork.CalendarDuty.Update(byId);
 ViewBag.objCalendarDuty = byId;
       this.WriteLog(enLogType.NomalLog, enActionType.SendApproved, "Gửi duyệt lịch trực thường trú Ban giám đốc thành công", "N/A", "N/A", result, "", "");
-      return (ActionResult) null;
+      return null;
     }
 
     [ActionDescription(ActionCode = "CalendarDutyDirectors_CancelApproved", ActionName = "Hủy duyệt bảng thường trú Ban giám đốc", GroupCode = "CalendarDutyDirectors", GroupName = "Lịch thường trú Ban giám đốc", IsMenu = false)]
@@ -6086,7 +6086,7 @@ ViewBag.objCalendarDuty = byId;
       int calendarDutyId = objCalendarDuty.CALENDAR_DUTY_ID;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(calendarDutyId);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.CALENDAR_STATUS = new int?(4);
       byId.COMMENTS = objCalendarDuty.COMMENTS;
       byId.USER_APPROVED_ID = new int?();
@@ -6094,7 +6094,7 @@ ViewBag.objCalendarDuty = byId;
       this.unitOfWork.CalendarDuty.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.ApproveCancel, "Hủy duyệt lịch trực thường trú Ban giám đốc thành công ", objCalendarDuty.COMMENTS, "N/A", calendarDutyId, "", "");
 ViewBag.objCalendarDuty = byId;
-      return (ActionResult) null;
+      return null;
     }
 
     [CustomAuthorize]
@@ -6104,13 +6104,13 @@ ViewBag.objCalendarDuty = byId;
     public ActionResult ApprovedCalendarDirector(string idCalendarDuty, string types)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       int result = 0;
       if (!int.TryParse(idCalendarDuty, out result))
-        return (ActionResult) null;
+        return null;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result);
       if (byId == null)
-        return (ActionResult) this.Json(JsonResponse.Json500((object) "Thông tin không tồn tại!"));
+        return this.Json(JsonResponse.Json500("Thông tin không tồn tại!"));
       byId.CALENDAR_STATUS = new int?(3);
       byId.USER_APPROVED_ID = new int?(this.UserX.ADMIN_USER_ID);
       byId.DATE_APPROVED = new DateTime?(DateTime.Now);
@@ -6128,22 +6128,22 @@ ViewBag.objCalendarDuty = byId;
             Phone = byCalendarDutyId[index].PHONE,
             DoctorId = byCalendarDutyId[index].DOCTORS_ID,
             DoctorName = byCalendarDutyId[index].DOCTOR_NAME,
-            Contents = "BM-Lichtruc:Đ/c Trực thường trú BGĐ tháng " + (object) byCalendarDutyId[index].CALENDAR_MONTH + "/" + (object) byCalendarDutyId[index].CALENDAR_YEAR + " từ " + byCalendarDutyId[index].CALENDAR_CONTENT
+            Contents = "BM-Lichtruc:Đ/c Trực thường trú BGĐ tháng " + byCalendarDutyId[index].CALENDAR_MONTH + "/" + byCalendarDutyId[index].CALENDAR_YEAR + " từ " + byCalendarDutyId[index].CALENDAR_CONTENT
           });
         doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
       }
       this.sendSMS(listSms);
-      return (ActionResult) null;
+      return null;
     }
 
     public ActionResult ApprovedRequestDirector(string idCalendarDuty, string types)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
 ViewBag.idCalendarDuty = idCalendarDuty;
       int result1 = 0;
       if (!int.TryParse(idCalendarDuty, out result1))
-        return (ActionResult) null;
+        return null;
       CALENDAR_DUTY byId = this.unitOfWork.CalendarDuty.GetById(result1);
       CalendarDutyModel calendarDutyModel = new CalendarDutyModel();
       calendarDutyModel.CALENDAR_DUTY_ID = byId.CALENDAR_DUTY_ID;
@@ -6151,9 +6151,9 @@ ViewBag.idCalendarDuty = idCalendarDuty;
       calendarDutyModel.COMMENTS = byId.COMMENTS;
       int result2 = 0;
       if (!int.TryParse(types, out result2))
-        return (ActionResult) null;
+        return null;
       calendarDutyModel.DUTY_TYPE = new int?(result2);
-      return (ActionResult) this.PartialView("_ApprovedRequest", (object) calendarDutyModel);
+      return this.PartialView("_ApprovedRequest", calendarDutyModel);
     }
 
     [ActionDescription(ActionCode = "CalendarDutyDirectors_Export", ActionName = "Xuất dữ liệu Excel", GroupCode = "CalendarDutyDirectors", GroupName = "Lịch thường trú Ban giám đốc", IsMenu = false)]
@@ -6162,8 +6162,8 @@ ViewBag.idCalendarDuty = idCalendarDuty;
     {
       try
       {
-        string fileName = "LichTT_" + (object) iMonth + "_" + (object) iYear;
-        return (ActionResult) new DownloadResult(this.GenerateByteDirector(fileName, iMonth, iYear), fileName + ".xlsx");
+        string fileName = "LichTT_" + iMonth + "_" + iYear;
+        return new DownloadResult(this.GenerateByteDirector(fileName, iMonth, iYear), fileName + ".xlsx");
       }
       catch (Exception ex)
       {
@@ -6188,7 +6188,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
       {
         ExcelWorksheet excelWorksheet = excelPackage.Workbook.Worksheets[1];
         excelWorksheet.Name = fileName;
-        string str1 = "THÁNG " + (object) iMonth + " NĂM " + (object) iYear;
+        string str1 = "THÁNG " + iMonth + " NĂM " + iYear;
         excelWorksheet.Cells["A5"].Value =  str1.ToUpper();
         var cel2 = excelWorksheet.Cells["A2"];
         int num3;
@@ -6217,7 +6217,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
           {
             for (int index2 = 0; index2 < doctorCalendarLeaderList.Count; ++index2)
             {
-              if (Convert.ToDateTime((object) doctorCalendarLeaderList[index2].DATE_START).Day >= Convert.ToInt32(str3) && Convert.ToDateTime((object) doctorCalendarLeaderList[index2].DATE_START).Day <= Convert.ToInt32(str4))
+              if (Convert.ToDateTime(doctorCalendarLeaderList[index2].DATE_START).Day >= Convert.ToInt32(str3) && Convert.ToDateTime(doctorCalendarLeaderList[index2].DATE_START).Day <= Convert.ToInt32(str4))
               {
                 str12 = !(str12 == "") ? str12 + "\n" + doctorCalendarLeaderList[index2].DOCTOR_NAME : str12 + doctorCalendarLeaderList[index2].DOCTOR_NAME;
                 str13 = !(str13 == "") ? str13 + "\n" + doctorCalendarLeaderList[index2].CALENDAR_PHONE : str13 + doctorCalendarLeaderList[index2].CALENDAR_PHONE;
@@ -6234,7 +6234,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
           string str18 = num3.ToString();
           string str19 = str17 + str18;
         excelWorksheet.Cells[str19].Value =  str13;
-          excelWorksheet.Cells["D13"].Value =  ("Ngày " + (object) now.Day + " tháng " + (object) now.Month + " năm " + (object) now.Year);
+          excelWorksheet.Cells["D13"].Value =  ("Ngày " + now.Day + " tháng " + now.Month + " năm " + now.Year);
         }
         List<CONFIG_REPORT> allByExcelName = this.unitOfWork.ConfigReports.GetAllByExcelName("ReportOfCalendarDirector.xlsx");
         if (allByExcelName != null && allByExcelName.Count > 0)
@@ -6284,7 +6284,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
     public ActionResult AutoScheduling(int iMonth, int iYear, int templateId, string contentDuty)
     {
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
-      int int32 = Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID);
+      int int32 = Convert.ToInt32(byUserName.LM_DEPARTMENT_ID);
       int num1 = this.unitOfWork.CalendarDuty.CheckCalendarDuty(iMonth, iYear, templateId, int32);
       List<CONFIG_PARAMETES> all = this.unitOfWork.ConfigParameter.GetAll(new int?(int32), iYear, 2);
       int? nullable1 = new int?(1);
@@ -6310,10 +6310,10 @@ ViewBag.idCalendarDuty = idCalendarDuty;
         entity1.LM_DEPARTMENT_PARTS = byUserName.LM_DEPARTMENT.DEPARTMENT_PATH + byId.LM_DEPARTMENT_PATH + ",";
         this.unitOfWork.CalendarDuty.Add(entity1);
         List<SqlParameter> sqlParameterList = new List<SqlParameter>();
-        sqlParameterList.Add(new SqlParameter("@MONTH", (object) iMonth));
-        sqlParameterList.Add(new SqlParameter("@YEAR", (object) iYear));
-        sqlParameterList.Add(new SqlParameter("@LM_DEPARTMENT_ID", (object) int32));
-        sqlParameterList.Add(new SqlParameter("@TEMPLATE_ID", (object) templateId));
+        sqlParameterList.Add(new SqlParameter("@MONTH", iMonth));
+        sqlParameterList.Add(new SqlParameter("@YEAR", iYear));
+        sqlParameterList.Add(new SqlParameter("@LM_DEPARTMENT_ID", int32));
+        sqlParameterList.Add(new SqlParameter("@TEMPLATE_ID", templateId));
         BACHMAICRContext bachmaicrContext = new BACHMAICRContext();
         List<AUTO_CALENDAR_DOCTOR> list1 = ((IEnumerable<AUTO_CALENDAR_DOCTOR>) bachmaicrContext.Database.SqlQuery<AUTO_CALENDAR_DOCTOR>("exec sp_insertAutoCalendar @MONTH, @YEAR, @LM_DEPARTMENT_ID, @TEMPLATE_ID", (object[]) sqlParameterList.ToArray())).ToList<AUTO_CALENDAR_DOCTOR>();
         List<DOCTOR> allByDepartmentId = this.unitOfWork.Doctors.GetAllByDepartmentId(int32);
@@ -6321,7 +6321,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
         int idColumnX = 0;
         int num3 = 0;
         int num4 = DateTime.DaysInMonth(iYear, iMonth);
-        DateTime? date = BachMaiCR.Web.Utils.Utils.ConvetDateVNToDate("1/" + (object) iMonth + "/" + (object) iYear);
+        DateTime? date = BachMaiCR.Web.Utils.Utils.ConvetDateVNToDate("1/" + iMonth + "/" + iYear);
         List<TEMPLATE_COLUM> columnByIdTemplate = this.unitOfWork.TemplatesColumn.GetColumnByIDTemplate(templateId, int32);
         if (columnByIdTemplate != null)
         {
@@ -6467,7 +6467,7 @@ label_25:
           }
         }
       }
-      return (ActionResult) null;
+      return null;
     }
 
     [HttpPost]
@@ -6478,7 +6478,7 @@ label_25:
     public ActionResult AutoSchedulingLeader(int iMonth, int iYear, string contentDuty)
     {
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
-      int int32 = Convert.ToInt32((object) byUserName.LM_DEPARTMENT_ID);
+      int int32 = Convert.ToInt32(byUserName.LM_DEPARTMENT_ID);
       List<CONFIG_PARAMETES> parameterLeader = this.unitOfWork.ConfigParameter.GetParameterLeader(iYear, 1);
       int? nullable1 = new int?(1);
       int num1 = 0;
@@ -6501,8 +6501,8 @@ label_25:
         entity1.USER_CREATE_ID = new int?(byUserName.ADMIN_USER_ID);
         this.unitOfWork.CalendarDuty.Add(entity1);
         List<SqlParameter> sqlParameterList = new List<SqlParameter>();
-        sqlParameterList.Add(new SqlParameter("@MONTH", (object) iMonth));
-        sqlParameterList.Add(new SqlParameter("@YEAR", (object) iYear));
+        sqlParameterList.Add(new SqlParameter("@MONTH", iMonth));
+        sqlParameterList.Add(new SqlParameter("@YEAR", iYear));
         BACHMAICRContext bachmaicrContext = new BACHMAICRContext();
         List<AUTO_CALENDAR_LEADER> list1 = ((IEnumerable<AUTO_CALENDAR_LEADER>) bachmaicrContext.Database.SqlQuery<AUTO_CALENDAR_LEADER>("exec sp_insertAutoCalendarLeader @MONTH, @YEAR", (object[]) sqlParameterList.ToArray())).ToList<AUTO_CALENDAR_LEADER>();
         bachmaicrContext.Dispose();
@@ -6510,7 +6510,7 @@ label_25:
         int num3 = 0;
         int num4 = 0;
         int num5 = DateTime.DaysInMonth(iYear, iMonth);
-        DateTime? date = BachMaiCR.Web.Utils.Utils.ConvetDateVNToDate("1/" + (object) iMonth + "/" + (object) iYear);
+        DateTime? date = BachMaiCR.Web.Utils.Utils.ConvetDateVNToDate("1/" + iMonth + "/" + iYear);
         DateTime? dateCheck = date;
         int num6 = 0;
 label_4:
@@ -6619,10 +6619,10 @@ label_22:
                       object[] objArray2 = objArray1;
                       int index2 = 0;
                       string str = dateTime1.ToString("dd/MM/yyyy ");
-                      objArray2[index2] = (object) str;
-                      objArray1[1] = (object) " ";
-                      objArray1[2] = (object) DayType.Day.GetHashCode();
-                      objArray1[3] = (object) ":00";
+                      objArray2[index2] = str;
+                      objArray1[1] = " ";
+                      objArray1[2] = DayType.Day.GetHashCode();
+                      objArray1[3] = ":00";
                         dateCheck = DateTime.Parse(string.Concat(objArray1));
                     }
                     else if (num4 == 1)
@@ -6632,10 +6632,10 @@ label_22:
                       int index2 = 0;
                       dateTime1 = dateCheck.Value;
                       string str = dateTime1.ToString("dd/MM/yyyy");
-                      objArray2[index2] = (object) str;
-                      objArray1[1] = (object) " ";
-                      objArray1[2] = (object) DayType.Night.GetHashCode();
-                      objArray1[3] = (object) ":00";
+                      objArray2[index2] = str;
+                      objArray1[1] = " ";
+                      objArray1[2] = DayType.Night.GetHashCode();
+                      objArray1[3] = ":00";
                     dateCheck = DateTime.Parse(string.Concat(objArray1));
                     }
                     ++num4;
@@ -6710,7 +6710,7 @@ label_22:
           }
         }
       }
-      return (ActionResult) null;
+      return null;
     }
   }
 }

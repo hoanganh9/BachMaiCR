@@ -37,7 +37,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult Index()
     {
             ViewBag.Title = "Nhật ký người dùng";
-      return (ActionResult) this.View();
+      return this.View();
     }
 
     [CustomAuthorize]
@@ -71,7 +71,7 @@ namespace BachMaiCR.Web.Controllers
       catch (Exception ex)
       {
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "N/A", "N/A", ex.Message, 0, "", "");
-        return (PartialViewResult) null;
+        return null;
       }
     }
 
@@ -93,7 +93,7 @@ namespace BachMaiCR.Web.Controllers
                 ViewBag.ListLogAction = EnumHelper<enActionType>.ConvertToSelectListItem(true, "-- Tất cả --");
                 ViewBag.ListLogType = EnumHelper<enLogType>.ConvertToSelectListItem(true, "-- Tất cả --");
        
-        return (ActionResult) this.PartialView("_Search", (object) logSearch);
+        return this.PartialView("_Search", logSearch);
       }
       catch (Exception ex)
       {
@@ -106,7 +106,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult OnDetail(int id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (id <= 0)
@@ -115,7 +115,7 @@ namespace BachMaiCR.Web.Controllers
         if (byId == null)
           throw new Exception(Localization.MsgItemNotExist);
         this.WriteLog(enLogType.NomalLog, enActionType.View, "Xem nhật ký người dùng", Localization.MsgActionSuccess, "N/A", id, "", "");
-        return (ActionResult) this.PartialView("_Detail", (object) byId);
+        return this.PartialView("_Detail", byId);
       }
       catch (Exception ex)
       {
@@ -130,7 +130,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult OnDelete(string id)
     {
       if (!this.Request.IsAjaxRequest())
-        return (ActionResult) this.RedirectToAction("Index");
+        return this.RedirectToAction("Index");
       try
       {
         if (string.IsNullOrEmpty(id))
