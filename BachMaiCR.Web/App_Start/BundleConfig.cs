@@ -9,7 +9,7 @@ namespace BachMaiCR.Web
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery")
                 .Include(
-                        "~/Scripts/jquery-3.1.1.min.js",
+                        "~/Scripts/jquery-1.8.3.js",
                         "~/Scripts/setup.project.js",
                         "~/Scripts/setup.project.confirmation.js",
                         "~/Scripts/jquery.cookie.js",
@@ -35,7 +35,7 @@ namespace BachMaiCR.Web
                         "~/Scripts/jquery.validate*",
                         "~/Scripts/jquery.unobtrusive*",
                         "~/Scripts/setup.project.custom.validate.js"
-                      
+
 
                         ));
 
@@ -49,7 +49,7 @@ namespace BachMaiCR.Web
                         "~/Scripts/bootstrap-bootbox.min.js",
                         "~/Scripts/bootstrap-datepicker.js",
                         "~/Scripts/bootstrap-select.js"
-                //"~/Scripts/bootstrap.js"
+                        //"~/Scripts/bootstrap.js"
                         ));
 
             bundles.Add(new ScriptBundle("~/bundles/treeview").Include(
@@ -107,7 +107,7 @@ namespace BachMaiCR.Web
             bundles.Add(new ScriptBundle("~/Scripts/basic_data").Include(
                       "~/Scripts/basic_data/jquery-ui.js",
                       "~/Scripts/basic_data/prettify.js",
-                      "~/Scripts/basic_data/jmultiselect.js"          
+                      "~/Scripts/basic_data/jmultiselect.js"
                       ));
         }
     }

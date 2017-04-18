@@ -15,14 +15,14 @@
         */
         var menu = $(element).find("li [href='" + window.location.pathname + "']").parent();
         var parent;
-        if (menu.length > 0 && menu.hasClass('li-nav-third-level')) {
+        if (menu.size() > 0 && menu.hasClass('li-nav-third-level')) {
             menu.addClass('active');
             parent = menu.parent().parent();
             parent.addClass('active');
             parent = parent.parent().parent();
             parent.addClass('active');
         }
-        else if (menu.length > 0 && menu.hasClass('li-nav-second-level')) {
+        else if (menu.size() > 0 && menu.hasClass('li-nav-second-level')) {
             menu.addClass('active');
             parent = menu.parent().parent();
             parent.addClass('active');

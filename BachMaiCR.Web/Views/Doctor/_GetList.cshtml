@@ -137,7 +137,7 @@
 
     // Hàm xử lý yêu cầu Export dữ liệu từ người dùng ra Excel
     function OnExportExcel() {
-        if ($('table tr').length == 0) {
+        if ($('table tr').size() == 0) {
             window.notice('@Resources.Localization.MsDataEmpty', window.notice_error);
         }
         else {

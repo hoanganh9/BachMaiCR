@@ -103,7 +103,7 @@
     // Delete log checked
     function OnDelete() {
         var lstItem = $('.select-checkbox:checked');
-        if (lstItem.length <= 0) {
+        if (lstItem.size() <= 0) {
             window.notice("Chưa có bản ghi được chọn!", window.notice_error);
             return;
         }

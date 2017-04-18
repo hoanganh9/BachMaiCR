@@ -75,7 +75,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<CALENDAR_DUTY> GetCalendarDirector(int iMonth = 0, int iYear = 0, int duty_type = 1)
     {
-      return ((IQueryable<CALENDAR_DUTY>) this.DbContext.CALENDAR_DUTY).Where((o => o.DUTY_TYPE == (int?) duty_type)).ToList();
+      return this.DbContext.CALENDAR_DUTY.Where(o => o.DUTY_TYPE == duty_type && o.CALENDAR_MONTH == iMonth && o.CALENDAR_YEAR == iYear).ToList();
     }
 
     public List<CALENDAR_DUTY> GetCalendarByDeparment(int iMonth = 0, int iYear = 0, int duty_type = 3, int? idDepartment = 0)
@@ -101,17 +101,17 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<DoctorCalendarLeader> GetDoctorCalendarDirector(int iMonth = 0, int iYear = 0, int duty_type = 1)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.DUTY_TYPE == (int?) duty_type)).ToList();
+      return this.DbContext.DoctorCalendarLeaders.Where(o => o.DUTY_TYPE == duty_type && o.CALENDAR_MONTH == iMonth && o.CALENDAR_YEAR == iYear).ToList();
     }
 
     public List<DoctorCalendarLeader> GetDoctorCalendarPesonal(int iMonth = 0, int iYear = 0, int doctorId = 0)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.DOCTORS_ID == doctorId)).ToList();
+      return this.DbContext.DoctorCalendarLeaders.Where(o => o.DOCTORS_ID == doctorId && o.CALENDAR_MONTH == iMonth && o.CALENDAR_YEAR == iYear).ToList();
     }
 
     public List<DoctorCalendarLeader> GetDoctorByCalendarDutyId(int calendarDutyId)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.CALENDAR_DUTY_ID == calendarDutyId)).ToList();
+      return this.DbContext.DoctorCalendarLeaders.Where(o => o.CALENDAR_DUTY_ID == calendarDutyId).ToList();
     }
 
     public List<DoctorCalendarLeader> GetDoctorCalendarDefault(int iMonth = 0, int iYear = 0, int duty_type = 3, int? deparmentId = 0)
