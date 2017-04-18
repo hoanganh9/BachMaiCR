@@ -49,21 +49,21 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<LM_DEPARTMENT> GetAll_List()
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy((t => t.DEPARTMENT_NAME)).ToList<LM_DEPARTMENT>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy((t => t.DEPARTMENT_NAME)).ToList();
     }
 
     public List<LM_DEPARTMENT> GetChildDepartment(int parrentId)
     {
       if (parrentId == 0)
-        return this.DbSet.Where((o => o.DEPARTMENT_PARENT_ID == (int?) parrentId && o.ISDELETE == false)).OrderBy<LM_DEPARTMENT>("DEPARTMENT_NAME").ToList<LM_DEPARTMENT>();
-      return this.DbSet.Where((o => o.DEPARTMENT_PARENT_ID == (int?) parrentId && o.ISDELETE == false)).OrderBy<LM_DEPARTMENT>("DEPARTMENT_NAME").ToList<LM_DEPARTMENT>();
+        return this.DbSet.Where((o => o.DEPARTMENT_PARENT_ID == (int?) parrentId && o.ISDELETE == false)).OrderBy<LM_DEPARTMENT>("DEPARTMENT_NAME").ToList();
+      return this.DbSet.Where((o => o.DEPARTMENT_PARENT_ID == (int?) parrentId && o.ISDELETE == false)).OrderBy<LM_DEPARTMENT>("DEPARTMENT_NAME").ToList();
     }
 
     public List<LM_DEPARTMENT> GetChildDepartment(string partparrentId)
     {
       if (string.IsNullOrEmpty(partparrentId))
         return (List<LM_DEPARTMENT>) null;
-      return this.DbSet.Where((o => o.DEPARTMENT_PATH.StartsWith(partparrentId))).OrderBy<LM_DEPARTMENT>("DEPARTMENT_PATH").ThenBy<LM_DEPARTMENT>("DEPARTMENT_NAME").ToList<LM_DEPARTMENT>();
+      return this.DbSet.Where((o => o.DEPARTMENT_PATH.StartsWith(partparrentId))).OrderBy<LM_DEPARTMENT>("DEPARTMENT_PATH").ThenBy<LM_DEPARTMENT>("DEPARTMENT_NAME").ToList();
     }
 
     public List<SelectListItem> GetListItemBase()
@@ -72,7 +72,7 @@ namespace BachMaiCR.DataAccess.Repository
       {
         Value = obj.LM_DEPARTMENT_ID.ToString(),
         Text = obj.DEPARTMENT_NAME
-      })).ToList<SelectListItem>();
+      })).ToList();
     }
 
     public List<ItemBase> GetListItemBase(List<int> ids)
@@ -82,7 +82,7 @@ namespace BachMaiCR.DataAccess.Repository
         Id = obj.LM_DEPARTMENT_ID,
         Name = obj.DEPARTMENT_NAME,
         Code = obj.DEPARTMENT_CODE
-      })).ToList<ItemBase>();
+      })).ToList();
     }
 
     private string getSpaceLevel(int? level)
@@ -97,7 +97,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<int> GetAllByDepartmentID(string departmentPart)
     {
-      return this.DbSet.AsNoTracking().Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.DEPARTMENT_PATH.Contains(departmentPart))).Select((obj => obj.LM_DEPARTMENT_ID)).ToList<int>();
+      return this.DbSet.AsNoTracking().Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.DEPARTMENT_PATH.Contains(departmentPart))).Select((obj => obj.LM_DEPARTMENT_ID)).ToList();
     }
 
     public List<DEPARTMENTLIST> GetAllDepartmentByParent(string departmentPart)
@@ -106,7 +106,7 @@ namespace BachMaiCR.DataAccess.Repository
       {
         LM_DEPARTMENT_ID = obj.LM_DEPARTMENT_ID,
         DEPARTMENT_NAME = obj.DEPARTMENT_NAME
-      })).ToList<DEPARTMENTLIST>();
+      })).ToList();
     }
 
     public List<DEPARTMENTLIST> GetAllDepartmentByLevel(int Level)
@@ -115,7 +115,7 @@ namespace BachMaiCR.DataAccess.Repository
       {
         LM_DEPARTMENT_ID = obj.LM_DEPARTMENT_ID,
         DEPARTMENT_NAME = obj.DEPARTMENT_NAME
-      })).ToList<DEPARTMENTLIST>();
+      })).ToList();
     }
 
     public List<DEPARTMENTLIST> GetAllDepartmentByLevelVT(int Level)
@@ -124,7 +124,7 @@ namespace BachMaiCR.DataAccess.Repository
       {
         LM_DEPARTMENT_ID = obj.LM_DEPARTMENT_ID,
         DEPARTMENT_NAME = obj.DEPARTMENT_CODE
-      })).ToList<DEPARTMENTLIST>();
+      })).ToList();
     }
 
     public List<DEPARTMENTLIST> GetAllDepartmentById(int? DeparmentId)
@@ -133,7 +133,7 @@ namespace BachMaiCR.DataAccess.Repository
       {
         LM_DEPARTMENT_ID = obj.LM_DEPARTMENT_ID,
         DEPARTMENT_NAME = obj.DEPARTMENT_NAME
-      })).ToList<DEPARTMENTLIST>();
+      })).ToList();
     }
 
     public bool ExistDeparmentLevel0(int? DeparmentId)
@@ -169,7 +169,7 @@ namespace BachMaiCR.DataAccess.Repository
             int DepID = 0;
             if (int.TryParse(strArray[index], out DepID))
             {
-              string departmentName = this.DbSet.AsNoTracking().FirstOrDefault<LM_DEPARTMENT>((obj => obj.LM_DEPARTMENT_ID == DepID)).DEPARTMENT_NAME;
+              string departmentName = this.DbSet.AsNoTracking().FirstOrDefault((obj => obj.LM_DEPARTMENT_ID == DepID)).DEPARTMENT_NAME;
               stringList.Add(departmentName);
             }
           }
@@ -195,7 +195,7 @@ namespace BachMaiCR.DataAccess.Repository
             int DepID = 0;
             if (int.TryParse(strArray[index], out DepID))
             {
-              string departmentCode = this.DbSet.AsNoTracking().FirstOrDefault<LM_DEPARTMENT>((obj => obj.LM_DEPARTMENT_ID == DepID)).DEPARTMENT_CODE;
+              string departmentCode = this.DbSet.AsNoTracking().FirstOrDefault((obj => obj.LM_DEPARTMENT_ID == DepID)).DEPARTMENT_CODE;
               stringList.Add(departmentCode);
             }
           }

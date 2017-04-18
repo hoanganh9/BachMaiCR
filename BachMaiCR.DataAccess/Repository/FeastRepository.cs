@@ -24,7 +24,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<FEAST> GetAll()
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE == false && obj.ISACTIVED == true)).ToList<FEAST>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE == false && obj.ISACTIVED == true)).ToList();
     }
 
     public PagedList<FEAST> GetAllList(string name, int year, int page, int size, string sort, string sortDir)

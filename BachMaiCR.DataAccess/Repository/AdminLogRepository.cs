@@ -1,4 +1,5 @@
-﻿
+﻿
+
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -67,7 +68,7 @@ namespace BachMaiCR.DataAccess.Repository
         {
           Text = obj.MENU_NAME,
           Value = obj.MENU_CODE
-        })).Distinct<SelectListItem>().ToList<SelectListItem>();
+        })).Distinct<SelectListItem>().ToList();
       }
       catch
       {
@@ -82,7 +83,7 @@ namespace BachMaiCR.DataAccess.Repository
       IQueryable<ADMIN_LOG> source = this.DbSet.AsNoTracking().Where((obj => lstId.Contains("," + obj.LOG_ID.ToString() + ",")));
       if (!source.Any<ADMIN_LOG>())
         return false;
-      foreach (ADMIN_LOG entity in source.ToList<ADMIN_LOG>())
+      foreach (ADMIN_LOG entity in source.ToList())
         this.Delete(entity);
       this.Save();
       return true;

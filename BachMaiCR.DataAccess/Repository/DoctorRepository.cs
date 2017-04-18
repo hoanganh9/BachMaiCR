@@ -95,7 +95,7 @@ namespace BachMaiCR.DataAccess.Repository
           IQueryable<LM_DEPARTMENT> searchKeys = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).Where((t => t.DEPARTMENT_PATH.Contains("," + deptId.ToString() + ",")));
           source = this.MultiValueContainsAny(source, searchKeys);
         }
-        return source.OrderBy((t => t.ABBREVIATION)).ToList<DOCTOR>();
+        return source.OrderBy((t => t.ABBREVIATION)).ToList();
       }
       catch
       {
@@ -129,7 +129,7 @@ namespace BachMaiCR.DataAccess.Repository
           }));
           source = this.MultiValueContainsAnyList(source, searchKeys);
         }
-        return source.OrderBy((t => t.ABBREVIATION)).OrderBy((t => t.DOCTOR_NAME)).ToList<DoctorList>();
+        return source.OrderBy((t => t.ABBREVIATION)).OrderBy((t => t.DOCTOR_NAME)).ToList();
       }
       catch
       {
@@ -221,7 +221,7 @@ namespace BachMaiCR.DataAccess.Repository
           num4 = 1;
         if (num4 == 0)
           source = source.Where((t => t.EDUCATION_IDs.Contains("," + entity.SearchDegreeId.Value.ToString() + ",")));
-        return source.OrderBy((t => t.ABBREVIATION)).ToList<DOCTOR>();
+        return source.OrderBy((t => t.ABBREVIATION)).ToList();
       }
       catch
       {
@@ -235,10 +235,10 @@ namespace BachMaiCR.DataAccess.Repository
       {
         if (departmentId > 0)
         {
-          ((IQueryable<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).Where((o => o.LM_DEPARTMENT_ID == departmentId)).FirstOrDefault<LM_DEPARTMENT>();
-          return this.DbSet.AsNoTracking().Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.LM_DEPARTMENT_IDs.Contains("," + departmentId + ","))).OrderBy((t => t.ABBREVIATION)).ToList<DOCTOR>();
+          ((IQueryable<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).Where((o => o.LM_DEPARTMENT_ID == departmentId)).FirstOrDefault();
+          return this.DbSet.AsNoTracking().Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.LM_DEPARTMENT_IDs.Contains("," + departmentId + ","))).OrderBy((t => t.ABBREVIATION)).ToList();
         }
-        return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy((t => t.ABBREVIATION)).ToList<DOCTOR>();
+        return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy((t => t.ABBREVIATION)).ToList();
       }
       catch
       {
@@ -248,27 +248,27 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<DOCTOR> GetAll_List()
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy((t => t.DOCTOR_NAME)).ToList<DOCTOR>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy((t => t.DOCTOR_NAME)).ToList();
     }
 
     public List<DOCTOR> GetAllByArrayDepartmentID(int[] ArrayIdDepartment)
     {
-      List<DOCTOR> list = this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE == false && obj.ISACTIVED == true)).OrderBy<DOCTOR, int?>((Expression<Func<DOCTOR, int?>>) (obj => obj.DOCTOR_ORDER)).ToList<DOCTOR>();
+      List<DOCTOR> list = this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE == false && obj.ISACTIVED == true)).OrderBy<DOCTOR, int?>((Expression<Func<DOCTOR, int?>>) (obj => obj.DOCTOR_ORDER)).ToList();
       int length = ArrayIdDepartment.Length;
       if (length > 0)
       {
         for (int index = 0; index < length; ++index)
         {
           string vR = ArrayIdDepartment[index].ToString();
-          list = list.Where((t => t.LM_DEPARTMENT_IDs.Contains("," + vR + ","))).ToList<DOCTOR>();
+          list = list.Where((t => t.LM_DEPARTMENT_IDs.Contains("," + vR + ","))).ToList();
         }
       }
-      return list.ToList<DOCTOR>();
+      return list.ToList();
     }
 
     public List<DoctorColumn> GetAllByTemplateColumn(int idColumn)
     {
-      return ((IQueryable<DoctorColumn>) this.DbContext.DoctorColumns).Where((obj => obj.TEMPLATE_COLUM_ID == idColumn)).OrderBy((o => o.DOCTORS_ID)).ToList<DoctorColumn>();
+      return ((IQueryable<DoctorColumn>) this.DbContext.DoctorColumns).Where((obj => obj.TEMPLATE_COLUM_ID == idColumn)).OrderBy((o => o.DOCTORS_ID)).ToList();
     }
 
     public List<DoctorInCalendar> GetAllDoctor(DateTime? date, int templateId)
@@ -294,7 +294,7 @@ namespace BachMaiCR.DataAccess.Repository
       });
       if (templateId > 0)
         source = source.Where((o => o.TEMPLATES_ID != (int?) templateId));
-      return source.OrderBy((o => o.DOCTORS_ID)).ToList<DoctorInCalendar>();
+      return source.OrderBy((o => o.DOCTORS_ID)).ToList();
     }
 
     public List<DoctorInCalendar> GetAllDoctorNotLeader(DateTime? date, int isLeader)
@@ -317,12 +317,12 @@ namespace BachMaiCR.DataAccess.Repository
         TEMPLATES_ID = data.TransparentIdentifier19.calendar.TEMPLATES_ID,
         ISAPPROVED = data.TransparentIdentifier19.calendar.ISAPPROVED,
         CALENDAR_DUTY_ID = data.TransparentIdentifier19.calendar.CALENDAR_DUTY_ID
-      }).OrderBy((o => o.DOCTORS_ID)).ToList<DoctorInCalendar>();
+      }).OrderBy((o => o.DOCTORS_ID)).ToList();
     }
 
     public List<DocTorDate> GetAllDayByDoctor(int idDoctor, int idCalendarDuty)
     {
-      return ((IQueryable<DocTorDate>) this.DbContext.DocTorDates).Where((obj => obj.DOCTORS_ID == idDoctor && obj.CALENDAR_DUTY_ID == idCalendarDuty)).OrderBy<DocTorDate, DateTime?>((Expression<Func<DocTorDate, DateTime?>>) (o => o.DATE_START)).ToList<DocTorDate>();
+      return ((IQueryable<DocTorDate>) this.DbContext.DocTorDates).Where((obj => obj.DOCTORS_ID == idDoctor && obj.CALENDAR_DUTY_ID == idCalendarDuty)).OrderBy<DocTorDate, DateTime?>((Expression<Func<DocTorDate, DateTime?>>) (o => o.DATE_START)).ToList();
     }
 
     public List<DateChangeList> GetAllDayByDoctorDefault(int idDoctor, int idCalendarDuty, DateTime date)
@@ -337,7 +337,7 @@ namespace BachMaiCR.DataAccess.Repository
         CALENDAR_DUTY_ID = data.calendar.CALENDAR_DUTY_ID,
         DOCTORS_ID = data.doc.DOCTORS_ID,
         CALENDAR_DATA_ID = data.calendar.CALENDAR_DATA_ID
-      }).OrderBy<DateChangeList, DateTime?>((Expression<Func<DateChangeList, DateTime?>>) (o => o.DATE_START)).ToList<DateChangeList>();
+      }).OrderBy<DateChangeList, DateTime?>((Expression<Func<DateChangeList, DateTime?>>) (o => o.DATE_START)).ToList();
     }
 
     public List<SelectListItem> GetListItemBase()
@@ -346,7 +346,7 @@ namespace BachMaiCR.DataAccess.Repository
       {
         Value = obj.DOCTORS_ID.ToString(),
         Text = obj.DOCTOR_NAME
-      })).ToList<SelectListItem>();
+      })).ToList();
     }
 
     public string GetMutilNameDoctors(string lstId)
@@ -374,7 +374,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<DOCTOR> GetAllDoctorByGroup(int groupId)
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE == false && obj.ISACTIVED == true && (groupId == 1 ? obj.DOCTOR_GROUP_ID == 1 : obj.DOCTOR_GROUP_ID == 1 || obj.DOCTOR_GROUP_ID == 2))).OrderBy((obj => obj.ABBREVIATION)).ToList<DOCTOR>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE == false && obj.ISACTIVED == true && (groupId == 1 ? obj.DOCTOR_GROUP_ID == 1 : obj.DOCTOR_GROUP_ID == 1 || obj.DOCTOR_GROUP_ID == 2))).OrderBy((obj => obj.ABBREVIATION)).ToList();
     }
 
     public bool ExistReferenceCategory(int usrID)

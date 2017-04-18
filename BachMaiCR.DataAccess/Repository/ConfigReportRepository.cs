@@ -23,7 +23,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<CONFIG_REPORT> GetAllByExcelName(string excelName)
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.CONFIG_REPORT_EXCEL == excelName.Trim())).ToList<CONFIG_REPORT>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.CONFIG_REPORT_EXCEL == excelName.Trim())).ToList();
     }
   }
 }

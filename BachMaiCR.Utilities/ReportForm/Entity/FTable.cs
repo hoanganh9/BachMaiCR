@@ -37,7 +37,7 @@ namespace BachMaiCR.Utilities.ReportForm
     {
       return new FRow()
       {
-        Cells = this.Columns.Select<FField, FField>((Func<FField, FField>) (k => new FField()
+        Cells = this.Columns.Select<FField, FField>((k => new FField()
         {
           FieldName = k.FieldName,
           FieldData = k.FieldData,
@@ -45,7 +45,7 @@ namespace BachMaiCR.Utilities.ReportForm
           RowSpan = k.RowSpan,
           Level = k.Level,
           ParentValue = k.ParentValue
-        })).ToList<FField>()
+        })).ToList()
       };
     }
   }

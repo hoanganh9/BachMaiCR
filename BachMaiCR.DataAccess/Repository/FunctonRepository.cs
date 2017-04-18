@@ -22,7 +22,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public WEBPAGES_FUNCTIONS GetByUniqueCode(string uniqueCode)
     {
-      return this.DbSet.FirstOrDefault<WEBPAGES_FUNCTIONS>((o => o.UNIQUE_CODE == uniqueCode));
+      return this.DbSet.FirstOrDefault((o => o.UNIQUE_CODE == uniqueCode));
     }
 
     public IEnumerable<string> GetActionCodeListByUniqueCode(string uniqueCode)

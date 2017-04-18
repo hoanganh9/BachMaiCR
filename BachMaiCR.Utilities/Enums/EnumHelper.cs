@@ -10,7 +10,7 @@ namespace BachMaiCR.Utilities.Enums
   {
     public static List<T> GetValues()
     {
-      return ((IEnumerable<FieldInfo>) typeof (T).GetFields(BindingFlags.Static | BindingFlags.Public)).Select<FieldInfo, T>((Func<FieldInfo, T>) (t => (T) t.GetValue(null))).ToList<T>();
+      return ((IEnumerable<FieldInfo>) typeof (T).GetFields(BindingFlags.Static | BindingFlags.Public)).Select<FieldInfo, T>((t => (T) t.GetValue(null))).ToList();
     }
 
     public static List<KeyTextItem> ConvertToKeyValueList()
@@ -20,7 +20,7 @@ namespace BachMaiCR.Utilities.Enums
       if (null == values)
         return keyTextItemList;
       StringEnum stringEnum = new StringEnum(typeof (T));
-      keyTextItemList.AddRange(values.Select<T, KeyTextItem>((Func<T, KeyTextItem>) (item => new KeyTextItem()
+      keyTextItemList.AddRange(values.Select<T, KeyTextItem>((item => new KeyTextItem()
       {
         Id = item.ToString(),
         Text = stringEnum.GetStringValue(item.ToString()) ?? item.ToString()
@@ -35,7 +35,7 @@ namespace BachMaiCR.Utilities.Enums
       if (null == values)
         return selectListItemList;
       StringEnum stringEnum = new StringEnum(typeof (T));
-      selectListItemList.AddRange(values.Select<T, SelectListItem>((Func<T, SelectListItem>) (item => new SelectListItem()
+      selectListItemList.AddRange(values.Select<T, SelectListItem>((item => new SelectListItem()
       {
         Value = ((int) Enum.Parse(typeof (T), item.ToString())).ToString(),
         Text = stringEnum.GetStringValue(item.ToString()) ?? item.ToString()
@@ -54,13 +54,13 @@ namespace BachMaiCR.Utilities.Enums
 
     public static T GetByValue(string value)
     {
-      return EnumHelper<T>.GetValues().FirstOrDefault<T>((Func<T, bool>) (o => o.ToString().ToUpper() == value.ToUpper()));
+      return EnumHelper<T>.GetValues().FirstOrDefault((o => o.ToString().ToUpper() == value.ToUpper()));
     }
 
     public static T GetByPosition(int position)
     {
       List<T> field = EnumHelper<T>.GetValues();
-      return field.FirstOrDefault<T>((Func<T, bool>) (o => field.IndexOf(o) == position));
+      return field.FirstOrDefault((o => field.IndexOf(o) == position));
     }
 
     public static string GetStringName(int val)

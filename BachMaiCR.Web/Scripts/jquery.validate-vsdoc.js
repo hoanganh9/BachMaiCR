@@ -498,7 +498,7 @@ $.extend($.validator, {
 		},
 		
 		valid: function() {
-			return this.length == 0;
+			return this.size() == 0;
 		},
 		
 		size: function() {

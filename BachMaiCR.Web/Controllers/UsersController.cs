@@ -95,7 +95,7 @@ namespace BachMaiCR.Web.Controllers
         }
         else if (currentUser.USERNAME == "admin")
         {
-          lmDepartmentList = this.unitOfWork.Departments.GetChildDepartment(0).ToList<LM_DEPARTMENT>();
+          lmDepartmentList = this.unitOfWork.Departments.GetChildDepartment(0).ToList();
         }
         else
         {
@@ -125,11 +125,11 @@ namespace BachMaiCR.Web.Controllers
             }
           }
         }
-        selectListItemList1 = source.Where<DOCTOR>((Func<DOCTOR, bool>) (d =>
+        selectListItemList1 = source.Where((d =>
         {
           bool? isdelete = d.ISDELETE;
           return !isdelete.GetValueOrDefault() && isdelete.HasValue;
-        })).OrderBy<DOCTOR, string>((Func<DOCTOR, string>) (d => d.DOCTOR_NAME)).Select<DOCTOR, SelectListItem>((Func<DOCTOR, SelectListItem>) (d =>
+        })).OrderBy<DOCTOR, string>((d => d.DOCTOR_NAME)).Select<DOCTOR, SelectListItem>((d =>
         {
           SelectListItem selectListItem1 = new SelectListItem();
           selectListItem1.Text = d.DOCTOR_NAME;
@@ -149,7 +149,7 @@ namespace BachMaiCR.Web.Controllers
 label_4:
           selectListItem2.Selected = num2 != 0;
           return selectListItem1;
-        })).ToList<SelectListItem>();
+        })).ToList();
       }
       SelectListItem selectListItem = new SelectListItem()
       {
@@ -161,11 +161,11 @@ ViewBag.RootDepartment = lmDepartmentList;
 ViewBag.ListDoctor = selectListItemList1;
       List<MENULIST> allActive = this.unitOfWork.AdminMenu.GetAll_Active();
       List<SelectListItem> selectListItemList2 = new List<SelectListItem>();
-      List<SelectListItem> list = allActive.Select<MENULIST, SelectListItem>((Func<MENULIST, SelectListItem>) (d => new SelectListItem()
+      List<SelectListItem> list = allActive.Select<MENULIST, SelectListItem>((d => new SelectListItem()
       {
         Text = d.MENU_NAME,
         Value = d.MENU_URL
-      })).ToList<SelectListItem>();
+      })).ToList();
 ViewBag.ListUrlMenu = list;
       selectListItemList2 = (List<SelectListItem>) null;
       if (this.Request.IsAjaxRequest())
@@ -359,13 +359,13 @@ ViewBag.ListUrlMenu = list;
         return this.Json(JsonResponse.Json400("Bạn không có quyền với người dùng này !"));
       if (byId != null)
       {
-        if (byId.CALENDAR_DUTY.Where<CALENDAR_DUTY>((Func<CALENDAR_DUTY, bool>) (o =>
+        if (byId.CALENDAR_DUTY.Where((o =>
         {
           bool? isdelete = o.ISDELETE;
           return isdelete.GetValueOrDefault() && isdelete.HasValue;
         })).Any<CALENDAR_DUTY>())
           return this.Json(JsonResponse.Json400("Người dùng đang tồn tại liên kết với chức năng lịch "));
-        if (byId.TEMPLATES.Where<TEMPLATE>((Func<TEMPLATE, bool>) (o =>
+        if (byId.TEMPLATES.Where((o =>
         {
           bool? isdelete = o.ISDELETE;
           return isdelete.GetValueOrDefault() && isdelete.HasValue;
@@ -447,9 +447,9 @@ ViewBag.ListUrlMenu = list;
         return this.RedirectToAction("manageusers", "admin");
       }
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
-      List<WEBPAGES_ROLES> source = byId.WEBPAGES_ROLES != null ? byId.WEBPAGES_ROLES.ToList<WEBPAGES_ROLES>() : new List<WEBPAGES_ROLES>();
-      List<int> actionOfUserIds = this.unitOfWork.Actions.GetActiveActionsByUser(byId).ToList<WEBPAGES_ACTIONS>().Select<WEBPAGES_ACTIONS, int>((Func<WEBPAGES_ACTIONS, int>) (o => o.WEBPAGES_ACTION_ID)).ToList<int>();
-      List<int> roleOfUserIds = source.Select<WEBPAGES_ROLES, int>((Func<WEBPAGES_ROLES, int>) (o => o.WEBPAGES_ROLE_ID)).ToList<int>();
+      List<WEBPAGES_ROLES> source = byId.WEBPAGES_ROLES != null ? byId.WEBPAGES_ROLES.ToList() : new List<WEBPAGES_ROLES>();
+      List<int> actionOfUserIds = this.unitOfWork.Actions.GetActiveActionsByUser(byId).ToList().Select<WEBPAGES_ACTIONS, int>((o => o.WEBPAGES_ACTION_ID)).ToList();
+      List<int> roleOfUserIds = source.Select<WEBPAGES_ROLES, int>((o => o.WEBPAGES_ROLE_ID)).ToList();
       List<int> department = new List<int>();
       if (byId != null)
       {
@@ -480,9 +480,9 @@ label_14:
       List<WEBPAGES_ROLES> list1;
       if (byUserName.USERNAME == "admin")
       {
-        List<WEBPAGES_ACTIONS> list2 = this.unitOfWork.Actions.GetAll().ToList<WEBPAGES_ACTIONS>();
-        list1 = this.unitOfWork.Roles.GetAll().ToList<WEBPAGES_ROLES>();
-        List<UserMenuModel> list3 = list2.Select<WEBPAGES_ACTIONS, UserMenuModel>((Func<WEBPAGES_ACTIONS, UserMenuModel>) (o =>
+        List<WEBPAGES_ACTIONS> list2 = this.unitOfWork.Actions.GetAll().ToList();
+        list1 = this.unitOfWork.Roles.GetAll().ToList();
+        List<UserMenuModel> list3 = list2.Select<WEBPAGES_ACTIONS, UserMenuModel>((o =>
         {
           UserMenuModel userMenuModel1 = new UserMenuModel();
           userMenuModel1.Name = o.MENU_NAME;
@@ -495,23 +495,23 @@ label_14:
           int num2 = isMenu.HasValue ? (isMenu.GetValueOrDefault() ? 1 : 0) : 0;
           userMenuModel2.IsMenu = num2 != 0;
           userMenuModel1.Selected = actionOfUserIds.Contains(o.WEBPAGES_ACTION_ID);
-          userMenuModel1.Roles = o.WEBPAGES_ROLES == null ? string.Empty : string.Join(", ", o.WEBPAGES_ROLES.Where<WEBPAGES_ROLES>((Func<WEBPAGES_ROLES, bool>) (k => roleOfUserIds.Contains(k.WEBPAGES_ROLE_ID))).Select<WEBPAGES_ROLES, string>((Func<WEBPAGES_ROLES, string>) (k => k.ROLE_NAME)).ToArray<string>());
+          userMenuModel1.Roles = o.WEBPAGES_ROLES == null ? string.Empty : string.Join(", ", o.WEBPAGES_ROLES.Where((k => roleOfUserIds.Contains(k.WEBPAGES_ROLE_ID))).Select<WEBPAGES_ROLES, string>((k => k.ROLE_NAME)).ToArray<string>());
           return userMenuModel1;
-        })).ToList<UserMenuModel>();
-        List<KeyTextItem> list4 = all.Select<WEBPAGES_ROLES, KeyTextItem>((Func<WEBPAGES_ROLES, KeyTextItem>) (o => new KeyTextItem()
+        })).ToList();
+        List<KeyTextItem> list4 = all.Select<WEBPAGES_ROLES, KeyTextItem>((o => new KeyTextItem()
         {
           Text = o.ROLE_NAME,
           Id = o.WEBPAGES_ROLE_ID.ToString(),
           Selected = roleOfUserIds.Contains(o.WEBPAGES_ROLE_ID)
-        })).OrderBy<KeyTextItem, string>((Func<KeyTextItem, string>) (o => o.Text)).ToList<KeyTextItem>();
+        })).OrderBy<KeyTextItem, string>((o => o.Text)).ToList();
 ViewBag.UserMenuModel = list3;
 ViewBag.Roles = list4;
 ViewBag.User = byId;
       }
       else
       {
-        list1 = (byUserName.WEBPAGES_ROLES ?? (ICollection<WEBPAGES_ROLES>) new List<WEBPAGES_ROLES>()).ToList<WEBPAGES_ROLES>();
-        List<UserMenuModel> list2 = this.unitOfWork.Actions.GetActiveActionsByUser(byUserName).Select<WEBPAGES_ACTIONS, UserMenuModel>((Func<WEBPAGES_ACTIONS, UserMenuModel>) (o =>
+        list1 = (byUserName.WEBPAGES_ROLES ?? (ICollection<WEBPAGES_ROLES>) new List<WEBPAGES_ROLES>()).ToList();
+        List<UserMenuModel> list2 = this.unitOfWork.Actions.GetActiveActionsByUser(byUserName).Select<WEBPAGES_ACTIONS, UserMenuModel>((o =>
         {
           UserMenuModel userMenuModel1 = new UserMenuModel();
           userMenuModel1.Name = o.MENU_NAME;
@@ -524,15 +524,15 @@ ViewBag.User = byId;
           int num2 = isMenu.HasValue ? (isMenu.GetValueOrDefault() ? 1 : 0) : 0;
           userMenuModel2.IsMenu = num2 != 0;
           userMenuModel1.Selected = actionOfUserIds.Contains(o.WEBPAGES_ACTION_ID);
-          userMenuModel1.Roles = o.WEBPAGES_ROLES == null ? string.Empty : string.Join(", ", o.WEBPAGES_ROLES.Where<WEBPAGES_ROLES>((Func<WEBPAGES_ROLES, bool>) (k => roleOfUserIds.Contains(k.WEBPAGES_ROLE_ID))).Select<WEBPAGES_ROLES, string>((Func<WEBPAGES_ROLES, string>) (k => k.ROLE_NAME)).ToArray<string>());
+          userMenuModel1.Roles = o.WEBPAGES_ROLES == null ? string.Empty : string.Join(", ", o.WEBPAGES_ROLES.Where((k => roleOfUserIds.Contains(k.WEBPAGES_ROLE_ID))).Select<WEBPAGES_ROLES, string>((k => k.ROLE_NAME)).ToArray<string>());
           return userMenuModel1;
-        })).ToList<UserMenuModel>();
-        List<KeyTextItem> list3 = all.Select<WEBPAGES_ROLES, KeyTextItem>((Func<WEBPAGES_ROLES, KeyTextItem>) (o => new KeyTextItem()
+        })).ToList();
+        List<KeyTextItem> list3 = all.Select<WEBPAGES_ROLES, KeyTextItem>((o => new KeyTextItem()
         {
           Text = o.ROLE_NAME,
           Id = o.WEBPAGES_ROLE_ID.ToString(),
           Selected = roleOfUserIds.Contains(o.WEBPAGES_ROLE_ID)
-        })).OrderBy<KeyTextItem, string>((Func<KeyTextItem, string>) (o => o.Text)).ToList<KeyTextItem>();
+        })).OrderBy<KeyTextItem, string>((o => o.Text)).ToList();
 ViewBag.UserMenuModel = list2;
 ViewBag.Roles = list3;
 ViewBag.User = byId;
@@ -572,18 +572,18 @@ ViewBag.User = byId;
           return this.Json(JsonResponse.Json404("Không tìm thấy người phân quyền"));
         if (user == null)
           return this.Json(JsonResponse.Json404("Không tìm thấy người dùng cần phân quyền"));
-        if (byUserName.USERNAME != "admin" && !ListHelper.ContainsAllItems<int>(this.unitOfWork.Actions.GetActiveActionsByUser(byUserName).Select<WEBPAGES_ACTIONS, int>((Func<WEBPAGES_ACTIONS, int>) (o => o.WEBPAGES_ACTION_ID)).ToList<int>(), actionIds))
+        if (byUserName.USERNAME != "admin" && !ListHelper.ContainsAllItems<int>(this.unitOfWork.Actions.GetActiveActionsByUser(byUserName).Select<WEBPAGES_ACTIONS, int>((o => o.WEBPAGES_ACTION_ID)).ToList(), actionIds))
           return this.Json(JsonResponse.Json400("Không được phép phân những chức năng đã chọn"));
         if (!this.CheckPermission(user))
           return this.Json(JsonResponse.Json400("Bạn không có quyền với người dùng này !"));
         if (user.WEBPAGES_ROLES != null)
         {
-          foreach (WEBPAGES_ROLES webpagesRoles in user.WEBPAGES_ROLES.ToList<WEBPAGES_ROLES>())
+          foreach (WEBPAGES_ROLES webpagesRoles in user.WEBPAGES_ROLES.ToList())
             user.WEBPAGES_ROLES.Remove(webpagesRoles);
         }
         if (user.USERS_ACTIONS != null)
         {
-          foreach (USERS_ACTIONS usersActions in user.USERS_ACTIONS.ToList<USERS_ACTIONS>())
+          foreach (USERS_ACTIONS usersActions in user.USERS_ACTIONS.ToList())
             user.USERS_ACTIONS.Remove(usersActions);
         }
         List<int> source = new List<int>();
@@ -598,7 +598,7 @@ ViewBag.User = byId;
             {
               user.WEBPAGES_ROLES.Add(byId);
               if (byId.WEBPAGES_ACTIONS != null)
-                source.AddRange((IEnumerable<int>) byId.WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((Func<WEBPAGES_ACTIONS, int>) (o => o.WEBPAGES_ACTION_ID)).ToList<int>());
+                source.AddRange((IEnumerable<int>) byId.WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((o => o.WEBPAGES_ACTION_ID)).ToList());
             }
           }
         }
@@ -610,25 +610,25 @@ ViewBag.User = byId;
             if (source.Contains(actionId))
             {
               source.Remove(actionId);
-              USERS_ACTIONS entity = user.USERS_ACTIONS.Where<USERS_ACTIONS>((Func<USERS_ACTIONS, bool>) (ua => ua.ADMIN_USER_ID == user.ADMIN_USER_ID && ua.WEBPAGES_ACTION_ID == actionId)).Select<USERS_ACTIONS, USERS_ACTIONS>((Func<USERS_ACTIONS, USERS_ACTIONS>) (ua => new USERS_ACTIONS()
+              USERS_ACTIONS entity = user.USERS_ACTIONS.Where((ua => ua.ADMIN_USER_ID == user.ADMIN_USER_ID && ua.WEBPAGES_ACTION_ID == actionId)).Select<USERS_ACTIONS, USERS_ACTIONS>((ua => new USERS_ACTIONS()
               {
                 ADMIN_USER = ua.ADMIN_USER,
                 ADMIN_USER_ID = ua.ADMIN_USER_ID,
                 UPDATE_DATE = ua.UPDATE_DATE,
                 WEBPAGES_ACTIONS = ua.WEBPAGES_ACTIONS,
                 WEBPAGES_ACTION_ID = ua.WEBPAGES_ACTION_ID
-              })).FirstOrDefault<USERS_ACTIONS>();
+              })).FirstOrDefault();
               if (entity != null)
                 this.unitOfWork.UsersInActions.Delete(entity);
             }
-            else if (user.USERS_ACTIONS.Where<USERS_ACTIONS>((Func<USERS_ACTIONS, bool>) (ua => ua.ADMIN_USER_ID == user.ADMIN_USER_ID && ua.WEBPAGES_ACTION_ID == actionId)).Select<USERS_ACTIONS, USERS_ACTIONS>((Func<USERS_ACTIONS, USERS_ACTIONS>) (ua => new USERS_ACTIONS()
+            else if (user.USERS_ACTIONS.Where((ua => ua.ADMIN_USER_ID == user.ADMIN_USER_ID && ua.WEBPAGES_ACTION_ID == actionId)).Select<USERS_ACTIONS, USERS_ACTIONS>((ua => new USERS_ACTIONS()
             {
               ADMIN_USER = ua.ADMIN_USER,
               ADMIN_USER_ID = ua.ADMIN_USER_ID,
               UPDATE_DATE = ua.UPDATE_DATE,
               WEBPAGES_ACTIONS = ua.WEBPAGES_ACTIONS,
               WEBPAGES_ACTION_ID = ua.WEBPAGES_ACTION_ID
-            })).FirstOrDefault<USERS_ACTIONS>() == null)
+            })).FirstOrDefault() == null)
               this.unitOfWork.UsersInActions.Add(new USERS_ACTIONS()
               {
                 WEBPAGES_ACTION_ID = actionId,
@@ -683,16 +683,16 @@ ViewBag.User = byId;
     public ActionResult GetDoctor(int departmentId, int currentDoctorId)
     {
       List<SelectListItem> selectListItemList = new List<SelectListItem>();
-      List<SelectListItem> list = this.unitOfWork.Doctors.GetAllByDepartmentId(departmentId).Where<DOCTOR>((Func<DOCTOR, bool>) (d =>
+      List<SelectListItem> list = this.unitOfWork.Doctors.GetAllByDepartmentId(departmentId).Where((d =>
       {
         bool? isdelete = d.ISDELETE;
         return !isdelete.GetValueOrDefault() && isdelete.HasValue;
-      })).OrderBy<DOCTOR, string>((Func<DOCTOR, string>) (d => d.DOCTOR_NAME)).Select<DOCTOR, SelectListItem>((Func<DOCTOR, SelectListItem>) (d => new SelectListItem()
+      })).OrderBy<DOCTOR, string>((d => d.DOCTOR_NAME)).Select<DOCTOR, SelectListItem>((d => new SelectListItem()
       {
         Text = this.Server.HtmlEncode(d.DOCTOR_NAME),
         Value = d.DOCTORS_ID.ToString(),
         Selected = d.DOCTORS_ID == currentDoctorId
-      })).ToList<SelectListItem>();
+      })).ToList();
       SelectListItem selectListItem = new SelectListItem()
       {
         Text = Localization.LabelSelect,

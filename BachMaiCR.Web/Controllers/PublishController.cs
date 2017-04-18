@@ -45,7 +45,7 @@ namespace BachMaiCR.Web.Controllers
         }
         else if (userX.USERNAME == "admin")
         {
-          lmDepartmentList = this.unitOfWork.Departments.GetChildDepartment(0).ToList<LM_DEPARTMENT>();
+          lmDepartmentList = this.unitOfWork.Departments.GetChildDepartment(0).ToList();
         }
         else
         {

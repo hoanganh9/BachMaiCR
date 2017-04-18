@@ -56,7 +56,7 @@ namespace BachMaiCR.DataAccess.Repository
     public List<WEBPAGES_ROLES> GetAll(List<int> department)
     {
         var cDisplayClass2 = new { department = department };
-        return this.DbSet.Where((o => cDisplayClass2.department.Select( (d => d)).Contains<int>(o.LM_DEPARTMENT_ID ?? 0))).OrderBy<WEBPAGES_ROLES>("ROLE_NAME").ToList<WEBPAGES_ROLES>();
+        return this.DbSet.Where((o => cDisplayClass2.department.Select( (d => d)).Contains<int>(o.LM_DEPARTMENT_ID ?? 0))).OrderBy<WEBPAGES_ROLES>("ROLE_NAME").ToList();
     }
 
     public void Delete(int id)
@@ -69,12 +69,12 @@ namespace BachMaiCR.DataAccess.Repository
 
     public WEBPAGES_ROLES GetByRoleName(string roleName)
     {
-      return this.DbSet.FirstOrDefault<WEBPAGES_ROLES>((o => o.ROLE_NAME == roleName));
+      return this.DbSet.FirstOrDefault((o => o.ROLE_NAME == roleName));
     }
 
     public bool IsExistRoleName(string roleName)
     {
-      return this.DbSet.FirstOrDefault<WEBPAGES_ROLES>((o => o.ROLE_NAME == roleName)) != null;
+      return this.DbSet.FirstOrDefault((o => o.ROLE_NAME == roleName)) != null;
     }
 
     public bool ExistReferenceDepartment(int deprtID)

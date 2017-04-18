@@ -59,7 +59,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<TEMPLATE> GetListByDate(int DepartmentID, DateTime date, int status)
     {
-      return this.DbSet.AsNoTracking().Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.DATE_START <= (DateTime?) date && obj.DATE_END >= (DateTime?) date && obj.STATUS == (int?) status && obj.LM_DEPARTMENT_PATH.Contains(DepartmentID.ToString()))).OrderBy((obj => obj.TEMPLATE_NAME)).ToList<TEMPLATE>();
+      return this.DbSet.AsNoTracking().Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.DATE_START <= (DateTime?) date && obj.DATE_END >= (DateTime?) date && obj.STATUS == (int?) status && obj.LM_DEPARTMENT_PATH.Contains(DepartmentID.ToString()))).OrderBy((obj => obj.TEMPLATE_NAME)).ToList();
     }
 
     public bool ExistReferenceDepartment(int deprtID)

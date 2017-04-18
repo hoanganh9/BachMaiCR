@@ -29,7 +29,7 @@ namespace BachMaiCR.DataAccess.Repository
         IQueryable<CONFIG_SMS> source = this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE == false));
         if (entity.SearchDeprtId.HasValue && entity.SearchDeprtId.Value > 0)
         {
-          LM_DEPARTMENT deptPath = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).FirstOrDefault<LM_DEPARTMENT>((t => t.LM_DEPARTMENT_ID.Equals(entity.SearchDeprtId.Value)));
+          LM_DEPARTMENT deptPath = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).FirstOrDefault((t => t.LM_DEPARTMENT_ID.Equals(entity.SearchDeprtId.Value)));
           if (deptPath == null)
             throw new Exception("ConfigSMS");
           IQueryable<int> lstAllChildIds = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.DEPARTMENT_PATH.Contains(deptPath.DEPARTMENT_PATH))).Select((obj => obj.LM_DEPARTMENT_ID));

@@ -55,7 +55,7 @@ namespace BachMaiCR.Web.Controllers
       string sortDir1 = string.IsNullOrEmpty(sortDir) ? "ASC" : sortDir;
       PagedList<WEBPAGES_ACTIONS> all = this.unitOfWork.Actions.GetAll(pageIndex, pagination.PageSize, sort, sortDir1);
       pageIndex = pageIndex <= 0 ? 0 : pageIndex;
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
       ViewBag.ActionPermission = list;
       pagination.TotalRows = all.TotalItemCount;
       pagination.CurrentRow = all.Count;
@@ -148,7 +148,7 @@ namespace BachMaiCR.Web.Controllers
             List<LM_DEPARTMENT> childDepartment = this.unitOfWork.Departments.GetChildDepartment(departments.GetById(id).DEPARTMENT_PATH);
             if (departmentId > 0)
             {
-              if (childDepartment.Select<LM_DEPARTMENT, int>((Func<LM_DEPARTMENT, int>) (o => o.LM_DEPARTMENT_ID)).Contains<int>(departmentId))
+              if (childDepartment.Select<LM_DEPARTMENT, int>((o => o.LM_DEPARTMENT_ID)).Contains<int>(departmentId))
               {
                 this.GetDepartment(this.unitOfWork.Departments.GetById(departmentId).LM_DEPARTMENT_ID, intList1);
                 intList1.Add(departmentId);
@@ -173,7 +173,7 @@ namespace BachMaiCR.Web.Controllers
         }
       }
       PagedList<WEBPAGES_ROLES> pagedList = string.IsNullOrEmpty(key) ? this.unitOfWork.Roles.GetAll(pageIndex, pagination.PageSize, sort, sortDir1, "", intList1) : this.unitOfWork.Roles.GetAll(pageIndex, pagination.PageSize, sort, sortDir1, key.Trim(), intList1);
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.Actions = list;
       pagination.TotalRows = pagedList.TotalItemCount;
       pagination.CurrentRow = pagedList.Count;
@@ -237,7 +237,7 @@ ViewBag.RootDepartment = this.GetDeptCurrent();
           List<LM_DEPARTMENT> childDepartment = this.unitOfWork.Departments.GetChildDepartment(departments.GetById(id).DEPARTMENT_PATH);
           if (departmentId > 0)
           {
-            if (childDepartment.Select<LM_DEPARTMENT, int>((Func<LM_DEPARTMENT, int>) (o => o.LM_DEPARTMENT_ID)).Contains<int>(departmentId))
+            if (childDepartment.Select<LM_DEPARTMENT, int>((o => o.LM_DEPARTMENT_ID)).Contains<int>(departmentId))
             {
               this.GetDepartment(this.unitOfWork.Departments.GetById(departmentId).LM_DEPARTMENT_ID, intList1);
               intList1.Add(departmentId);
@@ -269,7 +269,7 @@ ViewBag.RootDepartment = this.GetDeptCurrent();
       pagination.CurrentRow = pagedList.Count;
             ViewBag.Users = pagedList;
      
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
       ViewBag.Actions = list;
             ViewBag.Pagination = pagination;
 

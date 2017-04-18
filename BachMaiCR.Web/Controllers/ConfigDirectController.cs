@@ -104,7 +104,7 @@ ViewBag.Actions = actionCodesByUserName;
         }
         else if (currentUser.USERNAME == "admin")
         {
-          lmDepartmentList = this.unitOfWork.Departments.GetChildDepartment(0).ToList<LM_DEPARTMENT>();
+          lmDepartmentList = this.unitOfWork.Departments.GetChildDepartment(0).ToList();
         }
         else
         {
@@ -134,11 +134,11 @@ ViewBag.Actions = actionCodesByUserName;
             }
           }
         }
-        selectListItemList = source.Where<DOCTOR>((Func<DOCTOR, bool>) (d =>
+        selectListItemList = source.Where((d =>
         {
           bool? isdelete = d.ISDELETE;
           return !isdelete.GetValueOrDefault() && isdelete.HasValue;
-        })).OrderBy<DOCTOR, string>((Func<DOCTOR, string>) (d => d.DOCTOR_NAME)).Select<DOCTOR, SelectListItem>((Func<DOCTOR, SelectListItem>) (d =>
+        })).OrderBy<DOCTOR, string>((d => d.DOCTOR_NAME)).Select<DOCTOR, SelectListItem>((d =>
         {
           SelectListItem selectListItem1 = new SelectListItem();
           selectListItem1.Text = d.DOCTOR_NAME;
@@ -159,7 +159,7 @@ ViewBag.Actions = actionCodesByUserName;
 label_4:
           selectListItem2.Selected = num != 0;
           return selectListItem1;
-        })).ToList<SelectListItem>();
+        })).ToList();
       }
       string str = isAdd != 0 ? Localization.LabelSelect : Localization.LabelSearchAll;
       SelectListItem selectListItem = new SelectListItem()
@@ -180,11 +180,11 @@ ViewBag.RootDepartment = lmDepartmentList;
         Value = "0",
         Text = str
       };
-      List<SelectListItem> list = this.unitOfWork.Feasts.GetAll().OrderBy<FEAST, string>((Func<FEAST, string>) (o => o.FEAST_TITLE)).Select<FEAST, SelectListItem>((Func<FEAST, SelectListItem>) (t => new SelectListItem()
+      List<SelectListItem> list = this.unitOfWork.Feasts.GetAll().OrderBy<FEAST, string>((o => o.FEAST_TITLE)).Select<FEAST, SelectListItem>((t => new SelectListItem()
       {
         Text = t.FEAST_TITLE.ToString(),
         Value = t.FEAST_ID.ToString()
-      })).ToList<SelectListItem>();
+      })).ToList();
       list.Insert(0, selectListItem);
       return list;
     }

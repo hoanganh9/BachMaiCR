@@ -36,7 +36,7 @@ namespace BachMaiCR.Web.Controllers
     [CustomAuthorize]
     public ActionResult Index()
     {
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("FEAST_SAVE");
       return this.View("Index");
         

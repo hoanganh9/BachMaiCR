@@ -43,7 +43,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<DOCTOR_LEVEL> GetAll_List()
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy<DOCTOR_LEVEL, int?>((Expression<Func<DOCTOR_LEVEL, int?>>) (t => t.LEVEL_NUMBER)).ToList<DOCTOR_LEVEL>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy<DOCTOR_LEVEL, int?>((Expression<Func<DOCTOR_LEVEL, int?>>) (t => t.LEVEL_NUMBER)).ToList();
     }
 
     public List<SelectListItem> GetListItemBase()
@@ -52,12 +52,12 @@ namespace BachMaiCR.DataAccess.Repository
       {
         Value = obj.DOCTOR_LEVEL_ID.ToString(),
         Text = obj.LEVEL_NAME
-      })).ToList<SelectListItem>();
+      })).ToList();
     }
 
     public DoctorLevelView GetDoctorLevelByIdDoctor(int idDoctor)
     {
-      return ((IQueryable<DoctorLevelView>) this.DbContext.DoctorLevelViews).FirstOrDefault<DoctorLevelView>((o => o.DOCTORS_ID == idDoctor));
+      return ((IQueryable<DoctorLevelView>) this.DbContext.DoctorLevelViews).FirstOrDefault((o => o.DOCTORS_ID == idDoctor));
     }
   }
 }

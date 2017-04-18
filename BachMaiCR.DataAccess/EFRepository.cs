@@ -37,7 +37,7 @@ namespace BachMaiCR.DataAccess
       return ((IEnumerable<T>) this.DbSet.SqlQuery(string.Format("SELECT * FROM {0} WHERE {1} = @Id", this.DbContext.GetTableName<T>(), this.DbContext.GetTableKeyName<T>()), new object[1]
       {
         new SqlParameter("Id", id)
-      })).FirstOrDefault<T>();
+      })).FirstOrDefault();
     }
 
     public void Delete(T entity)

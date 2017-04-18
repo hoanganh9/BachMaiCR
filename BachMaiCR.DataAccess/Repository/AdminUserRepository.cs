@@ -46,20 +46,20 @@ namespace BachMaiCR.DataAccess.Repository
         {
           bool? isactive = webpagesRoles2.ISACTIVE;
           if ((!isactive.GetValueOrDefault() ? 0 : (isactive.HasValue ? 1 : 0)) != 0 && webpagesRoles2.WEBPAGES_ACTIONS != null)
-            source.AddRange((IEnumerable<WEBPAGES_ACTIONS>) webpagesRoles2.WEBPAGES_ACTIONS.ToList<WEBPAGES_ACTIONS>());
+            source.AddRange((IEnumerable<WEBPAGES_ACTIONS>) webpagesRoles2.WEBPAGES_ACTIONS.ToList());
         }
       }
-      List<int> list = source.Select( (o => o.WEBPAGES_ACTION_ID)).ToList<int>();
+      List<int> list = source.Select( (o => o.WEBPAGES_ACTION_ID)).ToList();
       foreach (USERS_ACTIONS usersActions in user.USERS_ACTIONS.Where((o =>
       {
         bool? isActive = o.IS_ACTIVE;
         return isActive.GetValueOrDefault() && isActive.HasValue;
-      })).ToList<USERS_ACTIONS>())
+      })).ToList())
       {
         USERS_ACTIONS usersInAction = usersActions;
         if (!list.Contains(usersInAction.WEBPAGES_ACTION_ID))
         {
-          WEBPAGES_ACTIONS webpagesActions = ((IQueryable<WEBPAGES_ACTIONS>) this.DbContext.WEBPAGES_ACTIONS).FirstOrDefault<WEBPAGES_ACTIONS>((o => o.WEBPAGES_ACTION_ID == usersInAction.WEBPAGES_ACTION_ID));
+          WEBPAGES_ACTIONS webpagesActions = ((IQueryable<WEBPAGES_ACTIONS>) this.DbContext.WEBPAGES_ACTIONS).FirstOrDefault((o => o.WEBPAGES_ACTION_ID == usersInAction.WEBPAGES_ACTION_ID));
           if (webpagesActions != null)
             source.Add(webpagesActions);
         }
@@ -68,10 +68,10 @@ namespace BachMaiCR.DataAccess.Repository
       {
         bool? isActive = o.IS_ACTIVE;
         return !isActive.GetValueOrDefault() && isActive.HasValue;
-      })).ToList<USERS_ACTIONS>())
+      })).ToList())
       {
         USERS_ACTIONS usersInAction = usersActions;
-        WEBPAGES_ACTIONS webpagesActions = source.FirstOrDefault<WEBPAGES_ACTIONS>((o => o.WEBPAGES_ACTION_ID == usersInAction.WEBPAGES_ACTION_ID));
+        WEBPAGES_ACTIONS webpagesActions = source.FirstOrDefault((o => o.WEBPAGES_ACTION_ID == usersInAction.WEBPAGES_ACTION_ID));
         if (webpagesActions != null)
           source.Remove(webpagesActions);
       }
@@ -89,9 +89,9 @@ namespace BachMaiCR.DataAccess.Repository
     {
       if (!string.IsNullOrEmpty(key))
       {
-        return this.DbSet.Where((o => o.ISDELETE == false && o.IS_ADMIN !=  true && o.ADMIN_USER_ID != currentUserId && o.ADMIN_USER_ID != createdUserId && departments.Contains<int>(o.LM_DEPARTMENT_ID ?? 0) && (o.FULLNAME.Contains(key.Trim()) || o.USERNAME.Contains(key.Trim())))).OrderBy<ADMIN_USER>("USERNAME").ToList<ADMIN_USER>();
+        return this.DbSet.Where((o => o.ISDELETE == false && o.IS_ADMIN !=  true && o.ADMIN_USER_ID != currentUserId && o.ADMIN_USER_ID != createdUserId && departments.Contains<int>(o.LM_DEPARTMENT_ID ?? 0) && (o.FULLNAME.Contains(key.Trim()) || o.USERNAME.Contains(key.Trim())))).OrderBy<ADMIN_USER>("USERNAME").ToList();
       }
-      return this.DbSet.Where((o => o.ISDELETE == false && o.IS_ADMIN !=  true && o.ADMIN_USER_ID != currentUserId && o.ADMIN_USER_ID != createdUserId && departments.Contains<int>(o.LM_DEPARTMENT_ID ?? 0))).OrderBy<ADMIN_USER>("USERNAME").ToList<ADMIN_USER>();
+      return this.DbSet.Where((o => o.ISDELETE == false && o.IS_ADMIN !=  true && o.ADMIN_USER_ID != currentUserId && o.ADMIN_USER_ID != createdUserId && departments.Contains<int>(o.LM_DEPARTMENT_ID ?? 0))).OrderBy<ADMIN_USER>("USERNAME").ToList();
     }
 
     public PagedList<ADMIN_USER> GetAll(int page, int size, string sort, string sortDir, bool isdelete, List<int> departments)
@@ -107,19 +107,19 @@ namespace BachMaiCR.DataAccess.Repository
     {
       if (userName == null)
         return null;
-      return this.DbSet.AsNoTracking().FirstOrDefault<ADMIN_USER>((o => o.USERNAME == userName));
+      return this.DbSet.AsNoTracking().FirstOrDefault((o => o.USERNAME == userName));
     }
 
     public ADMIN_USER GetByUserCode(string userCode)
     {
-      return this.DbSet.FirstOrDefault<ADMIN_USER>((o => o.USERCODE == userCode));
+      return this.DbSet.FirstOrDefault((o => o.USERCODE == userCode));
     }
 
     public List<ADMIN_USER> GetAll(string sort, string sortDir)
     {
       if (sortDir.ToLower() == "asc")
-        return this.DbSet.Where((o => o.ISDELETE == false && o.ISACTIVED == true && o.IS_ADMIN !=  true)).OrderBy<ADMIN_USER>(sort).ToList<ADMIN_USER>();
-      return this.DbSet.Where((o => o.ISDELETE == false && o.ISACTIVED == true && o.IS_ADMIN !=  true)).OrderByDescending<ADMIN_USER>(sort).ToList<ADMIN_USER>();
+        return this.DbSet.Where((o => o.ISDELETE == false && o.ISACTIVED == true && o.IS_ADMIN !=  true)).OrderBy<ADMIN_USER>(sort).ToList();
+      return this.DbSet.Where((o => o.ISDELETE == false && o.ISACTIVED == true && o.IS_ADMIN !=  true)).OrderByDescending<ADMIN_USER>(sort).ToList();
     }
 
     public PagedList<ADMIN_USER> SearchAllByUserName(string key, int page, int size, string sort, string sortDir)
@@ -141,7 +141,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public bool CheckUserExit(string userName)
     {
-      return this.DbSet.FirstOrDefault<ADMIN_USER>((o => o.USERNAME == userName)) != null;
+      return this.DbSet.FirstOrDefault((o => o.USERNAME == userName)) != null;
     }
 
     public string GetUrlActive(string UserName)
@@ -152,7 +152,7 @@ namespace BachMaiCR.DataAccess.Repository
       }));
       string str = "";
       if (source.Count<URL_ACTIVE>() > 0)
-        str = source.ToList<URL_ACTIVE>()[0].ACTIVE_URL;
+        str = source.ToList()[0].ACTIVE_URL;
       return str;
     }
 
@@ -170,7 +170,7 @@ namespace BachMaiCR.DataAccess.Repository
     {
       DbQuery<ADMIN_USER> dbQuery = this.DbSet.AsNoTracking();
       Expression<Func<ADMIN_USER, bool>> predicate = (obj => obj.DOCTORS_ID == (int?) doctorId && obj.ISDELETE == false && obj.ISACTIVED == !active);
-      foreach (ADMIN_USER entity in dbQuery.Where(predicate).ToList<ADMIN_USER>())
+      foreach (ADMIN_USER entity in dbQuery.Where(predicate).ToList())
       {
         entity.ISACTIVED = new bool?(active);
         this.Update(entity);

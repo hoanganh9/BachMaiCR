@@ -26,32 +26,32 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<DoctorHospital> GetDoctorHospital(int iMonth = 0, int iYear = 0)
     {
-      return ((IQueryable<DoctorHospital>) this.DbContext.DoctorHospitals).Where((o => o.CALENDAR_MONTH == (int?) iMonth && o.CALENDAR_YEAR == (int?) iYear)).ToList<DoctorHospital>();
+      return ((IQueryable<DoctorHospital>) this.DbContext.DoctorHospitals).Where((o => o.CALENDAR_MONTH == (int?) iMonth && o.CALENDAR_YEAR == (int?) iYear)).ToList();
     }
 
     public List<DoctorHospital> GetDoctorHospitalLeader(int iMonth = 0, int iYear = 0)
     {
-      return ((IQueryable<DoctorHospital>) this.DbContext.DoctorHospitals).Where((o => o.CALENDAR_MONTH == (int?) iMonth && o.CALENDAR_YEAR == (int?) iYear && o.DUTY_TYPE == (int?) 1)).ToList<DoctorHospital>();
+      return ((IQueryable<DoctorHospital>) this.DbContext.DoctorHospitals).Where((o => o.CALENDAR_MONTH == (int?) iMonth && o.CALENDAR_YEAR == (int?) iYear && o.DUTY_TYPE == (int?) 1)).ToList();
     }
 
     public List<DoctorHospital> GetDoctorHospitalByDepartment(int iMonth = 0, int iYear = 0, int idDepartment = 0)
     {
-      return ((IQueryable<DoctorHospital>) this.DbContext.DoctorHospitals).Where((o => o.CALENDAR_MONTH == (int?) iMonth && o.CALENDAR_YEAR == (int?) iYear && o.LM_DEPARTMENT_ID == idDepartment && (o.LEVEL_NUMBER == (int?) 1 || o.LEVEL_NUMBER == (int?) 2))).ToList<DoctorHospital>();
+      return ((IQueryable<DoctorHospital>) this.DbContext.DoctorHospitals).Where((o => o.CALENDAR_MONTH == (int?) iMonth && o.CALENDAR_YEAR == (int?) iYear && o.LM_DEPARTMENT_ID == idDepartment && (o.LEVEL_NUMBER == (int?) 1 || o.LEVEL_NUMBER == (int?) 2))).ToList();
     }
 
     public List<CALENDAR_DUTY> GetByApproved(int month = 0, int year = 0, int dutyType = 3, int isApproved = 0)
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.CALENDAR_MONTH == (int?) month && obj.CALENDAR_YEAR == (int?) year && obj.DUTY_TYPE == (int?) dutyType && obj.ISAPPROVED == isApproved && obj.ISDELETE == false)).ToList<CALENDAR_DUTY>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.CALENDAR_MONTH == (int?) month && obj.CALENDAR_YEAR == (int?) year && obj.DUTY_TYPE == (int?) dutyType && obj.ISAPPROVED == isApproved && obj.ISDELETE == false)).ToList();
     }
 
     public CALENDAR_DUTY CheckCalendarHospital(int calendarMonth, int calendarYear, int DutyType)
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.CALENDAR_MONTH == (int?) calendarMonth && obj.CALENDAR_YEAR == (int?) calendarYear && obj.DUTY_TYPE == (int?) DutyType && obj.ISDELETE == false)).FirstOrDefault<CALENDAR_DUTY>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.CALENDAR_MONTH == (int?) calendarMonth && obj.CALENDAR_YEAR == (int?) calendarYear && obj.DUTY_TYPE == (int?) DutyType && obj.ISDELETE == false)).FirstOrDefault();
     }
 
     public int CheckCalendarDuty(int calendarMonth, int calendarYear, int idTemplate, int idDepartment)
     {
-      List<CALENDAR_DUTY> list = this.DbSet.AsNoTracking().Where((obj => obj.CALENDAR_MONTH == (int?) calendarMonth && obj.CALENDAR_YEAR == (int?) calendarYear && obj.TEMPLATES_ID == (int?) idTemplate && obj.ISDELETE == false)).ToList<CALENDAR_DUTY>();
+      List<CALENDAR_DUTY> list = this.DbSet.AsNoTracking().Where((obj => obj.CALENDAR_MONTH == (int?) calendarMonth && obj.CALENDAR_YEAR == (int?) calendarYear && obj.TEMPLATES_ID == (int?) idTemplate && obj.ISDELETE == false)).ToList();
       return list.Count<CALENDAR_DUTY>() <= 0 ? 0 : list[0].CALENDAR_DUTY_ID;
     }
 
@@ -65,22 +65,22 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<DoctorCalendarLeader> GetDoctorCalendarLeader(int idCalendar = 0)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.CALENDAR_DUTY_ID == idCalendar)).OrderBy((o => o.DOCTORS_ID)).ToList<DoctorCalendarLeader>();
+      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.CALENDAR_DUTY_ID == idCalendar)).OrderBy((o => o.DOCTORS_ID)).ToList();
     }
 
     public List<DoctorCalendarLeader> GetDoctorCalendarByDeparment(int deparmentId = 0)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.LM_DEPARTMENT_ID == deparmentId)).OrderBy((o => o.DOCTORS_ID)).ToList<DoctorCalendarLeader>();
+      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.LM_DEPARTMENT_ID == deparmentId)).OrderBy((o => o.DOCTORS_ID)).ToList();
     }
 
     public List<CALENDAR_DUTY> GetCalendarDirector(int iMonth = 0, int iYear = 0, int duty_type = 1)
     {
-      return ((IQueryable<CALENDAR_DUTY>) this.DbContext.CALENDAR_DUTY).Where((o => o.DUTY_TYPE == (int?) duty_type)).ToList<CALENDAR_DUTY>();
+      return ((IQueryable<CALENDAR_DUTY>) this.DbContext.CALENDAR_DUTY).Where((o => o.DUTY_TYPE == (int?) duty_type)).ToList();
     }
 
     public List<CALENDAR_DUTY> GetCalendarByDeparment(int iMonth = 0, int iYear = 0, int duty_type = 3, int? idDepartment = 0)
     {
-      return ((IQueryable<CALENDAR_DUTY>) this.DbContext.CALENDAR_DUTY).Where((o => (int?) o.LM_DEPARTMENT_ID == idDepartment && o.TEMPLATES_ID == new int?())).ToList<CALENDAR_DUTY>();
+      return ((IQueryable<CALENDAR_DUTY>) this.DbContext.CALENDAR_DUTY).Where((o => (int?) o.LM_DEPARTMENT_ID == idDepartment && o.TEMPLATES_ID == new int?())).ToList();
     }
 
     public int GetCalendarDutyId(int iMonth = 0, int iYear = 0, int duty_type = 3, int idDepartment = 0, int isDefault = 0)
@@ -101,27 +101,27 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<DoctorCalendarLeader> GetDoctorCalendarDirector(int iMonth = 0, int iYear = 0, int duty_type = 1)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.DUTY_TYPE == (int?) duty_type)).ToList<DoctorCalendarLeader>();
+      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.DUTY_TYPE == (int?) duty_type)).ToList();
     }
 
     public List<DoctorCalendarLeader> GetDoctorCalendarPesonal(int iMonth = 0, int iYear = 0, int doctorId = 0)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.DOCTORS_ID == doctorId)).ToList<DoctorCalendarLeader>();
+      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.DOCTORS_ID == doctorId)).ToList();
     }
 
     public List<DoctorCalendarLeader> GetDoctorByCalendarDutyId(int calendarDutyId)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.CALENDAR_DUTY_ID == calendarDutyId)).ToList<DoctorCalendarLeader>();
+      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.CALENDAR_DUTY_ID == calendarDutyId)).ToList();
     }
 
     public List<DoctorCalendarLeader> GetDoctorCalendarDefault(int iMonth = 0, int iYear = 0, int duty_type = 3, int? deparmentId = 0)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.TEMPLATES_ID == new int?())).ToList<DoctorCalendarLeader>();
+      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.TEMPLATES_ID == new int?())).ToList();
     }
 
     public List<DoctorCalendarLeader> GetDoctorCalendarHospital(int iMonth = 0, int iYear = 0)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.CALENDAR_YEAR == (int?) iYear)).ToList<DoctorCalendarLeader>();
+      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((o => o.CALENDAR_YEAR == (int?) iYear)).ToList();
     }
 
     public List<DoctorCalendarLeader> GetDoctorCalendarHospital(int iMonth = 0, int iYear = 0, DateTime? timeStart = null, DateTime? timeEnd = null)
@@ -132,7 +132,7 @@ namespace BachMaiCR.DataAccess.Repository
         ;
       if (!timeEnd.HasValue)
         ;
-      return source.ToList<DoctorCalendarLeader>();
+      return source.ToList();
     }
 
     public bool ExistTemplateId(int id)
@@ -150,7 +150,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<DoctorCalendar> GetDoctorCalendar(int idCalendar = 0)
     {
-      return ((IQueryable<DoctorCalendar>) this.DbContext.DoctorCalendars).Where((o => o.CALENDAR_DUTY_ID == idCalendar)).ToList<DoctorCalendar>();
+      return ((IQueryable<DoctorCalendar>) this.DbContext.DoctorCalendars).Where((o => o.CALENDAR_DUTY_ID == idCalendar)).ToList();
     }
 
     public bool ExistReferenceDepartment(int deprtID)
@@ -174,7 +174,7 @@ namespace BachMaiCR.DataAccess.Repository
           IQueryable<FEAST> source3 = source2.Where((t => t.FEAST_ID.Equals(entity.SearchFeastId.Value)));
           if (!source3.Any<FEAST>())
             return new PagedList<DoctorCalendarLeader>();
-          List<FEAST> list = source3.ToList<FEAST>();
+          List<FEAST> list = source3.ToList();
           for (int index = 0; index < list.Count; ++index)
           {
             feastsearchList.Add(new FEASTSEARCH()
@@ -187,7 +187,7 @@ namespace BachMaiCR.DataAccess.Repository
         }
         else
         {
-          List<FEAST> list = source2.ToList<FEAST>();
+          List<FEAST> list = source2.ToList();
           for (int index = 0; index < list.Count; ++index)
           {
             feastsearchList.Add(new FEASTSEARCH()
@@ -222,7 +222,7 @@ namespace BachMaiCR.DataAccess.Repository
           num1 = 1;
         if (num1 == 0)
         {
-          LM_DEPARTMENT deptPath = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).FirstOrDefault<LM_DEPARTMENT>((t => t.LM_DEPARTMENT_ID.Equals(entity.SearchDeprtId.Value)));
+          LM_DEPARTMENT deptPath = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).FirstOrDefault((t => t.LM_DEPARTMENT_ID.Equals(entity.SearchDeprtId.Value)));
           if (deptPath == null)
             throw new Exception("Holiday");
           IQueryable<int> lstAllChildIds = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.DEPARTMENT_PATH.Contains(deptPath.DEPARTMENT_PATH))).Select((obj => obj.LM_DEPARTMENT_ID));
@@ -250,7 +250,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<DoctorCalendarLeader> GetDoctorCalendarDirector(List<int> doctorIds, int calendarDutyId)
     {
-      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((t => doctorIds.Contains(t.DOCTORS_ID) && t.CALENDAR_DUTY_ID.Equals(calendarDutyId))).ToList<DoctorCalendarLeader>();
+      return ((IQueryable<DoctorCalendarLeader>) this.DbContext.DoctorCalendarLeaders).Where((t => doctorIds.Contains(t.DOCTORS_ID) && t.CALENDAR_DUTY_ID.Equals(calendarDutyId))).ToList();
     }
   }
 }

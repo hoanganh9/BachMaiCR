@@ -258,7 +258,7 @@
  {
                      @Html.Hidden("template_Id", Html.ValueFor(m => m.TEMPLATES_ID))
                       
-                     <button type="submit" class="btn btn-primary" data-loading-text="Loading..." id="bntDel" onclick="return confirm('@Localization.ConfirmDelTemplate');" style="width:100px;"><span class='glyphicon glyphicon-trash'></span>@Localization.ButtonDelTemptDisplay</button>  
+                     <button type="submit" formnovalidate  class="btn btn-primary" data-loading-text="Loading..." id="bntDel" onclick="return confirm('@Localization.ConfirmDelTemplate');" style="width:100px;"><span class='glyphicon glyphicon-trash'></span>@Localization.ButtonDelTemptDisplay</button>  
                        
  }
                         </td>  }
@@ -274,7 +274,7 @@
                           
                             @if (statusID == 1 && enableApproved)
 {
-    <button type="submit" class="btn btn-primary"  id="bntAprroved" onclick="bntAproved(1);" style="width:100px;"><span class="glyphicon glyphicon-check"></span>@Localization.ButtonApprovedTemptDisplay</button>
+    <button type="submit" formnovalidate  class="btn btn-primary"  id="bntAprroved" onclick="bntAproved(1);" style="width:100px;"><span class="glyphicon glyphicon-check"></span>@Localization.ButtonApprovedTemptDisplay</button>
 }
 else if (statusID == 2 && enableApproved)
 {

@@ -24,7 +24,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public bool CheckCalendarDoctorAuto(int idDoctor, DateTime? dateCheck)
     {
-      int num = this.DbSet.AsNoTracking().Where((obj => obj.DOCTORS_ID == (int?) idDoctor && SqlFunctions.DateDiff("dd", obj.DATE_CREATE, dateCheck) == (int?) 0)).ToList<CALENDAR_AUTO>().Count<CALENDAR_AUTO>();
+      int num = this.DbSet.AsNoTracking().Where((obj => obj.DOCTORS_ID == (int?) idDoctor && SqlFunctions.DateDiff("dd", obj.DATE_CREATE, dateCheck) == (int?) 0)).ToList().Count<CALENDAR_AUTO>();
       bool flag = false;
       if (num > 0)
         return true;

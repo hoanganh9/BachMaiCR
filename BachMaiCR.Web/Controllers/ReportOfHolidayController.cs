@@ -51,11 +51,11 @@ ViewBag.Title = "Thống kê cán bộ trực theo ngày nghỉ lễ";
       List<SelectListItem> listItemBase = this.unitOfWork.Categories.GetListItemBase(3);
       listItemBase.Insert(0, selectListItem);
 ViewBag.ListPosition = listItemBase;
-      List<SelectListItem> list = this.unitOfWork.Feasts.GetAll().OrderBy<FEAST, string>((Func<FEAST, string>) (o => o.FEAST_TITLE)).Select<FEAST, SelectListItem>((Func<FEAST, SelectListItem>) (t => new SelectListItem()
+      List<SelectListItem> list = this.unitOfWork.Feasts.GetAll().OrderBy<FEAST, string>((o => o.FEAST_TITLE)).Select<FEAST, SelectListItem>((t => new SelectListItem()
       {
         Text = t.FEAST_TITLE.ToString(),
         Value = t.FEAST_ID.ToString()
-      })).ToList<SelectListItem>();
+      })).ToList();
       list.Insert(0, selectListItem);
 ViewBag.ListFeast = list;
       return this.View();
@@ -122,7 +122,7 @@ ViewBag.Pagination = pagination;
         List<FField> ffield = FUtils.ConvertToFField(freport.HeaderItem);
         if (ffield.Any<FField>())
         {
-          int num = ffield.Select<FField, int>((Func<FField, int>) (t => t.Level)).Max() - 1;
+          int num = ffield.Select<FField, int>((t => t.Level)).Max() - 1;
           ExportReport.DrawHeaderTabel(ffield, 8, 0, worldSheet);
         }
         if (doctorCalendarHoliday.Any<DoctorCalendarLeader>())
@@ -138,7 +138,7 @@ ViewBag.Pagination = pagination;
             ExportReport.ApplyStyle(excelRange[num + 8, 2], item.DOCTOR_NAME, null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 1), new ExcelVerticalAlignment?(), null, null, null);
             ExportReport.ApplyStyle(excelRange[num + 8, 3], item.POSITION_NAMEs, null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 1), new ExcelVerticalAlignment?(), null, null, null);
             ExportReport.ApplyStyle(excelRange[num + 8, 4], item.CALENDAR_DUTY_NAME, null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 1), new ExcelVerticalAlignment?(), null, null, null);
-            SelectListItem selectListItem = listItemBase.FirstOrDefault<SelectListItem>((Func<SelectListItem, bool>) (t => t.Value.Equals(item.LM_DEPARTMENT_ID.ToString())));
+            SelectListItem selectListItem = listItemBase.FirstOrDefault((t => t.Value.Equals(item.LM_DEPARTMENT_ID.ToString())));
             if (selectListItem != null)
               ExportReport.ApplyStyle(excelRange[num + 8, 5], selectListItem.Text, null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 1), new ExcelVerticalAlignment?(), null, null, null);
             DateTime? nullable = item.DATE_START;

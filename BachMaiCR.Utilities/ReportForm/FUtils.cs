@@ -14,7 +14,7 @@ namespace BachMaiCR.Utilities.ReportForm
     public static string GetHtmlHeaderTable(TreeItem tree, bool? setWidthAuto = null, int? positionGroup = null, string beginTag = "", string endTag = "")
     {
       int maxLevel = FUtils.GetLevelMax(tree) - 1;
-      IEnumerable<FField> ffields = FUtils.ConvertToFField(tree, maxLevel).Where<FField>((Func<FField, bool>) (t => t.Level != 0));
+      IEnumerable<FField> ffields = FUtils.ConvertToFField(tree, maxLevel).Where((t => t.Level != 0));
       return ffields.Any<FField>() ? FUtils.GetHtmlHeaderTable(ffields, maxLevel, setWidthAuto, positionGroup, beginTag, endTag) : "";
     }
 
@@ -32,7 +32,7 @@ namespace BachMaiCR.Utilities.ReportForm
       {
         FRow frow = new FRow();
         frow.IsHeader = true;
-        frow.Cells = ffields.Where<FField>((Func<FField, bool>) (t => t.Level == i)).ToList<FField>();
+        frow.Cells = ffields.Where((t => t.Level == i)).ToList();
         if (positionGroup.HasValue)
           frow.Cells[positionGroup.Value].ColumnSpan = new int?(2);
         stringBuilder.Append(frow.ToTrTag());
@@ -49,7 +49,7 @@ namespace BachMaiCR.Utilities.ReportForm
     public static string GetHtmlTable(TreeItem treeHeader, DataTable dtContent)
     {
       int maxLevel = FUtils.GetLevelMax(treeHeader) - 1;
-      IEnumerable<FField> ffields = FUtils.ConvertToFField(treeHeader, maxLevel).Where<FField>((Func<FField, bool>) (t => t.Level != 0));
+      IEnumerable<FField> ffields = FUtils.ConvertToFField(treeHeader, maxLevel).Where((t => t.Level != 0));
       if (!ffields.Any<FField>())
         return "";
       StringBuilder stringBuilder = new StringBuilder("<div class='table_kqtk fll invibox'><table class='Grid' width='100%' cellspacing='0' cellpadding='3' border='1'><tbody>");
@@ -103,11 +103,11 @@ namespace BachMaiCR.Utilities.ReportForm
     public static string GetHtmlTable(TreeItem treeHeader, DataTable dtContent, int positionHeaderGroup, List<string> rowGroup)
     {
       int maxLevel = FUtils.GetLevelMax(treeHeader) - 1;
-      IEnumerable<FField> source = FUtils.ConvertToFField(treeHeader, maxLevel).Where<FField>((Func<FField, bool>) (t => t.Level != 0));
+      IEnumerable<FField> source = FUtils.ConvertToFField(treeHeader, maxLevel).Where((t => t.Level != 0));
       if (!source.Any<FField>())
         return "";
       StringBuilder stringBuilder = new StringBuilder("<div class='table_kqtk fll invibox'><table class='Grid' width='100%' cellspacing='0' cellpadding='3' border='1'><tbody>");
-      stringBuilder.Append(FUtils.GetHtmlHeaderTable((IEnumerable<FField>) source.ToList<FField>(), maxLevel, new bool?(), new int?(), "", ""));
+      stringBuilder.Append(FUtils.GetHtmlHeaderTable((IEnumerable<FField>) source.ToList(), maxLevel, new bool?(), new int?(), "", ""));
       for (int index1 = 0; index1 < dtContent.Rows.Count; ++index1)
       {
         FRow frow = new FRow();
@@ -152,9 +152,9 @@ namespace BachMaiCR.Utilities.ReportForm
       List<FField> ffieldList = new List<FField>();
       if (maxLevel != 0)
       {
-        IEnumerable<FField> source = FUtils.ConvertToFField(tree, maxLevel).Where<FField>((Func<FField, bool>) (t => t.Level != 0));
+        IEnumerable<FField> source = FUtils.ConvertToFField(tree, maxLevel).Where((t => t.Level != 0));
         if (source.Any<FField>())
-          ffieldList = source.ToList<FField>();
+          ffieldList = source.ToList();
       }
       return ffieldList;
     }
@@ -179,7 +179,7 @@ namespace BachMaiCR.Utilities.ReportForm
       if (tree == null)
         return 0;
       if (tree.Children.Any<TreeItem>())
-        return 1 + tree.Children.Select<TreeItem, int>((Func<TreeItem, int>) (t => FUtils.GetLevelMax(t))).Max();
+        return 1 + tree.Children.Select<TreeItem, int>((t => FUtils.GetLevelMax(t))).Max();
       return 1;
     }
 
@@ -190,7 +190,7 @@ namespace BachMaiCR.Utilities.ReportForm
 
     public static void SetWidthCols(IEnumerable<FField> ff)
     {
-      IEnumerable<FField> source = ff.Where<FField>((Func<FField, bool>) (t =>
+      IEnumerable<FField> source = ff.Where((t =>
       {
         int num;
         if (t.ColumnSpan.HasValue)
@@ -205,11 +205,11 @@ namespace BachMaiCR.Utilities.ReportForm
       if (source.Count<FField>() <= 2)
         return;
       double num1 = 80.0;
-      source.ToList<FField>()[0].Width = new double?(3.0);
-      source.ToList<FField>()[1].Width = new double?(17.0);
+      source.ToList()[0].Width = new double?(3.0);
+      source.ToList()[1].Width = new double?(17.0);
       double num2 = num1 / (double) (source.Count<FField>() - 2);
       for (int index = 2; index < source.Count<FField>(); ++index)
-        source.ToList<FField>()[index].Width = new double?(num2);
+        source.ToList()[index].Width = new double?(num2);
     }
 
     public static void SetWidthFirstRow(List<FField> ff)

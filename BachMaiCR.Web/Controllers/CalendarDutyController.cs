@@ -56,16 +56,16 @@ namespace BachMaiCR.Web.Controllers
       int currentTemplateId = 0;
       if (listByDate.Count > 0)
         currentTemplateId = templateId == 0 ? listByDate[0].TEMPLATES_ID : templateId;
-      List<SelectListItem> list = listByDate.Where<TEMPLATE>((Func<TEMPLATE, bool>) (d =>
+      List<SelectListItem> list = listByDate.Where((d =>
       {
         bool? isdelete = d.ISDELETE;
         return !isdelete.GetValueOrDefault() && isdelete.HasValue;
-      })).OrderBy<TEMPLATE, string>((Func<TEMPLATE, string>) (d => d.TEMPLATE_NAME)).Select<TEMPLATE, SelectListItem>((Func<TEMPLATE, SelectListItem>) (d => new SelectListItem()
+      })).OrderBy<TEMPLATE, string>((d => d.TEMPLATE_NAME)).Select<TEMPLATE, SelectListItem>((d => new SelectListItem()
       {
         Text = this.Server.HtmlEncode(d.TEMPLATE_NAME),
         Value = d.TEMPLATES_ID.ToString(),
         Selected = d.TEMPLATES_ID == currentTemplateId
-      })).ToList<SelectListItem>();
+      })).ToList();
       SelectListItem selectListItem = new SelectListItem()
       {
         Text = Localization.CalendarDefault,
@@ -111,7 +111,7 @@ namespace BachMaiCR.Web.Controllers
             ViewBag.types = 3;
 
 
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 
             ViewBag.ActionPermission = list;
 
@@ -170,7 +170,7 @@ namespace BachMaiCR.Web.Controllers
         ViewBag.feast = calendarSearch.FEAST;
         ViewBag.departmentName = calendarSearch.DEPARTMENTS;
         ViewBag.types = types;
-        List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+        List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
         ViewBag.ActionPermission = list;
             
         return this.PartialView("_CalendarList", all);
@@ -260,7 +260,7 @@ namespace BachMaiCR.Web.Controllers
         return null;
       if (idCalendarDuty == null || idColumn == null || (idDoctorChange == null || dateDoctorChange == null) || idDoctorIsChange == null || DatesIsChange == null)
         return this.Json(JsonResponse.Json500("Đổi lịch không thành công!"), JsonRequestBehavior.AllowGet);
-      List<DOCTOR> list = this.unitOfWork.Doctors.GetAll().ToList<DOCTOR>();
+      List<DOCTOR> list = this.unitOfWork.Doctors.GetAll().ToList();
       int result1 = 0;
       int result2 = 0;
       int idDoctorChangeX = 0;
@@ -301,8 +301,8 @@ namespace BachMaiCR.Web.Controllers
         entity1.STATUS = new int?(1);
         entity1.STATUS_APPROVED = new int?(1);
         entity1.DATE_CHANGE = new DateTime?(DateTime.Now);
-        entity1.DOCTORS_NAME = list.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
-        entity1.DOCTORS_CHANGE_NAME = list.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
+        entity1.DOCTORS_NAME = list.Where((o => o.DOCTORS_ID == idDoctorChangeX)).ToList()[0].ABBREVIATION;
+        entity1.DOCTORS_CHANGE_NAME = list.Where((o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList()[0].ABBREVIATION;
         entity1.CALENDAR_DELETE = new int?(1);
         entity1.COLUMN_CHANGE_ID = new int?(idColumeIsChange);
         this.unitOfWork.CalendarChanges.Add(entity1);
@@ -343,8 +343,8 @@ namespace BachMaiCR.Web.Controllers
         entity2.STATUS = new int?(1);
         entity2.STATUS_APPROVED = new int?(1);
         entity2.DATE_CHANGE = new DateTime?(DateTime.Now);
-        entity2.DOCTORS_NAME = list.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
-        entity2.DOCTORS_CHANGE_NAME = list.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
+        entity2.DOCTORS_NAME = list.Where((o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList()[0].ABBREVIATION;
+        entity2.DOCTORS_CHANGE_NAME = list.Where((o => o.DOCTORS_ID == idDoctorChangeX)).ToList()[0].ABBREVIATION;
         entity2.CALENDAR_DELETE = new int?(entity1.CALENDAR_CHANGE_ID);
         entity2.COLUMN_CHANGE_ID = new int?(result2);
         this.unitOfWork.CalendarChanges.Add(entity2);
@@ -362,8 +362,8 @@ namespace BachMaiCR.Web.Controllers
         entity1.STATUS = new int?(1);
         entity1.STATUS_APPROVED = new int?(1);
         entity1.DATE_CHANGE = new DateTime?(DateTime.Now);
-        entity1.DOCTORS_NAME = list.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
-        entity1.DOCTORS_CHANGE_NAME = list.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
+        entity1.DOCTORS_NAME = list.Where((o => o.DOCTORS_ID == idDoctorChangeX)).ToList()[0].ABBREVIATION;
+        entity1.DOCTORS_CHANGE_NAME = list.Where((o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList()[0].ABBREVIATION;
         entity1.COLUMN_CHANGE_ID = new int?(idColumeIsChange);
         this.unitOfWork.CalendarChanges.Add(entity1);
         this.WriteLog(enLogType.NomalLog, enActionType.Update, "Cập nhật thông tin lịch trực đơn vị ", "N/A", "N/A", 0, "", "");
@@ -386,7 +386,7 @@ namespace BachMaiCR.Web.Controllers
     {
       if (!this.Request.IsAjaxRequest())
         return null;
-      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
         ViewBag.ActionPermission = list1;
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
       int result1 = 0;
@@ -464,12 +464,12 @@ namespace BachMaiCR.Web.Controllers
         int result4 = 0;
         int idDoctorIsChangeX = 0;
         DateTime? nullable2 = new DateTime?();
-        List<string> list2 = ((IEnumerable<string>) strNew.Split('-')).ToList<string>();
-        List<string> list3 = ((IEnumerable<string>) strDelete.Split('-')).ToList<string>();
-        List<string> list4 = ((IEnumerable<string>) strChangeOne.Split('-')).ToList<string>();
-        List<string> list5 = ((IEnumerable<string>) strChangeTwo.Split('-')).ToList<string>();
+        List<string> list2 = ((IEnumerable<string>) strNew.Split('-')).ToList();
+        List<string> list3 = ((IEnumerable<string>) strDelete.Split('-')).ToList();
+        List<string> list4 = ((IEnumerable<string>) strChangeOne.Split('-')).ToList();
+        List<string> list5 = ((IEnumerable<string>) strChangeTwo.Split('-')).ToList();
         this.unitOfWork.CalendarChanges.DeleteCalendarByIDAndDay(result1, Convert.ToInt32(byId.CALENDAR_MONTH));
-        List<DOCTOR> list6 = this.unitOfWork.Doctors.GetAll().ToList<DOCTOR>();
+        List<DOCTOR> list6 = this.unitOfWork.Doctors.GetAll().ToList();
         foreach (string str in list3)
         {
           char[] chArray = new char[1]{ '_' };
@@ -498,7 +498,7 @@ namespace BachMaiCR.Web.Controllers
             entity.STATUS_APPROVED = new int?(1);
             entity.DATE_CHANGE = new DateTime?(DateTime.Now);
             entity.DOCTORS_CHANGE_NAME = "";
-            entity.DOCTORS_NAME = list6.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctor)).ToList<DOCTOR>()[0].ABBREVIATION;
+            entity.DOCTORS_NAME = list6.Where((o => o.DOCTORS_ID == idDoctor)).ToList()[0].ABBREVIATION;
             this.unitOfWork.CalendarChanges.Add(entity);
           }
         }
@@ -530,7 +530,7 @@ namespace BachMaiCR.Web.Controllers
             entity.STATUS_APPROVED = new int?(1);
             entity.DATE_CHANGE = new DateTime?(DateTime.Now);
             entity.DOCTORS_CHANGE_NAME = "";
-            entity.DOCTORS_NAME = list6.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctor)).ToList<DOCTOR>()[0].ABBREVIATION;
+            entity.DOCTORS_NAME = list6.Where((o => o.DOCTORS_ID == idDoctor)).ToList()[0].ABBREVIATION;
             this.unitOfWork.CalendarChanges.Add(entity);
           }
         }
@@ -563,8 +563,8 @@ namespace BachMaiCR.Web.Controllers
             entity.STATUS = new int?(1);
             entity.STATUS_APPROVED = new int?(1);
             entity.DATE_CHANGE = new DateTime?(DateTime.Now);
-            entity.DOCTORS_NAME = list6.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctor)).ToList<DOCTOR>()[0].ABBREVIATION;
-            entity.DOCTORS_CHANGE_NAME = list6.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
+            entity.DOCTORS_NAME = list6.Where((o => o.DOCTORS_ID == idDoctor)).ToList()[0].ABBREVIATION;
+            entity.DOCTORS_CHANGE_NAME = list6.Where((o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList()[0].ABBREVIATION;
             entity.COLUMN_CHANGE_ID = new int?();
             this.unitOfWork.CalendarChanges.Add(entity);
           }
@@ -610,8 +610,8 @@ namespace BachMaiCR.Web.Controllers
             calendarChange1.STATUS = new int?(1);
             calendarChange1.STATUS_APPROVED = new int?(1);
             calendarChange1.DATE_CHANGE = new DateTime?(DateTime.Now);
-            calendarChange1.DOCTORS_NAME = list6.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctor)).ToList<DOCTOR>()[0].ABBREVIATION;
-            calendarChange1.DOCTORS_CHANGE_NAME = list6.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
+            calendarChange1.DOCTORS_NAME = list6.Where((o => o.DOCTORS_ID == idDoctor)).ToList()[0].ABBREVIATION;
+            calendarChange1.DOCTORS_CHANGE_NAME = list6.Where((o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList()[0].ABBREVIATION;
             calendarChange1.CALENDAR_DELETE = new int?(1);
             calendarChange1.COLUMN_CHANGE_ID = new int?(result5);
             if (this.unitOfWork.CalendarChanges.CheckChangeCaledar(calendarChange1, 1) == 0)
@@ -627,8 +627,8 @@ namespace BachMaiCR.Web.Controllers
             calendarChange2.STATUS = new int?(1);
             calendarChange2.STATUS_APPROVED = new int?(1);
             calendarChange2.DATE_CHANGE = new DateTime?(DateTime.Now);
-            calendarChange2.DOCTORS_NAME = list6.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
-            calendarChange2.DOCTORS_CHANGE_NAME = list6.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctor)).ToList<DOCTOR>()[0].ABBREVIATION;
+            calendarChange2.DOCTORS_NAME = list6.Where((o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList()[0].ABBREVIATION;
+            calendarChange2.DOCTORS_CHANGE_NAME = list6.Where((o => o.DOCTORS_ID == idDoctor)).ToList()[0].ABBREVIATION;
             calendarChange2.CALENDAR_DELETE = new int?(calendarChange1.CALENDAR_CHANGE_ID);
             calendarChange2.COLUMN_CHANGE_ID = new int?(result4);
             if (this.unitOfWork.CalendarChanges.CheckChangeCaledar(calendarChange2, 1) == 0)
@@ -820,7 +820,7 @@ namespace BachMaiCR.Web.Controllers
     [ValidateInput(false)]
     public PartialViewResult CalendarLists(SearchCalendarDuty calendarSearch, int types)
     {
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
             ViewBag.ActionPermission = list;
       int page = 0;
       Pagination pagination = new Pagination()
@@ -895,7 +895,7 @@ namespace BachMaiCR.Web.Controllers
 ViewBag.times = dateTime;
 ViewBag.doctors = doctorCalendarDefault;
         doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
-        List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+        List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
         List<CALENDAR_DUTY> calendarDutyList = (List<CALENDAR_DUTY>) null;
         List<CALENDAR_DUTY> calendarByDeparment = this.unitOfWork.CalendarDuty.GetCalendarByDeparment(result2, result3, hashCode1, nullable1);
@@ -932,7 +932,7 @@ ViewBag.typeEdit = 0;
         calendarDutyList = (List<CALENDAR_DUTY>) null;
         return this.PartialView("_EditCalendarDefault");
       }
-      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list1;
 ViewBag.idDepartment = byUserName.LM_DEPARTMENT_ID;
       List<TimeCalendarDuty> timeCalendarDutyList1 = new List<TimeCalendarDuty>();
@@ -1071,7 +1071,7 @@ ViewBag.idTemplate = idTemplate;
     {
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
 ViewBag.idDepartment = byUserName.LM_DEPARTMENT_ID;
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
 ViewBag.months = DateTime.Now.Month;
 ViewBag.years = DateTime.Now.Year;
@@ -1113,7 +1113,7 @@ ViewBag.years = Years;
     {
       if (!this.Request.IsAjaxRequest())
         return null;
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
       Random random;
       if (types == 0)
@@ -1352,7 +1352,7 @@ ViewBag.objCalendarDuty = byId;
         this.unitOfWork.CalendarChanges.UpdateStatus(result1, 2);
       if (int.TryParse(types, out result3))
       {
-        List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+        List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
         if (result3 == 1)
           return this.PartialView("_ListButtons");
@@ -1511,7 +1511,7 @@ ViewBag.objCalendarDuty = byId1;
           int result2 = 0;
           if (int.TryParse(types, out result2))
           {
-            List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+            List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
             if (result2 == 1)
               return this.PartialView("_ListButtons");
@@ -1531,7 +1531,7 @@ ViewBag.objCalendarDuty = byId1;
           int result2 = 0;
           if (int.TryParse(types, out result2))
           {
-            List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+            List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
             if (result2 == 1)
               return this.PartialView("_ListButtons");
@@ -1547,7 +1547,7 @@ ViewBag.ActionPermission = list;
     public JsonResult GetNamesCreate(string term)
     {
       List<ADMIN_USER> all = this.unitOfWork.Users.GetAll("FULLNAME", "");
-      IEnumerable<string> source = all.Any<ADMIN_USER>() ? all.Where<ADMIN_USER>((Func<ADMIN_USER, bool>) (n => n.FULLNAME.ToLower().Contains(term.ToLower()))).Select<ADMIN_USER, string>((Func<ADMIN_USER, string>) (t => t.FULLNAME)) : (IEnumerable<string>) new List<string>();
+      IEnumerable<string> source = all.Any<ADMIN_USER>() ? all.Where((n => n.FULLNAME.ToLower().Contains(term.ToLower()))).Select<ADMIN_USER, string>((t => t.FULLNAME)) : (IEnumerable<string>) new List<string>();
       return new JsonResult()
       {
         Data = source.ToArray<string>(),
@@ -1559,7 +1559,7 @@ ViewBag.ActionPermission = list;
     public JsonResult GetNamesApproved(string termApproved)
     {
       List<ADMIN_USER> all = this.unitOfWork.Users.GetAll("FULLNAME", "");
-      IEnumerable<string> strings = all.Any<ADMIN_USER>() ? all.Where<ADMIN_USER>((Func<ADMIN_USER, bool>) (n => n.FULLNAME.ToLower().Contains(termApproved.ToLower()))).Select<ADMIN_USER, string>((Func<ADMIN_USER, string>) (t => t.FULLNAME)) : (IEnumerable<string>) new List<string>();
+      IEnumerable<string> strings = all.Any<ADMIN_USER>() ? all.Where((n => n.FULLNAME.ToLower().Contains(termApproved.ToLower()))).Select<ADMIN_USER, string>((t => t.FULLNAME)) : (IEnumerable<string>) new List<string>();
       return new JsonResult()
       {
         Data = strings,
@@ -1570,8 +1570,8 @@ ViewBag.ActionPermission = list;
     [HttpGet]
     public JsonResult GetDepartment(string termDepartment)
     {
-      List<LM_DEPARTMENT> list = this.unitOfWork.Departments.GetAll().ToList<LM_DEPARTMENT>();
-      IEnumerable<string> strings = list.Any<LM_DEPARTMENT>() ? list.Where<LM_DEPARTMENT>((Func<LM_DEPARTMENT, bool>) (n => n.DEPARTMENT_NAME.ToLower().Contains(termDepartment.ToLower()))).Select<LM_DEPARTMENT, string>((Func<LM_DEPARTMENT, string>) (t => t.DEPARTMENT_NAME)) : (IEnumerable<string>) new List<string>();
+      List<LM_DEPARTMENT> list = this.unitOfWork.Departments.GetAll().ToList();
+      IEnumerable<string> strings = list.Any<LM_DEPARTMENT>() ? list.Where((n => n.DEPARTMENT_NAME.ToLower().Contains(termDepartment.ToLower()))).Select<LM_DEPARTMENT, string>((t => t.DEPARTMENT_NAME)) : (IEnumerable<string>) new List<string>();
       return new JsonResult()
       {
         Data = strings,
@@ -1615,7 +1615,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
       this.unitOfWork.CalendarDuty.Update(byId);
       this.WriteLog(enLogType.NomalLog, enActionType.ApproveCancel, "Hủy duyệt lịch trực đơn vị " + objCalendarDuty.CALENDAR_NAME, "N/A", "N/A", 0, "", "");
 ViewBag.objCalendarDuty = byId;
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
       int? nullable = objCalendarDuty.DUTY_TYPE;
       if ((nullable.GetValueOrDefault() != 1 ? 0 : (nullable.HasValue ? 1 : 0)) != 0)
@@ -1641,7 +1641,7 @@ ViewBag.ActionPermission = list;
         return this.RedirectToAction("Index");
       if (deparmentId <= 0)
         return this.Json(JsonResponse.Json500(Localization.MsgItemNotExist));
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
       List<DoctorCalendarLeader> doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
       List<DoctorCalendarLeader> calendarByDeparment = this.unitOfWork.CalendarDuty.GetDoctorCalendarByDeparment(deparmentId);
@@ -1662,7 +1662,7 @@ ViewBag.times = dateTime;
     {
       if (!this.Request.IsAjaxRequest())
         return this.RedirectToAction("Index");
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
       List<DoctorCalendarLeader> doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
       List<DoctorCalendarLeader> calendarDirector = this.unitOfWork.CalendarDuty.GetDoctorCalendarDirector(monthx, yearx, DutyType.Leader.GetHashCode());
@@ -1683,7 +1683,7 @@ ViewBag.times = dateTime;
     {
       if (!this.Request.IsAjaxRequest())
         return this.RedirectToAction("Index");
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
       List<DoctorCalendarLeader> doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
       List<DoctorCalendarLeader> doctorCalendarPesonal = this.unitOfWork.CalendarDuty.GetDoctorCalendarPesonal(monthx, yearx, doctorId);
@@ -2120,7 +2120,7 @@ ViewBag.times = timeCalendarDutyList2;
       if (!this.Request.IsAjaxRequest())
         return null;
       int result1 = 0;
-      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list1;
       int result2;
       int result3;
@@ -2171,11 +2171,11 @@ ViewBag.ActionPermission = list1;
         }
         List<DEPARTMENTLIST> departmentByLevelVt = this.unitOfWork.Departments.GetAllDepartmentByLevelVT(LevelDeparment.Level1.GetHashCode());
         CALENDAR_DUTY calendarDuty = this.unitOfWork.CalendarDuty.CheckCalendarHospital(nextMonth, result4, 4);
-        List<DoctorHospital> list2 = this.unitOfWork.CalendarDuty.GetDoctorHospital(nextMonth, result4).Where<DoctorHospital>((Func<DoctorHospital, bool>) (x =>
+        List<DoctorHospital> list2 = this.unitOfWork.CalendarDuty.GetDoctorHospital(nextMonth, result4).Where((x =>
         {
           int? levelNumber = x.LEVEL_NUMBER;
           return levelNumber.GetValueOrDefault() < 3 && levelNumber.HasValue;
-        })).OrderBy<DoctorHospital, string>((Func<DoctorHospital, string>) (x => x.DOCTOR_NAME)).ToList<DoctorHospital>();
+        })).OrderBy<DoctorHospital, string>((x => x.DOCTOR_NAME)).ToList();
         List<CALENDAR_GROUP> calendarGroupList = this.unitOfWork.CalendarGroups.ListCalendarGroup(nextMonth, result4);
 ViewBag.times = dateTime1;
 ViewBag.doctors = list2;
@@ -2883,22 +2883,22 @@ ViewBag.calendarDepartment = calendarGroupList;
           this.WriteLog(enLogType.NomalLog, enActionType.Approve, "Phê duyệt lịch trực toàn bệnh viện", "N/A", "N/A", result, "", "");
         }
         List<SendSms6x00> listSms = new List<SendSms6x00>();
-        CALENDAR_GROUP objLeader = lstApproved.Where<CALENDAR_GROUP>((Func<CALENDAR_GROUP, bool>) (x =>
+        CALENDAR_GROUP objLeader = lstApproved.Where((x =>
         {
           int? calendarType = x.CALENDAR_TYPE;
           return calendarType.GetValueOrDefault() == 2 && calendarType.HasValue;
-        })).FirstOrDefault<CALENDAR_GROUP>();
+        })).FirstOrDefault();
         List<DoctorHospital> doctorHospitalList1;
         string str1;
         SendSms6x00 sendSms6x00;
         if (objLeader != null)
         {
-          CALENDAR_GROUP entity = allByDate.Where<CALENDAR_GROUP>((Func<CALENDAR_GROUP, bool>) (x =>
+          CALENDAR_GROUP entity = allByDate.Where((x =>
           {
             int? calendarType1 = x.CALENDAR_TYPE;
             int? calendarType2 = objLeader.CALENDAR_TYPE;
             return calendarType1.GetValueOrDefault() == calendarType2.GetValueOrDefault() && calendarType1.HasValue == calendarType2.HasValue;
-          })).FirstOrDefault<CALENDAR_GROUP>();
+          })).FirstOrDefault();
           if (entity != null)
           {
             entity.CALENDAR_STATUS = new int?(1);
@@ -2908,11 +2908,11 @@ ViewBag.calendarDepartment = calendarGroupList;
             str1 = "";
             List<DoctorHospital> doctorHospitalList2 = new List<DoctorHospital>();
             List<DoctorHospital> doctorHospitalLeader = this.unitOfWork.CalendarDuty.GetDoctorHospitalLeader(Convert.ToInt32(entity.CALENDAR_MONTH), Convert.ToInt32(entity.CALENDAR_YEAR));
-            listIdDoctor = doctorHospitalLeader.Select<DoctorHospital, int>((Func<DoctorHospital, int>) (x => x.DOCTORS_ID)).Distinct<int>().ToList<int>();
+            listIdDoctor = doctorHospitalLeader.Select<DoctorHospital, int>((x => x.DOCTORS_ID)).Distinct<int>().ToList();
             for (int j = 0; j < listIdDoctor.Count; ++j)
             {
               string str2 = "";
-              List<DoctorHospital> list = doctorHospitalLeader.Where<DoctorHospital>((Func<DoctorHospital, bool>) (x => x.DOCTORS_ID == listIdDoctor[j])).ToList<DoctorHospital>();
+              List<DoctorHospital> list = doctorHospitalLeader.Where((x => x.DOCTORS_ID == listIdDoctor[j])).ToList();
               foreach (DoctorHospital doctorHospital in list)
               {
                 object[] objArray1 = new object[5]
@@ -2952,7 +2952,7 @@ var month = dateStart.Value.Month;
           foreach (CALENDAR_GROUP calendarGroup in lstApproved)
           {
             CALENDAR_GROUP objlstApproved = calendarGroup;
-            List<CALENDAR_GROUP> list1 = allByDate.Where<CALENDAR_GROUP>((Func<CALENDAR_GROUP, bool>) (x =>
+            List<CALENDAR_GROUP> list1 = allByDate.Where((x =>
             {
               int? calendarType = x.CALENDAR_TYPE;
               int? nullable = objlstApproved.CALENDAR_TYPE;
@@ -2966,7 +2966,7 @@ var month = dateStart.Value.Month;
               else
                 num = 0;
               return num != 0;
-            })).ToList<CALENDAR_GROUP>();
+            })).ToList();
             if (list1.Count > 0)
             {
               foreach (CALENDAR_GROUP entity in list1)
@@ -2979,11 +2979,11 @@ var month = dateStart.Value.Month;
                 str1 = "";
                 LM_DEPARTMENT byId = this.unitOfWork.Departments.GetById(Convert.ToInt32(entity.LM_DEPARTMENT_ID));
                 List<DoctorHospital> hospitalByDepartment = this.unitOfWork.CalendarDuty.GetDoctorHospitalByDepartment(Convert.ToInt32(entity.CALENDAR_MONTH), Convert.ToInt32(entity.CALENDAR_YEAR), Convert.ToInt32(entity.LM_DEPARTMENT_ID));
-                listIdDoctor = hospitalByDepartment.Select<DoctorHospital, int>((Func<DoctorHospital, int>) (x => x.DOCTORS_ID)).Distinct<int>().ToList<int>();
+                listIdDoctor = hospitalByDepartment.Select<DoctorHospital, int>((x => x.DOCTORS_ID)).Distinct<int>().ToList();
                 for (int j = 0; j < listIdDoctor.Count; ++j)
                 {
                   string str2 = "";
-                  List<DoctorHospital> list2 = hospitalByDepartment.Where<DoctorHospital>((Func<DoctorHospital, bool>) (x => x.DOCTORS_ID == listIdDoctor[j])).ToList<DoctorHospital>();
+                  List<DoctorHospital> list2 = hospitalByDepartment.Where((x => x.DOCTORS_ID == listIdDoctor[j])).ToList();
                   foreach (DoctorHospital doctorHospital in list2)
                   {
                     object[] objArray1 = new object[5]
@@ -3823,16 +3823,12 @@ var month = dateStart.Value.Month;
         List<CALENDAR_GROUP> byDateIsApproved = this.unitOfWork.CalendarGroups.GetAllByDateIsApproved(result1, result2);
         int num1 = 0;
         List<DoctorHospital> doctorHospitalList = new List<DoctorHospital>();
-        List<DoctorHospital> list1 = this.unitOfWork.CalendarDuty.GetDoctorHospital(result1, result2).Where<DoctorHospital>((Func<DoctorHospital, bool>) (x => Convert.ToInt32(x.LEVEL_NUMBER) < 3)).OrderBy<DoctorHospital, string>((Func<DoctorHospital, string>) (x => x.DOCTOR_NAME)).ToList<DoctorHospital>();
-        if (byDateIsApproved.Where<CALENDAR_GROUP>((Func<CALENDAR_GROUP, bool>) (x =>
-        {
-          int? calendarType = x.CALENDAR_TYPE;
-          return calendarType.GetValueOrDefault() == 2 && calendarType.HasValue;
-        })).FirstOrDefault<CALENDAR_GROUP>() != null)
+        List<DoctorHospital> list1 = this.unitOfWork.CalendarDuty.GetDoctorHospital(result1, result2).Where((x => x.LEVEL_NUMBER < 3)).OrderBy<DoctorHospital, string>((x => x.DOCTOR_NAME)).ToList();
+        if (byDateIsApproved.Where(x => x.CALENDAR_TYPE.GetValueOrDefault() == 2 && x.CALENDAR_TYPE.HasValue).FirstOrDefault() != null)
         {
           for (int i = 0; i < times.Count; ++i)
           {
-            List<DoctorHospital> list2 = list1.Where<DoctorHospital>((Func<DoctorHospital, bool>) (o =>
+            List<DoctorHospital> list2 = list1.Where((o =>
             {
               int? dutyType = o.DUTY_TYPE;
               int num;
@@ -3862,7 +3858,7 @@ var month = dateStart.Value.Month;
               num = 0;
 label_5:
               return num != 0;
-            })).GroupBy<DoctorHospital, string>((Func<DoctorHospital, string>) (x => x.ABBREVIATION)).Select<IGrouping<string, DoctorHospital>, DoctorHospital>((Func<IGrouping<string, DoctorHospital>, DoctorHospital>) (x => x.First<DoctorHospital>())).ToList<DoctorHospital>();
+            })).GroupBy((x => x.ABBREVIATION)).Select(x => x.First()).ToList();
             if (times[i].DAYS.Equals("CN") || times[i].DAYS.Equals("T7"))
             {
               excelWorksheet.Cells[5, i + 3].Style.Border.Top.Style= ExcelBorderStyle.Thin;
@@ -3877,7 +3873,7 @@ label_5:
               foreach (DoctorHospital doctorHospital in list2)
               {
                 DoctorHospital objDoctor = doctorHospital;
-                List<DEPARTMENTLIST> list3 = objDepartment.Where<DEPARTMENTLIST>((Func<DEPARTMENTLIST, bool>) (x => objDoctor.LM_DEPARTMENT_IDs.Contains(x.LM_DEPARTMENT_ID.ToString()))).ToList<DEPARTMENTLIST>();
+                List<DEPARTMENTLIST> list3 = objDepartment.Where((x => objDoctor.LM_DEPARTMENT_IDs.Contains(x.LM_DEPARTMENT_ID.ToString()))).ToList();
                 if (list3 != null)
                 {
                   richText.Add(objDoctor.ABBREVIATION + "\r\n").Bold = true;
@@ -3902,7 +3898,7 @@ label_5:
               foreach (DoctorHospital doctorHospital in list2)
               {
                 DoctorHospital objDoctor = doctorHospital;
-                List<DEPARTMENTLIST> list3 = objDepartment.Where<DEPARTMENTLIST>((Func<DEPARTMENTLIST, bool>) (x => objDoctor.LM_DEPARTMENT_IDs.Contains(x.LM_DEPARTMENT_ID.ToString()))).ToList<DEPARTMENTLIST>();
+                List<DEPARTMENTLIST> list3 = objDepartment.Where((x => objDoctor.LM_DEPARTMENT_IDs.Contains(x.LM_DEPARTMENT_ID.ToString()))).ToList();
                 if (list3 != null)
                 {
                   richText.Add(objDoctor.ABBREVIATION + "\r\n").Bold = true;
@@ -3941,12 +3937,12 @@ label_5:
         }
         for (int i = 0; i < objDepartment.Count; ++i)
         {
-          if (byDateIsApproved.Where<CALENDAR_GROUP>((Func<CALENDAR_GROUP, bool>) (x =>
+          if (byDateIsApproved.Where((x =>
           {
             int? lmDepartmentId1 = x.LM_DEPARTMENT_ID;
             int lmDepartmentId2 = objDepartment[i].LM_DEPARTMENT_ID;
             return lmDepartmentId1.GetValueOrDefault() == lmDepartmentId2 && lmDepartmentId1.HasValue;
-          })).FirstOrDefault<CALENDAR_GROUP>() != null)
+          })).FirstOrDefault() != null)
           {
             ++num1;
             excelWorksheet.Cells[5 + num1, 2].Style.Border.Top.Style= ExcelBorderStyle.Thin;
@@ -3974,7 +3970,7 @@ label_5:
                 excelWorksheet.Cells[5 + num1, j + 3].Style.Border.Bottom.Style= ExcelBorderStyle.Thin;
                 excelWorksheet.Cells[5 + num1, j + 3].Style.Fill.PatternType = ExcelFillStyle.Solid;;
                 excelWorksheet.Cells[5 + num1, j + 3].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-                List<DoctorHospital> list2 = list1.Where<DoctorHospital>((Func<DoctorHospital, bool>) (o =>
+                List<DoctorHospital> list2 = list1.Where((o =>
                 {
                   int num;
                   if (o.LM_DEPARTMENT_ID == objDepartment[i].LM_DEPARTMENT_ID)
@@ -3989,7 +3985,7 @@ label_5:
                   num = 0;
 label_4:
                   return num != 0;
-                })).GroupBy<DoctorHospital, string>((Func<DoctorHospital, string>) (x => x.ABBREVIATION)).Select<IGrouping<string, DoctorHospital>, DoctorHospital>((Func<IGrouping<string, DoctorHospital>, DoctorHospital>) (x => x.First<DoctorHospital>())).ToList<DoctorHospital>();
+                })).GroupBy((x => x.ABBREVIATION)).Select((x => x.First())).ToList();
                 excelWorksheet.Cells[5 + num1, j + 3].IsRichText = true;
                 excelWorksheet.Cells[5 + num1, j + 3].Style.WrapText = true;
                 ExcelRichTextCollection richText = excelWorksheet.Cells[5 + num1, j + 3].RichText;
@@ -4004,7 +4000,7 @@ label_4:
                 excelWorksheet.Cells[5 + num1, j + 3].Style.Border.Left.Style= ExcelBorderStyle.Thin;
                 excelWorksheet.Cells[5 + num1, j + 3].Style.Border.Right.Style= ExcelBorderStyle.Thin;
                 excelWorksheet.Cells[5 + num1, j + 3].Style.Border.Bottom.Style= ExcelBorderStyle.Thin;
-                List<DoctorHospital> list2 = list1.Where<DoctorHospital>((Func<DoctorHospital, bool>) (o =>
+                List<DoctorHospital> list2 = list1.Where((o =>
                 {
                   int num;
                   if (o.LM_DEPARTMENT_ID == objDepartment[i].LM_DEPARTMENT_ID)
@@ -4019,7 +4015,7 @@ label_4:
                   num = 0;
 label_4:
                   return num != 0;
-                })).GroupBy<DoctorHospital, string>((Func<DoctorHospital, string>) (x => x.ABBREVIATION)).Select<IGrouping<string, DoctorHospital>, DoctorHospital>((Func<IGrouping<string, DoctorHospital>, DoctorHospital>) (x => x.First<DoctorHospital>())).ToList<DoctorHospital>();
+                })).GroupBy((x => x.ABBREVIATION)).Select((x => x.First())).ToList();
                 excelWorksheet.Cells[5 + num1, j + 3].IsRichText = true;
                 excelWorksheet.Cells[5 + num1, j + 3].Style.WrapText = true;
                 ExcelRichTextCollection richText = excelWorksheet.Cells[5 + num1, j + 3].RichText;
@@ -4345,7 +4341,7 @@ ViewBag.DateX = date;
     {
       if (!this.Request.IsAjaxRequest())
         return null;
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list;
       int result1 = 0;
       List<DoctorCalendarLeader> doctorCalendarLeaderList = (List<DoctorCalendarLeader>) null;
@@ -4386,7 +4382,7 @@ ViewBag.typeEdit = typeEdit;
     {
       if (!this.Request.IsAjaxRequest())
         return null;
-      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list1;
       int result = 0;
       int hashCode1 = CalendarChangeType.Add.GetHashCode();
@@ -4402,7 +4398,7 @@ ViewBag.ActionPermission = list1;
         List<string> stringList4 = new List<string>();
         List<string> stringList5 = new List<string>();
         List<string> stringList6 = new List<string>();
-        List<DOCTOR> list2 = this.unitOfWork.Doctors.GetAll().ToList<DOCTOR>();
+        List<DOCTOR> list2 = this.unitOfWork.Doctors.GetAll().ToList();
         List<CALENDAR_CHANGE> calendarChangeList1 = new List<CALENDAR_CHANGE>();
         List<CALENDAR_CHANGE> calendarChangeList2 = new List<CALENDAR_CHANGE>();
         List<CALENDAR_CHANGE> calendarChangeList3 = new List<CALENDAR_CHANGE>();
@@ -4411,7 +4407,7 @@ ViewBag.ActionPermission = list1;
         int idDoctor = 0;
         int idDoctorOld = 0;
         DateTime? nullable1 = new DateTime?();
-        List<string> list3 = ((IEnumerable<string>) strAdd.Split('-')).ToList<string>();
+        List<string> list3 = ((IEnumerable<string>) strAdd.Split('-')).ToList();
         this.unitOfWork.CalendarChanges.DeleteCalendarChangeByStatus(result, hashCode1);
         foreach (string str in list3)
         {
@@ -4441,16 +4437,16 @@ ViewBag.ActionPermission = list1;
             List<CALENDAR_CHANGE> source = this.unitOfWork.CalendarChanges.ListNewChange(calendarChange2, hashCode1, 1);
             if (source.Count == 0)
             {
-              calendarChange2.DOCTORS_NAME = list2.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctor)).ToList<DOCTOR>()[0].ABBREVIATION;
+              calendarChange2.DOCTORS_NAME = list2.Where((o => o.DOCTORS_ID == idDoctor)).ToList()[0].ABBREVIATION;
               this.unitOfWork.CalendarChanges.Add(calendarChange2);
             }
             else
-              this.unitOfWork.CalendarChanges.Delete(source.First<CALENDAR_CHANGE>());
+              this.unitOfWork.CalendarChanges.Delete(source.First());
           }
         }
         string str1 = strDeleted;
         char[] chArray1 = new char[1]{ '-' };
-        foreach (string str2 in ((IEnumerable<string>) str1.Split(chArray1)).ToList<string>())
+        foreach (string str2 in ((IEnumerable<string>) str1.Split(chArray1)).ToList())
         {
           CALENDAR_CHANGE calendarChange2 = new CALENDAR_CHANGE();
           string[] strArray2 = str2.Split(',');
@@ -4478,16 +4474,16 @@ ViewBag.ActionPermission = list1;
             List<CALENDAR_CHANGE> source = this.unitOfWork.CalendarChanges.ListNewChange(calendarChange2, hashCode3, 1);
             if (source.Count == 0)
             {
-              calendarChange2.DOCTORS_NAME = list2.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorOld)).ToList<DOCTOR>()[0].ABBREVIATION;
+              calendarChange2.DOCTORS_NAME = list2.Where((o => o.DOCTORS_ID == idDoctorOld)).ToList()[0].ABBREVIATION;
               this.unitOfWork.CalendarChanges.Add(calendarChange2);
             }
             else
-              this.unitOfWork.CalendarChanges.Delete(source.First<CALENDAR_CHANGE>());
+              this.unitOfWork.CalendarChanges.Delete(source.First());
           }
         }
         string str3 = strChanged;
         char[] chArray2 = new char[1]{ '-' };
-        foreach (string str2 in ((IEnumerable<string>) str3.Split(chArray2)).ToList<string>())
+        foreach (string str2 in ((IEnumerable<string>) str3.Split(chArray2)).ToList())
         {
           CALENDAR_CHANGE calendarChange2 = new CALENDAR_CHANGE();
           string[] strArray2 = str2.Split(',');
@@ -4528,15 +4524,15 @@ ViewBag.ActionPermission = list1;
             calendarChange2.STATUS = new int?(1);
             calendarChange2.STATUS_APPROVED = new int?(1);
             calendarChange2.DATE_CHANGE = new DateTime?(DateTime.Now);
-            calendarChange2.DOCTORS_NAME = list2.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorOld)).ToList<DOCTOR>()[0].ABBREVIATION;
-            calendarChange2.DOCTORS_CHANGE_NAME = idDoctorChange != 0 ? list2.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorChange)).ToList<DOCTOR>()[0].ABBREVIATION : "";
+            calendarChange2.DOCTORS_NAME = list2.Where((o => o.DOCTORS_ID == idDoctorOld)).ToList()[0].ABBREVIATION;
+            calendarChange2.DOCTORS_CHANGE_NAME = idDoctorChange != 0 ? list2.Where((o => o.DOCTORS_ID == idDoctorChange)).ToList()[0].ABBREVIATION : "";
             calendarChange2.CALENDAR_DELETE = new int?(1);
             List<CALENDAR_CHANGE> source = this.unitOfWork.CalendarChanges.ListNewChange(calendarChange2, hashCode2, 0);
             if (source.Count != 0)
-              this.unitOfWork.CalendarChanges.Delete(source.First<CALENDAR_CHANGE>());
+              this.unitOfWork.CalendarChanges.Delete(source.First());
             if (idDoctorChange != 0)
             {
-              calendarChange2.DOCTORS_NAME = list2.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorOld)).ToList<DOCTOR>()[0].ABBREVIATION;
+              calendarChange2.DOCTORS_NAME = list2.Where((o => o.DOCTORS_ID == idDoctorOld)).ToList()[0].ABBREVIATION;
               this.unitOfWork.CalendarChanges.Add(calendarChange2);
             }
           }
@@ -4657,11 +4653,11 @@ ViewBag.Type = "1";
     {
       if (!this.Request.IsAjaxRequest())
         return null;
-      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list1 = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionPermission = list1;
       if (idCalendarDuty == null || idDoctorChange == null || (dateDoctorChange == null || idDoctorIsChange == null) || DatesIsChange == null)
         return null;
-      List<DOCTOR> list2 = this.unitOfWork.Doctors.GetAll().ToList<DOCTOR>();
+      List<DOCTOR> list2 = this.unitOfWork.Doctors.GetAll().ToList();
       int result = 0;
       int idDoctorChangeX = 0;
       int idDoctorIsChangeX = 0;
@@ -4692,9 +4688,9 @@ ViewBag.ActionPermission = list1;
       if (nullable4.HasValue)
       {
         calendarChangeModel.DOCTORS_ID = new int?(idDoctorChangeX);
-        calendarChangeModel.DOCTORS_NAME = list2.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
+        calendarChangeModel.DOCTORS_NAME = list2.Where((o => o.DOCTORS_ID == idDoctorChangeX)).ToList()[0].ABBREVIATION;
         calendarChangeModel.DATE_START = nullable3;
-        calendarChangeModel.DOCTORS_CHANGE_NAME = list2.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
+        calendarChangeModel.DOCTORS_CHANGE_NAME = list2.Where((o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList()[0].ABBREVIATION;
         calendarChangeModel.DOCTORS_CHANGE_ID = new int?(idDoctorIsChangeX);
         calendarChangeModel.DATE_CHANGE_START = nullable4;
         calendarChangeModel.CALENDAR_DUTY_ID = new int?(Convert.ToInt32(idCalendarDuty));
@@ -4702,9 +4698,9 @@ ViewBag.ActionPermission = list1;
       else
       {
         calendarChangeModel.DOCTORS_ID = new int?(idDoctorChangeX);
-        calendarChangeModel.DOCTORS_NAME = list2.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
+        calendarChangeModel.DOCTORS_NAME = list2.Where((o => o.DOCTORS_ID == idDoctorChangeX)).ToList()[0].ABBREVIATION;
         calendarChangeModel.DATE_START = nullable3;
-        calendarChangeModel.DOCTORS_CHANGE_NAME = list2.Where<DOCTOR>((Func<DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList<DOCTOR>()[0].ABBREVIATION;
+        calendarChangeModel.DOCTORS_CHANGE_NAME = list2.Where((o => o.DOCTORS_ID == idDoctorIsChangeX)).ToList()[0].ABBREVIATION;
         calendarChangeModel.DOCTORS_CHANGE_ID = new int?(idDoctorIsChangeX);
         calendarChangeModel.CALENDAR_DUTY_ID = new int?(Convert.ToInt32(idCalendarDuty));
       }
@@ -4818,7 +4814,7 @@ ViewBag.ActionPermission = list1;
       int num1 = DateTime.DaysInMonth(year, month);
       List<DoctorCalendar> doctorCalendar = this.unitOfWork.CalendarDuty.GetDoctorCalendar(int32);
       ADMIN_USER byUserName = this.unitOfWork.Users.GetByUserName(this.User.Identity.Name);
-      List<TEMPLATE_COLUM> templateColum = this.unitOfWork.TemplatesColumn.GetColumnByIDTemplate(byId.TEMPLATES_ID.Value, byUserName.LM_DEPARTMENT_ID.Value).ToList<TEMPLATE_COLUM>();
+      List<TEMPLATE_COLUM> templateColum = this.unitOfWork.TemplatesColumn.GetColumnByIDTemplate(byId.TEMPLATES_ID.Value, byUserName.LM_DEPARTMENT_ID.Value).ToList();
       List<int> intList = new List<int>();
       List<ItemBase> itemBaseList = new List<ItemBase>();
       if (!doctorCalendar.Any<DoctorCalendar>())
@@ -4849,8 +4845,8 @@ ViewBag.ActionPermission = list1;
           ExportReport.ApplyStyle(excelWorksheet.Cells[day + num3, 2], day.ToString() + "/" + month.ToString(), null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 2), new ExcelVerticalAlignment?((ExcelVerticalAlignment) 1), true, null, null);
           for (int i = 0; i < templateColum.Count; ++i)
           {
-            IEnumerable<DoctorCalendar> source = doctorCalendar.Where<DoctorCalendar>((Func<DoctorCalendar, bool>) (t => t.TEMPLATE_COLUM_ID == templateColum[i].TEMPLATE_COLUM_ID && t.DATE_START.Value == dayRow));
-            ExportReport.ApplyStyle(excelWorksheet.Cells[day + num3, 3 + i], string.Join("\r\n", source.Select<DoctorCalendar, string>((Func<DoctorCalendar, string>) (t => t.ABBREVIATION))), null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 2), new ExcelVerticalAlignment?((ExcelVerticalAlignment) 1), true, null, null);
+            IEnumerable<DoctorCalendar> source = doctorCalendar.Where((t => t.TEMPLATE_COLUM_ID == templateColum[i].TEMPLATE_COLUM_ID && t.DATE_START.Value == dayRow));
+            ExportReport.ApplyStyle(excelWorksheet.Cells[day + num3, 3 + i], string.Join("\r\n", source.Select<DoctorCalendar, string>((t => t.ABBREVIATION))), null, new ExcelHorizontalAlignment?((ExcelHorizontalAlignment) 2), new ExcelVerticalAlignment?((ExcelVerticalAlignment) 1), true, null, null);
             num2 = source.Count<DoctorCalendar>() > num2 ? source.Count<DoctorCalendar>() : num2;
           }
           excelWorksheet.Row(day + num3).Height = num2 == 0 ? 25.0 : (double) (35 * num2);
@@ -5243,7 +5239,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
       List<int> intList = new List<int>();
       List<ItemBase> deptItems = new List<ItemBase>();
       if (doctorCalendarLeaderList.Any<DoctorCalendarLeader>())
-        intList = doctorCalendarLeaderList.Select<DoctorCalendarLeader, int>((Func<DoctorCalendarLeader, int>) (t => t.LM_DEPARTMENT_ID)).ToList<int>();
+        intList = doctorCalendarLeaderList.Select<DoctorCalendarLeader, int>((t => t.LM_DEPARTMENT_ID)).ToList();
       List<CALENDAR_CHANGE> listChangeCalendar = this.unitOfWork.CalendarChanges.GetListChangeCalendar(result3);
       FileInfo fileInfo = new FileInfo(this.Server.MapPath("~/Views/Shared/ExcelTemplate/ReportOfCalendarLeader.xlsx"));
       if (fileInfo.Exists.Equals(false))
@@ -5353,17 +5349,17 @@ ViewBag.idCalendarDuty = idCalendarDuty;
         DateTime dateTime = new DateTime(iYear, iMonth, day);
         if (dayOfWeek != 0 ? (dayOfWeek != 1 ? (dayOfWeek != 2 ? (dayOfWeek != 3 ? (dayOfWeek != 4 ? (dayOfWeek != 5 ? (dayOfWeek != 6 ? (dayOfWeek != 7 ? dateTime.DayOfWeek == DayOfWeek.Sunday : dateTime.DayOfWeek == DayOfWeek.Sunday) : dateTime.DayOfWeek == DayOfWeek.Saturday) : dateTime.DayOfWeek == DayOfWeek.Saturday) : dateTime.DayOfWeek == DayOfWeek.Friday) : dateTime.DayOfWeek == DayOfWeek.Thursday) : dateTime.DayOfWeek == DayOfWeek.Wednesday) : dateTime.DayOfWeek == DayOfWeek.Tuesday) : dateTime.DayOfWeek == DayOfWeek.Monday)
         {
-          IEnumerable<DoctorCalendarLeader> source1 = itemData.Where<DoctorCalendarLeader>((Func<DoctorCalendarLeader, bool>) (t => t.DATE_START.Value.Day.Equals(day)));
-          IEnumerable<CALENDAR_CHANGE> source2 = itemDataChange.Where<CALENDAR_CHANGE>((Func<CALENDAR_CHANGE, bool>) (t => t.DATE_START.Value.Day.Equals(day)));
+          IEnumerable<DoctorCalendarLeader> source1 = itemData.Where((t => t.DATE_START.Value.Day.Equals(day)));
+          IEnumerable<CALENDAR_CHANGE> source2 = itemDataChange.Where((t => t.DATE_START.Value.Day.Equals(day)));
           if (dayOfWeek == 5 || dayOfWeek == 7)
           {
-            source1 = source1.Where<DoctorCalendarLeader>((Func<DoctorCalendarLeader, bool>) (t => t.DATE_START.Value.Hour == 10 || t.DATE_START.Value.Hour == 12));
-            source2 = itemDataChange.Where<CALENDAR_CHANGE>((Func<CALENDAR_CHANGE, bool>) (t => t.DATE_START.Value.Hour == 10 || t.DATE_START.Value.Hour == 12));
+            source1 = source1.Where((t => t.DATE_START.Value.Hour == 10 || t.DATE_START.Value.Hour == 12));
+            source2 = itemDataChange.Where((t => t.DATE_START.Value.Hour == 10 || t.DATE_START.Value.Hour == 12));
           }
           if (dayOfWeek == 6 || dayOfWeek == 8)
           {
-            source1 = source1.Where<DoctorCalendarLeader>((Func<DoctorCalendarLeader, bool>) (t => t.DATE_START.Value.Hour == 22));
-            source2 = itemDataChange.Where<CALENDAR_CHANGE>((Func<CALENDAR_CHANGE, bool>) (t => t.DATE_START.Value.Hour == 22));
+            source1 = source1.Where((t => t.DATE_START.Value.Hour == 22));
+            source2 = itemDataChange.Where((t => t.DATE_START.Value.Hour == 22));
           }
           if (source1.Any<DoctorCalendarLeader>() || source2.Any<CALENDAR_CHANGE>())
           {
@@ -5925,10 +5921,10 @@ ViewBag.isChange = isChange;
       if (allDoctorByGroup.Any<DOCTOR>() && idCalendarDuty > 0)
       {
         this.unitOfWork.CalendarDuty.GetById(idCalendarDuty);
-        List<DoctorCalendarLeader> calendarDirector = this.unitOfWork.CalendarDuty.GetDoctorCalendarDirector(allDoctorByGroup.Select<DOCTOR, int>((Func<DOCTOR, int>) (t => t.DOCTORS_ID)).ToList<int>(), idCalendarDuty);
+        List<DoctorCalendarLeader> calendarDirector = this.unitOfWork.CalendarDuty.GetDoctorCalendarDirector(allDoctorByGroup.Select<DOCTOR, int>((t => t.DOCTORS_ID)).ToList(), idCalendarDuty);
         if (calendarDirector.Any<DoctorCalendarLeader>())
         {
-ViewBag.lstCalendarDoctor = calendarDirector.OrderBy<DoctorCalendarLeader, string>((Func<DoctorCalendarLeader, string>) (t => t.ABBREVIATION)).Select<DoctorCalendarLeader, DoctorCalendarLeader>((Func<DoctorCalendarLeader, DoctorCalendarLeader>) (t => new DoctorCalendarLeader()
+ViewBag.lstCalendarDoctor = calendarDirector.OrderBy<DoctorCalendarLeader, string>((t => t.ABBREVIATION)).Select<DoctorCalendarLeader, DoctorCalendarLeader>((t => new DoctorCalendarLeader()
           {
             CALENDAR_DATA_ID = t.CALENDAR_DATA_ID,
             CALENDAR_DUTY_ID = t.CALENDAR_DUTY_ID,
@@ -6315,7 +6311,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
         sqlParameterList.Add(new SqlParameter("@LM_DEPARTMENT_ID", int32));
         sqlParameterList.Add(new SqlParameter("@TEMPLATE_ID", templateId));
         BACHMAICRContext bachmaicrContext = new BACHMAICRContext();
-        List<AUTO_CALENDAR_DOCTOR> list1 = ((IEnumerable<AUTO_CALENDAR_DOCTOR>) bachmaicrContext.Database.SqlQuery<AUTO_CALENDAR_DOCTOR>("exec sp_insertAutoCalendar @MONTH, @YEAR, @LM_DEPARTMENT_ID, @TEMPLATE_ID", (object[]) sqlParameterList.ToArray())).ToList<AUTO_CALENDAR_DOCTOR>();
+        List<AUTO_CALENDAR_DOCTOR> list1 = ((IEnumerable<AUTO_CALENDAR_DOCTOR>) bachmaicrContext.Database.SqlQuery<AUTO_CALENDAR_DOCTOR>("exec sp_insertAutoCalendar @MONTH, @YEAR, @LM_DEPARTMENT_ID, @TEMPLATE_ID", (object[]) sqlParameterList.ToArray())).ToList();
         List<DOCTOR> allByDepartmentId = this.unitOfWork.Doctors.GetAllByDepartmentId(int32);
         bachmaicrContext.Dispose();
         int idColumnX = 0;
@@ -6335,7 +6331,7 @@ ViewBag.idCalendarDuty = idCalendarDuty;
               foreach (DOCTOR doctor in allByDepartmentId)
               {
                 DOCTOR item = doctor;
-                List<AUTO_CALENDAR_DOCTOR> list2 = list1.Where<AUTO_CALENDAR_DOCTOR>((Func<AUTO_CALENDAR_DOCTOR, bool>) (o => o.DOCTORS_ID == item.DOCTORS_ID && o.TEMPLATE_COLUM_ID == idColumnX)).ToList<AUTO_CALENDAR_DOCTOR>();
+                List<AUTO_CALENDAR_DOCTOR> list2 = list1.Where((o => o.DOCTORS_ID == item.DOCTORS_ID && o.TEMPLATE_COLUM_ID == idColumnX)).ToList();
                 if (list2 != null && list2.Count > 0)
                 {
                   ++num6;
@@ -6446,7 +6442,7 @@ label_25:
                             ++num5;
                             num3 = 0;
                           }
-                          List<AUTO_CALENDAR_DOCTOR> list3 = list1.Where<AUTO_CALENDAR_DOCTOR>((Func<AUTO_CALENDAR_DOCTOR, bool>) (o => o.DOCTORS_ID == idDoctor)).ToList<AUTO_CALENDAR_DOCTOR>();
+                          List<AUTO_CALENDAR_DOCTOR> list3 = list1.Where((o => o.DOCTORS_ID == idDoctor)).ToList();
                           if (list3 != null && list3.Count > 0)
                           {
                             foreach (AUTO_CALENDAR_DOCTOR autoCalendarDoctor in list3)
@@ -6504,7 +6500,7 @@ label_25:
         sqlParameterList.Add(new SqlParameter("@MONTH", iMonth));
         sqlParameterList.Add(new SqlParameter("@YEAR", iYear));
         BACHMAICRContext bachmaicrContext = new BACHMAICRContext();
-        List<AUTO_CALENDAR_LEADER> list1 = ((IEnumerable<AUTO_CALENDAR_LEADER>) bachmaicrContext.Database.SqlQuery<AUTO_CALENDAR_LEADER>("exec sp_insertAutoCalendarLeader @MONTH, @YEAR", (object[]) sqlParameterList.ToArray())).ToList<AUTO_CALENDAR_LEADER>();
+        List<AUTO_CALENDAR_LEADER> list1 = ((IEnumerable<AUTO_CALENDAR_LEADER>) bachmaicrContext.Database.SqlQuery<AUTO_CALENDAR_LEADER>("exec sp_insertAutoCalendarLeader @MONTH, @YEAR", (object[]) sqlParameterList.ToArray())).ToList();
         bachmaicrContext.Dispose();
         int num2 = 0;
         int num3 = 0;
@@ -6672,7 +6668,7 @@ label_22:
                       ++num2;
                     num3 = 0;
                   }
-                  List<AUTO_CALENDAR_LEADER> list2 = list1.Where<AUTO_CALENDAR_LEADER>((Func<AUTO_CALENDAR_LEADER, bool>) (o => o.DOCTORS_ID == idDoctor)).ToList<AUTO_CALENDAR_LEADER>();
+                  List<AUTO_CALENDAR_LEADER> list2 = list1.Where((o => o.DOCTORS_ID == idDoctor)).ToList();
                   if (list2 != null && list2.Count > 0)
                   {
                     foreach (AUTO_CALENDAR_LEADER autoCalendarLeader in list2)
@@ -6687,7 +6683,7 @@ label_22:
                   {
                     if (!string.IsNullOrEmpty(arrDeparmentId[dept].Trim()))
                     {
-                      List<AUTO_CALENDAR_LEADER> list3 = list1.Where<AUTO_CALENDAR_LEADER>((Func<AUTO_CALENDAR_LEADER, bool>) (o => o.LM_DEPARTMENT_IDs.Equals("," + arrDeparmentId[dept].Trim() + ","))).ToList<AUTO_CALENDAR_LEADER>();
+                      List<AUTO_CALENDAR_LEADER> list3 = list1.Where((o => o.LM_DEPARTMENT_IDs.Equals("," + arrDeparmentId[dept].Trim() + ","))).ToList();
                       if (list3 != null && list3.Count > 0)
                       {
                         foreach (AUTO_CALENDAR_LEADER autoCalendarLeader in list3)

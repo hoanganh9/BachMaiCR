@@ -24,7 +24,7 @@ namespace BachMaiCR.DataAccess.Repository
     {
       DbQuery<CALENDAR_DATA> dbQuery = this.DbSet.AsNoTracking();
       Expression<Func<CALENDAR_DATA, bool>> predicate = (obj => obj.CALENDAR_DUTY_ID == idCalendarDuty && obj.TEMPLATE_COLUM_ID == (int?) idColumn && obj.DATE_START >= (DateTime?) startDate && obj.DATE_START <= (DateTime?) endDate);
-      foreach (CALENDAR_DATA entity in dbQuery.Where(predicate).ToList<CALENDAR_DATA>())
+      foreach (CALENDAR_DATA entity in dbQuery.Where(predicate).ToList())
         this.Delete(entity);
     }
 
@@ -32,7 +32,7 @@ namespace BachMaiCR.DataAccess.Repository
     {
       DbQuery<CALENDAR_DATA> dbQuery = this.DbSet.AsNoTracking();
       Expression<Func<CALENDAR_DATA, bool>> predicate = (obj => obj.CALENDAR_DUTY_ID == idCalendarDuty && obj.TEMPLATE_COLUM_ID == (int?) idColumn);
-      foreach (CALENDAR_DATA entity in dbQuery.Where(predicate).ToList<CALENDAR_DATA>())
+      foreach (CALENDAR_DATA entity in dbQuery.Where(predicate).ToList())
         this.Delete(entity);
     }
 
@@ -40,7 +40,7 @@ namespace BachMaiCR.DataAccess.Repository
     {
       DbQuery<CALENDAR_DATA> dbQuery = this.DbSet.AsNoTracking();
       Expression<Func<CALENDAR_DATA, bool>> predicate = (obj => obj.CALENDAR_DUTY_ID == idCalendarDuty);
-      foreach (CALENDAR_DATA entity in dbQuery.Where(predicate).ToList<CALENDAR_DATA>())
+      foreach (CALENDAR_DATA entity in dbQuery.Where(predicate).ToList())
         this.Delete(entity);
     }
   }

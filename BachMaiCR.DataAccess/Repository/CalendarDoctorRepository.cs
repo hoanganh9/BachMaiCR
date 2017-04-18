@@ -25,7 +25,7 @@ namespace BachMaiCR.DataAccess.Repository
     {
       DbQuery<CALENDAR_DOCTOR> dbQuery = this.DbSet.AsNoTracking();
       Expression<Func<CALENDAR_DOCTOR, bool>> predicate = (obj => obj.CALENDAR_DUTY_ID == (int?) idCalendarDuty && obj.COLUMN_LEVEL_ID == (int?) idColumn && obj.CALENDAR_DATA.DATE_START >= (DateTime?) startDate && obj.CALENDAR_DATA.DATE_START <= (DateTime?) endDate);
-      foreach (CALENDAR_DOCTOR entity in dbQuery.Where(predicate).ToList<CALENDAR_DOCTOR>())
+      foreach (CALENDAR_DOCTOR entity in dbQuery.Where(predicate).ToList())
         this.Delete(entity);
     }
 
@@ -33,7 +33,7 @@ namespace BachMaiCR.DataAccess.Repository
     {
       DbQuery<CALENDAR_DOCTOR> dbQuery = this.DbSet.AsNoTracking();
       Expression<Func<CALENDAR_DOCTOR, bool>> predicate = (obj => obj.CALENDAR_DUTY_ID == (int?) idCalendarDuty && obj.COLUMN_LEVEL_ID == (int?) idColumn);
-      foreach (CALENDAR_DOCTOR entity in dbQuery.Where(predicate).ToList<CALENDAR_DOCTOR>())
+      foreach (CALENDAR_DOCTOR entity in dbQuery.Where(predicate).ToList())
         this.Delete(entity);
     }
 
@@ -41,7 +41,7 @@ namespace BachMaiCR.DataAccess.Repository
     {
       DbQuery<CALENDAR_DOCTOR> dbQuery = this.DbSet.AsNoTracking();
       Expression<Func<CALENDAR_DOCTOR, bool>> predicate = (obj => obj.CALENDAR_DUTY_ID == (int?) idCalendarDuty);
-      foreach (CALENDAR_DOCTOR entity in dbQuery.Where(predicate).ToList<CALENDAR_DOCTOR>())
+      foreach (CALENDAR_DOCTOR entity in dbQuery.Where(predicate).ToList())
         this.Delete(entity);
     }
 
@@ -49,7 +49,7 @@ namespace BachMaiCR.DataAccess.Repository
     {
       DbQuery<CALENDAR_DOCTOR> dbQuery = this.DbSet.AsNoTracking();
       Expression<Func<CALENDAR_DOCTOR, bool>> predicate = (obj => obj.CALENDAR_DUTY_ID == (int?) idCalendarDuty && obj.DOCTORS_ID == idDoctor && SqlFunctions.DateDiff("dd", (DateTime?) date, obj.CALENDAR_DATA.DATE_START) == (int?) 0);
-      foreach (CALENDAR_DOCTOR entity in dbQuery.Where(predicate).ToList<CALENDAR_DOCTOR>())
+      foreach (CALENDAR_DOCTOR entity in dbQuery.Where(predicate).ToList())
         this.Delete(entity);
     }
 

@@ -96,14 +96,14 @@ namespace BachMaiCR.Web.Controllers
     [HttpGet]
     public ActionResult GetActionInRole(int roleId)
     {
-      List<WEBPAGES_ACTIONS> list = this.unitOfWork.Actions.GetAll().ToList<WEBPAGES_ACTIONS>();
-      List<int> selectedActionIds = this.unitOfWork.Roles.GetById(roleId).WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((Func<WEBPAGES_ACTIONS, int>) (o => o.WEBPAGES_ACTION_ID)).ToList<int>();
-      return this.Json(JsonResponse.Json200(list.Select<WEBPAGES_ACTIONS, KeyTextItem>((Func<WEBPAGES_ACTIONS, KeyTextItem>) (o => new KeyTextItem()
+      List<WEBPAGES_ACTIONS> list = this.unitOfWork.Actions.GetAll().ToList();
+      List<int> selectedActionIds = this.unitOfWork.Roles.GetById(roleId).WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((o => o.WEBPAGES_ACTION_ID)).ToList();
+      return this.Json(JsonResponse.Json200(list.Select<WEBPAGES_ACTIONS, KeyTextItem>((o => new KeyTextItem()
       {
         Text = o.DESCRIPTION,
         Id = o.WEBPAGES_ACTION_ID.ToString(),
         Selected = selectedActionIds.Contains(o.WEBPAGES_ACTION_ID)
-      })).ToList<KeyTextItem>()), JsonRequestBehavior.AllowGet);
+      })).ToList()), JsonRequestBehavior.AllowGet);
     }
   }
 }

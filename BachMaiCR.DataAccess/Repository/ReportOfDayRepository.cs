@@ -59,7 +59,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public bool CheckExistDateCreate(DateTime dtime, int deptID)
     {
-      return this.DbSet.AsNoTracking().FirstOrDefault<REPORT>((t => SqlFunctions.DateDiff("dd", (DateTime?) t.DATE_CREATE, (DateTime?) dtime) == (int?) 0 && deptID.Equals(t.LM_DEPARTMENT_ID) && t.ISDELETE == false)) != null;
+      return this.DbSet.AsNoTracking().FirstOrDefault((t => SqlFunctions.DateDiff("dd", (DateTime?) t.DATE_CREATE, (DateTime?) dtime) == (int?) 0 && deptID.Equals(t.LM_DEPARTMENT_ID) && t.ISDELETE == false)) != null;
     }
   }
 }

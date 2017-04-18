@@ -28,7 +28,7 @@ namespace BachMaiCR.DataAccess.Repository
       {
         Value = obj.DOCTOR_GROUP_ID.ToString(),
         Text = obj.DOCTOR_GROUP_NAME
-      })).ToList<SelectListItem>();
+      })).ToList();
     }
   }
 }

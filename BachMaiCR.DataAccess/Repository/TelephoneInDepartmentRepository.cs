@@ -22,7 +22,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<TelephoneInDepartment> GetALLTelephone(int idCalendarDuty)
     {
-      return ((IQueryable<TelephoneInDepartment>) this.DbContext.TelephoneInDepartments).Where((o => o.CALENDAR_ID == (int?) idCalendarDuty)).ToList<TelephoneInDepartment>();
+      return ((IQueryable<TelephoneInDepartment>) this.DbContext.TelephoneInDepartments).Where((o => o.CALENDAR_ID == (int?) idCalendarDuty)).ToList();
     }
   }
 }

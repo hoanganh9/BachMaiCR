@@ -25,7 +25,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public bool CheckCalendarDirect(int idDoctor, DateTime? dateCheck)
     {
-      int num = this.DbSet.AsNoTracking().Where((obj => obj.DOCTORS_ID == idDoctor && SqlFunctions.DateDiff("dd", obj.DATE_BEGIN, dateCheck) >= (int?) 0 && SqlFunctions.DateDiff("dd", obj.DATE_END, dateCheck) <= (int?) 0)).ToList<CONFIG_DIRECT>().Count<CONFIG_DIRECT>();
+      int num = this.DbSet.AsNoTracking().Where((obj => obj.DOCTORS_ID == idDoctor && SqlFunctions.DateDiff("dd", obj.DATE_BEGIN, dateCheck) >= (int?) 0 && SqlFunctions.DateDiff("dd", obj.DATE_END, dateCheck) <= (int?) 0)).ToList().Count<CONFIG_DIRECT>();
       bool flag = false;
       if (num > 0)
         return true;
@@ -48,7 +48,7 @@ namespace BachMaiCR.DataAccess.Repository
           num1 = 1;
         if (num1 == 0)
         {
-          LM_DEPARTMENT deptPath = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).FirstOrDefault<LM_DEPARTMENT>((t => t.LM_DEPARTMENT_ID.Equals(entity.SearchDeprtId.Value)));
+          LM_DEPARTMENT deptPath = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).FirstOrDefault((t => t.LM_DEPARTMENT_ID.Equals(entity.SearchDeprtId.Value)));
           if (deptPath == null)
             throw new Exception("ConfigDirect");
           IQueryable<int> lstAllChildIds = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.DEPARTMENT_PATH.Contains(deptPath.DEPARTMENT_PATH))).Select((obj => obj.LM_DEPARTMENT_ID));

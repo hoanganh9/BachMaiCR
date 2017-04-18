@@ -30,12 +30,12 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<ADMIN_MENU> GetChildMenu(int parrentId)
     {
-      return this.DbSet.Where((o => o.MENU_PARENT_ID == (int?) parrentId && o.ISACTIVE == true)).OrderBy<ADMIN_MENU>("MENU_ORDER").ToList<ADMIN_MENU>();
+      return this.DbSet.Where((o => o.MENU_PARENT_ID == (int?) parrentId && o.ISACTIVE == true)).OrderBy<ADMIN_MENU>("MENU_ORDER").ToList();
     }
 
     public List<ADMIN_MENU> GetAll_List()
     {
-      return this.DbSet.Where((o => o.ISACTIVE == true)).OrderBy<ADMIN_MENU>("MENU_ORDER").ToList<ADMIN_MENU>();
+      return this.DbSet.Where((o => o.ISACTIVE == true)).OrderBy<ADMIN_MENU>("MENU_ORDER").ToList();
     }
 
     public List<MENULIST> GetAll_Active()
@@ -48,7 +48,7 @@ namespace BachMaiCR.DataAccess.Repository
       MENULIST menulist = new MENULIST();
       menulist.MENU_NAME = "Không chọn";
       menulist.MENU_URL = "";
-      List<MENULIST> list = source.ToList<MENULIST>();
+      List<MENULIST> list = source.ToList();
       list.Insert(0, menulist);
       return list;
     }

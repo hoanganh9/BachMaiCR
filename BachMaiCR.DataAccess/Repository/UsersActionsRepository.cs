@@ -21,7 +21,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public USERS_ACTIONS GetByKey(int actionId, int userId)
     {
-      return this.DbSet.FirstOrDefault<USERS_ACTIONS>((o => o.WEBPAGES_ACTION_ID == actionId && o.ADMIN_USER_ID == userId));
+      return this.DbSet.FirstOrDefault((o => o.WEBPAGES_ACTION_ID == actionId && o.ADMIN_USER_ID == userId));
     }
 
     public void AddOrUpdate(USERS_ACTIONS userInAction)

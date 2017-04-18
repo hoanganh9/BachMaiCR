@@ -37,7 +37,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult Index()
     {
 ViewBag.Title = "Danh mục vị trí cán bộ";
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("DOCTORLEVEL_SAVE");
       return this.View();
     }

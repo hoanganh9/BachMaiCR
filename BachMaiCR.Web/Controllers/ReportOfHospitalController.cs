@@ -55,7 +55,7 @@ ViewBag.Title = "Thống kê số ca trực toàn viện";
       List<DEPARTMENTLIST> departmentByLevel = this.unitOfWork.Departments.GetAllDepartmentByLevel(1);
 ViewBag.objDepartment = departmentByLevel;
 ViewBag.lstPositions = listItemBase;
-      List<int> intList = departmentByLevel.Any<DEPARTMENTLIST>() ? departmentByLevel.Select<DEPARTMENTLIST, int>((Func<DEPARTMENTLIST, int>) (t => t.LM_DEPARTMENT_ID)).ToList<int>() : new List<int>();
+      List<int> intList = departmentByLevel.Any<DEPARTMENTLIST>() ? departmentByLevel.Select<DEPARTMENTLIST, int>((t => t.LM_DEPARTMENT_ID)).ToList() : new List<int>();
       List<DoctorCalendarLeader> hospitalBySearch = this.GetDoctorCalendarHospitalBySearch(strDate);
       int num1 = 0;
       FRow frow1 = new FRow();
@@ -86,7 +86,7 @@ ViewBag.lstPositions = listItemBase;
         {
           FieldName = position.Text
         });
-        int num3 = hospitalBySearch.Where<DoctorCalendarLeader>((Func<DoctorCalendarLeader, bool>) (t => t.POSITION_IDs.Contains(position.Value))).Count<DoctorCalendarLeader>();
+        int num3 = hospitalBySearch.Where((t => t.POSITION_IDs.Contains(position.Value))).Count<DoctorCalendarLeader>();
         num2 += num3;
         frow2.Cells.Add(new FField()
         {
@@ -111,13 +111,13 @@ ViewBag.lstPositions = listItemBase;
         foreach (SelectListItem selectListItem in listItemBase)
         {
           SelectListItem position = selectListItem;
-          int num3 = hospitalBySearch.Where<DoctorCalendarLeader>((Func<DoctorCalendarLeader, bool>) (t => t.LM_DEPARTMENT_IDs.Contains("," + dept.LM_DEPARTMENT_ID.ToString() + ",") && t.POSITION_IDs.Contains(position.Value))).Count<DoctorCalendarLeader>();
+          int num3 = hospitalBySearch.Where((t => t.LM_DEPARTMENT_IDs.Contains("," + dept.LM_DEPARTMENT_ID.ToString() + ",") && t.POSITION_IDs.Contains(position.Value))).Count<DoctorCalendarLeader>();
           frow3.Cells.Add(new FField()
           {
             FieldName = num3.ToString()
           });
         }
-        int num4 = hospitalBySearch == null || hospitalBySearch.Count == 0 ? 0 : hospitalBySearch.Where<DoctorCalendarLeader>((Func<DoctorCalendarLeader, bool>) (t => t.LM_DEPARTMENT_IDs.Contains("," + dept.LM_DEPARTMENT_ID.ToString() + ","))).Count<DoctorCalendarLeader>();
+        int num4 = hospitalBySearch == null || hospitalBySearch.Count == 0 ? 0 : hospitalBySearch.Where((t => t.LM_DEPARTMENT_IDs.Contains("," + dept.LM_DEPARTMENT_ID.ToString() + ","))).Count<DoctorCalendarLeader>();
         frow3.Cells.Add(new FField()
         {
           FieldName = num4.ToString()
@@ -163,7 +163,7 @@ ViewBag.tbodyStr = stringBuilder2.Replace("\"", "'").ToString() + "</tbody>";
             List<FField> ffield = FUtils.ConvertToFField(freport.HeaderItem);
             if (ffield.Any<FField>())
             {
-              int num1 = ffield.Select<FField, int>((Func<FField, int>) (t => t.Level)).Max() - 1;
+              int num1 = ffield.Select<FField, int>((t => t.Level)).Max() - 1;
               ExportReport.DrawHeaderTabel(ffield, 8, 0, worldSheet);
               ExportReport.SetCellWidth(worldSheet, lstPositions.Count + 3);
               ExcelRange er = worldSheet.Cells[num1 + 8, 1, 8 + num1 + departmentByLevel.Count + 1, lstPositions.Count + 3];
@@ -176,8 +176,8 @@ ViewBag.tbodyStr = stringBuilder2.Replace("\"", "'").ToString() + "</tbody>";
                 er[num2 + 8, 1].Value =  num2;
                 er[num2 + 8, 2].Value =  dept.DEPARTMENT_NAME;
                 for (int i = 0; i < lstPositions.Count; ++i)
-                  er[num2 + 8, i + 3].Value =  hospitalBySearch.Where<DoctorCalendarLeader>((Func<DoctorCalendarLeader, bool>) (t => t.LM_DEPARTMENT_ID.Equals(dept.LM_DEPARTMENT_ID) && t.POSITION_IDs.Contains(lstPositions[i].Value))).Count<DoctorCalendarLeader>();
-                er[num2 + 8, lstPositions.Count + 3].Value =  (hospitalBySearch == null || hospitalBySearch.Count == 0 ? 0 : hospitalBySearch.Where<DoctorCalendarLeader>((Func<DoctorCalendarLeader, bool>) (t => t.LM_DEPARTMENT_ID.Equals(dept.LM_DEPARTMENT_ID))).Count<DoctorCalendarLeader>());
+                  er[num2 + 8, i + 3].Value =  hospitalBySearch.Where((t => t.LM_DEPARTMENT_ID.Equals(dept.LM_DEPARTMENT_ID) && t.POSITION_IDs.Contains(lstPositions[i].Value))).Count<DoctorCalendarLeader>();
+                er[num2 + 8, lstPositions.Count + 3].Value =  (hospitalBySearch == null || hospitalBySearch.Count == 0 ? 0 : hospitalBySearch.Where((t => t.LM_DEPARTMENT_ID.Equals(dept.LM_DEPARTMENT_ID))).Count<DoctorCalendarLeader>());
                 ExportReport.SetStyleSumCells(er[num2 + 8, lstPositions.Count + 3]);
               }
               int num3 = 0;
@@ -189,7 +189,7 @@ ViewBag.tbodyStr = stringBuilder2.Replace("\"", "'").ToString() + "</tbody>";
               {
                 if (hospitalBySearch != null && hospitalBySearch.Count > 0)
                 {
-                  int num4 = hospitalBySearch.Where<DoctorCalendarLeader>((Func<DoctorCalendarLeader, bool>) (t => t.POSITION_IDs.Contains(lstPositions[j].Value))).Count<DoctorCalendarLeader>();
+                  int num4 = hospitalBySearch.Where((t => t.POSITION_IDs.Contains(lstPositions[j].Value))).Count<DoctorCalendarLeader>();
                   er[9 + num1 + departmentByLevel.Count, j + 3].Value =  num4;
                   ExportReport.SetStyleSumCells(er[9 + num1 + departmentByLevel.Count, j + 3]);
                   num3 += num4;

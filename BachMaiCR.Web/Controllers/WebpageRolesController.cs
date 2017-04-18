@@ -115,7 +115,7 @@ namespace BachMaiCR.Web.Controllers
       {
         if (byUserName.USERNAME == "admin")
         {
-          lmDepartmentList1 = this.unitOfWork.Departments.GetChildDepartment(0).ToList<LM_DEPARTMENT>();
+          lmDepartmentList1 = this.unitOfWork.Departments.GetChildDepartment(0).ToList();
         }
         else
         {
@@ -218,7 +218,7 @@ label_6:
       }
       else
         createdUserId = 0;
-      List<ADMIN_USER> list = users.GetAll(departments, key1, adminUserId, createdUserId).ToList<ADMIN_USER>();
+      List<ADMIN_USER> list = users.GetAll(departments, key1, adminUserId, createdUserId).ToList();
 ViewBag.ListUser = list;
 ViewBag.Role = webpagesRoles;
       List<LM_DEPARTMENT> deptCurrent = this.GetDeptCurrent();
@@ -301,7 +301,7 @@ label_6:
       }
       else
         createdUserId = 0;
-      List<ADMIN_USER> list = users.GetAll(departments, key1, adminUserId, createdUserId).ToList<ADMIN_USER>();
+      List<ADMIN_USER> list = users.GetAll(departments, key1, adminUserId, createdUserId).ToList();
 ViewBag.ListUser = list;
 ViewBag.Role = webpagesRoles;
       if (this.Request.IsAjaxRequest())
@@ -363,7 +363,7 @@ ViewBag.Role = webpagesRoles;
       try
       {
         transaction = this.unitOfWork.BeginTransaction();
-        List<WEBPAGES_ACTIONS> list = byId1.WEBPAGES_ACTIONS.ToList<WEBPAGES_ACTIONS>();
+        List<WEBPAGES_ACTIONS> list = byId1.WEBPAGES_ACTIONS.ToList();
         if (list.Any<WEBPAGES_ACTIONS>())
         {
           foreach (WEBPAGES_ACTIONS webpagesActions in list)
@@ -415,7 +415,7 @@ ViewBag.Role = webpagesRoles;
         return this.Json(JsonResponse.Json404("Role not found"), JsonRequestBehavior.AllowGet);
       List<int> intList = new List<int>();
       if (byId.WEBPAGES_ACTIONS != null)
-        intList = byId.WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((Func<WEBPAGES_ACTIONS, int>) (o => o.WEBPAGES_ACTION_ID)).ToList<int>();
+        intList = byId.WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((o => o.WEBPAGES_ACTION_ID)).ToList();
       return this.Json(JsonResponse.Json200(intList), JsonRequestBehavior.AllowGet);
     }
 

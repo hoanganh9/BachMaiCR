@@ -38,7 +38,7 @@ namespace BachMaiCR.Web.Controllers
         int? nullable = roleId;
         int id = nullable ?? 0;
         WEBPAGES_ROLES byId = roles.GetById(id);
-        List<int> selectedActionIds = byId == null || byId.WEBPAGES_ACTIONS == null ? new List<int>() : byId.WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((Func<WEBPAGES_ACTIONS, int>) (o => o.WEBPAGES_ACTION_ID)).ToList<int>();
+        List<int> selectedActionIds = byId == null || byId.WEBPAGES_ACTIONS == null ? new List<int>() : byId.WEBPAGES_ACTIONS.Select<WEBPAGES_ACTIONS, int>((o => o.WEBPAGES_ACTION_ID)).ToList();
         IEnumerable<WEBPAGES_ACTIONS> source = this.unitOfWork.Actions.GetActiveActionsByUser(byUserName);
         bool? isAdmin = byUserName.IS_ADMIN;
         int num1;
@@ -51,7 +51,7 @@ namespace BachMaiCR.Web.Controllers
           num1 = 0;
         if (num1 != 0)
           source = this.unitOfWork.Actions.GetAllActiveActions();
-        List<UserMenuModel> list = source.Select<WEBPAGES_ACTIONS, UserMenuModel>((Func<WEBPAGES_ACTIONS, UserMenuModel>) (o =>
+        List<UserMenuModel> list = source.Select<WEBPAGES_ACTIONS, UserMenuModel>((o =>
         {
           UserMenuModel userMenuModel1 = new UserMenuModel();
           userMenuModel1.Name = o.MENU_NAME;
@@ -65,7 +65,7 @@ namespace BachMaiCR.Web.Controllers
           userMenuModel2.IsMenu = num != 0;
           userMenuModel1.Selected = selectedActionIds.Contains(o.WEBPAGES_ACTION_ID);
           return userMenuModel1;
-        })).ToList<UserMenuModel>();
+        })).ToList();
 ViewBag.UserMenuModel = list;
                 ViewBag.RoleId = roleId;
             ViewBag.RoleName = byId.ROLE_NAME;
@@ -76,13 +76,13 @@ ViewBag.UserMenuModel = list;
     [CustomAuthorize]
     public ActionResult UserMenu()
     {
-      List<WEBPAGES_ACTIONS> list = this.unitOfWork.Actions.GetAll().Distinct<WEBPAGES_ACTIONS>().ToList<WEBPAGES_ACTIONS>();
+      List<WEBPAGES_ACTIONS> list = this.unitOfWork.Actions.GetAll().Distinct<WEBPAGES_ACTIONS>().ToList();
       List<UserMenuModel> userMenuModelList = new List<UserMenuModel>();
       if (list.Any<WEBPAGES_ACTIONS>())
       {
         foreach (WEBPAGES_ACTIONS webpagesActions in list)
         {
-          WEBPAGES_FUNCTIONS webpagesFunctions = webpagesActions.WEBPAGES_FUNCTIONS.FirstOrDefault<WEBPAGES_FUNCTIONS>((Func<WEBPAGES_FUNCTIONS, bool>) (o => o.ACTION_TYPE.ToUpper() == "GET"));
+          WEBPAGES_FUNCTIONS webpagesFunctions = webpagesActions.WEBPAGES_FUNCTIONS.FirstOrDefault((o => o.ACTION_TYPE.ToUpper() == "GET"));
           if (webpagesFunctions != null && !string.IsNullOrWhiteSpace(webpagesActions.MENU_NAME))
           {
             bool? isMenu = webpagesActions.IS_MENU;

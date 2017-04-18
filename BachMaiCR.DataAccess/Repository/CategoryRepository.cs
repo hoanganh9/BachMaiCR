@@ -47,7 +47,7 @@ namespace BachMaiCR.DataAccess.Repository
       {
         Value = obj.LM_CATEGORY_ID.ToString(),
         Text = obj.CATEGORY_NAME
-      })).ToList<SelectListItem>();
+      })).ToList();
     }
 
     public string GetMutilName(string lstId)

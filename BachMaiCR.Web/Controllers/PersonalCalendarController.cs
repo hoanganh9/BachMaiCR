@@ -52,7 +52,7 @@ namespace BachMaiCR.Web.Controllers
       sqlParameterList.Add(new SqlParameter("@USERNAME", name));
       sqlParameterList.Add(new SqlParameter("@DATE_START", dateTime1));
       BACHMAICRContext context = new BACHMAICRContext();
-      List<CALENDAR> list = ((IEnumerable<CALENDAR>) context.Database.SqlQuery<CALENDAR>("exec sp_getEvents @USERNAME, @DATE_START ", (object[]) sqlParameterList.ToArray())).ToList<CALENDAR>();
+      List<CALENDAR> list = ((IEnumerable<CALENDAR>) context.Database.SqlQuery<CALENDAR>("exec sp_getEvents @USERNAME, @DATE_START ", (object[]) sqlParameterList.ToArray())).ToList();
       List<SqlParameter> paramlist = (List<SqlParameter>) null;
       int hashCode1 = DayShifts.StartHour.GetHashCode();
       int hashCode2 = DayShifts.StartMinute.GetHashCode();
@@ -126,7 +126,7 @@ namespace BachMaiCR.Web.Controllers
       paramlist.Add(new SqlParameter("@USERNAME", userName));
       paramlist.Add(new SqlParameter("@DATE_START", dateStart));
       paramlist.Add(new SqlParameter("@HOUR", hour));
-      List<DOCTOR_NAME_LIST> list = ((IEnumerable<DOCTOR_NAME_LIST>) context.Database.SqlQuery<DOCTOR_NAME_LIST>("exec sp_getDoctorName @CALENDAR_DUTY_ID, @USERNAME, @DATE_START, @HOUR", (object[]) paramlist.ToArray())).ToList<DOCTOR_NAME_LIST>();
+      List<DOCTOR_NAME_LIST> list = ((IEnumerable<DOCTOR_NAME_LIST>) context.Database.SqlQuery<DOCTOR_NAME_LIST>("exec sp_getDoctorName @CALENDAR_DUTY_ID, @USERNAME, @DATE_START, @HOUR", (object[]) paramlist.ToArray())).ToList();
       string str = "";
       if (list != null && list.Count > 0)
         str = list[0].DOCTOR_NAME;

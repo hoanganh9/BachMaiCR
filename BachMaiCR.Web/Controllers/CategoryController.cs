@@ -143,7 +143,7 @@ namespace BachMaiCR.Web.Controllers
     public ActionResult ProvinceIndex()
     {
 ViewBag.Type = enCategoryType.Province;
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
       return this.View("Index");
     }
@@ -153,7 +153,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
     public ActionResult PositionIndex()
     {
 ViewBag.Type = enCategoryType.Position;
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
       return this.View("Index");
     }
@@ -163,7 +163,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
     public ActionResult EducationIndex()
     {
 ViewBag.Type = enCategoryType.EducationIndex;
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
       return this.View("Index");
     }
@@ -173,7 +173,7 @@ ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
     public ActionResult HolidaysIndex()
     {
 ViewBag.Type = enCategoryType.TypeOfHolidays;
-      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+      List<string> list = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
 ViewBag.ActionUpdate = list.Any<string>() && list.Contains("CATEGORY_SAVE");
       return this.View("Index");
     }

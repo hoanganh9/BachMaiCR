@@ -23,12 +23,12 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<CONFIG_PARAMETES> GetAll(int? deparmentId, int iYear, int type)
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.LM_DEPARTMENT_ID == deparmentId && obj.CONFIG_YEAR == iYear && obj.CONFIG_TYPE == (int?) type)).ToList<CONFIG_PARAMETES>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.LM_DEPARTMENT_ID == deparmentId && obj.CONFIG_YEAR == iYear && obj.CONFIG_TYPE == (int?) type)).ToList();
     }
 
     public List<CONFIG_PARAMETES> GetParameterLeader(int iYear, int type)
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.CONFIG_YEAR == iYear && obj.CONFIG_TYPE == (int?) type)).ToList<CONFIG_PARAMETES>();
+      return this.DbSet.AsNoTracking().Where((obj => obj.CONFIG_YEAR == iYear && obj.CONFIG_TYPE == (int?) type)).ToList();
     }
   }
 }

@@ -175,14 +175,14 @@ namespace BachMaiCR.Web.Controllers
 
     public static IEnumerable<MethodInfo> GetActions(string controller, string action)
     {
-      return ((IEnumerable<Type>) Assembly.GetExecutingAssembly().GetTypes()).Where<Type>((Func<Type, bool>) (t => t.Name == controller && typeof (Controller).IsAssignableFrom(t))).SelectMany<Type, MethodInfo>((Func<Type, IEnumerable<MethodInfo>>) (type => ((IEnumerable<MethodInfo>) type.GetMethods(BindingFlags.Instance | BindingFlags.Public)).Where<MethodInfo>((Func<MethodInfo, bool>) (a => a.Name == action))));
+      return ((IEnumerable<Type>) Assembly.GetExecutingAssembly().GetTypes()).Where((t => t.Name == controller && typeof (Controller).IsAssignableFrom(t))).SelectMany<Type, MethodInfo>((Func<Type, IEnumerable<MethodInfo>>) (type => ((IEnumerable<MethodInfo>) type.GetMethods(BindingFlags.Instance | BindingFlags.Public)).Where((a => a.Name == action))));
     }
 
     public static ActionDescriptionAttribute GetAttributeDescription(string controller, string actionName)
     {
-      foreach (MemberInfo memberInfo in ((IEnumerable<Type>) Assembly.GetExecutingAssembly().GetTypes()).Where<Type>((Func<Type, bool>) (t => t.Name == controller && typeof (Controller).IsAssignableFrom(t))).SelectMany<Type, MethodInfo>((Func<Type, IEnumerable<MethodInfo>>) (type => ((IEnumerable<MethodInfo>) type.GetMethods(BindingFlags.Instance | BindingFlags.Public)).Where<MethodInfo>((Func<MethodInfo, bool>) (a => a.Name == actionName)))))
+      foreach (MemberInfo memberInfo in ((IEnumerable<Type>) Assembly.GetExecutingAssembly().GetTypes()).Where((t => t.Name == controller && typeof (Controller).IsAssignableFrom(t))).SelectMany<Type, MethodInfo>((Func<Type, IEnumerable<MethodInfo>>) (type => ((IEnumerable<MethodInfo>) type.GetMethods(BindingFlags.Instance | BindingFlags.Public)).Where((a => a.Name == actionName)))))
       {
-        ActionDescriptionAttribute descriptionAttribute = memberInfo.GetCustomAttributes(typeof (ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault<ActionDescriptionAttribute>();
+        ActionDescriptionAttribute descriptionAttribute = memberInfo.GetCustomAttributes(typeof (ActionDescriptionAttribute), false).Cast<ActionDescriptionAttribute>().FirstOrDefault();
         if (descriptionAttribute != null)
           return descriptionAttribute;
       }
@@ -201,14 +201,14 @@ namespace BachMaiCR.Web.Controllers
     public List<string> GetActionCodesByUserName()
     {
       if (this.PermistionList == null)
-        this.PermistionList = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+        this.PermistionList = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
       return this.PermistionList;
     }
 
     public virtual bool CheckPermistion(string actCode)
     {
       if (this.PermistionList == null)
-        this.PermistionList = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList<string>();
+        this.PermistionList = this.unitOfWork.Users.GetActionCodesByUserName(this.User.Identity.Name).ToList();
       return this.PermistionList.Any<string>() && this.PermistionList.Contains(actCode);
     }
 
@@ -218,7 +218,7 @@ namespace BachMaiCR.Web.Controllers
       ADMIN_USER userX = this.UserX;
       if (userX.USERNAME == "admin")
       {
-        lmDepartmentList = this.unitOfWork.Departments.GetChildDepartment(0).ToList<LM_DEPARTMENT>();
+        lmDepartmentList = this.unitOfWork.Departments.GetChildDepartment(0).ToList();
       }
       else
       {

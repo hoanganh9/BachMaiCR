@@ -169,7 +169,7 @@ namespace BachMaiCR.Utilities.Ftp
     {
       if (string.IsNullOrWhiteSpace(filePath))
         return "";
-      List<string> list = ((IEnumerable<string>) filePath.Split('/')).ToList<string>();
+      List<string> list = ((IEnumerable<string>) filePath.Split('/')).ToList();
       if (list.Count<string>() < 2)
         return "";
       list.RemoveAt(list.Count - 1);
