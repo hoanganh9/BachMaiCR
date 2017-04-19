@@ -1,12 +1,5 @@
-﻿
-
-
-
-
-
-using System;
+﻿using System;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Linq.Expressions;
@@ -35,7 +28,7 @@ namespace BachMaiCR.DataAccess.Repository
           source = source.Where((t => SqlFunctions.DateDiff("dd", (DateTime?) entity.SearchDateEnd.Value, (DateTime?) t.DATE_CREATE) <= (int?) 0));
         nullable = entity.SearchDateSent;
         if (nullable.HasValue)
-          source = source.Where((t => SqlFunctions.DateDiff("dd", (DateTime?) entity.SearchDateSent.Value, (DateTime?) t.DATE_SENDED.Value) == (int?) 0));
+          source = source.Where((t => SqlFunctions.DateDiff("dd", (DateTime?) entity.SearchDateSent.Value, (DateTime?) t.DATE_SENDED.Value) == 0));
         int? searchStatus = entity.SearchStatus;
         int num;
         if (searchStatus.HasValue)
@@ -49,7 +42,7 @@ namespace BachMaiCR.DataAccess.Repository
           source = source.Where((t => t.STATUS.Equals(entity.SearchStatus.Value)));
         if (usrId > 0)
           source = source.Where((t => t.USER_CREATE_ID == usrId || t.USER_RECIPIENTS_IDs.Contains("," + doctorId.ToString() + ",") && t.STATUS == 1));
-        return source.OrderByDescending((t => t.DATE_CREATE)).Paginate<REPORT>(page, size, 0);
+        return source.OrderByDescending(t => t.DATE_CREATE).Paginate(page, size, 0);
       }
       catch
       {
@@ -59,7 +52,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public bool CheckExistDateCreate(DateTime dtime, int deptID)
     {
-      return this.DbSet.AsNoTracking().FirstOrDefault((t => SqlFunctions.DateDiff("dd", (DateTime?) t.DATE_CREATE, (DateTime?) dtime) == (int?) 0 && deptID.Equals(t.LM_DEPARTMENT_ID) && t.ISDELETE == false)) != null;
+      return this.DbSet.AsNoTracking().FirstOrDefault((t => SqlFunctions.DateDiff("dd", (DateTime?) t.DATE_CREATE, (DateTime?) dtime) == 0 && deptID.Equals(t.LM_DEPARTMENT_ID) && t.ISDELETE == false)) != null;
     }
   }
 }

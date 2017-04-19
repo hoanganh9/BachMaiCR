@@ -1,10 +1,4 @@
-﻿
-
-
-
-
-
-using BachMaiCR.DBMapping.Models;
+﻿using BachMaiCR.DBMapping.Models;
 
 namespace BachMaiCR.DataAccess.Repository
 {

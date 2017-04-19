@@ -1,18 +1,15 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class USERS_ACTIONSMap : EntityTypeConfiguration<USERS_ACTIONS>
   {
-    public USERS_ACTIONSMap() : base()
+    public USERS_ACTIONSMap()
     {
-      
       this.HasKey(t => new
       {
         ADMIN_USER_ID = t.ADMIN_USER_ID,

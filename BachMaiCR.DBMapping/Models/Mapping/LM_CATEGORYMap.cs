@@ -1,16 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class LM_CATEGORYMap : EntityTypeConfiguration<LM_CATEGORY>
   {
-    public LM_CATEGORYMap() : base()
+    public LM_CATEGORYMap()
     {
-      
       this.HasKey(t => t.LM_CATEGORY_ID);
       this.Property(t => t.CATEGORY_NAME).HasMaxLength(500);
       this.Property(t => t.CATEGORY_DESCRIPTION).HasMaxLength(500);

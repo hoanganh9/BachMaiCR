@@ -1,16 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class WEBPAGES_FUNCTIONSMap : EntityTypeConfiguration<WEBPAGES_FUNCTIONS>
   {
-    public WEBPAGES_FUNCTIONSMap() : base()
+    public WEBPAGES_FUNCTIONSMap()
     {
-      
       this.HasKey(t => t.WEBPAGES_FUNCTIONS_ID);
       this.Property(t => t.UNIQUE_CODE).HasMaxLength(100);
       this.Property(t => t.ACTION_NAME).HasMaxLength(100);

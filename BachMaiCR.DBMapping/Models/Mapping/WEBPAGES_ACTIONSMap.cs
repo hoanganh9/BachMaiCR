@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
 using System.Data.Entity.ModelConfiguration.Configuration;
@@ -9,9 +8,8 @@ namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class WEBPAGES_ACTIONSMap : EntityTypeConfiguration<WEBPAGES_ACTIONS>
   {
-    public WEBPAGES_ACTIONSMap() : base()
+    public WEBPAGES_ACTIONSMap()
     {
-      
       this.HasKey(t => t.WEBPAGES_ACTION_ID);
       this.Property(t => t.DESCRIPTION).HasMaxLength(500);
       this.Property(t => t.MENU_NAME).HasMaxLength(200);
@@ -40,15 +38,12 @@ namespace BachMaiCR.DBMapping.Models.Mapping
       this.Property(t => t.ACTION_CLASSCSS).HasColumnName("ACTION_CLASSCSS");
       this.Property(t => t.GROUP_CHILD_CODE).HasColumnName("GROUP_CHILD_CODE");
       this.Property(t => t.GROUP_CHILD_NAME).HasColumnName("GROUP_CHILD_NAME");
-      this.HasMany(t => t.WEBPAGES_FUNCTIONS).WithMany(t => t.WEBPAGES_ACTIONS).Map(m =>
+      this.HasMany<WEBPAGES_FUNCTIONS>(t => t.WEBPAGES_FUNCTIONS).WithMany(t => t.WEBPAGES_ACTIONS).Map((Action<ManyToManyAssociationMappingConfiguration>) (m =>
       {
         m.ToTable("FUNCTIONS_ACTIONS");
-        m.MapLeftKey(new string[1]{ "WEBPAGES_ACTION_ID" });
-        m.MapRightKey(new string[1]
-        {
-          "WEBPAGES_FUNCTIONS_ID"
-        });
-      });
+        m.MapLeftKey("WEBPAGES_ACTION_ID");
+        m.MapRightKey("WEBPAGES_FUNCTIONS_ID");
+      }));
     }
   }
 }

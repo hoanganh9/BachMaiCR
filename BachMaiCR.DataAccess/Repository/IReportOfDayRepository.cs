@@ -1,10 +1,4 @@
-﻿
-
-
-
-
-
-using System;
+﻿using System;
 using BachMaiCR.DBMapping.Models;
 using BachMaiCR.DBMapping.ModelsExt;
 using BachMaiCR.Utilities;

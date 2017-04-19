@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CONFIG_HOLIDAYSMap : EntityTypeConfiguration<CONFIG_HOLIDAYS>
   {
-    public CONFIG_HOLIDAYSMap() : base()
+    public CONFIG_HOLIDAYSMap()
     {
-      
       this.HasKey(t => t.CONFIG_HOLIDAY_ID);
       this.ToTable("CONFIG_HOLIDAYS");
       this.Property(t => t.CONFIG_HOLIDAY_ID).HasColumnName("CONFIG_HOLIDAY_ID");

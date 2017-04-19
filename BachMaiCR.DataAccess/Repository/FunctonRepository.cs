@@ -1,10 +1,4 @@
-﻿
-
-
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -22,15 +16,15 @@ namespace BachMaiCR.DataAccess.Repository
 
     public WEBPAGES_FUNCTIONS GetByUniqueCode(string uniqueCode)
     {
-      return this.DbSet.FirstOrDefault((o => o.UNIQUE_CODE == uniqueCode));
+      return this.DbSet.FirstOrDefault(o => o.UNIQUE_CODE == uniqueCode);
     }
 
     public IEnumerable<string> GetActionCodeListByUniqueCode(string uniqueCode)
     {
       WEBPAGES_FUNCTIONS byUniqueCode = this.GetByUniqueCode(uniqueCode);
       if (byUniqueCode != null)
-        return byUniqueCode.WEBPAGES_ACTIONS.Select( (o => o.CODE));
-      return (IEnumerable<string>) new string[0];
+        return byUniqueCode.WEBPAGES_ACTIONS.Select(o => o.CODE);
+      return new string[0];
     }
   }
 }

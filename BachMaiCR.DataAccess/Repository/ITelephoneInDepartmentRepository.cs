@@ -1,10 +1,4 @@
-﻿
-
-
-
-
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BachMaiCR.DBMapping.Models;
 
 namespace BachMaiCR.DataAccess.Repository

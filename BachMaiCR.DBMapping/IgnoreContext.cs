@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿
+using System.Data.Entity;
 using BachMaiCR.DBMapping.ModelsExt;
 
 namespace BachMaiCR.DBMapping

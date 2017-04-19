@@ -1,16 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class REPORTMap : EntityTypeConfiguration<REPORT>
   {
-    public REPORTMap() : base()
+    public REPORTMap()
     {
-      
       this.HasKey(t => t.REPORT_ID);
       this.Property(t => t.REPORT_NAME).IsRequired().HasMaxLength(250);
       this.Property(t => t.LM_DEPARTMENT_NAME).HasMaxLength(150);

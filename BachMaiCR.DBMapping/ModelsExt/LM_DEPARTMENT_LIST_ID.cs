@@ -1,4 +1,6 @@
-﻿namespace BachMaiCR.DBMapping.ModelsExt
+﻿
+
+namespace BachMaiCR.DBMapping.ModelsExt
 {
   public class LM_DEPARTMENT_LIST_ID
   {

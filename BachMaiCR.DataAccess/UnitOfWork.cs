@@ -262,7 +262,7 @@ namespace BachMaiCR.DataAccess
     protected void InitializeContext()
     {
       this._context = new BACHMAICRContext();
-      this._context.Configuration.LazyLoadingEnabled= true;
+      this._context.Configuration.LazyLoadingEnabled = true;
     }
 
     public ITransaction BeginTransaction()
@@ -275,7 +275,7 @@ namespace BachMaiCR.DataAccess
       if (transaction == null)
         return;
       transaction.Dispose();
-      transaction = null;
+      transaction = (ITransaction) null;
     }
 
     public void Save()
@@ -293,7 +293,7 @@ namespace BachMaiCR.DataAccess
     public void Dispose()
     {
       this.Dispose(true);
-      GC.SuppressFinalize(this);
+      GC.SuppressFinalize((object) this);
     }
   }
 }

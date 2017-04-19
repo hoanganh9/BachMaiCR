@@ -22,7 +22,7 @@ namespace BachMaiCR.Utilities.Ftp
       NameValueCollection appSettings = ConfigurationManager.AppSettings;
       FtpClient.ftpRootPath = appSettings["ftpServer"];
       FtpClient.ftpCredential = (ICredentials) new NetworkCredential(appSettings["ftpUser"], appSettings["ftpPassword"]);
-      FtpClient.ftpProxy = string.IsNullOrWhiteSpace(appSettings["ftpProxy"]) ? null : (IWebProxy) new WebProxy(appSettings["ftpProxy"]);
+      FtpClient.ftpProxy = string.IsNullOrWhiteSpace(appSettings["ftpProxy"]) ? (IWebProxy) null : (IWebProxy) new WebProxy(appSettings["ftpProxy"]);
       if (!string.IsNullOrWhiteSpace(FtpClient.ftpRootPath))
         ;
     }
@@ -169,7 +169,7 @@ namespace BachMaiCR.Utilities.Ftp
     {
       if (string.IsNullOrWhiteSpace(filePath))
         return "";
-      List<string> list = ((IEnumerable<string>) filePath.Split('/')).ToList();
+      List<string> list = filePath.Split('/').ToList<string>();
       if (list.Count<string>() < 2)
         return "";
       list.RemoveAt(list.Count - 1);

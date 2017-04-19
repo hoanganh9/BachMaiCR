@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CALENDAR_CHANGEMap : EntityTypeConfiguration<CALENDAR_CHANGE>
   {
-    public CALENDAR_CHANGEMap() : base()
+    public CALENDAR_CHANGEMap()
     {
-      
       this.HasKey(t => t.CALENDAR_CHANGE_ID);
       this.Property(t => t.DOCTORS_NAME).HasMaxLength(50);
       this.Property(t => t.DOCTORS_CHANGE_NAME).HasMaxLength(50);

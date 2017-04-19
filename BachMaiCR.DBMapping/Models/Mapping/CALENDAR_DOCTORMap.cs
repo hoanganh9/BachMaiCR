@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CALENDAR_DOCTORMap : EntityTypeConfiguration<CALENDAR_DOCTOR>
   {
-    public CALENDAR_DOCTORMap() : base()
+    public CALENDAR_DOCTORMap()
     {
-      
       this.HasKey(t => t.CALENDAR_DOCTOR_ID);
       this.ToTable("CALENDAR_DOCTOR");
       this.Property(t => t.CALENDAR_DOCTOR_ID).HasColumnName("CALENDAR_DOCTOR_ID");

@@ -30,8 +30,8 @@ namespace BachMaiCR.DataAccess
       if (this.ts == null)
         return;
       this.ts.Dispose();
-      this.ts = null;
-      this.uow = null;
+      this.ts = (TransactionScope) null;
+      this.uow = (UnitOfWork) null;
     }
   }
 }

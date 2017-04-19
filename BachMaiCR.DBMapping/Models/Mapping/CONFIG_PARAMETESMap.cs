@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CONFIG_PARAMETESMap : EntityTypeConfiguration<CONFIG_PARAMETES>
   {
-    public CONFIG_PARAMETESMap() : base()
+    public CONFIG_PARAMETESMap()
     {
-      
       this.HasKey(t => t.CONFIG_PARAMETES_ID);
       this.Property(t => t.DESCRIPTION).HasMaxLength(250);
       this.ToTable("CONFIG_PARAMETES");

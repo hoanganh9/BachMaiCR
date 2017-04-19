@@ -1,12 +1,5 @@
-﻿
-
-
-
-
-
-using System;
+﻿using System;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Linq.Expressions;
@@ -25,7 +18,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public bool CheckCalendarDirect(int idDoctor, DateTime? dateCheck)
     {
-      int num = this.DbSet.AsNoTracking().Where((obj => obj.DOCTORS_ID == idDoctor && SqlFunctions.DateDiff("dd", obj.DATE_BEGIN, dateCheck) >= (int?) 0 && SqlFunctions.DateDiff("dd", obj.DATE_END, dateCheck) <= (int?) 0)).ToList().Count<CONFIG_DIRECT>();
+      int num = this.DbSet.AsNoTracking().Where((obj => obj.DOCTORS_ID == idDoctor && SqlFunctions.DateDiff("dd", obj.DATE_BEGIN, dateCheck) >= (int?) 0 && SqlFunctions.DateDiff("dd", obj.DATE_END, dateCheck) <= (int?) 0)).ToList().Count();
       bool flag = false;
       if (num > 0)
         return true;
@@ -36,7 +29,7 @@ namespace BachMaiCR.DataAccess.Repository
     {
       try
       {
-        IQueryable<CONFIG_DIRECT> source = this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE == false));
+        IQueryable<CONFIG_DIRECT> source = this.DbSet.AsNoTracking().Where(obj => obj.ISDELETE == false);
         int? nullable;
         int num1;
         if (entity.SearchDeprtId.HasValue)
@@ -48,12 +41,12 @@ namespace BachMaiCR.DataAccess.Repository
           num1 = 1;
         if (num1 == 0)
         {
-          LM_DEPARTMENT deptPath = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).FirstOrDefault((t => t.LM_DEPARTMENT_ID.Equals(entity.SearchDeprtId.Value)));
+          LM_DEPARTMENT deptPath = this.DbContext.LM_DEPARTMENT.AsNoTracking().FirstOrDefault((t => t.LM_DEPARTMENT_ID.Equals(entity.SearchDeprtId.Value)));
           if (deptPath == null)
             throw new Exception("ConfigDirect");
-          IQueryable<int> lstAllChildIds = ((IQueryable<LM_DEPARTMENT>) ((DbQuery<LM_DEPARTMENT>) this.DbContext.LM_DEPARTMENT).AsNoTracking()).Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.DEPARTMENT_PATH.Contains(deptPath.DEPARTMENT_PATH))).Select((obj => obj.LM_DEPARTMENT_ID));
-          if (lstAllChildIds.Any<int>())
-            source = source.Where((t => lstAllChildIds.Contains<int>(t.LM_DEPARTMENT_ID)));
+          IQueryable<int> lstAllChildIds = this.DbContext.LM_DEPARTMENT.AsNoTracking().Where((obj => (obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false)) && obj.DEPARTMENT_PATH.Contains(deptPath.DEPARTMENT_PATH))).Select(obj => obj.LM_DEPARTMENT_ID);
+          if (lstAllChildIds.Any())
+            source = source.Where((t => lstAllChildIds.Contains(t.LM_DEPARTMENT_ID)));
         }
         nullable = entity.SearchDoctorId;
         int num2;
@@ -70,7 +63,7 @@ namespace BachMaiCR.DataAccess.Repository
         num2 = 1;
 label_14:
         if (num2 == 0)
-          source = source.Where((t => t.DOCTORS_ID == entity.SearchDoctorId.Value));
+          source = source.Where(t => t.DOCTORS_ID == entity.SearchDoctorId.Value);
         nullable = entity.SearchHolidayId;
         int num3;
         if (nullable.HasValue)
@@ -86,14 +79,14 @@ label_14:
         num3 = 1;
 label_20:
         if (num3 == 0)
-          source = source.Where((t => t.FEAST_ID == (int?) entity.SearchHolidayId.Value));
+          source = source.Where(t => t.FEAST_ID == entity.SearchHolidayId.Value);
         if (!string.IsNullOrEmpty(entity.SearchDate) && entity.SearchDate.Trim() != "" && entity.SearchDate.Trim() != "__/__/____")
         {
           DateTime? searchDate = new DateTime?();
           searchDate = new DateTime?(DateTime.Parse(entity.SearchDate.Trim() + " 00:00"));
           source = source.Where((t => SqlFunctions.DateDiff("dd", t.DATE_BEGIN, searchDate) >= (int?) 0 && SqlFunctions.DateDiff("dd", t.DATE_END, searchDate) <= (int?) 0));
         }
-        return source.OrderBy((t => t.DOCTOR.DOCTOR_NAME)).OrderBy<CONFIG_DIRECT, DateTime?>((Expression<Func<CONFIG_DIRECT, DateTime?>>) (t => t.DATE_BEGIN)).Paginate<CONFIG_DIRECT>(page, size, 0);
+        return source.OrderBy(t => t.DOCTOR.DOCTOR_NAME).OrderBy(t => t.DATE_BEGIN).Paginate(page, size, 0);
       }
       catch
       {

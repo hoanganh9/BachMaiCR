@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class DoctorColumnMap : EntityTypeConfiguration<DoctorColumn>
   {
-    public DoctorColumnMap() : base()
+    public DoctorColumnMap()
     {
-      
       this.HasKey(t => new
       {
         DOCTORS_ID = t.DOCTORS_ID,

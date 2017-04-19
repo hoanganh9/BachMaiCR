@@ -1,16 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CONFIG_REPORTMap : EntityTypeConfiguration<CONFIG_REPORT>
   {
-    public CONFIG_REPORTMap() : base()
+    public CONFIG_REPORTMap()
     {
-      
       this.HasKey(t => t.CONFIG_REPORT_ID);
       this.Property(t => t.CONFIG_REPORT_NAME).HasMaxLength(50);
       this.Property(t => t.CONFIG_REPORT_EXCEL).HasMaxLength(50);

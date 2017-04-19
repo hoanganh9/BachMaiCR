@@ -12,7 +12,7 @@ namespace BachMaiCR.Utilities.Cache
     {
       get
       {
-        return (ObjectCache) MemoryCache.Default;
+        return MemoryCache.Default;
       }
     }
 
@@ -41,27 +41,27 @@ namespace BachMaiCR.Utilities.Cache
 
     public bool IsStored(string key)
     {
-      return this.Cache.Contains(key, null);
+      return this.Cache.Contains(key, (string) null);
     }
 
     public void RemoveByTerm(string term)
     {
-      foreach (KeyValuePair<string, object> keyValuePair in (IEnumerable<KeyValuePair<string, object>>) this.Cache)
+      foreach (KeyValuePair<string, object> keyValuePair in this.Cache)
       {
         if (keyValuePair.Key.Contains(term))
-          this.Cache.Remove(keyValuePair.Key, null);
+          this.Cache.Remove(keyValuePair.Key, (string) null);
       }
     }
 
     public void Remove(string key)
     {
-      this.Cache.Remove(key, null);
+      this.Cache.Remove(key, (string) null);
     }
 
     public void Clear()
     {
-      foreach (KeyValuePair<string, object> keyValuePair in (IEnumerable<KeyValuePair<string, object>>) this.Cache)
-        this.Cache.Remove(keyValuePair.Key, null);
+      foreach (KeyValuePair<string, object> keyValuePair in this.Cache)
+        this.Cache.Remove(keyValuePair.Key, (string) null);
     }
   }
 }

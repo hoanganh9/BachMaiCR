@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class ADMIN_LOGMap : EntityTypeConfiguration<ADMIN_LOG>
   {
-    public ADMIN_LOGMap() : base()
+    public ADMIN_LOGMap()
     {
-      
       this.HasKey(t => t.LOG_ID);
       this.Property(t => t.SESSION_ID).HasMaxLength(50);
       this.Property(t => t.APP_CODE).HasMaxLength(50);

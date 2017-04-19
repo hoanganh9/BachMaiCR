@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Core.Metadata.Edm;
 using System.Data.Entity.Core.Objects;
@@ -23,12 +22,12 @@ namespace BachMaiCR.DataAccess
 
     public static string GetTableKeyName<T>(this ObjectContext context) where T : class
     {
-        return context.CreateObjectSet<T>().EntitySet.ElementType.KeyMembers.Select(a => a.Name).FirstOrDefault();
+      return context.CreateObjectSet<T>().EntitySet.ElementType.KeyMembers.Select(k => k.Name).FirstOrDefault();
     }
 
     public static string GetTableName<T>(this ObjectContext context) where T : class
     {
-      return new Regex("FROM (?<table>.*) AS").Match(((ObjectQuery) context.CreateObjectSet<T>()).ToTraceString()).Groups["table"].Value;
+      return new Regex("FROM (?<table>.*) AS").Match(context.CreateObjectSet<T>().ToTraceString()).Groups["table"].Value;
     }
   }
 }

@@ -1,16 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CALENDAR_GROUPMap : EntityTypeConfiguration<CALENDAR_GROUP>
   {
-    public CALENDAR_GROUPMap() : base()
+    public CALENDAR_GROUPMap()
     {
-      
       this.HasKey(t => t.CALENDAR_GROUP_ID);
       this.ToTable("CALENDAR_GROUP");
       this.Property(t => t.CALENDAR_GROUP_ID).HasColumnName("CALENDAR_GROUP_ID");

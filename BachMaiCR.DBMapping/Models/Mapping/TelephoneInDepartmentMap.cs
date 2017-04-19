@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class TelephoneInDepartmentMap : EntityTypeConfiguration<TelephoneInDepartment>
   {
-    public TelephoneInDepartmentMap() : base()
+    public TelephoneInDepartmentMap()
     {
-      
       this.HasKey(t => new
       {
         LM_DEPARTMENT_ID = t.LM_DEPARTMENT_ID,

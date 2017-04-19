@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BachMaiCR.DBMapping.Models;
 using BachMaiCR.Utilities;
 

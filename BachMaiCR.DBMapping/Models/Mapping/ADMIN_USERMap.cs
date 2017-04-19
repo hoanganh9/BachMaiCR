@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class ADMIN_USERMap : EntityTypeConfiguration<ADMIN_USER>
   {
-    public ADMIN_USERMap() : base()
+    public ADMIN_USERMap()
     {
-      
       this.HasKey(t => t.ADMIN_USER_ID);
       this.Property(t => t.USERNAME).HasMaxLength(50);
       this.Property(t => t.USERCODE).HasMaxLength(50);

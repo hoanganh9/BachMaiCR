@@ -1,4 +1,6 @@
-﻿namespace BachMaiCR.Utilities
+﻿
+
+namespace BachMaiCR.Utilities
 {
   public interface IPagedList
   {

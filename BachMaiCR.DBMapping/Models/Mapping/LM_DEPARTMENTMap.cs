@@ -1,16 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class LM_DEPARTMENTMap : EntityTypeConfiguration<LM_DEPARTMENT>
   {
-    public LM_DEPARTMENTMap() : base()
+    public LM_DEPARTMENTMap()
     {
-      
       this.HasKey(t => t.LM_DEPARTMENT_ID);
       this.Property(t => t.DEPARTMENT_NAME).HasMaxLength(150);
       this.Property(t => t.DEPARTMENT_CODE).HasMaxLength(50);

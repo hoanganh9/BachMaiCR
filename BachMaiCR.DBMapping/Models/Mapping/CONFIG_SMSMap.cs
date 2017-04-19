@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CONFIG_SMSMap : EntityTypeConfiguration<CONFIG_SMS>
   {
-    public CONFIG_SMSMap() : base()
+    public CONFIG_SMSMap()
     {
-      
       this.HasKey(t => t.CONFIG_SMS_ID);
       this.Property(t => t.CONFIG_SMS_NAME).HasMaxLength(150);
       this.ToTable("CONFIG_SMS");

@@ -1,16 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class FEASTMap : EntityTypeConfiguration<FEAST>
   {
-    public FEASTMap() : base()
+    public FEASTMap()
     {
-      
       this.HasKey(t => t.FEAST_ID);
       this.Property(t => t.FEAST_TITLE).IsRequired().HasMaxLength(150);
       this.ToTable("FEAST");

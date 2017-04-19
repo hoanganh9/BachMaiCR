@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class TEMPLATEMap : EntityTypeConfiguration<TEMPLATE>
   {
-    public TEMPLATEMap() : base()
+    public TEMPLATEMap()
     {
-      
       this.HasKey(t => t.TEMPLATES_ID);
       this.Property(t => t.TEMPLATE_NAME).HasMaxLength(300);
       this.Property(t => t.ABBREVIATION).HasMaxLength(50);

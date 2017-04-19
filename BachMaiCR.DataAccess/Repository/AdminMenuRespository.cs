@@ -1,13 +1,6 @@
-﻿
-
-
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using BachMaiCR.DBMapping.Models;
@@ -25,22 +18,22 @@ namespace BachMaiCR.DataAccess.Repository
 
     public bool ExistChild(int id)
     {
-      return this.DbSet.Where((o => o.MENU_PARENT_ID == (int?) id)).Count<ADMIN_MENU>() > 0;
+      return DbSet.Where(o => o.MENU_PARENT_ID == id).Any();
     }
 
     public List<ADMIN_MENU> GetChildMenu(int parrentId)
     {
-      return this.DbSet.Where((o => o.MENU_PARENT_ID == (int?) parrentId && o.ISACTIVE == true)).OrderBy<ADMIN_MENU>("MENU_ORDER").ToList();
+      return this.DbSet.Where(o => o.MENU_PARENT_ID == parrentId && o.ISACTIVE == true).OrderBy("MENU_ORDER").ToList();
     }
 
     public List<ADMIN_MENU> GetAll_List()
     {
-      return this.DbSet.Where((o => o.ISACTIVE == true)).OrderBy<ADMIN_MENU>("MENU_ORDER").ToList();
+      return this.DbSet.Where(o => o.ISACTIVE == true).OrderBy("MENU_ORDER").ToList();
     }
 
     public List<MENULIST> GetAll_Active()
     {
-      IQueryable<MENULIST> source = this.DbSet.AsNoTracking().Where((obj => obj.MENU_URL != "#" && obj.ISACTIVE == true)).OrderBy((obj => obj.MENU_NAME)).Select((obj => new MENULIST()
+      IQueryable<MENULIST> source = this.DbSet.AsNoTracking().Where(obj => obj.MENU_URL != "#" && obj.ISACTIVE == true).OrderBy(obj => obj.MENU_NAME).Select((obj => new MENULIST()
       {
         MENU_NAME = obj.MENU_NAME,
         MENU_URL = obj.MENU_URL

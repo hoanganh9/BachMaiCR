@@ -1,13 +1,6 @@
-﻿
-
-
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using BachMaiCR.DBMapping.Models;
@@ -23,12 +16,12 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<CONFIG_PARAMETES> GetAll(int? deparmentId, int iYear, int type)
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.LM_DEPARTMENT_ID == deparmentId && obj.CONFIG_YEAR == iYear && obj.CONFIG_TYPE == (int?) type)).ToList();
+      return this.DbSet.AsNoTracking().Where(obj => obj.LM_DEPARTMENT_ID == deparmentId && obj.CONFIG_YEAR == iYear && obj.CONFIG_TYPE == type).ToList();
     }
 
     public List<CONFIG_PARAMETES> GetParameterLeader(int iYear, int type)
     {
-      return this.DbSet.AsNoTracking().Where((obj => obj.CONFIG_YEAR == iYear && obj.CONFIG_TYPE == (int?) type)).ToList();
+      return this.DbSet.AsNoTracking().Where(obj => obj.CONFIG_YEAR == iYear && obj.CONFIG_TYPE == type).ToList();
     }
   }
 }

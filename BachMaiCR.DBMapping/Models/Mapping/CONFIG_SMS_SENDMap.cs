@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CONFIG_SMS_SENDMap : EntityTypeConfiguration<CONFIG_SMS_SEND>
   {
-    public CONFIG_SMS_SENDMap() : base()
+    public CONFIG_SMS_SENDMap()
     {
-      
       this.HasKey(t => t.CONFIG_SMS_SEND_ID);
       this.ToTable("CONFIG_SMS_SEND");
       this.Property(t => t.CONFIG_SMS_SEND_ID).HasColumnName("CONFIG_SMS_SEND_ID");

@@ -1,4 +1,6 @@
-﻿namespace BachMaiCR.DBMapping.Models
+﻿
+
+namespace BachMaiCR.DBMapping.Models
 {
   public class DoctorLevelView
   {

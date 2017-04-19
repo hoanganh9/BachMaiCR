@@ -1,16 +1,13 @@
-﻿
-using System;
+﻿using System;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class DOCTOR_LEVELMap : EntityTypeConfiguration<DOCTOR_LEVEL>
   {
-    public DOCTOR_LEVELMap() : base()
+    public DOCTOR_LEVELMap()
     {
-      
       this.HasKey(t => t.DOCTOR_LEVEL_ID);
       this.Property(t => t.CODE).IsRequired().HasMaxLength(50);
       this.Property(t => t.LEVEL_NAME).HasMaxLength(250);

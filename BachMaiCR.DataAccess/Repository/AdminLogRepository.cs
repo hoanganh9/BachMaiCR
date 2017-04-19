@@ -1,9 +1,6 @@
-﻿
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Linq.Expressions;
@@ -52,7 +49,7 @@ namespace BachMaiCR.DataAccess.Repository
           num2 = 1;
         if (num2 == 0)
           source = source.Where((t => t.ACTION_TYPE.Equals(entity.SearchAction.Value)));
-        return source.OrderByDescending((t => t.START_TIME)).Paginate<ADMIN_LOG>(page, size, 0);
+        return source.OrderByDescending(t => t.START_TIME).Paginate(page, size, 0);
       }
       catch
       {
@@ -63,12 +60,12 @@ namespace BachMaiCR.DataAccess.Repository
     public List<SelectListItem> GetListMenuName()
     {
       try
-      { 
-        return this.DbSet.AsNoTracking().OrderBy((obj => obj.MENU_NAME)).Select((obj => new SelectListItem()
+      {
+        return this.DbSet.AsNoTracking().OrderBy(obj => obj.MENU_NAME).Select((obj => new SelectListItem()
         {
           Text = obj.MENU_NAME,
           Value = obj.MENU_CODE
-        })).Distinct<SelectListItem>().ToList();
+        })).Distinct().ToList();
       }
       catch
       {
@@ -81,7 +78,7 @@ namespace BachMaiCR.DataAccess.Repository
       if (string.IsNullOrEmpty(lstId))
         return false;
       IQueryable<ADMIN_LOG> source = this.DbSet.AsNoTracking().Where((obj => lstId.Contains("," + obj.LOG_ID.ToString() + ",")));
-      if (!source.Any<ADMIN_LOG>())
+      if (!source.Any())
         return false;
       foreach (ADMIN_LOG entity in source.ToList())
         this.Delete(entity);

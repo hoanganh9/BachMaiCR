@@ -26,7 +26,7 @@ namespace BachMaiCR.Utilities.Enums
 
     public string GetStringValue(string valueName)
     {
-      string str = null;
+      string str = (string) null;
       try
       {
         str = StringEnum.GetStringValue((Enum) Enum.Parse(this._enumType, valueName, false));
@@ -46,7 +46,7 @@ namespace BachMaiCR.Utilities.Enums
         if (customAttributes.Length > 0)
           stringList.Add(customAttributes[0].Value);
       }
-      return (Array) stringList.ToArray();
+      return stringList.ToArray();
     }
 
     public Dictionary<string, string> GetListValues()
@@ -89,7 +89,7 @@ namespace BachMaiCR.Utilities.Enums
     public static object Parse(Type type, string stringValue, bool ignoreCase)
     {
       object obj = null;
-      string strA = null;
+      string strA = (string) null;
       if (!type.IsEnum)
         throw new ArgumentException(string.Format("Supplied type must be an Enum.  Type was {0}", type.ToString()));
       foreach (FieldInfo field in type.GetFields())

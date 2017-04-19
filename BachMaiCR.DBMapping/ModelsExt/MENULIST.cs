@@ -1,4 +1,6 @@
-﻿namespace BachMaiCR.DBMapping.ModelsExt
+﻿
+
+namespace BachMaiCR.DBMapping.ModelsExt
 {
   public class MENULIST
   {

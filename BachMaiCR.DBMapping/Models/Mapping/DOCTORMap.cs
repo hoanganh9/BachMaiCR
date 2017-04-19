@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class DOCTORMap : EntityTypeConfiguration<DOCTOR>
   {
-    public DOCTORMap() : base()
+    public DOCTORMap()
     {
-      
       this.HasKey(t => t.DOCTORS_ID);
       this.Property(t => t.DOCTOR_NAME).HasMaxLength(100);
       this.Property(t => t.CODE_STAFF).HasMaxLength(50);

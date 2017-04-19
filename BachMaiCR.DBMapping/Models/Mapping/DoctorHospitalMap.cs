@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class DoctorHospitalMap : EntityTypeConfiguration<DoctorHospital>
   {
-    public DoctorHospitalMap() : base()
+    public DoctorHospitalMap()
     {
-      
       this.HasKey(t => new
       {
         CALENDAR_DUTY_ID = t.CALENDAR_DUTY_ID,

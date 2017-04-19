@@ -1,10 +1,4 @@
-﻿
-
-
-
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -22,7 +16,7 @@ namespace BachMaiCR.DataAccess.Repository
 
     public List<TelephoneInDepartment> GetALLTelephone(int idCalendarDuty)
     {
-      return ((IQueryable<TelephoneInDepartment>) this.DbContext.TelephoneInDepartments).Where((o => o.CALENDAR_ID == (int?) idCalendarDuty)).ToList();
+      return this.DbContext.TelephoneInDepartments.Where(o => o.CALENDAR_ID == idCalendarDuty).ToList();
     }
   }
 }

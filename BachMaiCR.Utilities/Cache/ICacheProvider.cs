@@ -1,4 +1,6 @@
-﻿namespace BachMaiCR.Utilities.Cache
+﻿
+
+namespace BachMaiCR.Utilities.Cache
 {
   public interface ICacheProvider
   {

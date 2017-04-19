@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class COLUM_LEVELMap : EntityTypeConfiguration<COLUM_LEVEL>
   {
-    public COLUM_LEVELMap() : base()
+    public COLUM_LEVELMap()
     {
-      
       this.HasKey(t => t.COLUM_LEVEL_ID);
       this.ToTable("COLUM_LEVEL");
       this.Property(t => t.COLUM_LEVEL_ID).HasColumnName("COLUM_LEVEL_ID");

@@ -7,7 +7,7 @@ namespace BachMaiCR.Utilities
   {
     public static bool ContainsAllItems<T>(List<T> a, List<T> b)
     {
-      return !b.Except<T>((IEnumerable<T>) a).Any<T>();
+      return !b.Except<T>(a).Any<T>();
     }
   }
 }

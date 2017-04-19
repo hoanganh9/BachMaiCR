@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -75,27 +75,20 @@
     <Compile Include="KeyTextItem.cs" />
     <Compile Include="ListHelper.cs" />
     <Compile Include="MimeType.cs" />
-    <Compile Include="Paging\PagedList.cs" />
-    <Compile Include="Paging\PagedListExtensions.cs" />
-    <Compile Include="Paging\PageQuery.cs" />
+    <Compile Include="OrderQuery.cs" />
+    <Compile Include="PagedListExtensions.cs" />
+    <Compile Include="PagedList.cs" />
+    <Compile Include="PageQuery.cs" />
     <Compile Include="ParameterRebinder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportForm\Entity\FField.cs" />
-    <Compile Include="ReportForm\Entity\FHeader.cs" />
-    <Compile Include="ReportForm\Entity\FReport.cs" />
-    <Compile Include="ReportForm\Entity\FRow.cs" />
-    <Compile Include="ReportForm\Entity\FTable.cs" />
-    <Compile Include="ReportForm\Entity\TreeItem.cs" />
+    <Compile Include="ReportForm\FField.cs" />
+    <Compile Include="ReportForm\FHeader.cs" />
+    <Compile Include="ReportForm\FReport.cs" />
+    <Compile Include="ReportForm\FRow.cs" />
+    <Compile Include="ReportForm\FTable.cs" />
     <Compile Include="ReportForm\FUtils.cs" />
-    <Compile Include="Sorting\OrderQuery.cs" />
+    <Compile Include="ReportForm\TreeItem.cs" />
     <Compile Include="StringHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

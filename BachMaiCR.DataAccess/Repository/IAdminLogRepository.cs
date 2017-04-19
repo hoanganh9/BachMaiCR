@@ -1,10 +1,4 @@
-﻿
-
-
-
-
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
 using BachMaiCR.DBMapping.Models;
 using BachMaiCR.DBMapping.ModelsExt;

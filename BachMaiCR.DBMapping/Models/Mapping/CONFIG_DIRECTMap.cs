@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CONFIG_DIRECTMap : EntityTypeConfiguration<CONFIG_DIRECT>
   {
-    public CONFIG_DIRECTMap() : base()
+    public CONFIG_DIRECTMap()
     {
-      
       this.HasKey(t => t.CONFIG_DIRECT_ID);
       this.ToTable("CONFIG_DIRECT");
       this.Property(t => t.CONFIG_DIRECT_ID).HasColumnName("CONFIG_DIRECT_ID");

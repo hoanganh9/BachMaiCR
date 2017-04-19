@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class CALENDAR_DATAMap : EntityTypeConfiguration<CALENDAR_DATA>
   {
-    public CALENDAR_DATAMap() : base()
+    public CALENDAR_DATAMap()
     {
-      
       this.HasKey(t => t.CALENDAR_DATA_ID);
       this.Property(t => t.CALENDAR_NAME).HasMaxLength(200);
       this.Property(t => t.CALENDAR_CONTENT).HasMaxLength(500);

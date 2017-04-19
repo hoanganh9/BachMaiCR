@@ -1,4 +1,6 @@
-﻿namespace BachMaiCR.Utilities.Enums
+﻿
+
+namespace BachMaiCR.Utilities.Enums
 {
   public enum enHolidayType
   {

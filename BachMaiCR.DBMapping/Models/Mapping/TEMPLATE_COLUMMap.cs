@@ -1,17 +1,14 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
 using System.Linq.Expressions;
 
 namespace BachMaiCR.DBMapping.Models.Mapping
 {
   public class TEMPLATE_COLUMMap : EntityTypeConfiguration<TEMPLATE_COLUM>
   {
-    public TEMPLATE_COLUMMap() : base()
+    public TEMPLATE_COLUMMap()
     {
-      
       this.HasKey(t => t.TEMPLATE_COLUM_ID);
       this.Property(t => t.COLUM_NAME).HasMaxLength(50);
       this.Property(t => t.LM_DEPARTMENT_PATH).HasMaxLength(50);
