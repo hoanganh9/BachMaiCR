@@ -2,9 +2,9 @@
 
 namespace BachMaiCR.Utilities
 {
-  public static class MimeType
-  {
-    private static Dictionary<string, string> mime = new Dictionary<string, string>()
+    public static class MimeType
+    {
+        private static Dictionary<string, string> mime = new Dictionary<string, string>()
     {
       {
         ".pdf",
@@ -59,18 +59,19 @@ namespace BachMaiCR.Utilities
         "image/bmp"
       }
     };
-    public const string DefaultMimeType = "application/octet-stream";
 
-    public static string GetMime(string fileExtension)
-    {
-      if (string.IsNullOrWhiteSpace(fileExtension))
-        return string.Empty;
-      if (!fileExtension.StartsWith("."))
-        fileExtension = string.Format(".{0}", fileExtension);
-      fileExtension = fileExtension.ToLower();
-      if (MimeType.mime.ContainsKey(fileExtension))
-        return MimeType.mime[fileExtension];
-      return "application/octet-stream";
+        public const string DefaultMimeType = "application/octet-stream";
+
+        public static string GetMime(string fileExtension)
+        {
+            if (string.IsNullOrWhiteSpace(fileExtension))
+                return string.Empty;
+            if (!fileExtension.StartsWith("."))
+                fileExtension = string.Format(".{0}", fileExtension);
+            fileExtension = fileExtension.ToLower();
+            if (MimeType.mime.ContainsKey(fileExtension))
+                return MimeType.mime[fileExtension];
+            return "application/octet-stream";
+        }
     }
-  }
 }

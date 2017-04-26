@@ -1,72 +1,72 @@
-﻿using System;
-using BachMaiCR.DataAccess.Repository;
+﻿using BachMaiCR.DataAccess.Repository;
+using System;
 
 namespace BachMaiCR.DataAccess
 {
-  public interface IUnitOfWork : IDisposable
-  {
-    IUserRepository Users { get; }
+    public interface IUnitOfWork : IDisposable
+    {
+        IUserRepository Users { get; }
 
-    IActionRepository Actions { get; }
+        IActionRepository Actions { get; }
 
-    IFunctonRepository Functons { get; }
+        IFunctonRepository Functons { get; }
 
-    IRoleRepository Roles { get; }
+        IRoleRepository Roles { get; }
 
-    ICategoryRepository Categories { get; }
+        ICategoryRepository Categories { get; }
 
-    IDoctorLevelRepository DoctorLevels { get; }
+        IDoctorLevelRepository DoctorLevels { get; }
 
-    IDepartmentRepository Departments { get; }
+        IDepartmentRepository Departments { get; }
 
-    ICalendarDutyRepository CalendarDuty { get; }
+        ICalendarDutyRepository CalendarDuty { get; }
 
-    IUsersInActionsRepository UsersInActions { get; }
+        IUsersInActionsRepository UsersInActions { get; }
 
-    IDoctorRepository Doctors { get; }
+        IDoctorRepository Doctors { get; }
 
-    ITemplateColumRepository TemplatesColumn { get; }
+        ITemplateColumRepository TemplatesColumn { get; }
 
-    ITemplateRepository Templates { get; }
+        ITemplateRepository Templates { get; }
 
-    ICalendarDoctorRepository CalendarDoctors { get; }
+        ICalendarDoctorRepository CalendarDoctors { get; }
 
-    ICalendarDataRepository CalendarDatas { get; }
+        ICalendarDataRepository CalendarDatas { get; }
 
-    IAdminLogRepository AdminLogs { get; }
+        IAdminLogRepository AdminLogs { get; }
 
-    IReportOfDayRepository ReportOfDays { get; }
+        IReportOfDayRepository ReportOfDays { get; }
 
-    IAdminMenuRespository AdminMenu { get; }
+        IAdminMenuRespository AdminMenu { get; }
 
-    ICalendarChangeRepository CalendarChanges { get; }
+        ICalendarChangeRepository CalendarChanges { get; }
 
-    IDoctorGroupRepository DoctorGroups { get; }
+        IDoctorGroupRepository DoctorGroups { get; }
 
-    ICalendarGroupRepository CalendarGroups { get; }
+        ICalendarGroupRepository CalendarGroups { get; }
 
-    IFeastRepository Feasts { get; }
+        IFeastRepository Feasts { get; }
 
-    IDoctorDataRepository DoctorDatas { get; }
+        IDoctorDataRepository DoctorDatas { get; }
 
-    ITelephoneInDepartmentRepository TelephoneInDepartments { get; }
+        ITelephoneInDepartmentRepository TelephoneInDepartments { get; }
 
-    IConfigReportRepository ConfigReports { get; }
+        IConfigReportRepository ConfigReports { get; }
 
-    IConfigHolidaysRepository ConfigHolidays { get; }
+        IConfigHolidaysRepository ConfigHolidays { get; }
 
-    IConfigDirectRepository ConfigDirect { get; }
+        IConfigDirectRepository ConfigDirect { get; }
 
-    IConfigParameterRepository ConfigParameter { get; }
+        IConfigParameterRepository ConfigParameter { get; }
 
-    IConfigSMSRepository ConfigSMS { get; }
+        IConfigSMSRepository ConfigSMS { get; }
 
-    ICalendarAutoRepository CalendarAuto { get; }
+        ICalendarAutoRepository CalendarAuto { get; }
 
-    void Save();
+        void Save();
 
-    ITransaction BeginTransaction();
+        ITransaction BeginTransaction();
 
-    void EndTransaction(ITransaction transaction);
-  }
+        void EndTransaction(ITransaction transaction);
+    }
 }

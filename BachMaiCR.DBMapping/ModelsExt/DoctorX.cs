@@ -1,10 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using BachMaiCR.DBMapping.Models;
+﻿using BachMaiCR.DBMapping.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BachMaiCR.DBMapping.ModelsExt
 {
-  [NotMapped]
-  public class DoctorX : DOCTOR
-  {
-  }
+    [NotMapped]
+    public class DoctorX : DOCTOR
+    {
+    }
 }

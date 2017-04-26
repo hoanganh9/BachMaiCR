@@ -1,18 +1,18 @@
-﻿using System;
-using BachMaiCR.DBMapping.Models;
+﻿using BachMaiCR.DBMapping.Models;
+using System;
 
 namespace BachMaiCR.DataAccess.Repository
 {
-  public interface ICalendarDoctorRepository : IRepository<CALENDAR_DOCTOR>
-  {
-    void DeleteByIDCalendarDuty(int idCalendarDuty, int idColumn, DateTime startDate, DateTime endDate);
+    public interface ICalendarDoctorRepository : IRepository<CALENDAR_DOCTOR>
+    {
+        void DeleteByIDCalendarDuty(int idCalendarDuty, int idColumn, DateTime startDate, DateTime endDate);
 
-    void DeleteByIDCalendarDuty(int idCalendarDuty, int idColumn);
+        void DeleteByIDCalendarDuty(int idCalendarDuty, int idColumn);
 
-    void DeleteCalendarDoctorById(int idCalendarDuty);
+        void DeleteCalendarDoctorById(int idCalendarDuty);
 
-    bool ExistReferenceUser(int usrID);
+        bool ExistReferenceUser(int usrID);
 
-    void DeleteByDoctorId(int idCalendarDuty, int idDoctor, DateTime date);
-  }
+        void DeleteByDoctorId(int idCalendarDuty, int idDoctor, DateTime date);
+    }
 }

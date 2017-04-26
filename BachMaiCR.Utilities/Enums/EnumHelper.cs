@@ -6,67 +6,67 @@ using System.Web.Mvc;
 
 namespace BachMaiCR.Utilities.Enums
 {
-  public static class EnumHelper<T> where T : struct
-  {
-    public static List<T> GetValues()
+    public static class EnumHelper<T> where T : struct
     {
-      return typeof (T).GetFields(BindingFlags.Static | BindingFlags.Public).Select((t => (T) t.GetValue(null))).ToList<T>();
-    }
-
-    public static List<KeyTextItem> ConvertToKeyValueList()
-    {
-      List<T> values = EnumHelper<T>.GetValues();
-      List<KeyTextItem> keyTextItemList = new List<KeyTextItem>();
-      if (null == values)
-        return keyTextItemList;
-      StringEnum stringEnum = new StringEnum(typeof (T));
-      keyTextItemList.AddRange(values.Select((item => new KeyTextItem()
-      {
-        Id = item.ToString(),
-        Text = stringEnum.GetStringValue(item.ToString()) ?? item.ToString()
-      })));
-      return keyTextItemList;
-    }
-
-    public static List<SelectListItem> ConvertToSelectListItem(bool selectAll = false, string text = "-- Tất cả --")
-    {
-      List<T> values = EnumHelper<T>.GetValues();
-      List<SelectListItem> selectListItemList = new List<SelectListItem>();
-      if (null == values)
-        return selectListItemList;
-      StringEnum stringEnum = new StringEnum(typeof (T));
-      selectListItemList.AddRange(values.Select(item => new SelectListItem()
-      {
-        Value = ((int) Enum.Parse(typeof (T), item.ToString())).ToString(),
-        Text = stringEnum.GetStringValue(item.ToString()) ?? item.ToString()
-      }));
-      if (selectAll)
-      {
-        SelectListItem selectListItem = new SelectListItem()
+        public static List<T> GetValues()
         {
-          Value = "-1",
-          Text = text
-        };
-        selectListItemList.Insert(0, selectListItem);
-      }
-      return selectListItemList;
-    }
+            return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Select((t => (T)t.GetValue(null))).ToList<T>();
+        }
 
-    public static T GetByValue(string value)
-    {
-      return EnumHelper<T>.GetValues().FirstOrDefault<T>(o => o.ToString().ToUpper() == value.ToUpper());
-    }
+        public static List<KeyTextItem> ConvertToKeyValueList()
+        {
+            List<T> values = EnumHelper<T>.GetValues();
+            List<KeyTextItem> keyTextItemList = new List<KeyTextItem>();
+            if (null == values)
+                return keyTextItemList;
+            StringEnum stringEnum = new StringEnum(typeof(T));
+            keyTextItemList.AddRange(values.Select((item => new KeyTextItem()
+            {
+                Id = item.ToString(),
+                Text = stringEnum.GetStringValue(item.ToString()) ?? item.ToString()
+            })));
+            return keyTextItemList;
+        }
 
-    public static T GetByPosition(int position)
-    {
-      List<T> field = EnumHelper<T>.GetValues();
-      return field.FirstOrDefault<T>(o => field.IndexOf(o) == position);
-    }
+        public static List<SelectListItem> ConvertToSelectListItem(bool selectAll = false, string text = "-- Tất cả --")
+        {
+            List<T> values = EnumHelper<T>.GetValues();
+            List<SelectListItem> selectListItemList = new List<SelectListItem>();
+            if (null == values)
+                return selectListItemList;
+            StringEnum stringEnum = new StringEnum(typeof(T));
+            selectListItemList.AddRange(values.Select(item => new SelectListItem()
+            {
+                Value = ((int)Enum.Parse(typeof(T), item.ToString())).ToString(),
+                Text = stringEnum.GetStringValue(item.ToString()) ?? item.ToString()
+            }));
+            if (selectAll)
+            {
+                SelectListItem selectListItem = new SelectListItem()
+                {
+                    Value = "-1",
+                    Text = text
+                };
+                selectListItemList.Insert(0, selectListItem);
+            }
+            return selectListItemList;
+        }
 
-    public static string GetStringName(int val)
-    {
-      string name = Enum.GetName(typeof (T), val);
-      return new StringEnum(typeof (T)).GetStringValue(name) ?? name;
+        public static T GetByValue(string value)
+        {
+            return EnumHelper<T>.GetValues().FirstOrDefault<T>(o => o.ToString().ToUpper() == value.ToUpper());
+        }
+
+        public static T GetByPosition(int position)
+        {
+            List<T> field = EnumHelper<T>.GetValues();
+            return field.FirstOrDefault<T>(o => field.IndexOf(o) == position);
+        }
+
+        public static string GetStringName(int val)
+        {
+            string name = Enum.GetName(typeof(T), val);
+            return new StringEnum(typeof(T)).GetStringValue(name) ?? name;
+        }
     }
-  }
 }

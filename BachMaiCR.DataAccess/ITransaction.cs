@@ -2,10 +2,10 @@
 
 namespace BachMaiCR.DataAccess
 {
-  public interface ITransaction : IDisposable
-  {
-    void Commit();
+    public interface ITransaction : IDisposable
+    {
+        void Commit();
 
-    void Rollback();
-  }
+        void Rollback();
+    }
 }

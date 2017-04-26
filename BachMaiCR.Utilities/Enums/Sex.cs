@@ -1,10 +1,8 @@
-﻿
-
-namespace BachMaiCR.Utilities.Enums
+﻿namespace BachMaiCR.Utilities.Enums
 {
-  public enum Sex
-  {
-    [StringValue("Nữ")] Nu,
-    [StringValue("Nam")] Nam,
-  }
+    public enum Sex
+    {
+        [StringValue("Nữ")] Nu,
+        [StringValue("Nam")] Nam,
+    }
 }

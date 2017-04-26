@@ -3,18 +3,18 @@ using System.Net;
 
 namespace BachMaiCR.Utilities.Ftp
 {
-  public interface IFtpClient
-  {
-    FtpStatusCode UploadFile(string sourcePath, string destinationPath);
+    public interface IFtpClient
+    {
+        FtpStatusCode UploadFile(string sourcePath, string destinationPath);
 
-    FtpStatusCode UploadFile(Stream fileStream, string destinationPath);
+        FtpStatusCode UploadFile(Stream fileStream, string destinationPath);
 
-    FtpStatusCode CreateFolder(string folderPath);
+        FtpStatusCode CreateFolder(string folderPath);
 
-    byte[] DownloadFile(string filePath);
+        byte[] DownloadFile(string filePath);
 
-    FtpStatusCode DeleteFile(string filePath);
+        FtpStatusCode DeleteFile(string filePath);
 
-    bool IsExistFolder(string folderPath);
-  }
+        bool IsExistFolder(string folderPath);
+    }
 }

@@ -1,14 +1,13 @@
-﻿
+﻿using BachMaiCR.DBMapping.ModelsExt;
 using System.Data.Entity;
-using BachMaiCR.DBMapping.ModelsExt;
 
 namespace BachMaiCR.DBMapping
 {
-  public class IgnoreContext
-  {
-    public void Ignore(DbModelBuilder modelBuilder)
+    public class IgnoreContext
     {
-      modelBuilder.Ignore<DoctorX>();
+        public void Ignore(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Ignore<DoctorX>();
+        }
     }
-  }
 }

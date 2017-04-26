@@ -4,64 +4,64 @@ using System.Runtime.Caching;
 
 namespace BachMaiCR.Utilities.Cache
 {
-  public class CacheProvider : ICacheProvider
-  {
-    private static readonly object _lockCache = new object();
-
-    private ObjectCache Cache
+    public class CacheProvider : ICacheProvider
     {
-      get
-      {
-        return MemoryCache.Default;
-      }
-    }
+        private static readonly object _lockCache = new object();
 
-    public void Set(string key, object data, int cacheTime = 60)
-    {
-      if (data == null)
-        return;
-      lock (CacheProvider._lockCache)
-        this.Cache.Add(new CacheItem(key, data), new CacheItemPolicy()
+        private ObjectCache Cache
         {
-          AbsoluteExpiration = (DateTimeOffset) (DateTime.Now + TimeSpan.FromMinutes((double) cacheTime))
-        });
-    }
+            get
+            {
+                return MemoryCache.Default;
+            }
+        }
 
-    public T Get<T>(string key)
-    {
-      try
-      {
-        return (T) this.Cache[key];
-      }
-      catch (Exception ex)
-      {
-        return default (T);
-      }
-    }
+        public void Set(string key, object data, int cacheTime = 60)
+        {
+            if (data == null)
+                return;
+            lock (CacheProvider._lockCache)
+                this.Cache.Add(new CacheItem(key, data), new CacheItemPolicy()
+                {
+                    AbsoluteExpiration = (DateTimeOffset)(DateTime.Now + TimeSpan.FromMinutes((double)cacheTime))
+                });
+        }
 
-    public bool IsStored(string key)
-    {
-      return this.Cache.Contains(key, (string) null);
-    }
+        public T Get<T>(string key)
+        {
+            try
+            {
+                return (T)this.Cache[key];
+            }
+            catch (Exception ex)
+            {
+                return default(T);
+            }
+        }
 
-    public void RemoveByTerm(string term)
-    {
-      foreach (KeyValuePair<string, object> keyValuePair in this.Cache)
-      {
-        if (keyValuePair.Key.Contains(term))
-          this.Cache.Remove(keyValuePair.Key, (string) null);
-      }
-    }
+        public bool IsStored(string key)
+        {
+            return this.Cache.Contains(key, (string)null);
+        }
 
-    public void Remove(string key)
-    {
-      this.Cache.Remove(key, (string) null);
-    }
+        public void RemoveByTerm(string term)
+        {
+            foreach (KeyValuePair<string, object> keyValuePair in this.Cache)
+            {
+                if (keyValuePair.Key.Contains(term))
+                    this.Cache.Remove(keyValuePair.Key, (string)null);
+            }
+        }
 
-    public void Clear()
-    {
-      foreach (KeyValuePair<string, object> keyValuePair in this.Cache)
-        this.Cache.Remove(keyValuePair.Key, (string) null);
+        public void Remove(string key)
+        {
+            this.Cache.Remove(key, (string)null);
+        }
+
+        public void Clear()
+        {
+            foreach (KeyValuePair<string, object> keyValuePair in this.Cache)
+                this.Cache.Remove(keyValuePair.Key, (string)null);
+        }
     }
-  }
 }

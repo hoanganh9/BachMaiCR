@@ -2,21 +2,21 @@
 
 namespace BachMaiCR.Utilities.Enums
 {
-  public class StringValueAttribute : Attribute
-  {
-    private string _value;
-
-    public string Value
+    public class StringValueAttribute : Attribute
     {
-      get
-      {
-        return this._value;
-      }
-    }
+        private string _value;
 
-    public StringValueAttribute(string value)
-    {
-      this._value = value;
+        public string Value
+        {
+            get
+            {
+                return this._value;
+            }
+        }
+
+        public StringValueAttribute(string value)
+        {
+            this._value = value;
+        }
     }
-  }
 }

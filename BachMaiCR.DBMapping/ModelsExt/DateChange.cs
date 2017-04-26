@@ -1,9 +1,7 @@
-﻿
-
-namespace BachMaiCR.DBMapping.ModelsExt
+﻿namespace BachMaiCR.DBMapping.ModelsExt
 {
-  public class DateChange
-  {
-    public string Dates { get; set; }
-  }
+    public class DateChange
+    {
+        public string Dates { get; set; }
+    }
 }
