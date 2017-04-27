@@ -242,13 +242,3 @@ function scheduleCloseClick(item) {
         $('#content_' + id).remove();
     });
 }
-
-
-function btnExportClick(iMonth, iYear) {
-    var queryParam = ["?",
-               "iMonth=", iMonth, "&"
-               , "iYear=", iYear
-    ].join('');
-    var url = '@Url.Action("ExportDirector", "CalendarDuty")' + queryParam
-    location.href = url;
-}

@@ -4637,7 +4637,7 @@ namespace BachMaiCR.Web.Controllers
                     excelWorksheet.Column(index).Width = 15.0;
                     for (int dayOfWeek = 0; dayOfWeek < strArray.Length; ++dayOfWeek)
                     {
-                        excelWorksheet.Row(dayOfWeek + num2).Height = 15.0;
+                        //excelWorksheet.Row(dayOfWeek + num2).Height = 15.0;
                         if (index == 1)
                         {
                             if (dayOfWeek >= 5 && dayOfWeek < 8)
@@ -5154,7 +5154,6 @@ namespace BachMaiCR.Web.Controllers
                     excelWorksheet.Column(index).Width = 12.3;
                     for (int dayOfWeek = 0; dayOfWeek < strArray.Length; ++dayOfWeek)
                     {
-                        excelWorksheet.Row(dayOfWeek + num2).Height = 15.0;
                         if (index == 1)
                         {
                             if (dayOfWeek >= 5 && dayOfWeek <= 8)
@@ -5209,6 +5208,7 @@ namespace BachMaiCR.Web.Controllers
                     excelWorksheet.Cells["A15:D21"].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
                     excelWorksheet.Cells["A15:D21"].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 }
+                excelWorksheet.CustomHeight = false;
                 asByteArray = excelPackage.GetAsByteArray();
             }
             return new DownloadResult(asByteArray, "LichTT_LD_Thang" + result1.ToString() + "_nam" + result2.ToString() + ".xlsx");

@@ -51,19 +51,17 @@ namespace BachMaiCR.Web.Controllers
             }
             ADMIN_USER currentUser = unitOfWork.Users.GetByUserName(User.Identity.Name);
             List<LM_DEPARTMENT> lmDepartmentList = new List<LM_DEPARTMENT>();
-            List<SelectListItem> selectListItemList1 = new List<SelectListItem>();
+            List<SelectListItem> doctorList = new List<SelectListItem>();
             if (currentUser != null)
             {
                 List<int> intList1 = new List<int>();
                 List<DOCTOR> source = new List<DOCTOR>();
                 if (u != null && u.LM_DEPARTMENT_ID.HasValue)
                 {
-                    IDepartmentRepository departments = unitOfWork.Departments;
-                    bool? isdelete = departments.GetById(u.LM_DEPARTMENT_ID.Value).ISDELETE;
-                    if (isdelete.GetValueOrDefault())
+                    bool? isdelete = unitOfWork.Departments.GetById(u.LM_DEPARTMENT_ID.Value).ISDELETE;
+                    if (!isdelete.GetValueOrDefault())
                     {
-                        IDoctorRepository doctors = unitOfWork.Doctors;
-                        source = doctors.GetAllByDepartmentId(u.LM_DEPARTMENT_ID.Value);
+                        source = unitOfWork.Doctors.GetAllByDepartmentId(u.LM_DEPARTMENT_ID.Value);
                     }
                 }
                 else if (currentUser.USERNAME == "admin")
@@ -85,7 +83,7 @@ namespace BachMaiCR.Web.Controllers
                         }
                     }
                 }
-                selectListItemList1 = source.Where(d => d.ISDELETE == false).OrderBy((d => d.DOCTOR_NAME)).Select(d => new SelectListItem()
+                doctorList = source.Where(d => d.ISDELETE == false).OrderBy((d => d.DOCTOR_NAME)).Select(d => new SelectListItem()
                 {
                     Text = d.DOCTOR_NAME,
                     Value = d.DOCTORS_ID.ToString(),
@@ -98,9 +96,9 @@ namespace BachMaiCR.Web.Controllers
                 Text = Localization.LabelSelect,
                 Value = "0"
             };
-            selectListItemList1.Insert(0, selectListItem);
+            doctorList.Insert(0, selectListItem);
             ViewBag.RootDepartment = lmDepartmentList;
-            ViewBag.ListDoctor = selectListItemList1;
+            ViewBag.ListDoctor = doctorList;
             List<MENULIST> allActive = unitOfWork.AdminMenu.GetAll_Active();
             List<SelectListItem> list = allActive.Select((d => new SelectListItem()
             {
