@@ -72,7 +72,6 @@ namespace BachMaiCR.Web.Controllers
                 List<int> intList1 = new List<int>();
                 List<DOCTOR> source = new List<DOCTOR>();
                 int? lmDepartmentId;
-                int num1;
                 if (currentUser.LM_DEPARTMENT_ID.HasValue)
                 {
                     IDepartmentRepository departments = unitOfWork.Departments;
