@@ -61,7 +61,7 @@
                         </div>
                         <div class="col-md-2"></div>
                         <div class="col-md-10">
-                            @Html.ValidationMessageFor(m => m.Date_Begin)
+                            @*@Html.ValidationMessageFor(m => m.Date_Begin)*@
                         </div>
                         <div class="col-md-2">
                             @Html.LabelFor(m => m.Date_Begin, labelText: @Localization.LabelFromDate, htmlAttributes: new { @class = "input-lable-control nowrap" })
@@ -76,7 +76,7 @@
                         </div>
                         <div class="col-md-2"></div>
                         <div class="col-md-10">
-                            @Html.ValidationMessageFor(m => m.Date_End)
+                            @*@Html.ValidationMessageFor(m => m.Date_End)*@
                         </div>
                         <div class="col-md-2">
                             @Html.LabelFor(m => m.Date_End, labelText: @Localization.LabelToDate, htmlAttributes: new { @class = "input-lable-control nowrap" })
@@ -119,11 +119,11 @@
             autoclose: true
         });
         $('.input-group .datePicker').attr("data-val-date", '');
-        $('.input-group .datePicker').attr("data-val", "false");    
+        $('.input-group .datePicker').attr("data-val", "false");
         $.mask.definitions['y'] = '[12]';
         $.mask.definitions['m'] = '[01]';
         $.mask.definitions['d'] = '[0-3]';
-        $(".input-group .datePicker").mask("d9/m9/y999", { placeholder: "_" }); 
+        $(".input-group .datePicker").mask("d9/m9/y999", { placeholder: "_" });
         // Sự kiện cho button birthdat click
         $('#btnDateBeginPicker').delegate("", "click", function (evt) {
             if (!$('.datepicker ').is(":visible"))
@@ -139,10 +139,10 @@
             if (date == "" || date == null || date == undefined) {
                 //   $('.field-validation-error[data-valmsg-for="Date_End"]').remove();
                 $('#Date_End').datepicker("setValue", date);
-            }           
+            }
             var lableError = $('.field-validation-valid[data-valmsg-for="Date_End"]');
             lableError.css('color', 'red');
-            if (date != null && date != "" && dateBegin != null && dateBegin != "" && Date.parse(dateBegin) > Date.parse(date)) {
+            if (date != null && date != "" && dateBegin != null && dateBegin != "" && moment(dateBegin, "dd/mm/yyyy").toDate() > moment(date, "dd/mm/yyyy").toDate()) {
                 lableError.text('@Html.Raw(Resources.Localization.MsgCheckDateTimeAdd)');
             } else {
                 lableError.text("");
@@ -208,7 +208,7 @@
                     }
                 });
             }
-            else {
+            else if ($catForm.validate().errorList[0].message) {
                 window.notice($catForm.validate().errorList[0].message, window.notice_error);
             }
         });
@@ -221,7 +221,7 @@
                 lableError.text("");
                 return true;
             } else {
-                lableError.text('@Html.Raw(Localization.MsgEmptyDeparment)');              
+                lableError.text('@Html.Raw(Localization.MsgEmptyDeparment)');
                 return false;
             }
         }
@@ -233,21 +233,18 @@
                 lableError.text("");
                 return true;
             } else {
-                lableError.text('@Html.Raw(Localization.MsgEmptyDoctor)');              
+                lableError.text('@Html.Raw(Localization.MsgEmptyDoctor)');
                 return false;
             }
         }
         function checkdatettime() {
-            var date = $('#Date_End').val();
+            var dateEnd = $('#Date_End').val();
             var dateBegin = $('#Date_Begin').val();
-            var lableError = $('.field-validation-valid[data-valmsg-for="Date_End"]');
-            lableError.css('color', 'red');
-            if (date != null && date != "" && dateBegin != null && dateBegin != "" && Date.parse(dateBegin) > Date.parse(date)) {               
-                lableError.text('@Html.Raw(Localization.MsgCheckDateTimeAdd)');
-                return true;
-            } else {
-                lableError.text("");
+            if (dateEnd != null && dateEnd != "" && dateBegin != null && dateBegin != "" && moment(dateBegin, "dd/mm/yyyy").toDate() > moment(dateEnd, "dd/mm/yyyy").toDate()) {
+                window.notice('@Html.Raw(Localization.MsgCheckDateTimeAdd)', window.notice_error);
                 return false;
+            } else {
+                return true;
             }
         }
     });

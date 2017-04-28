@@ -221,10 +221,10 @@
         });
         $('#DATE_START, #DATE_END').on('changeDate', function (ev) {
             var date = $('#DATE_END').val();
-            var dateBegin = $('#DATE_START').val();            
+            var dateBegin = $('#DATE_START').val();
             var lableError = $('.field-validation-valid[data-valmsg-for="DATE_START"]');
             lableError.css('color', 'red');
-            if (date != null && date != "" && dateBegin != null && dateBegin != "" && Date.parse(dateBegin) > Date.parse(date)) {
+            if (date != null && date != "" && dateBegin != null && dateBegin != "" && moment(dateBegin, "dd/mm/yyyy").toDate() > moment(date, "dd/mm/yyyy").toDate()) {
                 lableError.text('@Html.Raw(Localization.MsgCheckDateTimeAdd)');
             } else {
                 lableError.text("");
@@ -239,12 +239,12 @@
         $catForm.submit(function (event) {
             event.preventDefault();
             var checkForm = true;
-            if (!checkdepartment()) {              
+            if (!checkdepartment()) {
                 checkForm = false;
-            }            
-            if (!checkdatettime()) {               
+            }
+            if (!checkdatettime()) {
                 checkForm = false;
-            }           
+            }
             if (checkForm && $catForm.valid()) {
                 $.ajax({
                     type: "POST",
@@ -269,7 +269,7 @@
                     }
                 });
             }
-            else {
+            else if ($catForm.validate().errorList[0].message) {
                 window.notice($catForm.validate().errorList[0].message, window.notice_error);
             }
         });
@@ -286,17 +286,14 @@
                 return false;
             }
         }
-       
+
         function checkdatettime() {
             var date = $('#DATE_END').val();
             var dateBegin = $('#DATE_START').val();
-            var lableError = $('.field-validation-valid[data-valmsg-for="DATE_START"]');
-            lableError.css('color', 'red');
-            if (date != null && date != "" && dateBegin != null && dateBegin != "" && Date.parse(dateBegin) > Date.parse(date)) {
-                lableError.text('@Html.Raw(Localization.MsgCheckDateTimeAdd)');
+            if (date != null && date != "" && dateBegin != null && dateBegin != "" && moment(dateBegin, "dd/mm/yyyy").toDate() > moment(date, "dd/mm/yyyy").toDate()) {
+                window.notice('@Html.Raw(Localization.MsgCheckDateTimeAdd)', window.notice_error);
                 return false;
             } else {
-                lableError.text("");
                 return true;
             }
         }

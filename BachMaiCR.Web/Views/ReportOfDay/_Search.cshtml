@@ -93,7 +93,7 @@
                 var dateEnd = $("#SearchDateEnd").val();              
                 var lableError = $('.field-validation-valid[data-valmsg-for="SearchDateEnd"]');
                 lableError.css('color', 'red');
-                if (dateStart != null && dateStart != "" && dateEnd != null && dateEnd != "" && Date.parse(dateStart) > Date.parse(dateEnd)) {
+                if (dateStart != null && dateStart != "" && dateEnd != null && dateEnd != "" && moment(dateStart, "dd/mm/yyyy").toDate() > moment(dateEnd, "dd/mm/yyyy").toDate()) {
                     lableError.text("Khoảng thời gian cần tìm kiếm không chính xác");
 
                     return true;

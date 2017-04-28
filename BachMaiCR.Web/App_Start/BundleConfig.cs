@@ -16,7 +16,8 @@ namespace BachMaiCR.Web
                         "~/Scripts/colResizable-1.3.js",
                         "~/Scripts/jquery.tipsy.js",
                         "~/Scripts/bootstrap.input-clear.js",
-                        "~/Scripts/ConvertUtils.js"
+                        "~/Scripts/ConvertUtils.js",
+                        "~/Scripts/moment.js"
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/underscore").Include(

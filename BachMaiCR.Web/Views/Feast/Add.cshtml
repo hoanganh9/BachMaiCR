@@ -40,7 +40,7 @@
                             </div>
                         <div class="col-md-2"></div>
                             <div class="col-md-10">
-                                @Html.ValidationMessageFor(m => m.Date_Begin)
+                                @*@Html.ValidationMessageFor(m => m.Date_Begin)*@
                             </div>
                             <div class="col-md-2">
                                 @Html.LabelFor(m => m.Date_Begin, labelText: @Localization.LabelFromDate, htmlAttributes: new { @class = "input-lable-control nowrap" })
@@ -55,7 +55,7 @@
                             </div>
                         <div class="col-md-2"></div>
                             <div class="col-md-10">
-                                @Html.ValidationMessageFor(m => m.Date_End)
+                                @*@Html.ValidationMessageFor(m => m.Date_End)*@
                             </div>
                             <div class="col-md-2">
                                 @Html.LabelFor(m => m.Date_End, labelText: @Localization.LabelToDate, htmlAttributes: new { @class = "input-lable-control nowrap" })
@@ -91,7 +91,7 @@
 
 <script type="text/javascript" src="~/Scripts/jquery.maskedinput-1.3.min.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {     
+    $(document).ready(function () {
         $('.input-group .datePicker').datepicker({
             format: 'dd/mm/yyyy',
             weekStart: 1,
@@ -130,13 +130,13 @@
 
             var lableError = $('.field-validation-valid[data-valmsg-for="Date_End"]');
             lableError.css('color', 'red');
-            if (date != null && date != "" && dateBegin != null && dateBegin != "" && Date.parse(dateBegin) > Date.parse(date)) {
+            if (date != null && date != "" && dateBegin != null && dateBegin != "" && moment(dateBegin, "dd/mm/yyyy").toDate() > moment(date, "dd/mm/yyyy").toDate()) {
                 lableError.text('@Html.Raw(Localization.MsgCheckDateTimeAdd)');
             } else {
                 lableError.text("");
             }
         });
-       
+
         // Set index cho datepicker lên trên
         $('.datepicker').css('z-index', 9999);
         var $catForm = $("#frmModifyCategory");
@@ -173,22 +173,18 @@
                     }
                 });
             }
-            else {
+            else if ($catForm.validate().errorList[0].message) {
                 window.notice($catForm.validate().errorList[0].message, window.notice_error);
             }
         });
         function checkdatettime() {
             var date = $('#Date_End').val();
             var dateBegin = $('#Date_Begin').val();
-            var lableError = $('.field-validation-valid[data-valmsg-for="Date_End"]');
-            lableError.css('color', 'red');
-            if (date != null && date != "" && dateBegin != null && dateBegin != "" && Date.parse(dateBegin) > Date.parse(date)) {
-                lableError.text('@Html.Raw(Localization.MsgCheckDateTimeAdd)');
-
-                return true;
-            } else {
-                lableError.text("");
+            if (date != null && date != "" && dateBegin != null && dateBegin != "" && moment(dateBegin, "dd/mm/yyyy").toDate() > moment(date, "dd/mm/yyyy").toDate()) {
+                window.notice('@Html.Raw(Localization.MsgCheckDateTimeAdd)', window.notice_error);
                 return false;
+            } else {
+                return true;
             }
         }
     });

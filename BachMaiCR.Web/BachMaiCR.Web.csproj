@@ -562,6 +562,8 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\pie\PIE.htc" />
     <Content Include="Scripts\pie\PIE.js" />
     <Content Include="Scripts\pie\PIE_uncompressed.htc" />

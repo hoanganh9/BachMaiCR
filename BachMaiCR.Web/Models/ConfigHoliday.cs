@@ -28,12 +28,12 @@ namespace BachMaiCR.Web.Models
         //[UIHint("Date")]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = "MsgEmptyFeastFromDate", ErrorMessageResourceType = typeof(Resources.Localization))]
         //[DisplayFormat(NullDisplayText = "", DataFormatString = " {0:dd/MM/yyyy}")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
         public DateTime? Date_Begin { get; set; }
         //[UIHint("Date")]
         [Required(AllowEmptyStrings = false, ErrorMessageResourceName = "MsgEmptyFeastToDate", ErrorMessageResourceType = typeof(Resources.Localization))]
         //[DisplayFormat(NullDisplayText = "", DataFormatString = " {0:dd/MM/yyyy}")]
-        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = false)]
         public DateTime? Date_End { get; set; }
 
         [LocalizationDisplay("LableTypeOfHoliday")]
