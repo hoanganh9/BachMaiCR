@@ -111,7 +111,7 @@
 }
 <script>
     $(function () {
-      
+        debugger;
         var dateMonth = '@System.DateTime.Now.Month';
         var dateYear = '@System.DateTime.Now.Year';
         var types = '@types';
@@ -242,7 +242,7 @@
                     </td>
                     <td class="Align_Left">&nbsp;                           @Html.DropDownListFor(m => m.DATE_MONTH, DATE_MONTH, new { @class = "selectMonths", data_width = "80px" })
                         &nbsp;
-                              @Resources.Localization.LabelYear&nbsp;
+                              @Resources.Localization.LabelYear &nbsp;
                                   @Html.DropDownListFor(m => m.DATE_YEAR, DATE_YEAR, new { @class = "selectYears", data_width = "160px" })
 
                     </td>
@@ -328,6 +328,7 @@
 
     });
     function AddCalendarHospital() {
+        debugger;
         $.get('/CalendarDuty/AddCalendarHospital', {}, function (data) {
 
             $('#AddCalendarHospital').html(data);
@@ -343,6 +344,7 @@
 <script type="text/javascript">
 
     $(document).ready(function (e) {
+        debugger;
         $('#userCreate').typeahead({
             source: function (term, process) {
                 var url = '@Url.Content("/CalendarDuty/GetNamesCreate")';
