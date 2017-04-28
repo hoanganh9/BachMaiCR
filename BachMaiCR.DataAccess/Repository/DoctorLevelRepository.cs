@@ -26,7 +26,7 @@ namespace BachMaiCR.DataAccess.Repository
 
         public PagedList<DOCTOR_LEVEL> GetAll(int type, string name, int page, int size, string sort, string sortDir)
         {
-            IQueryable<DOCTOR_LEVEL> source = this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE == false && (obj.LEVEL_NAME.Contains(name) || obj.CODE.Contains(name))));
+            IQueryable<DOCTOR_LEVEL> source = this.DbSet.AsNoTracking().Where(obj => obj.ISDELETE != true && (obj.LEVEL_NAME.Contains(name) || obj.CODE.Contains(name)));
             if (sortDir.ToLower() == "asc")
                 return source.OrderBy(sort).Paginate(page, size, 0);
             return source.OrderByDescending(sort).Paginate(page, size, 0);
@@ -34,12 +34,12 @@ namespace BachMaiCR.DataAccess.Repository
 
         public List<DOCTOR_LEVEL> GetAll_List()
         {
-            return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy(t => t.LEVEL_NUMBER).ToList();
+            return this.DbSet.AsNoTracking().Where(obj => obj.ISDELETE != true).OrderBy(t => t.LEVEL_NUMBER).ToList();
         }
 
         public List<SelectListItem> GetListItemBase()
         {
-            return this.DbSet.AsNoTracking().Where((obj => obj.ISDELETE.HasValue.Equals(false) || obj.ISDELETE.Value.Equals(false))).OrderBy(obj => obj.LEVEL_ORDER).Select((obj => new SelectListItem()
+            return this.DbSet.AsNoTracking().Where(obj => obj.ISDELETE != true).OrderBy(obj => obj.LEVEL_ORDER).Select((obj => new SelectListItem()
             {
                 Value = obj.DOCTOR_LEVEL_ID.ToString(),
                 Text = obj.LEVEL_NAME

@@ -617,9 +617,11 @@
                     }
                     // Thêm mới cán bộ 
                     $('#table_list_staff').find('input:checked').each(function () {
-                        var item = $(this).parent('td').next('td').find('div');
-                        if (arrayClient.indexOf(item.attr('id')) < 0) {
-                            addItemToList(item, countX);
+                        if ($(this).attr('id') != 'cbx-check-all') {
+                            var item = $(this).parent('td').next('td').find('div');
+                            if (arrayClient.indexOf(item.attr('id')) < 0) {
+                                addItemToList(item, countX);
+                            }
                         }
                     });
                     // Xóa cán bộ cũ

@@ -314,8 +314,11 @@
     $('#popupStaff').delegate(" #btnOk", "click", function (event) {
         removeList();
         $('#popupStaff').find('input:checked').each(function () {
-            var item = $(this).parent('td').next('td').find('div');
-            addItemToList(item);
+            if ($(this).attr('id') != 'cbx-check-all')
+            {
+                var item = $(this).parent('td').next('td').find('div');
+                addItemToList(item);
+            }
         })
 
         //Tính lại độ cao cho các dòng dữ liệu
