@@ -220,7 +220,7 @@ namespace BachMaiCR.Web.Controllers
                                 content = "Gửi không thành công tin nhắn tới cho cán bộ: '" + listSms[index].DoctorName + "' - Số điện thoại: '" + phone + "'";
                             else
                                 content = "Gửi không thành công tin nhắn nhắc lịch tới đơn vị: '" + listSms[index].DoctorName + "' - Số điện thoại: '" + phone + "'";
-                            WriteLog(enLogType.NomalLog, enActionType.SendSMS, content, "N/A", ex.Message, listSms[index].DoctorId, string.Empty, string.Empty);
+                            WriteLog(enLogType.NomalLog, enActionType.SendSMSBrandname, content, "N/A", ex.Message, listSms[index].DoctorId, string.Empty, string.Empty);
                         }
                     }
                 }
