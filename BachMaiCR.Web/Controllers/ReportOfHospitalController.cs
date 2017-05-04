@@ -167,8 +167,8 @@ namespace BachMaiCR.Web.Controllers
                                 (er[num2 + 8, 1]).Value = num2;
                                 (er[num2 + 8, 2]).Value = dept.DEPARTMENT_NAME;
                                 for (int i = 0; i < lstPositions.Count; ++i)
-                                    (er[num2 + 8, i + 3]).Value = (hospitalBySearch.Where((t => t.LM_DEPARTMENT_IDs.Contains("," + dept.LM_DEPARTMENT_ID.ToString() + ",") && t.POSITION_IDs.Contains(lstPositions[i].Value))).Count<DoctorCalendarLeader>());
-                                (er[num2 + 8, lstPositions.Count + 3]).Value = ((hospitalBySearch == null || hospitalBySearch.Count == 0 ? 0 : hospitalBySearch.Where((t => t.LM_DEPARTMENT_IDs.Contains("," + dept.LM_DEPARTMENT_ID + ","))).Count<DoctorCalendarLeader>()));
+                                    (er[num2 + 8, i + 3]).Value = (hospitalBySearch.Where((t => t.LM_DEPARTMENT_IDs.Contains("," + dept.LM_DEPARTMENT_ID.ToString() + ",") && t.POSITION_IDs.Contains(lstPositions[i].Value))).Count());
+                                (er[num2 + 8, lstPositions.Count + 3]).Value = ((hospitalBySearch == null || hospitalBySearch.Count == 0 ? 0 : hospitalBySearch.Where((t => t.LM_DEPARTMENT_IDs.Contains("," + dept.LM_DEPARTMENT_ID + ","))).Count()));
                                 ExportReport.SetStyleSumCells(er[num2 + 8, lstPositions.Count + 3]);
                             }
                             int num3 = 0;
@@ -180,7 +180,7 @@ namespace BachMaiCR.Web.Controllers
                             {
                                 if (hospitalBySearch != null && hospitalBySearch.Count > 0)
                                 {
-                                    int num4 = hospitalBySearch.Where((t => t.POSITION_IDs.Contains(lstPositions[j].Value))).Count<DoctorCalendarLeader>();
+                                    int num4 = hospitalBySearch.Where((t => t.POSITION_IDs.Contains(lstPositions[j].Value))).Count();
                                     (er[9 + num1 + departmentByLevel.Count, j + 3]).Value = num4;
                                     ExportReport.SetStyleSumCells(er[9 + num1 + departmentByLevel.Count, j + 3]);
                                     num3 += num4;

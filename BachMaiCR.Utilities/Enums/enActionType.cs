@@ -14,5 +14,6 @@
         [StringValue("Gửi SMS")] SendSMS = 9,
         [StringValue("Phân quyền")] Permission = 10,
         [StringValue("Hành động khác")] Other = 100,
+        [StringValue("Gửi Brandname")] SendSMSBrandname = 11,
     }
 }

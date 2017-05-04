@@ -6,6 +6,7 @@ using BachMaiCR.Utilities.Cache;
 using BachMaiCR.Utilities.Enums;
 using BachMaiCR.Web.Common;
 using BachMaiCR.Web.ServiceSMS6x00;
+using BachMaiCR.Web.ServiceSMSBrandName;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -165,6 +166,90 @@ namespace BachMaiCR.Web.Controllers
                 }
             }
             insertMtInfClient.Close();
+        }
+        
+        //Send sms BrandName with service LaHongMedia
+        public void sendSMSBrandname(List<SendSms6x00> listSms)
+        {
+            if (!(ConfigurationManager.AppSettings["sendSMS"] == "1"))
+                return;
+            ServiceSoapClient serviceBrandname = new ServiceSoapClient();
+            string brandName = ConfigurationManager.AppSettings["sendBrandname_Brandname"];
+            string userName = ConfigurationManager.AppSettings["sendBrandname_UserName"];
+            string passWord = ConfigurationManager.AppSettings["sendBrandname_PassWord"];
+            string blockId = serviceBrandname.OpenBlock(brandName, userName, passWord);
+            //Loi
+            if(blockId == "-1")
+            {
+
+            }
+            else
+            {
+                if (listSms != null && listSms.Count > 0)
+                {
+                    for (int index = 0; index < listSms.Count; ++index)
+                    {
+                        string phone = listSms[index].Phone;
+                        string str = Utils.Utils.ConvertVN(Utils.Utils.StripHTML(listSms[index].Contents));
+                        try
+                        {
+                            var result = serviceBrandname.SendMT(brandName, userName, passWord, phone, str, blockId);
+                            if (result.StartsWith("200"))
+                            {
+                                string content;
+                                if (listSms[index].Types != "1")
+                                    content = "Gửi thành công tin nhắn tới cho cán bộ: '" + listSms[index].DoctorName + "' - Số điện thoại: '" + phone + "'";
+                                else
+                                    content = "Gửi thành công tin nhắn nhắc lịch tới đơn vị: '" + listSms[index].DoctorName + "' - Số điện thoại: '" + phone + "'";
+                                WriteLog(enLogType.NomalLog, enActionType.SendSMSBrandname, content, str, "N/A", listSms[index].DoctorId, string.Empty, string.Empty);
+                            }
+                            else
+                            {
+                                string content;
+                                if (listSms[index].Types != "1")
+                                    content = "Gửi không thành công tin nhắn tới cho cán bộ: '" + listSms[index].DoctorName + "' - Số điện thoại: '" + phone + "'";
+                                else
+                                    content = "Gửi không thành công tin nhắn nhắc lịch tới đơn vị: '" + listSms[index].DoctorName + "' - Số điện thoại: '" + phone + "'";
+                                WriteLog(enLogType.NomalLog, enActionType.SendSMSBrandname, content, str, MsgErrorSMSBrandname(result), listSms[index].DoctorId, string.Empty, string.Empty);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            string content;
+                            if (listSms[index].Types != "1")
+                                content = "Gửi không thành công tin nhắn tới cho cán bộ: '" + listSms[index].DoctorName + "' - Số điện thoại: '" + phone + "'";
+                            else
+                                content = "Gửi không thành công tin nhắn nhắc lịch tới đơn vị: '" + listSms[index].DoctorName + "' - Số điện thoại: '" + phone + "'";
+                            WriteLog(enLogType.NomalLog, enActionType.SendSMS, content, "N/A", ex.Message, listSms[index].DoctorId, string.Empty, string.Empty);
+                        }
+                    }
+                }
+                serviceBrandname.CloseBlock(brandName, userName, passWord, blockId);
+            }
+        }
+
+        private string MsgErrorSMSBrandname(string smsResult)
+        {
+            switch (smsResult)
+            {
+                case "201":
+                    return "Gửi tin thất bại";
+                case "202":
+                    return "Tài khoản không đúng";
+                case "203":
+                    return "Số điện thoại không hợp lệ hoặc không hỗ trợ";
+                case "204":
+                    return "Tài khoản không hợp lệ";
+                case "205":
+                    return "Không đủ MT gửi tin";
+                case "206":
+                    return "Sai BlockId";
+                case "207":
+                    return "SMSId đã tồn tại";
+                default://200|Số MT của tin nhắn gửi vừa|SMSId của tin nhắn 
+                    return smsResult;
+
+            }
         }
 
         public static IEnumerable<MethodInfo> GetActions(string controller, string action)

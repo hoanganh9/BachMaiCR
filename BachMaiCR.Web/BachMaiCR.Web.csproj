@@ -342,6 +342,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Service References\ServiceSMSBrandName\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Utils\DataTemplate.cs" />
     <Compile Include="Utils\Utils.cs" />
   </ItemGroup>
@@ -593,6 +598,12 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Service References\ServiceSMSBrandName\configuration91.svcinfo" />
+    <None Include="Service References\ServiceSMSBrandName\configuration.svcinfo" />
+    <None Include="Service References\ServiceSMSBrandName\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
     <Content Include="thumoi.JPG" />
     <Content Include="Views\Admin\_AddUserToRole.cshtml" />
     <Content Include="Views\Admin\_SearchUserToRole.cshtml" />
@@ -791,6 +802,7 @@
     <Content Include="Views\ConfigSMS\_Search.cshtml" />
     <Content Include="Views\ConfigSMS\Index.cshtml" />
     <Content Include="Views\CalendarDuty\_DetailCalendar.cshtml" />
+    <None Include="Service References\ServiceSMSBrandName\Service.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -819,6 +831,7 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\ServiceSMS6x00\" />
+    <WCFMetadataStorage Include="Service References\ServiceSMSBrandName\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BachMaiCR.DataAccess\BachMaiCR.DataAccess.csproj">

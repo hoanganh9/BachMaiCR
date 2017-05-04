@@ -71,6 +71,7 @@
     <Compile Include="ModelsExt\SearchCalendarDuty.cs" />
     <Compile Include="ModelsExt\SearchTemplate.cs" />
     <Compile Include="ModelsExt\SendSms6x00.cs" />
+    <Compile Include="ModelsExt\SendSMSBrandname.cs" />
     <Compile Include="ModelsExt\TimeCalendarDuty.cs" />
     <Compile Include="ModelsExt\URL_ACTIVE.cs" />
     <Compile Include="Models\ADMIN_LOG.cs" />

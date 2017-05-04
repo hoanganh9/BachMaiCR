@@ -2215,7 +2215,7 @@ namespace BachMaiCR.Web.Controllers
                                 Types = "0",
                                 DoctorName = entity.DOCTOR.DOCTOR_NAME
                             });
-                            sendSMS(listSms);
+                            sendSMSBrandname(listSms);
                         }
                         else if (num1 == 0)
                         {
@@ -2312,7 +2312,7 @@ namespace BachMaiCR.Web.Controllers
                                     Types = "0",
                                     DoctorName = entity.DOCTOR.DOCTOR_NAME
                                 });
-                                sendSMS(listSms);
+                                sendSMSBrandname(listSms);
                             }
                         }
                         else
@@ -2404,7 +2404,7 @@ namespace BachMaiCR.Web.Controllers
                                 Types = "0",
                                 DoctorName = entity.DOCTOR.DOCTOR_NAME
                             });
-                            sendSMS(listSms);
+                            sendSMSBrandname(listSms);
                         }
                     }
                     if (typeAction == 4)
@@ -2491,7 +2491,7 @@ namespace BachMaiCR.Web.Controllers
                             Types = "0",
                             DoctorName = entity.DOCTOR.DOCTOR_NAME
                         });
-                        sendSMS(listSms);
+                        sendSMSBrandname(listSms);
                     }
                     if (typeAction == 2)
                     {
@@ -2556,7 +2556,7 @@ namespace BachMaiCR.Web.Controllers
                         sendSms6x00_2.Types = "0";
                         sendSms6x00_2.DoctorName = byId1.DOCTOR.DOCTOR_NAME;
                         listSms.Add(sendSms6x00_2);
-                        sendSMS(listSms);
+                        sendSMSBrandname(listSms);
                         unitOfWork.CalendarDoctors.Delete(byId1);
                         unitOfWork.CalendarDatas.Delete(byId2);
                     }
@@ -2640,7 +2640,7 @@ namespace BachMaiCR.Web.Controllers
                 sendSms6x00_2.Types = "0";
                 sendSms6x00_2.DoctorName = byId.DOCTOR_NAME;
                 listSms.Add(sendSms6x00_2);
-                sendSMS(listSms);
+                sendSMSBrandname(listSms);
             }
             WriteLog(enLogType.NomalLog, enActionType.Approve, "Phê duyệt đổi lịch", "N/A", "N/A", 0, string.Empty, string.Empty);
             return Json(JsonResponse.Json200("Xác nhận lịch trực thành công!"));
@@ -2906,7 +2906,7 @@ namespace BachMaiCR.Web.Controllers
                         }
                     }
                 }
-                sendSMS(listSms);
+                sendSMSBrandname(listSms);
             }
             return null;
         }
@@ -3423,7 +3423,7 @@ namespace BachMaiCR.Web.Controllers
                         listSms.Add(sendSms6x00_2);
                     }
                 }
-                sendSMS(listSms);
+                sendSMSBrandname(listSms);
             }
             return null;
         }
@@ -3545,7 +3545,7 @@ namespace BachMaiCR.Web.Controllers
             DateTime now = DateTime.Now;
             int.TryParse(deparmentIdx, out result);
             LM_DEPARTMENT byId = unitOfWork.Departments.GetById(result);
-            sendSMS(new List<SendSms6x00>()
+            sendSMSBrandname(new List<SendSms6x00>()
       {
         new SendSms6x00()
         {
@@ -3566,7 +3566,7 @@ namespace BachMaiCR.Web.Controllers
         public ActionResult SendSMSHospitalLeader()
         {
             DateTime now = DateTime.Now;
-            sendSMS(new List<SendSms6x00>()
+            sendSMSBrandname(new List<SendSms6x00>()
       {
         new SendSms6x00()
         {
@@ -6008,7 +6008,7 @@ namespace BachMaiCR.Web.Controllers
                     });
                 doctorCalendarLeaderList = null;
             }
-            sendSMS(listSms);
+            sendSMSBrandname(listSms);
             return null;
         }
 
